@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FormOutlined, CreditCardOutlined } from "@ant-design/icons";
 import { getCurrentDateTime } from "utils/time.helper";
-import { ambalajData } from "components/tables/AmbalajTablo";
+import { ambalajData } from "components/pages/Ambalajlar";
 import { useUIContext } from "context/UIProvider";
 import SevkiyatKarti from "./SevkiyatKarti";
 

@@ -6,7 +6,7 @@ import { useUIContext } from "context/UIProvider";
 import { MdOutlineDelete } from "react-icons/md";
 
 import { getCurrentDateTime } from "utils/time.helper";
-import TableGod from "./TableGod";
+import TableGod from "../shared/TableGod";
 import { createTableFilterFromData } from "utils/table.helper";
 
 export const sicaklikData = [];
@@ -62,7 +62,7 @@ const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
 
-function SicaklikTablo() {
+function Sicakliklar() {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const rowSelection = {
@@ -114,4 +114,4 @@ function SicaklikTablo() {
   );
 }
 
-export default SicaklikTablo;
+export default Sicakliklar;

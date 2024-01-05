@@ -1,13 +1,13 @@
-import NewGelen from "components/forms/GelenMalzemeKayitForm";
+import NewGelen from "components/pages/GelenMalzemeKayit";
 import { useUIContext } from "context/UIProvider";
 import { FaTemperatureLow, FaWpforms } from "react-icons/fa";
 import { FaDropbox } from "react-icons/fa6";
-import { FcAddDatabase, FcOk, FcSynchronize } from "react-icons/fc";
+import { FcAddDatabase, FcOk, FcSynchronize, FcPieChart } from "react-icons/fc";
 import { GoDatabase } from "react-icons/go";
 import { GrHostMaintenance } from "react-icons/gr";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 import { RiCustomerServiceLine } from "react-icons/ri";
-import { TbRulerMeasure } from "react-icons/tb";
+import { TbRulerMeasure, TbReportAnalytics } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CompanyLogo from "../shared/CompanyLogo";
@@ -115,6 +115,11 @@ const pages = {
       title: "Tamamlanan Üretimler",
       icon: <FcOk />,
       link: "/uretim/tamamlanan",
+    },
+    {
+      title: "Üretim Raporu",
+      icon: <FcPieChart />,
+      link: "/uretim/rapor",
     },
   ],
   tanimlamalar: [

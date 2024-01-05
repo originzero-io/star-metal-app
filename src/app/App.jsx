@@ -4,13 +4,13 @@ import styled from "styled-components";
 import FormModal from "components/shared/FormModal";
 import { UIProvider } from "context/UIProvider";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import TamamlananUretimTablo from "components/tables/TamamlananUretimTablo";
-import DevamEdenUretimTablo from "components/tables/DevamEdenUretimTablo";
-import MusteriTablo from "components/tables/MusteriTablo";
-import ReferansTablo from "components/tables/ReferansTablo";
-import AmbalajTablo from "components/tables/AmbalajTablo";
-import SicaklikTablo from "components/tables/SicaklikTablo";
-import GelenMalzemeKayitForm from "components/forms/GelenMalzemeKayitForm";
+import TamamlananUretimler from "components/pages/TamamlananUretimler";
+import DevamEdenUretimler from "components/pages/DevamEdenUretimler";
+import Musteriler from "components/pages/Musteriler";
+import Referanslar from "components/pages/Referanslar";
+import Ambalajlar from "components/pages/Ambalajlar";
+import Sicakliklar from "components/pages/Sicakliklar";
+import GelenMalzemeKayit from "components/pages/GelenMalzemeKayit";
 
 const AppWrapperStyled = styled.div`
   height: 100vh;
@@ -34,13 +34,13 @@ function App() {
         <Router>
           <NavigationMenu />
           <Routes>
-            <Route path="/uretim/devam-eden" element={<DevamEdenUretimTablo />} />
-            <Route path="/uretim/tamamlanan" element={<TamamlananUretimTablo />} />
-            <Route path="/gelen-malzeme-kayit" element={<GelenMalzemeKayitForm />} />
-            <Route path="/musteriler" element={<MusteriTablo />} />
-            <Route path="/referanslar" element={<ReferansTablo />} />
-            <Route path="/ambalajlar" element={<AmbalajTablo />} />
-            <Route path="/sicakliklar" element={<SicaklikTablo />} />
+            <Route path="/uretim/devam-eden" element={<DevamEdenUretimler />} />
+            <Route path="/uretim/tamamlanan" element={<TamamlananUretimler />} />
+            <Route path="/gelen-malzeme-kayit" element={<GelenMalzemeKayit />} />
+            <Route path="/musteriler" element={<Musteriler />} />
+            <Route path="/referanslar" element={<Referanslar />} />
+            <Route path="/ambalajlar" element={<Ambalajlar />} />
+            <Route path="/sicakliklar" element={<Sicakliklar />} />
           </Routes>
           <FormModal />
         </Router>

@@ -1,66 +1,89 @@
 import { Button, Modal } from "antd";
 import { useState } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import YeniReferansForm from "components/forms/YeniReferansForm";
+
+import YeniMusteriForm from "components/forms/YeniMusteriForm";
 import { useUIContext } from "context/UIProvider";
 import { MdOutlineDelete } from "react-icons/md";
 import { createTableFilterFromData } from "utils/table.helper";
-import TableGod from "./TableGod";
+import TableGod from "../shared/TableGod";
 
-export const referansData = [];
-
+const data = [];
 for (let i = 0; i < 4; i++) {
-  referansData.push({
+  data.push({
     key: i,
-    referansNo: `${i}1000256K`,
-    siparisNo: `270 71 0${i}`,
-    islemAciklama: "Çinko Fosfat",
-    aciklama: "006.0226 çinko fosfat",
-    hesaplama: "0.0002",
-    partiAdedi: 5,
-    referansYuzeyAlani: 10.9,
-    firmaAdi01: "Valeo",
-    birim: "kg",
-    firmaAdi02: "270 00 02",
-    islemTipi: "Fosfat",
-    uretimAdediDegistirme: "Hayır",
+    musteriAdi1: "BELTAN VİBRAACOUSTİC A.Ş.",
+    musteriAdi2: `270 71 0${i}`,
+    adres1: "BTSO ORG. SAN. BÖLGESİ",
+    adres2: "SARI CADDE NO:10",
+    il: "BURSA",
+    ilce: "OSMANGAZI",
+    vergiDairesi: "E.GAZİ",
+    vergiHesapNo: "1630026175",
   });
 }
 
 const columns = [
   {
-    title: "Referans No",
-    dataIndex: "referansNo",
-    key: "referansNo",
-    filters: createTableFilterFromData(referansData, "referansNo"),
+    title: "Müşteri Adı - 1",
+    dataIndex: "musteriAdi1",
+    key: "musteriAdi1",
+    filters: createTableFilterFromData(data, "musteriAdi1"),
     onFilter: (value, record) => record.musteriAdi1.indexOf(value) === 0,
     filterSearch: true,
+    width: 200,
   },
   {
-    title: "Sipariş No",
-    dataIndex: "siparisNo",
-    key: "siparisNo",
-    filters: createTableFilterFromData(referansData, "siparisNo"),
+    title: "Müşteri Adı - 2",
+    dataIndex: "musteriAdi2",
+    key: "musteriAdi2",
+    filters: createTableFilterFromData(data, "musteriAdi2"),
     onFilter: (value, record) => record.musteriAdi2.indexOf(value) === 0,
     filterSearch: true,
+    width: 120,
   },
   {
-    title: "İşlem Açıklaması",
-    dataIndex: "islemAciklama",
+    title: "Adres - 1",
+    dataIndex: "adres1",
     key: "adres1",
-    // width: 250,
+    filters: createTableFilterFromData(data, "adres1"),
+    onFilter: (value, record) => record.adres1.indexOf(value) === 0,
+    filterSearch: true,
+    width: 200,
   },
   {
-    title: "İrsaliye için Açıklama",
-    dataIndex: "aciklama",
-    key: "aciklama",
-    // width: 300,
+    title: "Adres - 2",
+    dataIndex: "adres2",
+    key: "adres2",
+    width: 200,
   },
 
   {
-    title: "Hesaplama",
-    dataIndex: "hesaplama",
-    key: "hesaplama",
+    title: "İl",
+    dataIndex: "il",
+    key: "il",
+    filters: createTableFilterFromData(data, "il"),
+    onFilter: (value, record) => record.il.indexOf(value) === 0,
+    filterSearch: true,
+    width: 80,
+  },
+  {
+    title: "İlçe",
+    dataIndex: "ilce",
+    key: "ilce",
+    width: 100,
+  },
+  {
+    title: "Vergi Dairesi",
+    dataIndex: "vergiDairesi",
+    key: "vergiDairesi",
+    width: 100,
+  },
+  {
+    title: "Vergi Hesap No",
+    dataIndex: "vergiHesapNo",
+    key: "vergiHesapNo",
+    width: 150,
   },
 ];
 
@@ -68,7 +91,7 @@ const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
 
-function ReferansTablo() {
+function Musteriler() {
   const [selectedRows, setSelectedRows] = useState([]);
   const { showModal } = useUIContext();
 
@@ -78,6 +101,7 @@ function ReferansTablo() {
       setSelectedRows(_selectedRows);
     },
   };
+
   const deleteRecordHandler = () => {
     Modal.confirm({
       title: "Emin misiniz?",
@@ -95,12 +119,12 @@ function ReferansTablo() {
   };
   return (
     <TableGod
-      dataSource={referansData}
+      dataSource={data}
       columns={columns}
       onChange={onChange}
       rowSelection={rowSelection}
       contextMenu={{
-        editForm: YeniReferansForm,
+        editForm: YeniMusteriForm,
       }}
       actionButtons={
         <>
@@ -118,9 +142,9 @@ function ReferansTablo() {
             style={{ marginRight: "4px" }}
             type="primary"
             icon={<IoIosAddCircleOutline />}
-            onClick={() => showModal({ title: "Yeni Referans", content: <YeniReferansForm /> })}
+            onClick={() => showModal({ title: "Yeni Müşteri", content: <YeniMusteriForm /> })}
           >
-            Yeni Referans
+            Yeni Müşteri
           </Button>
         </>
       }
@@ -128,4 +152,4 @@ function ReferansTablo() {
   );
 }
 
-export default ReferansTablo;
+export default Musteriler;

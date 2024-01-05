@@ -1,7 +1,8 @@
 import { Tag } from "antd";
 import { CgMoreVertical } from "react-icons/cg";
 import { createTableFilterFromData } from "utils/table.helper";
-import TableGod from "./TableGod";
+import TableGod from "../shared/TableGod";
+import MalzemeDuzenlemeForm from "components/forms/MalzemeDuzenlemeForm";
 
 const data = [];
 for (let i = 0; i < 4; i++) {
@@ -116,7 +117,7 @@ const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
 
-function TamamlananUretimTablo({ setSelectedRows }) {
+function TamamlananUretimler({ setSelectedRows }) {
   const rowSelection = {
     onChange: (_selectedRowKeys, _selectedRows) => {
       console.log(`selectedRowKeys: ${_selectedRowKeys}`, "selectedRows: ", _selectedRows);
@@ -130,10 +131,13 @@ function TamamlananUretimTablo({ setSelectedRows }) {
       onChange={onChange}
       rowSelection={rowSelection}
       expandable
+      contextMenu={{
+        editForm: MalzemeDuzenlemeForm,
+      }}
     />
   );
 }
 
-TamamlananUretimTablo.propTypes = {};
+TamamlananUretimler.propTypes = {};
 
-export default TamamlananUretimTablo;
+export default TamamlananUretimler;

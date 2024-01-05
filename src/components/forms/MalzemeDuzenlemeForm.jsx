@@ -1,5 +1,5 @@
 import { Button, Divider, Form, Input, Radio, Select } from "antd";
-import { ambalajData } from "components/tables/AmbalajTablo";
+import { ambalajData } from "components/pages/Ambalajlar";
 import { useState } from "react";
 import { getCurrentDateTime } from "utils/time.helper";
 

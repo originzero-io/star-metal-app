@@ -1,7 +1,7 @@
 import { Button, Col, Divider, Form, Input, Radio, Row, Select, Space, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
-import { ambalajData } from "components/tables/AmbalajTablo";
-import { referansData } from "components/tables/ReferansTablo";
+import { ambalajData } from "components/pages/Ambalajlar";
+import { referansData } from "components/pages/Referanslar";
 import React, { useEffect, useRef, useState } from "react";
 import { FaMinusCircle } from "react-icons/fa";
 import { TiPlusOutline } from "react-icons/ti";
@@ -47,7 +47,7 @@ const SpaceStyled = styled(Space)`
     background-color: #e5f3fd;
   }
 `;
-export default function GelenMalzemeKayitForm() {
+export default function GelenMalzemeKayit() {
   const onFinish = (values) => {
     console.log("Success:", values);
   };

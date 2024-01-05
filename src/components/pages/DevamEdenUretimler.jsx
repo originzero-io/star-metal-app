@@ -6,7 +6,7 @@ import MalzemeDuzenlemeForm from "components/forms/MalzemeDuzenlemeForm";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
 import { createTableFilterFromData } from "utils/table.helper";
-import TableGod from "./TableGod";
+import TableGod from "../shared/TableGod";
 import UretimGirisi from "components/cards/UretimGirisi";
 
 const data = [];
@@ -129,7 +129,7 @@ const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
 
-function DevamEdenUretimTablo() {
+function DevamEdenUretimler() {
   const [selectedRows, setSelectedRows] = useState([]);
   const { showModal } = useUIContext();
 
@@ -214,4 +214,4 @@ function DevamEdenUretimTablo() {
   );
 }
 
-export default DevamEdenUretimTablo;
+export default DevamEdenUretimler;
