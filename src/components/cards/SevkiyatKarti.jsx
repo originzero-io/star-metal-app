@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Button, Col, Row } from "antd";
 import styled from "styled-components";
 import { useReactToPrint } from "react-to-print";
@@ -20,11 +20,18 @@ const BoldTextStyled = styled.div`
   font-weight: 800;
 `;
 
-export default function SevkiyatKarti({ record }) {
+export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger }) {
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
+
+  useEffect(() => {
+    if (printTrigger && record) {
+      handlePrint();
+      setPrintTrigger(false);
+    }
+  }, [handlePrint, record]);
   return (
     <div>
       <Button type="primary" icon={<IoPrintOutline />} onClick={handlePrint}>

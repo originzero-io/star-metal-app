@@ -25,8 +25,6 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
     content: () => componentRef.current,
   });
 
-  // const { record, printTrigger, setPrintTrigger } = usePrintContext();
-
   useEffect(() => {
     if (printTrigger && record) {
       handlePrint();
@@ -36,9 +34,6 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
 
   return (
     <div>
-      {/* <Button type="primary" icon={<IoPrintOutline />} onClick={handlePrint}>
-        Yazdır
-      </Button> */}
       <ContainerStyled ref={componentRef}>
         <Row>
           <ColStyled span={6}>
