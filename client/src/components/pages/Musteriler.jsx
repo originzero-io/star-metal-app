@@ -1,22 +1,17 @@
 import { Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
-
 import MusteriForm from "components/forms/MusteriForm";
 import { useUIContext } from "context/UIProvider";
 import { MdOutlineDelete } from "react-icons/md";
 import { createTableFilterFromData } from "utils/table.helper";
 import { useDBContext } from "context/DBProvider";
-// import BaseHTTP from "services/base.http";
 import musterilerHttp from "services/musteriler.http";
 import TableGod from "../shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
-
-// const musterilerHttp = new BaseHTTP("/musteriler", "musteriAdi1");
-
 function Musteriler() {
   const [selectedRows, setSelectedRows] = useState([]);
   const { showModal, showNotification } = useUIContext();

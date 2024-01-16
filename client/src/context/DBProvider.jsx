@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import referanslarHttp from "services/referanslar.http";
 import musterilerHttp from "services/musteriler.http";
+import ambalajlarHttp from "services/ambalajlar.http";
 
 const DBContext = createContext();
 
@@ -13,6 +14,8 @@ export const useDBContext = () => useContext(DBContext);
 export const DBProvider = ({ children }) => {
   const [referanslar, setReferanslar] = useState([]);
   const [musteriler, setMusteriler] = useState([]);
+  const [ambalajlar, setAmbalajlar] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   const fetchReferanslar = async () => {
@@ -36,9 +39,21 @@ export const DBProvider = ({ children }) => {
       console.log("error: ", error);
     }
   };
+
+  const fetchAmbalajlar = async () => {
+    setLoading(true);
+    try {
+      const ambalajData = await ambalajlarHttp.getData();
+      setAmbalajlar(ambalajData);
+      setLoading(false);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
   useEffect(() => {
     fetchReferanslar();
     fetchMusteriler();
+    fetchAmbalajlar();
   }, []);
 
   const value = {
@@ -46,6 +61,8 @@ export const DBProvider = ({ children }) => {
     setReferanslar,
     musteriler,
     setMusteriler,
+    ambalajlar,
+    setAmbalajlar,
     loading,
   };
 

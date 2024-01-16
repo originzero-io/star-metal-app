@@ -1,14 +1,11 @@
-import { Button, Col, Divider, Form, Input, Radio, Row, Select, Space, Tag } from "antd";
-import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
-import { ambalajData } from "components/pages/Ambalajlar";
-import React, { useEffect, useRef, useState } from "react";
-import { FaMinusCircle } from "react-icons/fa";
-import { TiPlusOutline } from "react-icons/ti";
-import { getCurrentDateTime } from "utils/time.helper";
-import styled from "styled-components";
-import PageHeader from "components/shared/PageHeader";
 import { PlusCircleFilled } from "@ant-design/icons";
+import { Button, Col, Form, Input, Row, Select, Space, Tag } from "antd";
+import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
+import PageHeader from "components/shared/PageHeader";
 import { useDBContext } from "context/DBProvider";
+import { useState } from "react";
+import { FaMinusCircle } from "react-icons/fa";
+import styled from "styled-components";
 
 const Container = styled.div`
   display: flex;
@@ -66,7 +63,7 @@ export default function GelenMalzemeKayit() {
 
   const [record, setRecord] = useState(null);
   const [printTrigger, setPrintTrigger] = useState(false);
-  const { referanslar } = useDBContext();
+  const { ambalajlar, referanslar } = useDBContext();
 
   const printRowData = async (name) => {
     try {
@@ -266,7 +263,7 @@ export default function GelenMalzemeKayit() {
                     style={{ width: "120px" }}
                   >
                     <Select placeholder="1. Ambalaj">
-                      {ambalajData.map((ambalaj, i) => (
+                      {ambalajlar.map((ambalaj, i) => (
                         <Select.Option key={i} value={ambalaj.kasaAdi}>
                           {ambalaj.kasaAdi}
                         </Select.Option>
@@ -280,7 +277,7 @@ export default function GelenMalzemeKayit() {
                     style={{ width: "120px" }}
                   >
                     <Select placeholder="2. Ambalaj">
-                      {ambalajData.map((ambalaj, i) => (
+                      {ambalajlar.map((ambalaj, i) => (
                         <Select.Option key={i} value={ambalaj.kasaAdi}>
                           {ambalaj.kasaAdi}
                         </Select.Option>

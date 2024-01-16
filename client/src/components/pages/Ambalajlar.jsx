@@ -1,71 +1,14 @@
 import { Button, Modal } from "antd";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 
 import { useUIContext } from "context/UIProvider";
 import { MdOutlineDelete } from "react-icons/md";
 
 import AmbalajForm from "components/forms/AmbalajForm";
+import { useDBContext } from "context/DBProvider";
 import TableGod from "../shared/TableGod";
-
-export const ambalajData = [
-  {
-    key: 1,
-    kasaAdi: "DÇTA",
-  },
-  {
-    key: 2,
-    kasaAdi: "Kasa 01",
-  },
-  {
-    key: 3,
-    kasaAdi: "Kasa 02",
-  },
-  {
-    key: 4,
-    kasaAdi: "KS",
-  },
-  {
-    key: 5,
-    kasaAdi: "Kutu 01",
-  },
-  {
-    key: 6,
-    kasaAdi: "Kutu 02",
-  },
-  {
-    key: 7,
-    kasaAdi: "Kutu 03",
-  },
-  {
-    key: 8,
-    kasaAdi: "MDDS",
-  },
-  {
-    key: 9,
-    kasaAdi: "MDTA",
-  },
-  {
-    key: 10,
-    kasaAdi: "PS",
-  },
-  {
-    key: 11,
-    kasaAdi: "PTA",
-  },
-  {
-    key: 12,
-    kasaAdi: "TA",
-  },
-];
-
-const columns = [
-  {
-    title: "Kasa Adı",
-    dataIndex: "kasaAdi",
-    key: "kasaAdi",
-  },
-];
+import ambalajlarHttp from "services/ambalajlar.http";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
@@ -73,7 +16,19 @@ const onChange = (pagination, filters, sorter, extra) => {
 
 function Ambalajlar() {
   const [selectedRows, setSelectedRows] = useState([]);
-  const { showModal } = useUIContext();
+  const { showModal, showNotification } = useUIContext();
+  const { ambalajlar, setAmbalajlar } = useDBContext();
+
+  const columns = useMemo(
+    () => [
+      {
+        title: "Kasa Adı",
+        dataIndex: "kasaAdi",
+        key: "kasaAdi",
+      },
+    ],
+    [],
+  );
 
   const rowSelection = {
     onChange: (_selectedRowKeys, _selectedRows) => {
@@ -82,29 +37,54 @@ function Ambalajlar() {
     },
   };
 
-  const deleteRecordHandler = () => {
+  const deleteSelectedRowsHandler = () => {
     Modal.confirm({
       title: "Emin misiniz?",
       content:
         "Seçili kayıtları silmek üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?",
       okText: "Tamam",
       cancelText: "İptal",
-      onOk() {
-        console.log("Evet, eminim");
+      async onOk() {
+        try {
+          const newAmbalajlar = await ambalajlarHttp.deleteData(ambalajlar, selectedRows);
+          setAmbalajlar(newAmbalajlar);
+          showNotification("success", "Seçili ambalajlar silindi");
+        } catch (error) {
+          showNotification("error", "Hata oluştu", error.message);
+        }
       },
       onCancel() {
         console.log("Hayır, vazgeçtim");
       },
     });
   };
+
+  const deleteSingleRecordHandler = (record) => {
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content: `${record.kasaAdi} isimli müşteriyi üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
+      okText: "Tamam",
+      cancelText: "İptal",
+      async onOk() {
+        try {
+          const newMusteriler = await ambalajlarHttp.deleteData(ambalajlar, [record]);
+          setAmbalajlar(newMusteriler);
+          showNotification("success", `${record.kasaAdi} ambalajı silindi`);
+        } catch (error) {
+          showNotification("error", "Hata oluştu", error.message);
+        }
+      },
+    });
+  };
   return (
     <TableGod
-      dataSource={ambalajData}
+      dataSource={ambalajlar}
       columns={columns}
       onChange={onChange}
       rowSelection={rowSelection}
       contextMenu={{
         editForm: AmbalajForm,
+        deleteAction: deleteSingleRecordHandler,
       }}
       actionButtons={
         <>
@@ -113,7 +93,7 @@ function Ambalajlar() {
               style={{ marginRight: "4px" }}
               danger
               icon={<MdOutlineDelete />}
-              onClick={deleteRecordHandler}
+              onClick={deleteSelectedRowsHandler}
             >
               Sil ({selectedRows.length})
             </Button>

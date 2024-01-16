@@ -1,9 +1,10 @@
 import { Button, Divider, Form, Input, Radio, Select } from "antd";
-import { ambalajData } from "components/pages/Ambalajlar";
-import { useState } from "react";
+import { useDBContext } from "context/DBProvider";
 import { getCurrentDateTime } from "utils/time.helper";
 
 export default function MalzemeDuzenlemeForm({ record }) {
+  const { ambalajlar } = useDBContext();
+
   const onFinish = (values) => {
     console.log("Success:", values);
   };
@@ -185,7 +186,7 @@ export default function MalzemeDuzenlemeForm({ record }) {
           style={{ flex: 1 }} // margin: 0 ile iç içe Form.Item'larda boşluk sorununu düzeltir
         >
           <Select>
-            {ambalajData.map((ambalaj, i) => (
+            {ambalajlar.map((ambalaj, i) => (
               <Select.Option key={i} value={ambalaj.kasaAdi}>
                 {ambalaj.kasaAdi}
               </Select.Option>
@@ -209,7 +210,7 @@ export default function MalzemeDuzenlemeForm({ record }) {
           style={{ flex: 1 }}
         >
           <Select>
-            {ambalajData.map((ambalaj, i) => (
+            {ambalajlar.map((ambalaj, i) => (
               <Select.Option key={i} value={ambalaj.kasaAdi}>
                 {ambalaj.kasaAdi}
               </Select.Option>

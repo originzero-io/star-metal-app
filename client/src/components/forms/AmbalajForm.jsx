@@ -1,23 +1,34 @@
 import { Button, Divider, Form, Input } from "antd";
+import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
+import ambalajlarHttp from "services/ambalajlar.http";
 
-export default function AmbalajForm({ record }) {
-  const { showModal } = useUIContext();
-  console.log("yeni müşteri recordd: ", record);
+export default function AmbalajForm({ record, type }) {
+  const { showModal, showNotification } = useUIContext();
+  const { ambalajlar, setAmbalajlar } = useDBContext();
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
-    showModal(false);
+  const onFinish = async (values) => {
+    if (type === "update") {
+      const updatedMusteri = await ambalajlarHttp.updateData(ambalajlar, {
+        id: record.id,
+        ...values,
+      });
+      setAmbalajlar(updatedMusteri);
+      showModal(false);
+      showNotification("success", "Kayıt güncellendi");
+    } else {
+      await ambalajlarHttp.addData(values);
+      setAmbalajlar([...ambalajlar, { key: values.kasaAdi, ...values }]);
+      showNotification("success", "Kayıt eklendi");
+    }
   };
+
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
   return (
     <Form
       name="basic"
-      // labelCol={{
-      //   span: 6,
-      // }}
       labelCol={{ flex: "130px" }}
       labelAlign="left"
       key={record ? record.key : "form"}

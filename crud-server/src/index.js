@@ -10,7 +10,6 @@ import apiErrorHandler from "./api/errorHandler.js";
 
 const app = express();
 const PORT = 6333;
-const dbHost = process.env.DB_HOST;
 
 app.use(logger("dev"));
 app.use(cors());

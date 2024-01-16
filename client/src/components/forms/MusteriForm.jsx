@@ -17,7 +17,6 @@ export default function MusteriForm({ record, type }) {
       showModal(false);
       showNotification("success", "Kayıt güncellendi");
     } else {
-      console.log("e burdayım o zaman");
       await musterilerHttp.addData(values);
       setMusteriler([...musteriler, { key: values.musteriAdi1, ...values }]);
       showNotification("success", "Kayıt eklendi");

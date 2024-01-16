@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FormOutlined, CreditCardOutlined } from "@ant-design/icons";
 import { getCurrentDateTime } from "utils/time.helper";
-import { ambalajData } from "components/pages/Ambalajlar";
 import { useUIContext } from "context/UIProvider";
 import SevkiyatKarti from "./SevkiyatKarti";
+import { useDBContext } from "context/DBProvider";
 
 const SectionBase = styled.div`
   border: 1px solid #d0d0d0;
@@ -64,7 +64,7 @@ const BottomContent = styled.div`
 `;
 
 export default function UretimGirisi({ record }) {
-  console.log(record);
+  const { ambalajlar } = useDBContext();
 
   const [malzemeTipi, setMalzemeTipi] = useState("Talep No'lu");
   const [printTrigger, setPrintTrigger] = useState(false);
@@ -190,7 +190,7 @@ export default function UretimGirisi({ record }) {
                 ]}
               >
                 <Select>
-                  {ambalajData.map((ambalaj, i) => (
+                  {ambalajlar.map((ambalaj, i) => (
                     <Select.Option key={i} value={ambalaj.kasaAdi}>
                       {ambalaj.kasaAdi}
                     </Select.Option>
@@ -208,7 +208,7 @@ export default function UretimGirisi({ record }) {
                 ]}
               >
                 <Select>
-                  {ambalajData.map((ambalaj, i) => (
+                  {ambalajlar.map((ambalaj, i) => (
                     <Select.Option key={i} value={ambalaj.kasaAdi}>
                       {ambalaj.kasaAdi}
                     </Select.Option>
