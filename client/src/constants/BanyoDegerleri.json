@@ -1,0 +1,126 @@
+{
+  "KA01": {
+    "banyoSicakligi": 33,
+    "parameters": {
+      "Temizleme Noktası": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1600
+  },
+  "KA03": {
+    "banyoSicakligi": 87.7,
+    "parameters": {
+      "Temizleme Noktası": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1600
+  },
+  "KA06": {
+    "banyoSicakligi": 87.7,
+    "parameters": {
+      "Temizleme Noktası": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1000
+  },
+  "KA09": {
+    "banyoSicakligi": 43.7,
+    "parameters": {
+      "Toplam Asit": 0,
+      "Serbest Asit": 0,
+      "Demir Noktası": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1200
+  },
+  "KA10": {
+    "banyoSicakligi": 72.5,
+    "parameters": {
+      "Toplam Asit": 0,
+      "Serbest Asit": 0,
+      "Demir Noktası": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1200
+  },
+  "KA11": {
+    "banyoSicakligi": 72.5,
+    "parameters": {
+      "Toplam Asit": 0,
+      "Serbest Asit": 0,
+      "Demir Noktası": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1200
+  },
+  "KA14": {
+    "banyoSicakligi": 39.9,
+    "parameters": {
+      "Toplam Asit": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1600
+  },
+  "KB01": {
+    "banyoSicakligi": 33,
+    "parameters": {
+      "Temizleme Noktası": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1600
+  },
+  "KB03": {
+    "banyoSicakligi": 11.3,
+    "parameters": {
+      "Temizleme Noktası": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 2100
+  },
+  "KB06": {
+    "banyoSicakligi": 87.7,
+    "parameters": {
+      "Temizleme Noktası": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1000
+  },
+  "KB09": {
+    "banyoSicakligi": 20.4,
+    "parameters": {
+      "Ni Konsantrasyonu": 0,
+      "C Konsantrasyonu": 0,
+      "pH": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1000
+  },
+  "KB10": {
+    "banyoSicakligi": 20.4,
+    "parameters": {
+      "Ni Konsantrasyonu": 0,
+      "C Konsantrasyonu": 0,
+      "pH": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1000
+  },
+  "KB12": {
+    "banyoSicakligi": 72.5,
+    "parameters": {
+      "Toplam Asit": 0,
+      "Serbest Asit": 0,
+      "Demir Noktası": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1200
+  },
+  "KB14": {
+    "banyoSicakligi": 39.9,
+    "parameters": {
+      "Toplam Asit": 0
+    },
+    "yuzeyAlani": 0,
+    "banyoOmru": 1600
+  }
+}
