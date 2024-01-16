@@ -4,6 +4,7 @@ import axios from "axios";
 import referanslarHttp from "services/referanslar.http";
 import musterilerHttp from "services/musteriler.http";
 import ambalajlarHttp from "services/ambalajlar.http";
+import { useUIContext } from "./UIProvider";
 
 const DBContext = createContext();
 
@@ -18,38 +19,41 @@ export const DBProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(false);
 
+  const { showNotification } = useUIContext();
+
   const fetchReferanslar = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const referansData = await referanslarHttp.getData();
       setReferanslar(referansData);
       setLoading(false);
     } catch (error) {
-      console.log("error: ", error);
+      showNotification("error", "Referans verisi alınamadı", error.message);
     }
   };
 
   const fetchMusteriler = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const musteriData = await musterilerHttp.getData();
       setMusteriler(musteriData);
       setLoading(false);
     } catch (error) {
-      console.log("error: ", error);
+      showNotification("error", "Müşteri verisi alınamadı", error.message);
     }
   };
 
   const fetchAmbalajlar = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const ambalajData = await ambalajlarHttp.getData();
       setAmbalajlar(ambalajData);
       setLoading(false);
     } catch (error) {
-      console.log("error: ", error);
+      showNotification("error", "Ambalaj verisi alınamadı", error.message);
     }
   };
+
   useEffect(() => {
     fetchReferanslar();
     fetchMusteriler();
