@@ -1,13 +1,13 @@
 import { Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import YeniReferansForm from "components/forms/YeniReferansForm";
+import ReferansForm from "components/forms/ReferansForm";
 import { useUIContext } from "context/UIProvider";
 import { MdOutlineDelete } from "react-icons/md";
 import { createTableFilterFromData } from "utils/table.helper";
-import TableGod from "../shared/TableGod";
 import { useDBContext } from "context/DBProvider";
 import referanslarHttp from "services/referanslar.http";
+import TableGod from "../shared/TableGod";
 
 // const referansData = [];
 
@@ -133,7 +133,7 @@ function Referanslar() {
       onChange={onChange}
       rowSelection={rowSelection}
       contextMenu={{
-        editForm: YeniReferansForm,
+        editForm: ReferansForm,
         deleteAction: deleteSingleRecordHandler,
       }}
       actionButtons={
@@ -152,7 +152,7 @@ function Referanslar() {
             style={{ marginRight: "4px" }}
             type="primary"
             icon={<IoIosAddCircleOutline />}
-            onClick={() => showModal({ title: "Yeni Referans", content: <YeniReferansForm /> })}
+            onClick={() => showModal({ title: "Yeni Referans", content: <ReferansForm /> })}
           >
             Yeni Referans
           </Button>

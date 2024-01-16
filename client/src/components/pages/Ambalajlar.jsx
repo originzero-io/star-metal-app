@@ -5,7 +5,7 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import { useUIContext } from "context/UIProvider";
 import { MdOutlineDelete } from "react-icons/md";
 
-import YeniAmbalajForm from "components/forms/YeniAmbalajForm";
+import AmbalajForm from "components/forms/AmbalajForm";
 import TableGod from "../shared/TableGod";
 
 export const ambalajData = [
@@ -104,7 +104,7 @@ function Ambalajlar() {
       onChange={onChange}
       rowSelection={rowSelection}
       contextMenu={{
-        editForm: YeniAmbalajForm,
+        editForm: AmbalajForm,
       }}
       actionButtons={
         <>
@@ -122,7 +122,7 @@ function Ambalajlar() {
             style={{ marginRight: "4px" }}
             type="primary"
             icon={<IoIosAddCircleOutline />}
-            onClick={() => showModal({ title: "Yeni Ambalaj", content: <YeniAmbalajForm /> })}
+            onClick={() => showModal({ title: "Yeni Ambalaj", content: <AmbalajForm /> })}
           >
             Yeni Ambalaj
           </Button>

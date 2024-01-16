@@ -1,7 +1,7 @@
 import { Button, Divider, Form, Input } from "antd";
 import { useUIContext } from "context/UIProvider";
 
-export default function YeniMusteriForm({ record }) {
+export default function MusteriForm({ record }) {
   const { showModal } = useUIContext();
   console.log("yeni müşteri recordd: ", record);
 
@@ -128,7 +128,7 @@ export default function YeniMusteriForm({ record }) {
 // import { Button, Divider, Form, Input } from "antd";
 // import { useUIContext } from "context/UIProvider";
 
-// export default function YeniMusteriForm() {
+// export default function MusteriForm() {
 //   const { showModal } = useUIContext();
 
 //   const onFinish = (values) => {

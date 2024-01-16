@@ -2,7 +2,7 @@ import { Button, Modal } from "antd";
 import { useState } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 
-import YeniMusteriForm from "components/forms/YeniMusteriForm";
+import MusteriForm from "components/forms/MusteriForm";
 import { useUIContext } from "context/UIProvider";
 import { MdOutlineDelete } from "react-icons/md";
 import { createTableFilterFromData } from "utils/table.helper";
@@ -124,7 +124,7 @@ function Musteriler() {
       onChange={onChange}
       rowSelection={rowSelection}
       contextMenu={{
-        editForm: YeniMusteriForm,
+        editForm: MusteriForm,
       }}
       actionButtons={
         <>
@@ -142,7 +142,7 @@ function Musteriler() {
             style={{ marginRight: "4px" }}
             type="primary"
             icon={<IoIosAddCircleOutline />}
-            onClick={() => showModal({ title: "Yeni Müşteri", content: <YeniMusteriForm /> })}
+            onClick={() => showModal({ title: "Yeni Müşteri", content: <MusteriForm /> })}
           >
             Yeni Müşteri
           </Button>

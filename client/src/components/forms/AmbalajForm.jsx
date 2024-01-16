@@ -1,7 +1,7 @@
 import { Button, Divider, Form, Input } from "antd";
 import { useUIContext } from "context/UIProvider";
 
-export default function YeniAmbalajForm({ record }) {
+export default function AmbalajForm({ record }) {
   const { showModal } = useUIContext();
   console.log("yeni müşteri recordd: ", record);
 

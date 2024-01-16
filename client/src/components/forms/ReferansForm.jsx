@@ -5,7 +5,7 @@ import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
 import referanslarHttp from "services/referanslar.http";
 
-export default function YeniReferansForm({ record, type }) {
+export default function ReferansForm({ record, type }) {
   const [referenceTypes, setReferenceTypes] = useState([
     "Fosfat",
     "Nikel",

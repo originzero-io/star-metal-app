@@ -6,8 +6,8 @@ import MalzemeDuzenlemeForm from "components/forms/MalzemeDuzenlemeForm";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
 import { createTableFilterFromData } from "utils/table.helper";
-import TableGod from "../shared/TableGod";
 import UretimGirisi from "components/cards/UretimGirisi";
+import TableGod from "../shared/TableGod";
 
 const data = [];
 for (let i = 0; i < 100; i++) {
