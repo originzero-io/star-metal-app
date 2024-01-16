@@ -1,13 +1,27 @@
 import { Button, Divider, Form, Input } from "antd";
+import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
+import musterilerHttp from "services/musteriler.http";
 
-export default function MusteriForm({ record }) {
-  const { showModal } = useUIContext();
-  console.log("yeni müşteri recordd: ", record);
+export default function MusteriForm({ record, type }) {
+  const { showModal, showNotification } = useUIContext();
+  const { musteriler, setMusteriler } = useDBContext();
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
-    showModal(false);
+  const onFinish = async (values) => {
+    if (type === "update") {
+      const updatedMusteri = await musterilerHttp.updateData(musteriler, {
+        id: record.id,
+        ...values,
+      });
+      setMusteriler(updatedMusteri);
+      showModal(false);
+      showNotification("success", "Kayıt güncellendi");
+    } else {
+      console.log("e burdayım o zaman");
+      await musterilerHttp.addData(values);
+      setMusteriler([...musteriler, { key: values.musteriAdi1, ...values }]);
+      showNotification("success", "Kayıt eklendi");
+    }
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -15,9 +29,6 @@ export default function MusteriForm({ record }) {
   return (
     <Form
       name="basic"
-      // labelCol={{
-      //   span: 6,
-      // }}
       labelCol={{ flex: "130px" }}
       labelAlign="left"
       key={record ? record.key : "form"}

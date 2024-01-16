@@ -9,26 +9,6 @@ import { useDBContext } from "context/DBProvider";
 import referanslarHttp from "services/referanslar.http";
 import TableGod from "../shared/TableGod";
 
-// const referansData = [];
-
-// for (let i = 0; i < 4; i++) {
-//   referansData.push({
-//     key: i,
-//     referansNo: `${i}1000256K`,
-//     siparisNo: `270 71 0${i}`,
-//     islemAciklama: "Çinko Fosfat",
-//     irsaliyeAciklama: "006.0226 çinko fosfat",
-//     hesaplama: "0.0002",
-//     partiAdedi: 5,
-//     referansYuzeyAlani: 10.9,
-//     firmaAdi01: "Valeo",
-//     birim: "kg",
-//     firmaAdi02: "270 00 02",
-//     islemTipi: "Fosfat",
-//     uretimAdediDegistirme: "Hayır",
-//   });
-// }
-
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
@@ -93,7 +73,7 @@ function Referanslar() {
       cancelText: "İptal",
       async onOk() {
         try {
-          const newReferanslar = await referanslarHttp.deleteReferans(referanslar, selectedRows);
+          const newReferanslar = await referanslarHttp.deleteData(referanslar, selectedRows);
           setReferanslar(newReferanslar);
           showNotification("success", "Seçili referanslar silindi");
         } catch (error) {
@@ -114,16 +94,13 @@ function Referanslar() {
       cancelText: "İptal",
       async onOk() {
         try {
-          const newReferanslar = await referanslarHttp.deleteReferans(referanslar, [record]);
+          const newReferanslar = await referanslarHttp.deleteData(referanslar, [record]);
           setReferanslar(newReferanslar);
           showNotification("success", `${record.referansNo} referansı silindi`);
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
       },
-      // onCancel() {
-      //   console.log("Hayır, vazgeçtim");
-      // },
     });
   };
   return (

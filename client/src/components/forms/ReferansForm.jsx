@@ -19,7 +19,7 @@ export default function ReferansForm({ record, type }) {
 
   const onFinish = async (values) => {
     if (type === "update") {
-      const updatedReferanslar = await referanslarHttp.updateReferans(referanslar, {
+      const updatedReferanslar = await referanslarHttp.updateData(referanslar, {
         id: record.id,
         ...values,
       });
@@ -27,7 +27,7 @@ export default function ReferansForm({ record, type }) {
       showModal(false);
       showNotification("success", "Kayıt güncellendi");
     } else {
-      await referanslarHttp.addReferans(values);
+      await referanslarHttp.addData(values);
       setReferanslar([...referanslar, { key: values.referansNo, ...values }]);
       showNotification("success", "Kayıt eklendi");
     }
