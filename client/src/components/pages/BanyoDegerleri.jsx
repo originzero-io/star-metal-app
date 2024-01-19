@@ -233,29 +233,11 @@ function BanyoIcerik({ name }) {
           <MiddleSection>
             {content.parameters &&
               Object.entries(content.parameters).map((parameterEntry) => (
-                <ValuesItem>
+                <ValuesItem key={parameterEntry[1]}>
                   <ValuesItemHeader>{parameterEntry[0]}</ValuesItemHeader>
                   <ValuesItemContent>{parameterEntry[1]}</ValuesItemContent>
                 </ValuesItem>
               ))}
-            {/* {values.parameters.map((parameter) => (
-              <ValuesItem>
-                <ValuesItemHeader>{Object.keys(parameter)}</ValuesItemHeader>
-                <ValuesItemContent>{}</ValuesItemContent>
-              </ValuesItem>
-            ))} */}
-            {/* <ValuesItem>
-              <ValuesItemHeader>Temizleme Noktası</ValuesItemHeader>
-              <ValuesItemContent>0</ValuesItemContent>
-            </ValuesItem>
-            <ValuesItem>
-              <ValuesItemHeader>Serbest Asit</ValuesItemHeader>
-              <ValuesItemContent>0</ValuesItemContent>
-            </ValuesItem>
-            <ValuesItem>
-              <ValuesItemHeader>Demir Noktası</ValuesItemHeader>
-              <ValuesItemContent>0</ValuesItemContent>
-            </ValuesItem> */}
           </MiddleSection>
           <BottomSection>
             <div>
@@ -282,30 +264,7 @@ function BanyoIcerik({ name }) {
               </Tag>
             </div>
           </BottomSection>
-          {/* <ButtonSection>
-            <Row gutter={4}>
-              <Col span={6}>
-                <CustomButton icon={<SaveOutlined style={{ fontSize: "2.5vmin" }} />}>
-                  Ölçüm Değerlerini Kaydet
-                </CustomButton>
-              </Col>
-              <Col span={6}>
-                <CustomButton icon={<FormOutlined style={{ fontSize: "2.5vmin" }} />}>
-                  Yeni Kuruluş
-                </CustomButton>
-              </Col>
-              <Col span={6}>
-                <CustomButton icon={<LineChartOutlined style={{ fontSize: "2.5vmin" }} />}>
-                  En Son Ölçülen Değerler
-                </CustomButton>
-              </Col>
-              <Col span={6}>
-                <CustomButton icon={<QuestionCircleOutlined style={{ fontSize: "2.5vmin" }} />}>
-                  Yardım
-                </CustomButton>
-              </Col>
-            </Row>
-          </ButtonSection> */}
+
           <ButtonSection>
             <Row gutter={4}>
               <Col span={6}>

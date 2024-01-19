@@ -1,4 +1,4 @@
-import NewGelen from "components/pages/GelenMalzemeKayit";
+import { useState } from "react";
 import { useUIContext } from "context/UIProvider";
 import { FaTemperatureLow, FaWpforms } from "react-icons/fa";
 import { FaDropbox } from "react-icons/fa6";
@@ -7,12 +7,11 @@ import { GoDatabase } from "react-icons/go";
 import { GrHostMaintenance } from "react-icons/gr";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 import { RiCustomerServiceLine } from "react-icons/ri";
-import { TbRulerMeasure, TbReportAnalytics } from "react-icons/tb";
+import { TbRulerMeasure } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import CompanyLogo from "../shared/CompanyLogo";
 import UserCard from "./UserCard";
-import { useState } from "react";
 
 const ContainerStyled = styled.div`
   height: 100%;
@@ -163,7 +162,7 @@ const pages = {
 };
 
 function NavigationMenu() {
-  const { showModal, setPageHeader } = useUIContext();
+  const { setPageHeader } = useUIContext();
   const [selectedPage, setSelectedPage] = useState(null);
 
   return (
@@ -179,12 +178,7 @@ function NavigationMenu() {
               </MenuListGroupHeaderStyled>
               <MenuListGroupContentStyled>
                 {pages[category.key].map((content, i) => (
-                  <LinkStyled
-                    key={i}
-                    // to={content.title !== "Gelen Malzeme Kaydı" ? content.link : null}
-                    to={content.link}
-                    onClick={() => setSelectedPage(content)}
-                  >
+                  <LinkStyled key={i} to={content.link} onClick={() => setSelectedPage(content)}>
                     <MenuListGroupItemStyled
                       selected={selectedPage === content}
                       onClick={() =>
@@ -193,20 +187,6 @@ function NavigationMenu() {
                           icon: content.icon,
                         })
                       }
-                      // onClick={
-                      //   content.title === "Gelen Malzeme Kaydı"
-                      //     ? () =>
-                      //         showModal({
-                      //           title: "Gelen Malzeme Kaydı",
-                      //           content: <NewGelen />,
-                      //           width: 1200,
-                      //         })
-                      //     : () =>
-                      //         setPageHeader({
-                      //           title: content.title,
-                      //           icon: content.icon,
-                      //         })
-                      // }
                     >
                       <MenuListGroupIcon>{content.icon}</MenuListGroupIcon>
                       <MenuListGroupItemTitle>{content.title}</MenuListGroupItemTitle>
@@ -220,11 +200,6 @@ function NavigationMenu() {
       </div>
       <UserCard />
     </ContainerStyled>
-    // <MenuListGroupItemStyled
-    //             onClick={() =>
-    //               showModal({ title: "Gelen Malzeme Kaydı", content: <NewGelen />, width: 1200 })
-    //             }
-    //           >
   );
 }
 

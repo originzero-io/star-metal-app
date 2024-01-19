@@ -19,7 +19,8 @@ app.use(express.json());
 
 app.use("/", router);
 
-app.use(apiErrorHandler);
+app.use("/uploads/ambalajlar", express.static("api/uploads/ambalajlar"));
+// app.use(apiErrorHandler);
 
 db.sync().then(() => {
   app.listen(PORT, () => {

@@ -15,7 +15,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             borderColor: "#d0d0d0",
             cellFontSizeSM: 12,
             headerColor: "rgba(0, 0, 0, 0.8)",
-            //cellFontSizeSM: 13,
             colorBgContainer: "rgba(255, 255, 255, 0.6)",
             filterDropdownBg: "#fefefe",
             boxShadow: "11 12px 50px rgba(255, 0, 0, 1)",
@@ -25,6 +24,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           },
           Input: {
             colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
+          },
+          Checkbox: {
+            colorPrimary: "rgb(167, 14, 14)",
+            colorPrimaryHover: "rgb(195, 18, 18)",
           },
           Select: {
             colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
