@@ -64,9 +64,13 @@ const BottomContent = styled.div`
 `;
 
 export default function UretimGirisi({ record }) {
-  const { ambalajlar } = useDBContext();
+  const { ambalajlar, referanslar } = useDBContext();
 
-  const [malzemeTipi, setMalzemeTipi] = useState("Talep No'lu");
+  const [malzemeTipi, setMalzemeTipi] = useState(record.malzemeTipi);
+  const [miktarSapmasi, setMiktarSapmasi] = useState(
+    referanslar.filter((referans) => referans.referansNo === record.referansNo)[0].miktarSapmasi,
+  );
+
   const [printTrigger, setPrintTrigger] = useState(false);
 
   const onFinish = (values) => {
@@ -76,9 +80,6 @@ export default function UretimGirisi({ record }) {
   const malzemeTipiHandler = (e) => {
     console.log("radio checked", e.target.value);
     setMalzemeTipi(e.target.value);
-  };
-  const partiAdediHandler = (value) => {
-    console.log("changed", value);
   };
   return (
     <Container>
@@ -102,24 +103,14 @@ export default function UretimGirisi({ record }) {
         </MeasureItem>
         <MeasureItem>
           <MeasureItemHeader>Adet</MeasureItemHeader>
-          <MeasureItemContent>0</MeasureItemContent>
+          <MeasureItemContent>550</MeasureItemContent>
         </MeasureItem>
       </MeasureSection>
       <MiddleSection>
-        <Radio.Group onChange={malzemeTipiHandler} value={malzemeTipi}>
+        <Radio.Group onChange={malzemeTipiHandler} value={malzemeTipi} disabled>
           <Radio value="Sipariş No'lu">Sipariş No'lu</Radio>
           <Radio value="Talep No'lu">Talep No'lu</Radio>
         </Radio.Group>
-        <div style={{ width: "20%" }}>
-          <span style={{ marginRight: "10px" }}>Parti Adedi: </span>
-          <Input
-            style={{ width: "50%" }}
-            min={0}
-            type="number"
-            placeholder="Adet"
-            onChange={partiAdediHandler}
-          />
-        </div>
       </MiddleSection>
       <FormSection>
         <Form
@@ -160,7 +151,12 @@ export default function UretimGirisi({ record }) {
                   },
                 ]}
               >
-                <Input type="number" min={0} />
+                <Input
+                  defaultValue={550}
+                  type="number"
+                  min={550 - miktarSapmasi}
+                  max={550 + miktarSapmasi}
+                />
               </Form.Item>
               <Form.Item
                 label="Personel"

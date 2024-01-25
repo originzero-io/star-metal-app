@@ -93,7 +93,7 @@ export default function GelenMalzemeKayit() {
   };
 
   const selectReferenceHandle = (value, name) => {
-    const selectedReference = referansData.filter((referans) => referans.referansNo === value)[0];
+    const selectedReference = referanslar.filter((referans) => referans.referansNo === value)[0];
 
     form.setFieldsValue({
       malzemeler: {
@@ -119,6 +119,28 @@ export default function GelenMalzemeKayit() {
             ...form.getFieldValue(["malzemeler", name]),
             islemAciklama: "",
             siparisNo: "",
+          },
+        },
+      });
+    } else if (value === "Talep No'lu") {
+      // sonradan Talep No'lu olarak seçilirse mevcut değerler boşaltılsın diye
+      form.setFieldsValue({
+        malzemeler: {
+          ...form.getFieldValue("malzemeler"),
+          [name]: {
+            ...form.getFieldValue(["malzemeler", name]),
+            siparisNo: "",
+          },
+        },
+      });
+    } else if (value === "Sipariş No'lu") {
+      // sonradan Sipariş No'lu olarak seçilirse mevcut değerler boşaltılsın diye
+      form.setFieldsValue({
+        malzemeler: {
+          ...form.getFieldValue("malzemeler"),
+          [name]: {
+            ...form.getFieldValue(["malzemeler", name]),
+            talepNo: "",
           },
         },
       });
@@ -202,7 +224,7 @@ export default function GelenMalzemeKayit() {
                     rules={rules}
                     style={{ width: "140px" }}
                   >
-                    {selectedIrsaliyeTipi[name] === "İade" ? (
+                    {selectedIrsaliyeTipi[name] !== "Sipariş No'lu" ? (
                       <Input placeholder="Referans No" />
                     ) : (
                       <Select
@@ -220,9 +242,13 @@ export default function GelenMalzemeKayit() {
                     )}
                   </Form.Item>
 
-                  <Form.Item {...restField} name={[name, "islemAciklama"]} rules={rules}>
+                  <Form.Item
+                    {...restField}
+                    name={[name, "islemAciklama"]}
+                    rules={selectedIrsaliyeTipi[name] === "İade" ? rules : null}
+                  >
                     <Input
-                      disabled={selectedIrsaliyeTipi[name] !== "İade"}
+                      disabled={selectedIrsaliyeTipi[name] === "Sipariş No'lu"}
                       placeholder="Açıklama"
                     />
                   </Form.Item>
@@ -232,7 +258,7 @@ export default function GelenMalzemeKayit() {
                     name={[name, "siparisNo"]}
                     rules={[
                       {
-                        required: selectedIrsaliyeTipi[name] !== "İade",
+                        required: selectedIrsaliyeTipi[name] === "Sipariş No'lu",
                         message: "Bu alan zorunlu",
                       },
                     ]}
@@ -243,8 +269,15 @@ export default function GelenMalzemeKayit() {
                     />
                   </Form.Item>
 
-                  <Form.Item {...restField} name={[name, "talepNo"]} rules={rules}>
-                    <Input placeholder="Talep No" />
+                  <Form.Item
+                    {...restField}
+                    name={[name, "talepNo"]}
+                    rules={selectedIrsaliyeTipi[name] === "Talep No'lu" ? rules : null}
+                  >
+                    <Input
+                      disabled={selectedIrsaliyeTipi[name] !== "Talep No'lu"}
+                      placeholder="Talep No"
+                    />
                   </Form.Item>
 
                   <Form.Item

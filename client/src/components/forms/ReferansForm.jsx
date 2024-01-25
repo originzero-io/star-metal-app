@@ -68,8 +68,8 @@ export default function ReferansForm({ record, type }) {
         <Input.TextArea />
       </Form.Item>
       <Form.Item
-        label="Parti Adedi"
-        name="partiAdedi"
+        label="Lot Adedi"
+        name="lotAdedi"
         rules={[
           {
             required: true,
@@ -78,6 +78,18 @@ export default function ReferansForm({ record, type }) {
         ]}
       >
         <Input />
+      </Form.Item>
+      <Form.Item
+        label="Miktar Sapması"
+        name="miktarSapmasi"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Input type="number" />
       </Form.Item>
       <Form.Item label="Referans Yüzey Alanı" name="referansYuzeyAlani">
         <Input type="number" />

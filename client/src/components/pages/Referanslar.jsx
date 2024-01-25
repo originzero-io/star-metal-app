@@ -37,6 +37,30 @@ function Referanslar() {
         filterSearch: true,
       },
       {
+        title: "Firma Adı",
+        dataIndex: "firmaAdi01",
+        key: "firmaAdi01",
+        filters: createTableFilterFromData(referanslar, "firmaAdi01"),
+        onFilter: (value, record) => record.firmaAdi01.indexOf(value) === 0,
+        filterSearch: true,
+      },
+      {
+        title: "Lot Adedi",
+        dataIndex: "lotAdedi",
+        key: "lotAdedi",
+        filters: createTableFilterFromData(referanslar, "lotAdedi"),
+        onFilter: (value, record) => record.lotAdedi === value,
+        filterSearch: true,
+      },
+      {
+        title: "Miktar Sapması",
+        dataIndex: "miktarSapmasi",
+        key: "miktarSapmasi",
+        filters: createTableFilterFromData(referanslar, "miktarSapmasi"),
+        onFilter: (value, record) => record.miktarSapmasi === value,
+        filterSearch: true,
+      },
+      {
         title: "İşlem Açıklaması",
         dataIndex: "islemAciklama",
         key: "adres1",
@@ -50,9 +74,9 @@ function Referanslar() {
       },
 
       {
-        title: "Hesaplama",
-        dataIndex: "hesaplama",
-        key: "hesaplama",
+        title: "Yüzey Alanı",
+        dataIndex: "referansYuzeyAlani",
+        key: "referansYuzeyAlani",
       },
     ],
     [referanslar],

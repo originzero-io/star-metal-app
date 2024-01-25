@@ -12,7 +12,8 @@ router.post("/", async (req, res) => {
   const {
     referansNo,
     irsaliyeAciklama,
-    partiAdedi,
+    lotAdedi,
+    miktarSapmasi,
     referansYuzeyAlani,
     siparisNo,
     islemAciklama,
@@ -25,7 +26,7 @@ router.post("/", async (req, res) => {
 
   try {
     await db.query(
-      `INSERT INTO Referanslar (referansNo, irsaliyeAciklama, hesaplama, partiAdedi, referansYuzeyAlani, siparisNo, islemAciklama, firmaAdi01, birim, firmaAdi02, islemTipi, uretimAdediDegistirme) VALUES ('${referansNo}','${irsaliyeAciklama}', '0.0002', '${partiAdedi}', '${referansYuzeyAlani}', '${siparisNo}', '${islemAciklama}', '${firmaAdi01}', '${birim}', '${firmaAdi02}', '${islemTipi}', '${uretimAdediDegistirme}'  )`,
+      `INSERT INTO Referanslar (referansNo, irsaliyeAciklama, lotAdedi, miktarSapmasi, referansYuzeyAlani, siparisNo, islemAciklama, firmaAdi01, birim, firmaAdi02, islemTipi, uretimAdediDegistirme) VALUES ('${referansNo}','${irsaliyeAciklama}', '${lotAdedi}', '${miktarSapmasi}', '${referansYuzeyAlani}', '${siparisNo}', '${islemAciklama}', '${firmaAdi01}', '${birim}', '${firmaAdi02}', '${islemTipi}', '${uretimAdediDegistirme}'  )`,
     );
     res.send("Kayıt eklendi.");
   } catch (error) {
@@ -44,8 +45,8 @@ router.put("/", async (req, res) => {
       `UPDATE Referanslar
         SET referansNo = '${referans.referansNo}',
           irsaliyeAciklama= '${referans.irsaliyeAciklama}',
-          hesaplama= '0.0002',
-          partiAdedi= '${referans.partiAdedi}',
+          lotAdedi= '${referans.lotAdedi}',
+          miktarSapmasi= '${referans.miktarSapmasi}',
           referansYuzeyAlani= '${referans.referansYuzeyAlani}',
           siparisNo= '${referans.siparisNo}',
           islemAciklama= '${referans.islemAciklama}',

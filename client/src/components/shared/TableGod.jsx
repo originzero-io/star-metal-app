@@ -99,7 +99,7 @@ export default function TableGod({
           columns={columns}
           size="small"
           onChange={onChange && onChange}
-          bordered
+          // bordered
           pagination={{
             defaultPageSize: 20,
             showSizeChanger: true,

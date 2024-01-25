@@ -10,8 +10,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       theme={{
         components: {
           Table: {
-            rowHoverBg: "#cfd9f0",
-            rowSelectedBg: "#a7bdee",
+            // rowHoverBg: "#cfd9f0",
+            rowHoverBg: "#fbeae8",
+            // rowSelectedBg: "#a7bdee",
+            rowSelectedBg: "#fde7e4",
+            rowSelectedHoverBg: "#f9d2cd",
+            // rowSelectedBg: "#cee8fb",
             borderColor: "#d0d0d0",
             cellFontSizeSM: 12,
             headerColor: "rgba(0, 0, 0, 0.8)",
@@ -24,6 +28,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           },
           Input: {
             colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
+            colorBgContainerDisabled: "rgba(0, 0, 0, 0.01)",
+            colorTextDisabled: "rgba(0, 0, 0)",
+          },
+          Radio: {
+            dotColorDisabled: "#0958d9",
+            colorTextDisabled: "rgba(0, 0, 0, 0.7)",
           },
           Checkbox: {
             colorPrimary: "rgb(167, 14, 14)",
