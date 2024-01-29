@@ -41,8 +41,8 @@ const MenuListGroupStyled = styled.div`
 `;
 const MenuListGroupContentStyled = styled.div``;
 const MenuListGroupHeaderStyled = styled.div`
-  color: black;
-  font-size: 1.6vmin;
+  color: #2f2f2f;
+  font-size: 1.5vmin;
   font-weight: 700;
   padding-left: 8px;
   display: flex;
@@ -59,11 +59,11 @@ const MenuListGroupItemStyled = styled.div`
   cursor: pointer;
   padding: 8px;
   padding-left: 10px;
-  font-weight: 400;
+  font-weight: 600;
 
   display: flex;
   align-items: center;
-  color: black;
+  color: #5a5a5a;
   border-radius: 6px;
   background-color: ${(props) => (props.selected ? "rgba(114, 151, 235, 0.3)" : "")};
   color: ${(props) => (props.selected ? "#4b00ff" : "")};
@@ -76,7 +76,7 @@ const MenuListGroupItemStyled = styled.div`
 `;
 const MenuListGroupItemTitle = styled.div`
   margin-left: 6px;
-  font-size: 1.6vmin;
+  font-size: 1.4vmin;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -85,7 +85,7 @@ const MenuListGroupTitleStyled = styled.div`
   margin-left: 10px;
 `;
 const MenuListGroupIcon = styled.div`
-  font-size: 22px;
+  font-size: 20px;
   display: flex;
 `;
 
@@ -181,7 +181,9 @@ function NavigationMenu() {
           {pages.categories.map((category, i) => (
             <MenuListGroupStyled key={i}>
               <MenuListGroupHeaderStyled>
-                <div>{category.icon}</div>
+                <div style={{ display: "flex", alignItems: "center", fontSize: "1.7vmin" }}>
+                  {category.icon}
+                </div>
                 <MenuListGroupTitleStyled>{category.title}</MenuListGroupTitleStyled>
               </MenuListGroupHeaderStyled>
               <MenuListGroupContentStyled>
