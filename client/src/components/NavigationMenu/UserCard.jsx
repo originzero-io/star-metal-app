@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 const ContainerStyled = styled.div`
@@ -8,7 +7,7 @@ const ContainerStyled = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  // background-color: rgba(255, 255, 255, 0.1);
+
   cursor: pointer;
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
@@ -17,7 +16,7 @@ const ContainerStyled = styled.div`
 const UserNameStyled = styled.div`
   font-weight: 700;
   font-size: 1.8vmin;
-  color: #fefefe;
+  color: black;
 `;
 const UserRoleStyled = styled.div`
   font-size: 1.1vmin;

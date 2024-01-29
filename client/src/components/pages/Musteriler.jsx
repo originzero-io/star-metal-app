@@ -1,12 +1,12 @@
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useMemo, useState } from "react";
-import { IoIosAddCircleOutline } from "react-icons/io";
+
 import MusteriForm from "components/forms/MusteriForm";
-import { useUIContext } from "context/UIProvider";
-import { MdOutlineDelete } from "react-icons/md";
-import { createTableFilterFromData } from "utils/table.helper";
 import { useDBContext } from "context/DBProvider";
+import { useUIContext } from "context/UIProvider";
 import musterilerHttp from "services/musteriler.http";
+import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -143,7 +143,7 @@ function Musteriler() {
             <Button
               style={{ marginRight: "4px" }}
               danger
-              icon={<MdOutlineDelete />}
+              icon={<DeleteOutlined />}
               onClick={deleteSelectedRecordsHandler}
             >
               Sil ({selectedRows.length})
@@ -152,7 +152,7 @@ function Musteriler() {
           <Button
             style={{ marginRight: "4px" }}
             type="primary"
-            icon={<IoIosAddCircleOutline />}
+            icon={<PlusOutlined />}
             onClick={() => showModal({ title: "Yeni Müşteri", content: <MusteriForm /> })}
           >
             Yeni Müşteri

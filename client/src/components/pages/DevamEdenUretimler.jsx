@@ -166,7 +166,7 @@ function DevamEdenUretimler() {
         filterSearch: true,
       },
     ],
-    [],
+    [data],
   );
 
   return (

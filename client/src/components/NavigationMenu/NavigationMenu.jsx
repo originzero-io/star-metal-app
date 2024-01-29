@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { FolderAddTwoTone } from "@ant-design/icons";
 import { useUIContext } from "context/UIProvider";
+import { useState } from "react";
 import { FaTemperatureLow, FaWpforms } from "react-icons/fa";
 import { FaDropbox } from "react-icons/fa6";
-import { FcAddDatabase, FcOk, FcSynchronize, FcPieChart } from "react-icons/fc";
+import { FcOk, FcPieChart, FcSynchronize } from "react-icons/fc";
 import { GoDatabase } from "react-icons/go";
 import { GrHostMaintenance } from "react-icons/gr";
 import { MdOutlineDocumentScanner } from "react-icons/md";
@@ -18,8 +19,12 @@ const ContainerStyled = styled.div`
   width: 13%;
   display: flex;
   flex-direction: column;
-  background: rgb(35, 34, 50);
-  background: linear-gradient(191deg, rgba(35, 34, 50, 1) 50%, #660400 100%);
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   border-top-right-radius: 20px;
   padding-top: 10px;
   justify-content: space-between;
@@ -36,14 +41,17 @@ const MenuListGroupStyled = styled.div`
 `;
 const MenuListGroupContentStyled = styled.div``;
 const MenuListGroupHeaderStyled = styled.div`
-  color: white;
+  color: black;
   font-size: 1.6vmin;
   font-weight: 700;
   padding-left: 8px;
   display: flex;
   align-items: center;
   margin-bottom: 6px;
-  background-color: #2e2d4b;
+
+  box-shadow: 0 2px 4px 0 rgba(106, 113, 210, 0.3);
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
   padding: 6px;
   border-radius: 6px;
 `;
@@ -55,19 +63,20 @@ const MenuListGroupItemStyled = styled.div`
 
   display: flex;
   align-items: center;
-  color: white;
-  border-radius: 8px;
-  background-color: ${(props) => (props.selected ? "#56334d" : "")};
+  color: black;
+  border-radius: 6px;
+  background-color: ${(props) => (props.selected ? "rgba(114, 151, 235, 0.3)" : "")};
+  color: ${(props) => (props.selected ? "#4b00ff" : "")};
+
   &:hover {
-    background-color: #3e3d65;
-    background-color: #2a2945;
-    border-radius: 8px;
+    background: rgb(206, 215, 237);
+    border-radius: 6px;
+    color: #4b00ff;
   }
 `;
 const MenuListGroupItemTitle = styled.div`
   margin-left: 6px;
   font-size: 1.6vmin;
-  color: #d8d6d6;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -78,7 +87,6 @@ const MenuListGroupTitleStyled = styled.div`
 const MenuListGroupIcon = styled.div`
   font-size: 22px;
   display: flex;
-  color: #d8d6d6;
 `;
 
 const LinkStyled = styled(Link)`
@@ -123,7 +131,7 @@ const pages = {
   tanimlamalar: [
     {
       title: "Gelen Malzeme Kaydı",
-      icon: <FcAddDatabase />,
+      icon: <FolderAddTwoTone twoToneColor="#5c0099" />,
       link: "/gelen-malzeme-kayit",
     },
     {

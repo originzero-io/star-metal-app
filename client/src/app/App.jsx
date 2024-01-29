@@ -19,7 +19,8 @@ const AppWrapperStyled = styled.div`
   display: flex;
   background-color: #f1f1f9;
   background: rgb(196, 207, 232);
-  background: linear-gradient(180deg, #d4e0fa 52%, #fce6e5 100%);
+  background: linear-gradient(180deg, #d4e0fa 52%, #dad0f3 100%);
+  // background: linear-gradient(180deg, #d4e0fa 52%, #fce6e5 100%);
 `;
 
 function App() {

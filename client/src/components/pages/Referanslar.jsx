@@ -1,12 +1,11 @@
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
-import { useMemo, useState } from "react";
-import { IoIosAddCircleOutline } from "react-icons/io";
 import ReferansForm from "components/forms/ReferansForm";
-import { useUIContext } from "context/UIProvider";
-import { MdOutlineDelete } from "react-icons/md";
-import { createTableFilterFromData } from "utils/table.helper";
 import { useDBContext } from "context/DBProvider";
+import { useUIContext } from "context/UIProvider";
+import { useMemo, useState } from "react";
 import referanslarHttp from "services/referanslar.http";
+import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -143,7 +142,7 @@ function Referanslar() {
             <Button
               style={{ marginRight: "4px" }}
               danger
-              icon={<MdOutlineDelete />}
+              icon={<DeleteOutlined />}
               onClick={deleteSelectedRecordsHandler}
             >
               Sil ({selectedRows.length})
@@ -152,7 +151,7 @@ function Referanslar() {
           <Button
             style={{ marginRight: "4px" }}
             type="primary"
-            icon={<IoIosAddCircleOutline />}
+            icon={<PlusOutlined />}
             onClick={() => showModal({ title: "Yeni Referans", content: <ReferansForm /> })}
           >
             Yeni Referans

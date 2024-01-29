@@ -6,7 +6,7 @@ export default function PageHeader() {
   return (
     <div
       style={{
-        fontSize: "2.2vmin",
+        fontSize: "1.8vmin",
         fontWeight: "bold",
         display: "flex",
         alignItems: "center",
@@ -14,11 +14,10 @@ export default function PageHeader() {
     >
       <div
         style={{
-          fontSize: "3vmin",
+          fontSize: "2.5vmin",
           fontWeight: "bold",
           marginRight: "10px",
           display: "flex",
-          // background: "red",
         }}
       >
         {pageHeader.icon}

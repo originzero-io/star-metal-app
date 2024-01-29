@@ -1,8 +1,8 @@
 import "../assets/css/main.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { ConfigProvider } from "antd";
 import App from "./App";
-import { ConfigProvider, theme } from "antd";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -10,18 +10,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       theme={{
         components: {
           Table: {
-            // rowHoverBg: "#cfd9f0",
-            rowHoverBg: "#fbeae8",
-            // rowSelectedBg: "#a7bdee",
-            rowSelectedBg: "#fde7e4",
-            rowSelectedHoverBg: "#f9d2cd",
-            // rowSelectedBg: "#cee8fb",
+            rowHoverBg: "#cfd9f0",
+            rowSelectedBg: "#cee8fb",
             borderColor: "#d0d0d0",
             cellFontSizeSM: 12,
             headerColor: "rgba(0, 0, 0, 0.8)",
-            colorBgContainer: "rgba(255, 255, 255, 0.6)",
-            filterDropdownBg: "#fefefe",
-            boxShadow: "11 12px 50px rgba(255, 0, 0, 1)",
+            colorBgContainer: "rgba(255, 255, 255, 0.5)",
+            // filterDropdownBg: "#fefefe",
+            filterDropdownBg: "rgb(222, 227, 237)",
           },
           Form: {
             itemMarginBottom: 6,
@@ -36,11 +32,20 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             colorTextDisabled: "rgba(0, 0, 0, 0.7)",
           },
           Checkbox: {
-            colorPrimary: "rgb(167, 14, 14)",
-            colorPrimaryHover: "rgb(195, 18, 18)",
+            colorPrimary: "rgb(107,67,175)",
+            colorPrimaryHover: "rgb(107,67,175)",
           },
           Select: {
             colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
+          },
+          Button: {
+            colorPrimary: "linear-gradient(72deg, rgba(107,67,175,1) 36%, rgba(225,101,193,1) 87%)",
+            colorPrimaryHover:
+              "linear-gradient(72deg, rgba(107,67,175,1) 36%, rgba(225,101,193,1) 87%)",
+            colorPrimaryActive: "rgba(107,67,175,1)",
+            motionDurationMid: "0s",
+            colorLink: "purple",
+            colorLinkHover: "#e570f7",
           },
         },
       }}

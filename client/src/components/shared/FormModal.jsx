@@ -2,6 +2,7 @@ import { Modal } from "antd";
 import { useUIContext } from "context/UIProvider";
 import { useRef, useState } from "react";
 import Draggable from "react-draggable";
+import { CloseCircleFilled } from "@ant-design/icons";
 
 const FormModal = () => {
   const { modal, showModal } = useUIContext();
@@ -50,12 +51,16 @@ const FormModal = () => {
       title={
         <div
           style={{
-            marginBottom: "20px",
+            marginTop: "-25px",
+            marginLeft: "-2.5%",
+            marginRight: "-2.5%",
+            marginBottom: "25px",
             fontWeight: "bold",
-            background:
-              "linear-gradient(90deg, rgba(35,34,50,1) 26%, #9f0803 72%, rgba(255,255,255,1) 96%)",
-            color: "whitesmoke",
-            borderRadius: "4px",
+            //background: "#7a58b3",
+            background: "#ced4da",
+            // background: "#b3bcc4",
+            color: "#262a2f",
+            borderRadius: "8px 8px 0px 0px",
             padding: "6px",
             paddingLeft: "12px",
             cursor: "move",
@@ -79,6 +84,16 @@ const FormModal = () => {
       centered
       width={1000}
       footer={null}
+      closeIcon={
+        <CloseCircleFilled
+          style={{
+            fontSize: "2.2vmin",
+            color: "#373737",
+            marginRight: "0%",
+            marginTop: "-130%",
+          }}
+        />
+      }
       modalRender={(_modal) => (
         <Draggable
           disabled={disabled}

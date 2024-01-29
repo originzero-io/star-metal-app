@@ -18,7 +18,6 @@ const TableWrapperStyled = styled.div`
   width: 87%;
   padding: 14px;
   overflow: auto;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 `;
 const TableTitleWrapperStyled = styled.div`
   display: flex;

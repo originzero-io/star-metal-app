@@ -14,35 +14,11 @@ const Container = styled.div`
   width: 87%;
   padding: 14px;
   overflow: auto;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 `;
 
 function Ambalajlar() {
-  // const [selectedRows, setSelectedRows] = useState([]);
   const { showModal, showNotification } = useUIContext();
   const { ambalajlar, setAmbalajlar } = useDBContext();
-
-  // const deleteSelectedRowsHandler = () => {
-  //   Modal.confirm({
-  //     title: "Emin misiniz?",
-  //     content:
-  //       "Seçili kayıtları silmek üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?",
-  //     okText: "Tamam",
-  //     cancelText: "İptal",
-  //     async onOk() {
-  //       try {
-  //         const newAmbalajlar = await ambalajlarHttp.deleteData(ambalajlar, selectedRows);
-  //         setAmbalajlar(newAmbalajlar);
-  //         showNotification("success", "Seçili ambalajlar silindi");
-  //       } catch (error) {
-  //         showNotification("error", "Hata oluştu", error.message);
-  //       }
-  //     },
-  //     onCancel() {
-  //       console.log("Hayır, vazgeçtim");
-  //     },
-  //   });
-  // };
 
   const deleteSingleRecordHandler = (record) => {
     Modal.confirm({

@@ -8,27 +8,27 @@ const ContextMenuWrapperStyled = styled.div`
   top: ${({ position }) => `${position.y}px`};
   left: ${({ position }) => `${position.x}px`};
   z-index: 1000;
-  // border: 1px solid #c8c8c8;
-  box-shadow: -5px 8px 15px 0px rgba(0, 0, 0, 0.1);
+  border: 1px solid #d4d4d4;
+  box-shadow: -5px 14px 24px 0px rgba(0, 0, 0, 0.1);
 `;
 
 const MenuStyled = styled.div`
-  background-color: #232232;
-  padding: 8px;
+  background-color: white;
+  padding: 6px;
   font-size: 15px;
   cursor: pointer;
   border-radius: 6px;
 `;
 const MenuItemStyled = styled.div`
-  color: whitesmoke;
+  color: #313131;
   padding: 4px;
   padding-left: 10px;
   padding-right: 10px;
   display: flex;
   align-items: center;
   &:hover {
-    background-color: #515067;
-    border-radius: 6px;
+    background-color: #ebedf3;
+    color: #4b00ff;
   }
 `;
 
