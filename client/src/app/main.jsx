@@ -26,17 +26,24 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
             colorBgContainerDisabled: "rgba(0, 0, 0, 0.01)",
             colorTextDisabled: "rgba(0, 0, 0)",
+            activeBorderColor: "rgb(131, 92, 197)",
+            hoverBorderColor: "rgb(131, 92, 197) ",
           },
           Radio: {
             dotColorDisabled: "#0958d9",
             colorTextDisabled: "rgba(0, 0, 0, 0.7)",
+            colorPrimary: "rgb(107,67,175)",
+            colorPrimaryHover: "rgb(164, 137, 209)",
+            buttonSolidCheckedHoverBg: "rgb(131, 92, 197)",
           },
           Checkbox: {
             colorPrimary: "rgb(107,67,175)",
-            colorPrimaryHover: "rgb(107,67,175)",
+            colorPrimaryHover: "rgb(145, 115, 196)",
           },
           Select: {
             colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
+            colorPrimary: "rgb(131, 92, 197)",
+            colorPrimaryHover: "rgb(131, 92, 197)",
           },
           Button: {
             colorPrimary: "linear-gradient(72deg, rgba(107,67,175,1) 36%, rgba(225,101,193,1) 87%)",
