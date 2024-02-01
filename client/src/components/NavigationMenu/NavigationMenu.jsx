@@ -59,21 +59,41 @@ const MenuListGroupItemStyled = styled.div`
   cursor: pointer;
   padding: 8px;
   padding-left: 10px;
-  font-weight: 600;
+  font-weight: ${(props) => props.selected && 800};
 
   display: flex;
   align-items: center;
   color: #5a5a5a;
-  border-radius: 6px;
-  background-color: ${(props) => (props.selected ? "rgba(114, 151, 235, 0.3)" : "")};
+
+  background-color: ${(props) => (props.selected ? "rgb(206, 215, 237)" : "transparent")};
   color: ${(props) => (props.selected ? "#4b00ff" : "")};
 
+  border-right: ${(props) => (props.selected ? "3px solid #4b00ff" : "")};
   &:hover {
     background: rgb(206, 215, 237);
-    border-radius: 6px;
     color: #4b00ff;
   }
 `;
+
+const RegisterButtonItemStyled = styled.div`
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 22px;
+
+  margin-bottom: 12px;
+  background: linear-gradient(72deg, rgba(107, 67, 175, 1) 36%, rgba(225, 101, 193, 1) 87%);
+  color: white;
+  padding: 10px;
+
+  &:hover {
+    background: linear-gradient(72deg, rgba(107, 67, 175, 1) 36%, rgba(225, 101, 193, 1) 87%);
+    background: linear-gradient(72deg, #5d30aa 36%, rgba(224, 75, 187, 0.9) 87%);
+  }
+`;
+
 const MenuListGroupItemTitle = styled.div`
   margin-left: 6px;
   font-size: 1.4vmin;
@@ -129,11 +149,11 @@ const pages = {
     },
   ],
   tanimlamalar: [
-    {
-      title: "Gelen Malzeme Kaydı",
-      icon: <FolderAddTwoTone twoToneColor="#5c0099" />,
-      link: "/gelen-malzeme-kayit",
-    },
+    // {
+    //   title: "Gelen Malzeme Kaydı",
+    //   icon: <FolderAddTwoTone twoToneColor="#5c0099" />,
+    //   link: "/gelen-malzeme-kayit",
+    // },
     {
       title: "Müşteriler",
       icon: <RiCustomerServiceLine />,
@@ -157,7 +177,7 @@ const pages = {
       link: "/sicakliklar",
     },
     {
-      title: "Banyo Değerleri",
+      title: "Banyolar",
       icon: <TbRulerMeasure />,
       link: "/banyo-degerleri",
     },
@@ -178,6 +198,22 @@ function NavigationMenu() {
       <div>
         <CompanyLogo />
         <MenuListStyled>
+          <LinkStyled to="/gelen-malzeme-kayit">
+            <RegisterButtonItemStyled
+              onClick={() => {
+                setPageHeader({
+                  title: "Gelen Malzeme Kaydı",
+                  icon: <FolderAddTwoTone twoToneColor="#5c0099" />,
+                });
+                setSelectedPage("");
+              }}
+            >
+              <MenuListGroupIcon style={{ fontSize: "2.5vmin" }}>
+                <FolderAddTwoTone twoToneColor="#5c0099" />
+              </MenuListGroupIcon>
+              <MenuListGroupItemTitle>Gelen Malzeme Kaydı</MenuListGroupItemTitle>
+            </RegisterButtonItemStyled>
+          </LinkStyled>
           {pages.categories.map((category, i) => (
             <MenuListGroupStyled key={i}>
               <MenuListGroupHeaderStyled>

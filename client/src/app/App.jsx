@@ -1,5 +1,4 @@
 import NavigationMenu from "components/NavigationMenu/NavigationMenu";
-// import "./App.css";
 import styled from "styled-components";
 import FormModal from "components/shared/FormModal";
 import { UIProvider } from "context/UIProvider";
@@ -11,7 +10,7 @@ import Referanslar from "components/pages/Referanslar";
 import Ambalajlar from "components/pages/Ambalajlar";
 import Sicakliklar from "components/pages/Sicakliklar";
 import GelenMalzemeKayit from "components/pages/GelenMalzemeKayit";
-import BanyoDegerleri from "components/pages/BanyoDegerleri";
+import Banyolar from "components/pages/Banyolar/Banyolar";
 import { DBProvider } from "context/DBProvider";
 
 const AppWrapperStyled = styled.div`
@@ -20,7 +19,6 @@ const AppWrapperStyled = styled.div`
   background-color: #f1f1f9;
   background: rgb(196, 207, 232);
   background: linear-gradient(180deg, #d4e0fa 52%, #dad0f3 100%);
-  // background: linear-gradient(180deg, #d4e0fa 52%, #fce6e5 100%);
 `;
 
 function App() {
@@ -38,7 +36,7 @@ function App() {
               <Route path="/referanslar" element={<Referanslar />} />
               <Route path="/ambalajlar" element={<Ambalajlar />} />
               <Route path="/sicakliklar" element={<Sicakliklar />} />
-              <Route path="/banyo-degerleri" element={<BanyoDegerleri />} />
+              <Route path="/banyo-degerleri" element={<Banyolar />} />
             </Routes>
             <FormModal />
           </Router>

@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         components: {
           Table: {
             rowHoverBg: "#cfd9f0",
-            rowSelectedBg: "#cee8fb",
+            rowSelectedBg: "#b72eb714",
             borderColor: "#d0d0d0",
             cellFontSizeSM: 12,
             headerColor: "rgba(0, 0, 0, 0.8)",
@@ -47,12 +47,17 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           },
           Button: {
             colorPrimary: "linear-gradient(72deg, rgba(107,67,175,1) 36%, rgba(225,101,193,1) 87%)",
-            colorPrimaryHover:
-              "linear-gradient(72deg, rgba(107,67,175,1) 36%, rgba(225,101,193,1) 87%)",
+            colorPrimaryHover: "linear-gradient(72deg, #5d30aa 36%, rgba(224, 75, 187, 0.9) 87%)",
             colorPrimaryActive: "rgba(107,67,175,1)",
             motionDurationMid: "0s",
             colorLink: "purple",
             colorLinkHover: "#e570f7",
+          },
+          Tabs: {
+            inkBarColor: "#4b00ff",
+            itemSelectedColor: "#4b00ff",
+            itemHoverColor: "#793fff",
+            lineWidthBold: 3,
           },
         },
       }}
