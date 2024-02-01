@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { PlusCircleFilled } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Select, Space, Tag } from "antd";
 import { FaMinusCircle } from "react-icons/fa";
-import FormItem from "antd/es/form/FormItem";
 
 const BanyoTanimlamaContainerStyled = styled.div`
   width: 100%;
