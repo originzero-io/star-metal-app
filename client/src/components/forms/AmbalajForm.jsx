@@ -12,6 +12,7 @@ export default function AmbalajForm({ record, type }) {
   const [fileList, setFileList] = useState([]);
 
   const onFileChange = ({ fileList: newFileList }) => {
+    console.log("fileList: ", newFileList);
     setFileList(newFileList);
   };
   const onFinish = async (values) => {

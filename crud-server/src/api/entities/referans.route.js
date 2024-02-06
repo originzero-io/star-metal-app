@@ -1,5 +1,24 @@
 import express from "express";
 import db from "../../dbConnection.js";
+import multer from "multer";
+
+const referansResimMiddleware = multer({
+  limits: {
+    fileSize: 1024 * 1024 * 20,
+  },
+  fileFilter: (req, file, cb) => {
+    cb(undefined, true);
+  },
+  storage: multer.diskStorage({
+    filename: (req, file, cb) => {
+      // 1111-VB.png
+      cb(null, `${req.body.referansNo}.${file.mimetype.split("/")[1]}`);
+    },
+    destination: (req, file, cb) => {
+      cb(null, "api/uploads/referanslar");
+    },
+  }),
+});
 
 const router = express.Router();
 
@@ -8,7 +27,7 @@ router.get("/", async (req, res) => {
   res.send(referanslar);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", referansResimMiddleware.single("photo"), async (req, res) => {
   const {
     referansNo,
     irsaliyeAciklama,
@@ -24,9 +43,11 @@ router.post("/", async (req, res) => {
     uretimAdediDegistirme,
   } = req.body;
 
+  const resimUrl = `${referansNo}.${req.file.mimetype.split("/")[1]}`;
+
   try {
     await db.query(
-      `INSERT INTO Referanslar (referansNo, irsaliyeAciklama, lotAdedi, miktarSapmasi, referansYuzeyAlani, siparisNo, islemAciklama, firmaAdi01, birim, firmaAdi02, islemTipi, uretimAdediDegistirme) VALUES ('${referansNo}','${irsaliyeAciklama}', '${lotAdedi}', '${miktarSapmasi}', '${referansYuzeyAlani}', '${siparisNo}', '${islemAciklama}', '${firmaAdi01}', '${birim}', '${firmaAdi02}', '${islemTipi}', '${uretimAdediDegistirme}'  )`,
+      `INSERT INTO Referanslar (referansNo, irsaliyeAciklama, lotAdedi, miktarSapmasi, referansYuzeyAlani, siparisNo, islemAciklama, firmaAdi01, birim, firmaAdi02, islemTipi, uretimAdediDegistirme, resimUrl) VALUES ('${referansNo}','${irsaliyeAciklama}', '${lotAdedi}', '${miktarSapmasi}', '${referansYuzeyAlani}', '${siparisNo}', '${islemAciklama}', '${firmaAdi01}', '${birim}', '${firmaAdi02}', '${islemTipi}', '${uretimAdediDegistirme}', '${resimUrl}'  )`,
     );
     res.send("Kayıt eklendi.");
   } catch (error) {

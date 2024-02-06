@@ -17,6 +17,12 @@ export default function ReferansForm({ record, type }) {
   const { referanslar, setReferanslar } = useDBContext();
   const { showModal, showNotification } = useUIContext();
 
+  const [fileList, setFileList] = useState([]);
+
+  const onFileChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+
   const onFinish = async (values) => {
     if (type === "update") {
       const updatedReferanslar = await referanslarHttp.updateData(referanslar, {
@@ -25,13 +31,23 @@ export default function ReferansForm({ record, type }) {
       });
       setReferanslar(updatedReferanslar);
       showModal(false);
-      showNotification("success", "Kayıt güncellendi");
+      showNotification("success", "Referans güncellendi");
     } else {
-      await referanslarHttp.addData(values);
+      const formData = new FormData();
+
+      Object.keys(values).forEach((key) => {
+        formData.append(key, values[key]);
+      });
+
+      if (fileList.length > 0) {
+        formData.append("photo", fileList[0].originFileObj);
+      }
+      await referanslarHttp.addData(formData);
       setReferanslar([...referanslar, { key: values.referansNo, ...values }]);
-      showNotification("success", "Kayıt eklendi");
+      showNotification("success", "Referans eklendi");
     }
   };
+
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -132,12 +148,24 @@ export default function ReferansForm({ record, type }) {
       >
         <Input />
       </Form.Item>
-      <Form.Item label="Resim Ekle" name="resim">
+      <Form.Item
+        label="Resim"
+        name="resim"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
         <Upload
-          name="logo"
-          action="/upload.do"
+          name="photo"
           listType="picture"
           accept="image/png, image/jpeg, image/jpg"
+          fileList={fileList}
+          onChange={onFileChange}
+          beforeUpload={() => false}
+          maxCount={1}
         >
           <Button icon={<UploadOutlined />}>Resim seç</Button>
         </Upload>
