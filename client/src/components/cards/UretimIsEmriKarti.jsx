@@ -83,13 +83,11 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
             <BoldTextStyled>{record?.islemAciklama}</BoldTextStyled>
           </ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>
-              <img
-                alt="referansResim"
-                src={`http://localhost:6333/uploads/referanslar/${record?.resimUrl}`}
-                style={{ maxWidth: "100%" }}
-              />
-            </BoldTextStyled>
+            <img
+              alt="referansResim"
+              src={`http://localhost:6333/uploads/referanslar/${record?.resimUrl}`}
+              style={{ maxWidth: "100%" }}
+            />
           </ColStyled>
           <ColStyled span={6}>
             <BoldTextStyled>ÜRETİME VEREN</BoldTextStyled>
