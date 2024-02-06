@@ -90,7 +90,7 @@ export default function UretimGirisi({ record }) {
       </TopSection>
       <MeasureSection>
         <MeasureItem>
-          <MeasureItemHeader>Toplam</MeasureItemHeader>
+          <MeasureItemHeader>Brüt</MeasureItemHeader>
           <MeasureItemContent>0</MeasureItemContent>
         </MeasureItem>
         <MeasureItem>
@@ -119,7 +119,7 @@ export default function UretimGirisi({ record }) {
           labelCol={{ flex: "130px" }}
           labelAlign="left"
           // key={record ? record.key : "form"}
-          initialValues={record || {}}
+          initialValues={{ uretimAdedi: 550 }}
           onFinish={onFinish}
           //   onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -151,12 +151,7 @@ export default function UretimGirisi({ record }) {
                   },
                 ]}
               >
-                <Input
-                  defaultValue={550}
-                  type="number"
-                  min={550 - miktarSapmasi}
-                  max={550 + miktarSapmasi}
-                />
+                <Input type="number" min={550 - miktarSapmasi} max={550 + miktarSapmasi} />
               </Form.Item>
               <Form.Item
                 label="Personel"
@@ -216,7 +211,7 @@ export default function UretimGirisi({ record }) {
 
           <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
             <Button type="primary" icon={<CreditCardOutlined />} htmlType="submit">
-              Sevkiyat Kartı Çıkart
+              Üretim Kartı Çıkart
             </Button>
           </Form.Item>
         </Form>
