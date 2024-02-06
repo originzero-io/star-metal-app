@@ -74,6 +74,7 @@ export default function GelenMalzemeKayit() {
         ["malzemeler", name, "islemAciklama"],
         ["malzemeler", name, "siparisNo"],
         ["malzemeler", name, "adet"],
+        ["malzemeler", name, "resimUrl"],
       ]);
 
       console.log("DATA: ", data);
@@ -102,6 +103,7 @@ export default function GelenMalzemeKayit() {
           ...form.getFieldValue(["malzemeler", name]),
           islemAciklama: selectedReference.islemAciklama,
           siparisNo: selectedReference.siparisNo,
+          resimUrl: selectedReference.resimUrl,
         },
       },
     });

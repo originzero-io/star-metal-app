@@ -66,6 +66,8 @@ function DevamEdenUretimler() {
       birinciAmbalaj: "MDDS",
       ikinciAmbalaj: "PTA",
       description: "Bu kayıtla ilgili not",
+      lotAdedi: referans.lotAdedi,
+      resimUrl: referans.resimUrl,
     }));
     setData(newData);
   }, [referanslar]);

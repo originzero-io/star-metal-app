@@ -8,6 +8,7 @@ import { getCurrentDateTime } from "utils/time.helper";
 const ContainerStyled = styled.div`
   margin-top: 8px;
   padding: 10px;
+  height: 600px;
 `;
 const ColStyled = styled(Col)`
   border: 1px solid black;
@@ -33,7 +34,7 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
   }, [handlePrint, record]);
 
   return (
-    <div>
+    <div style={{ height: "10%" }}>
       <ContainerStyled ref={componentRef}>
         <Row>
           <ColStyled span={6}>
@@ -59,7 +60,7 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
         <Row>
           <ColStyled span={6}>Adet</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.adet}</BoldTextStyled>
+            <BoldTextStyled>{record?.lotAdedi}</BoldTextStyled>
           </ColStyled>
           <ColStyled span={6}>Kayıt Eden</ColStyled>
           <ColStyled span={6}>
@@ -77,9 +78,18 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           </ColStyled>
         </Row>
         <Row style={{ height: "150px" }}>
-          <ColStyled span={18}>
+          <ColStyled span={12}>
             <BoldTextStyled>İŞLEM AÇIKLAMASI</BoldTextStyled>
             <BoldTextStyled>{record?.islemAciklama}</BoldTextStyled>
+          </ColStyled>
+          <ColStyled span={6}>
+            <BoldTextStyled>
+              <img
+                alt="referansResim"
+                src={`http://localhost:6333/uploads/referanslar/${record?.resimUrl}`}
+                style={{ maxWidth: "100%" }}
+              />
+            </BoldTextStyled>
           </ColStyled>
           <ColStyled span={6}>
             <BoldTextStyled>ÜRETİME VEREN</BoldTextStyled>

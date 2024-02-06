@@ -49,7 +49,7 @@ export default function TableGod({
   const contextMenuHandler = (record, event) => {
     event.preventDefault();
     setContextMenuPosition({ x: event.clientX, y: event.clientY });
-    console.log(record);
+    console.log("contextMenu record: ", record);
     setSelectedRecord(record);
   };
 
