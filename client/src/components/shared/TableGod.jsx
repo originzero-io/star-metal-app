@@ -178,7 +178,8 @@ TableGod.propTypes = {
   hasContextMenu: PropTypes.bool,
   actionButtons: PropTypes.node,
   contextMenu: PropTypes.shape({
-    editForm: PropTypes.elementType,
+    editForm: PropTypes.elementType.isRequired,
+    deleteAction: PropTypes.func.isRequired,
     extraItems: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.string.isRequired,
