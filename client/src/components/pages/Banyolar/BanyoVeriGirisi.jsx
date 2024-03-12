@@ -144,7 +144,7 @@ export default function BanyoVeriGirisi({ content }) {
         </MiddleSection>
         <BottomSection>
           <div>
-            <span style={{ marginRight: "10px" }}>Yüzey Alanı: </span>
+            <span style={{ marginRight: "10px" }}>Yüzey Alanı: (dm2)</span>
             <Tag
               style={{
                 padding: "5px",
@@ -158,7 +158,7 @@ export default function BanyoVeriGirisi({ content }) {
             </Tag>
           </div>
           <div>
-            <span style={{ marginRight: "10px" }}>Banyo Ömrü: </span>
+            <span style={{ marginRight: "10px" }}>Banyo Ömrü: (dm2) </span>
             <Tag
               style={{ padding: "5px", width: "100px", textAlign: "center", fontSize: "1.7vmin" }}
               color="blue"
