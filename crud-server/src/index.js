@@ -7,6 +7,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import router from "./api/router.js";
 import apiErrorHandler from "./api/errorHandler.js";
+import { findDirname } from "./utils/file.js";
 
 const app = express();
 const PORT = 6333;
@@ -19,7 +20,7 @@ app.use(express.json());
 
 app.use("/", router);
 
-app.use("/uploads", express.static("api/uploads"));
+app.use("/uploads", express.static(`${findDirname(import.meta.url)}/api/uploads`));
 
 // app.use(apiErrorHandler);
 

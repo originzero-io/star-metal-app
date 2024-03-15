@@ -1,6 +1,4 @@
 import { Button, Card, Modal, Tooltip } from "antd";
-import { useState } from "react";
-
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { useUIContext } from "context/UIProvider";
 

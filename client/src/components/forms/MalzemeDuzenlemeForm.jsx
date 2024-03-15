@@ -3,7 +3,7 @@ import { useDBContext } from "context/DBProvider";
 import { getCurrentDateTime } from "utils/time.helper";
 
 export default function MalzemeDuzenlemeForm({ record }) {
-  const { ambalajlar } = useDBContext();
+  const { referanslar, ambalajlar } = useDBContext();
 
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -13,8 +13,8 @@ export default function MalzemeDuzenlemeForm({ record }) {
   };
 
   const options = [
-    { label: "Sipariş No'lu", value: "Sipariş No'lu" },
-    { label: "Talep No'lu", value: "Talep No'lu" },
+    { label: "Sipariş Nolu", value: "Sipariş Nolu" },
+    { label: "Talep Nolu", value: "Talep Nolu" },
     { label: "İade", value: "İade" },
   ];
 
@@ -26,17 +26,16 @@ export default function MalzemeDuzenlemeForm({ record }) {
       name="basic"
       labelCol={{ flex: "150px" }}
       labelAlign="left"
-      key={record ? record.key : "form"}
+      key={record ? record.id : "form"}
       initialValues={record || {}}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
       <Form.Item label="Referans Sıra No" name="siraNo">
-        <Input disabled placeholder="137015" />
+        <Input disabled placeholder={record.id} />
       </Form.Item>
       <Form.Item label="Tarih" name="tarih">
-        {/* <Input disabled placeholder="12332" /> */}
         <div>{getCurrentDateTime()}</div>
       </Form.Item>
 
@@ -74,9 +73,11 @@ export default function MalzemeDuzenlemeForm({ record }) {
         ]}
       >
         <Select>
-          <Select.Option value="0R1006197G">0R1006197G</Select.Option>
-          <Select.Option value="1R1006197G">1R1006197G</Select.Option>
-          <Select.Option value="2R1006197G">2R1006197G</Select.Option>
+          {referanslar.map((referans) => (
+            <Select.Option key={referans.id} value={referans.referansNo}>
+              {referans.referansNo}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
 
@@ -103,7 +104,7 @@ export default function MalzemeDuzenlemeForm({ record }) {
       <Form.Item label="Gelen İrsaliye No" name="gelenIrsaliyeNo">
         <div style={{ display: "flex", gap: "16px" }}>
           <Form.Item
-            name="gelenIrsaliyeNo"
+            name="irsaliyeNo"
             rules={[
               {
                 required: true,

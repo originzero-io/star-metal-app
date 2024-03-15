@@ -1,11 +1,14 @@
 import { PlusCircleFilled } from "@ant-design/icons";
-import { Button, Col, Form, Input, Row, Select, Space, Tag } from "antd";
+import { Button, Col, Form, Input, InputNumber, Row, Select, Space, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import PageHeader from "components/shared/PageHeader";
 import { useDBContext } from "context/DBProvider";
+import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
 import { FaMinusCircle } from "react-icons/fa";
+import { devamEdenUretimHttp } from "services/uretim.http";
 import styled from "styled-components";
+import { getCurrentDateTime } from "utils/time.helper";
 
 const Container = styled.div`
   display: flex;
@@ -45,8 +48,30 @@ const SpaceStyled = styled(Space)`
   }
 `;
 export default function GelenMalzemeKayit() {
-  const onFinish = (values) => {
+  const { devamEdenUretimler, setDevamEdenUretimler } = useDBContext();
+  const { showNotification } = useUIContext();
+
+  const onFinish = async (values) => {
     console.log("Success:", values);
+
+    const { irsaliyeNo, getirenSofor, kontrolEden, malzemeler } = values;
+
+    const records = malzemeler.map((malzeme) => ({
+      irsaliyeNo,
+      getirenSofor,
+      kontrolEden,
+      ...malzeme,
+      gelenTarih: getCurrentDateTime(),
+      gidenMiktar: 0,
+      kalanMiktar: malzeme.adet,
+      uretilenMiktar: 0,
+      uretilmeyenMiktar: malzeme.adet,
+    }));
+
+    const newMalzemeler = await devamEdenUretimHttp.addData(records);
+
+    setDevamEdenUretimler([...devamEdenUretimler, ...newMalzemeler]);
+    showNotification("success", `${newMalzemeler.length} adet malzeme üretime eklendi.`);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -77,7 +102,6 @@ export default function GelenMalzemeKayit() {
         ["malzemeler", name, "resimUrl"],
       ]);
 
-      console.log("DATA: ", data);
       const cardRecord = {
         key: name,
         irsaliyeNo: data.irsaliyeNo,
@@ -85,7 +109,7 @@ export default function GelenMalzemeKayit() {
         ...data.malzemeler[name],
       };
 
-      console.log("cardRecord: ", cardRecord);
+      console.log(">>> Print Card Record: ", cardRecord);
       setRecord(cardRecord);
       setPrintTrigger(true);
     } catch (errorInfo) {
@@ -124,8 +148,8 @@ export default function GelenMalzemeKayit() {
           },
         },
       });
-    } else if (value === "Talep No'lu") {
-      // sonradan Talep No'lu olarak seçilirse mevcut değerler boşaltılsın diye
+    } else if (value === "Talep Nolu") {
+      // sonradan Talep Nolu olarak seçilirse mevcut değerler boşaltılsın diye
       form.setFieldsValue({
         malzemeler: {
           ...form.getFieldValue("malzemeler"),
@@ -135,8 +159,8 @@ export default function GelenMalzemeKayit() {
           },
         },
       });
-    } else if (value === "Sipariş No'lu") {
-      // sonradan Sipariş No'lu olarak seçilirse mevcut değerler boşaltılsın diye
+    } else if (value === "Sipariş Nolu") {
+      // sonradan Sipariş Nolu olarak seçilirse mevcut değerler boşaltılsın diye
       form.setFieldsValue({
         malzemeler: {
           ...form.getFieldValue("malzemeler"),
@@ -177,7 +201,7 @@ export default function GelenMalzemeKayit() {
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item label="Şoför" name="sofor" rules={rules}>
+            <Form.Item label="Şoför" name="getirenSofor" rules={rules}>
               <Input placeholder="Şoför" />
             </Form.Item>
           </Col>
@@ -214,8 +238,8 @@ export default function GelenMalzemeKayit() {
                       style={{ width: "120px" }}
                       onChange={(value) => selectedIrsaliyeTipiHandler(value, name)}
                     >
-                      <Select.Option value="Sipariş No'lu">Sipariş No'lu</Select.Option>
-                      <Select.Option value="Talep No'lu">Talep No'lu</Select.Option>
+                      <Select.Option value="Sipariş Nolu">Sipariş Nolu</Select.Option>
+                      <Select.Option value="Talep Nolu">Talep Nolu</Select.Option>
                       <Select.Option value="İade">İade</Select.Option>
                     </Select>
                   </Form.Item>
@@ -226,7 +250,7 @@ export default function GelenMalzemeKayit() {
                     rules={rules}
                     style={{ width: "140px" }}
                   >
-                    {selectedIrsaliyeTipi[name] !== "Sipariş No'lu" ? (
+                    {selectedIrsaliyeTipi[name] !== "Sipariş Nolu" ? (
                       <Input placeholder="Referans No" />
                     ) : (
                       <Select
@@ -250,7 +274,7 @@ export default function GelenMalzemeKayit() {
                     rules={selectedIrsaliyeTipi[name] === "İade" ? rules : null}
                   >
                     <Input
-                      disabled={selectedIrsaliyeTipi[name] === "Sipariş No'lu"}
+                      disabled={selectedIrsaliyeTipi[name] === "Sipariş Nolu"}
                       placeholder="Açıklama"
                     />
                   </Form.Item>
@@ -260,7 +284,7 @@ export default function GelenMalzemeKayit() {
                     name={[name, "siparisNo"]}
                     rules={[
                       {
-                        required: selectedIrsaliyeTipi[name] === "Sipariş No'lu",
+                        required: selectedIrsaliyeTipi[name] === "Sipariş Nolu",
                         message: "Bu alan zorunlu",
                       },
                     ]}
@@ -274,21 +298,16 @@ export default function GelenMalzemeKayit() {
                   <Form.Item
                     {...restField}
                     name={[name, "talepNo"]}
-                    rules={selectedIrsaliyeTipi[name] === "Talep No'lu" ? rules : null}
+                    rules={selectedIrsaliyeTipi[name] === "Talep Nolu" ? rules : null}
                   >
                     <Input
-                      disabled={selectedIrsaliyeTipi[name] !== "Talep No'lu"}
+                      disabled={selectedIrsaliyeTipi[name] !== "Talep Nolu"}
                       placeholder="Talep No"
                     />
                   </Form.Item>
 
-                  <Form.Item
-                    {...restField}
-                    name={[name, "adet"]}
-                    rules={rules}
-                    style={{ width: "100px" }}
-                  >
-                    <Input placeholder="Adet" />
+                  <Form.Item {...restField} name={[name, "adet"]} rules={rules}>
+                    <InputNumber placeholder="Adet" min={0} style={{ width: "100%" }} />
                   </Form.Item>
 
                   <Form.Item
@@ -298,8 +317,8 @@ export default function GelenMalzemeKayit() {
                     style={{ width: "120px" }}
                   >
                     <Select placeholder="1. Ambalaj">
-                      {ambalajlar.map((ambalaj, i) => (
-                        <Select.Option key={i} value={ambalaj.kasaAdi}>
+                      {ambalajlar.map((ambalaj) => (
+                        <Select.Option key={ambalaj.id} value={ambalaj.kasaAdi}>
                           {ambalaj.kasaAdi}
                         </Select.Option>
                       ))}
@@ -312,8 +331,8 @@ export default function GelenMalzemeKayit() {
                     style={{ width: "120px" }}
                   >
                     <Select placeholder="2. Ambalaj">
-                      {ambalajlar.map((ambalaj, i) => (
-                        <Select.Option key={i} value={ambalaj.kasaAdi}>
+                      {ambalajlar.map((ambalaj) => (
+                        <Select.Option key={ambalaj.id} value={ambalaj.kasaAdi}>
                           {ambalaj.kasaAdi}
                         </Select.Option>
                       ))}

@@ -16,9 +16,8 @@ const onChange = (pagination, filters, sorter, extra) => {
 
 function DevamEdenUretimler() {
   const [selectedRows, setSelectedRows] = useState([]);
-  const [data, setData] = useState([]);
   const { showModal } = useUIContext();
-  const { referanslar } = useDBContext();
+  const { devamEdenUretimler } = useDBContext();
 
   const rowSelection = {
     onChange: (_selectedRowKeys, _selectedRows) => {
@@ -42,43 +41,13 @@ function DevamEdenUretimler() {
     });
   };
 
-  useEffect(() => {
-    const newData = referanslar.map((referans, i) => ({
-      key: i,
-      referansNo: `${referans.referansNo}`,
-      siparisNo: `${referans.siparisNo}`,
-      talepNo: `308-6${i}`,
-      islemAciklama: "DIYAFRAM CINKO FOSFAT",
-      irsaliyeNo: `34829${i}`,
-      gelenTarih: "14.12.2023 08:47:32",
-      gelenMiktar: 1696 + i,
-      gidenMiktar: 1696 + i,
-      kalanMiktar: 0,
-      uretilenMiktar: 1697 + i,
-      uretilmeyenMiktar: 0,
-      yuzeyAlanHesap: i + Math.random() * 50,
-      referansTipi: "Fosfat",
-      malzemeTipi: i % 2 === 0 ? "Talep No'lu" : i % 3 === 0 ? "Sipariş No'lu" : "İade",
-      kontrolEden: "Mustafa Akseki",
-      gelenIrsaliyeNo: `${i}-12BRV4`,
-      katSayi: 3,
-      getirenSofor: "Necati Uysal",
-      birinciAmbalaj: "MDDS",
-      ikinciAmbalaj: "PTA",
-      description: "Bu kayıtla ilgili not",
-      lotAdedi: referans.lotAdedi,
-      resimUrl: referans.resimUrl,
-    }));
-    setData(newData);
-  }, [referanslar]);
-
   const columns = useMemo(
     () => [
       {
         title: "Referans",
         dataIndex: "referansNo",
         key: "referansNo",
-        filters: createTableFilterFromData(data, "referansNo"),
+        filters: createTableFilterFromData(devamEdenUretimler, "referansNo"),
         onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
         filterSearch: true,
         render: (text) => (
@@ -92,7 +61,7 @@ function DevamEdenUretimler() {
         title: "Malzeme Tipi",
         dataIndex: "malzemeTipi",
         key: "malzemeTipi",
-        filters: createTableFilterFromData(data, "malzemeTipi"),
+        filters: createTableFilterFromData(devamEdenUretimler, "malzemeTipi"),
         onFilter: (value, record) => record.malzemeTipi.indexOf(value) === 0,
         filterSearch: true,
       },
@@ -100,7 +69,7 @@ function DevamEdenUretimler() {
         title: "Sipariş No",
         dataIndex: "siparisNo",
         key: "siparisNo",
-        filters: createTableFilterFromData(data, "siparisNo"),
+        filters: createTableFilterFromData(devamEdenUretimler, "siparisNo"),
         onFilter: (value, record) => record.siparisNo.indexOf(value) === 0,
         filterSearch: true,
       },
@@ -109,13 +78,13 @@ function DevamEdenUretimler() {
         dataIndex: "talepNo",
         key: "talepNo",
       },
+      // {
+      //   title: "İşlem Açıklaması",
+      //   dataIndex: "islemAciklama",
+      //   key: "islemAciklama",
+      // },
       {
-        title: "İşlem Açıklaması",
-        dataIndex: "islemAciklama",
-        key: "islemAciklama",
-      },
-      {
-        title: "Irsaliye No",
+        title: "İrsaliye No",
         dataIndex: "irsaliyeNo",
         key: "irsaliyeNo",
       },
@@ -126,9 +95,9 @@ function DevamEdenUretimler() {
       },
       {
         title: "Gelen",
-        dataIndex: "gelenMiktar",
-        key: "gelenMiktar",
-        sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
+        dataIndex: "adet",
+        key: "adet",
+        sorter: (a, b) => a.adet - b.adet,
       },
       {
         title: "Giden",
@@ -155,25 +124,32 @@ function DevamEdenUretimler() {
         sorter: (a, b) => a.uretilmeyenMiktar - b.uretilmeyenMiktar,
       },
       {
-        title: "Yüzey Alan Hesap",
-        dataIndex: "yuzeyAlanHesap",
-        key: "yuzeyAlanHesap",
+        title: "Referans Yüzey Alanı",
+        // dataIndex: ["Referanslar", "referansYuzeyAlani"],
+        key: "referansYuzeyAlanı",
+        render: (text, record) => record.Referanslar?.referansYuzeyAlani,
       },
       {
-        title: "Referans Tipi",
-        dataIndex: "referansTipi",
-        key: "referansTipi",
-        filters: createTableFilterFromData(data, "referansTipi"),
-        onFilter: (value, record) => record.referansTipi.indexOf(value) === 0,
+        title: "İşlem Tipi",
+        // dataIndex: "referansTipi",
+        render: (text, record) => record.Referanslar?.islemTipi,
+        key: "islemTipi",
+        filters: [...new Set(devamEdenUretimler.map((item) => item.Referanslar?.islemTipi))].map(
+          (islemTipi) => ({
+            text: islemTipi,
+            value: islemTipi,
+          }),
+        ),
+        onFilter: (value, record) => record.Referanslar?.islemTipi.indexOf(value) === 0,
         filterSearch: true,
       },
     ],
-    [data],
+    [devamEdenUretimler],
   );
 
   return (
     <TableGod
-      dataSource={data}
+      dataSource={devamEdenUretimler}
       columns={columns}
       onChange={onChange}
       rowSelection={rowSelection}
@@ -182,17 +158,21 @@ function DevamEdenUretimler() {
         editForm: MalzemeDuzenlemeForm,
         extraItems: [
           {
-            title: "Üretim İş Emri Kartı",
+            title: "Üretim / Sevkiyat Hareketleri",
+            //title: <div style={{ fontWeight: "700" }}>Üretim / Sevkiyat Hareketleri</div>,
+            action: (record) =>
+              showModal({
+                title: "Üretim / Sevkiyat Hareketleri",
+                content: <SevkiyatKarti record={record} />,
+              }),
+          },
+          {
+            title: "Üretim İş Emri Kartı Çıkart",
             action: (record) =>
               showModal({
                 title: "Üretim İş Emri Kartı",
                 content: <UretimIsEmriKarti record={record} />,
               }),
-          },
-          {
-            title: "Sevkiyat Kartı",
-            action: (record) =>
-              showModal({ title: "Sevkiyat Kartı", content: <SevkiyatKarti record={record} /> }),
           },
         ],
       }}

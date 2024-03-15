@@ -102,7 +102,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BoldTextStyled>AÇIKLAMA</BoldTextStyled>
             </div>
             <div style={{ textAlign: "start", fontSize: "2.2vmin" }}>
-              <BoldTextStyled>{record.description}</BoldTextStyled>
+              <BoldTextStyled>{record.islemAciklama}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={6}>

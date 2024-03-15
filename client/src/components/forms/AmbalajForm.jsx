@@ -17,12 +17,15 @@ export default function AmbalajForm({ record, type }) {
   };
   const onFinish = async (values) => {
     if (type === "update") {
-      const updatedMusteri = await ambalajlarHttp.updateData(ambalajlar, {
-        id: record.id,
-        kasaAdi: values.kasaAdi,
-        resimUrl: record.resimUrl,
+      const updatedAmbalaj = await ambalajlarHttp.updateData(record.id, values);
+
+      const updatedAmbalajlarArray = ambalajlar.map((ambalaj) => {
+        if (ambalaj.id === updatedAmbalaj.id) {
+          return { ...updatedAmbalaj };
+        }
+        return ambalaj;
       });
-      setAmbalajlar(updatedMusteri);
+      setAmbalajlar(updatedAmbalajlarArray);
       showModal(false);
       showNotification("success", "Ambalaj güncellendi");
     } else {
@@ -33,9 +36,8 @@ export default function AmbalajForm({ record, type }) {
         formData.append("photo", fileList[0].originFileObj);
       }
 
-      await ambalajlarHttp.addData(formData);
-      const resimUrl = `${values.kasaAdi}.${values.photo.file.type.split("/")[1]}`;
-      setAmbalajlar([...ambalajlar, { key: values.kasaAdi, kasaAdi: values.kasaAdi, resimUrl }]);
+      const newAmbalaj = await ambalajlarHttp.addData(formData);
+      setAmbalajlar([...ambalajlar, { ...newAmbalaj }]);
       showNotification("success", "Ambalaj eklendi");
     }
   };
@@ -48,7 +50,7 @@ export default function AmbalajForm({ record, type }) {
       name="basic"
       labelCol={{ flex: "130px" }}
       labelAlign="left"
-      key={record ? record.key : "form"}
+      key={record ? record.id : "form"}
       initialValues={record || {}}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}

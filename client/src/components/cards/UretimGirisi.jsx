@@ -1,9 +1,8 @@
-import { Button, Col, Form, Input, Radio, Row, Select, Carousel } from "antd";
+import { Button, Col, Form, Radio, Row, Select, InputNumber } from "antd";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { FormOutlined, CreditCardOutlined } from "@ant-design/icons";
 import { getCurrentDateTime } from "utils/time.helper";
-import { useUIContext } from "context/UIProvider";
 import SevkiyatKarti from "./SevkiyatKarti";
 import { useDBContext } from "context/DBProvider";
 
@@ -26,12 +25,15 @@ const MeasureItem = styled.div`
   border: 1px solid #c4c4c4;
   margin: 10px;
   width: 20%;
-  height: 80px;
+  height: 85px;
   border-radius: 6px;
 `;
 const MeasureItemHeader = styled.div`
   text-align: center;
-  background-color: #c3c3c3;
+  background-color: rgb(107, 67, 175);
+  color: whitesmoke;
+  padding: 2px;
+  font-size: 16px;
 `;
 const MeasureItemContent = styled.div`
   font-size: 3vmin;
@@ -68,7 +70,7 @@ export default function UretimGirisi({ record }) {
 
   const [malzemeTipi, setMalzemeTipi] = useState(record.malzemeTipi);
   const [miktarSapmasi, setMiktarSapmasi] = useState(
-    referanslar.filter((referans) => referans.referansNo === record.referansNo)[0].miktarSapmasi,
+    referanslar.filter((referans) => referans.referansNo === record.referansNo)[0]?.miktarSapmasi,
   );
 
   const [printTrigger, setPrintTrigger] = useState(false);
@@ -81,35 +83,53 @@ export default function UretimGirisi({ record }) {
     console.log("radio checked", e.target.value);
     setMalzemeTipi(e.target.value);
   };
+
+  const [teraziOlcum, setTeraziOlcum] = useState({
+    brut: 0,
+    dara: 0,
+    net: 0,
+  });
+
+  const fakeTeraziOlcumHandler = () => {
+    const brut = Math.round((Math.random() * 100 + 1) * 10) / 10;
+    const dara = Math.round((Math.random() * 100 + 1) * 10) / 10;
+    const net = Math.round((Math.random() * 100 + 1) * 10) / 10;
+    setTeraziOlcum({
+      ...teraziOlcum,
+      brut,
+      dara,
+      net,
+    });
+  };
   return (
     <Container>
       <TopSection>
-        <Button type="primary" icon={<FormOutlined />}>
+        <Button type="primary" icon={<FormOutlined />} onClick={fakeTeraziOlcumHandler}>
           Teraziden Ölçüm Al
         </Button>
       </TopSection>
       <MeasureSection>
         <MeasureItem>
           <MeasureItemHeader>Brüt</MeasureItemHeader>
-          <MeasureItemContent>0</MeasureItemContent>
+          <MeasureItemContent>{teraziOlcum.brut}</MeasureItemContent>
         </MeasureItem>
         <MeasureItem>
           <MeasureItemHeader>Dara</MeasureItemHeader>
-          <MeasureItemContent>0</MeasureItemContent>
+          <MeasureItemContent>{teraziOlcum.dara}</MeasureItemContent>
         </MeasureItem>
         <MeasureItem>
           <MeasureItemHeader>Net</MeasureItemHeader>
-          <MeasureItemContent>0</MeasureItemContent>
+          <MeasureItemContent>{teraziOlcum.net}</MeasureItemContent>
         </MeasureItem>
         <MeasureItem>
           <MeasureItemHeader>Adet</MeasureItemHeader>
-          <MeasureItemContent>550</MeasureItemContent>
+          <MeasureItemContent>{record.adet}</MeasureItemContent>
         </MeasureItem>
       </MeasureSection>
       <MiddleSection>
         <Radio.Group onChange={malzemeTipiHandler} value={malzemeTipi} disabled>
-          <Radio value="Sipariş No'lu">Sipariş No'lu</Radio>
-          <Radio value="Talep No'lu">Talep No'lu</Radio>
+          <Radio value="Sipariş Nolu">Sipariş Nolu</Radio>
+          <Radio value="Talep Nolu">Talep Nolu</Radio>
         </Radio.Group>
       </MiddleSection>
       <FormSection>
@@ -118,8 +138,8 @@ export default function UretimGirisi({ record }) {
           layout="horizontal"
           labelCol={{ flex: "130px" }}
           labelAlign="left"
-          // key={record ? record.key : "form"}
-          initialValues={{ uretimAdedi: 550 }}
+          // key={record ? record.id : "form"}
+          initialValues={{ uretimAdedi: record.adet }}
           onFinish={onFinish}
           //   onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -127,14 +147,20 @@ export default function UretimGirisi({ record }) {
           <Row gutter={32}>
             <Col span={12}>
               <Form.Item label="Üretim Sıra No">
-                <div>1</div>
+                <div>{record.id}</div>
               </Form.Item>
               <Form.Item label="Referans Sıra No">
-                <div>1</div>
+                <div>{record.id}</div>
               </Form.Item>
-              <Form.Item label="Sipariş No">
-                <div>{record.siparisNo}</div>
-              </Form.Item>
+              {record.malzemeTipi === "Sipariş Nolu" ? (
+                <Form.Item label="Sipariş No">
+                  <div>{record.siparisNo}</div>
+                </Form.Item>
+              ) : (
+                <Form.Item label="Talep No">
+                  <div>{record.talepNo}</div>
+                </Form.Item>
+              )}
               <Form.Item label="İrsaliye No">
                 <div>{record.irsaliyeNo}</div>
               </Form.Item>
@@ -151,7 +177,11 @@ export default function UretimGirisi({ record }) {
                   },
                 ]}
               >
-                <Input type="number" min={550 - miktarSapmasi} max={550 + miktarSapmasi} />
+                <InputNumber
+                  style={{ width: "100%" }}
+                  min={record.adet - miktarSapmasi}
+                  max={record.adet + miktarSapmasi}
+                />
               </Form.Item>
               <Form.Item
                 label="Personel"

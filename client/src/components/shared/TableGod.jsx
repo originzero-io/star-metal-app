@@ -96,6 +96,7 @@ export default function TableGod({
         <Table
           dataSource={dataSource}
           columns={columns}
+          rowKey={(record) => record.id}
           size="small"
           onChange={onChange && onChange}
           // bordered
@@ -153,7 +154,8 @@ export default function TableGod({
                     fontSize: "1.4vmin",
                   }}
                 >
-                  {record.description}
+                  <span style={{ fontWeight: "700" }}>İşlem Açıklaması - </span>{" "}
+                  {record.islemAciklama}
                 </p>
               ),
             }
@@ -182,7 +184,7 @@ TableGod.propTypes = {
     deleteAction: PropTypes.func.isRequired,
     extraItems: PropTypes.arrayOf(
       PropTypes.shape({
-        title: PropTypes.string.isRequired,
+        title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
         action: PropTypes.func.isRequired,
       }),
     ), // extraItems, belirli bir şekle sahip nesnelerin bir dizisi

@@ -1,6 +1,9 @@
 import express from "express";
-import db from "../../dbConnection.js";
 import multer from "multer";
+import Referans, { ReferansIslemTipi } from "./models/referans.model.js";
+import DevamEdenUretim from "./models/uretim.model.js";
+import fs from "fs";
+import { findDirname } from "../../utils/file.js";
 
 const referansResimMiddleware = multer({
   limits: {
@@ -15,7 +18,7 @@ const referansResimMiddleware = multer({
       cb(null, `${req.body.referansNo}.${file.mimetype.split("/")[1]}`);
     },
     destination: (req, file, cb) => {
-      cb(null, "api/uploads/referanslar");
+      cb(null, `${findDirname(import.meta.url)}/../uploads/referanslar`);
     },
   }),
 });
@@ -23,33 +26,19 @@ const referansResimMiddleware = multer({
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const referanslar = await db.query("SELECT * FROM Referanslar");
+  const referanslar = await Referans.findAll();
+
   res.send(referanslar);
 });
 
 router.post("/", referansResimMiddleware.single("photo"), async (req, res) => {
-  const {
-    referansNo,
-    irsaliyeAciklama,
-    lotAdedi,
-    miktarSapmasi,
-    referansYuzeyAlani,
-    siparisNo,
-    islemAciklama,
-    firmaAdi01,
-    birim,
-    firmaAdi02,
-    islemTipi,
-    uretimAdediDegistirme,
-  } = req.body;
+  const { referansNo } = req.body;
 
   const resimUrl = `${referansNo}.${req.file.mimetype.split("/")[1]}`;
 
   try {
-    await db.query(
-      `INSERT INTO Referanslar (referansNo, irsaliyeAciklama, lotAdedi, miktarSapmasi, referansYuzeyAlani, siparisNo, islemAciklama, firmaAdi01, birim, firmaAdi02, islemTipi, uretimAdediDegistirme, resimUrl) VALUES ('${referansNo}','${irsaliyeAciklama}', '${lotAdedi}', '${miktarSapmasi}', '${referansYuzeyAlani}', '${siparisNo}', '${islemAciklama}', '${firmaAdi01}', '${birim}', '${firmaAdi02}', '${islemTipi}', '${uretimAdediDegistirme}', '${resimUrl}'  )`,
-    );
-    res.send("Kayıt eklendi.");
+    const newReferans = await Referans.create({ ...req.body, resimUrl });
+    res.json(newReferans);
   } catch (error) {
     res.status(500).json({
       name: error.name,
@@ -60,27 +49,27 @@ router.post("/", referansResimMiddleware.single("photo"), async (req, res) => {
 
 router.put("/", async (req, res) => {
   try {
-    const referans = req.body;
+    const referans = await Referans.findByPk(req.body.id);
+    const currentReferansNo = referans.referansNo;
+    if (referans) {
+      const updatedReferans = await referans.update(req.body);
 
-    await db.query(
-      `UPDATE Referanslar
-        SET referansNo = '${referans.referansNo}',
-          irsaliyeAciklama= '${referans.irsaliyeAciklama}',
-          lotAdedi= '${referans.lotAdedi}',
-          miktarSapmasi= '${referans.miktarSapmasi}',
-          referansYuzeyAlani= '${referans.referansYuzeyAlani}',
-          siparisNo= '${referans.siparisNo}',
-          islemAciklama= '${referans.islemAciklama}',
-          firmaAdi01= '${referans.firmaAdi01}',
-          birim= '${referans.birim}',
-          firmaAdi02= '${referans.firmaAdi02}',
-          islemTipi= '${referans.islemTipi}',
-          uretimAdediDegistirme= '${referans.uretimAdediDegistirme}'
-        WHERE id = '${referans.id}';`,
-    );
-    res.status(200).send("güncelleme başarılı");
+      if (updatedReferans) {
+        await DevamEdenUretim.update(
+          {
+            referansNo: updatedReferans.referansNo,
+            islemAciklama: updatedReferans.islemAciklama,
+            siparisNo: updatedReferans.siparisNo,
+          }, // Güncellenecek yeni değerler
+          { where: { referansNo: currentReferansNo } }, // eski değer
+        );
+      }
+      res.status(200).json(updatedReferans);
+    } else {
+      res.status(400).send("referans bulunamadı");
+    }
   } catch (error) {
-    console.log("error: ", error);
+    console.log("error: ", error.errors[0].path);
     res.status(500).json({
       name: error.name,
       fields: error.fields,
@@ -91,11 +80,36 @@ router.put("/", async (req, res) => {
 router.delete("/", async (req, res) => {
   const { selectedRows } = req.body;
 
-  selectedRows.forEach(async (row) => {
-    await db.query(`DELETE FROM Referanslar WHERE id IN (${row.id})`);
-  });
+  try {
+    selectedRows.forEach(async (row) => {
+      const filePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${row.resimUrl}`;
+      await Referans.destroy({
+        where: { id: row.id },
+      });
+      fs.unlinkSync(filePath);
+    });
+    res.send("Kayıtlar silindi");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
 
-  res.send("silme isteği alındı");
+router.get("/islem-tipi", async (req, res) => {
+  const referansIslemTipleri = await ReferansIslemTipi.findAll();
+  res.json(referansIslemTipleri);
+});
+
+router.post("/islem-tipi", async (req, res) => {
+  const { islemTipi } = req.body;
+  try {
+    const newIslemTipi = await ReferansIslemTipi.create({ islemTipi: islemTipi });
+    res.json(newIslemTipi);
+  } catch (error) {
+    res.status(500).json({
+      name: error.name,
+      fields: error.fields,
+    });
+  }
 });
 
 export default router;

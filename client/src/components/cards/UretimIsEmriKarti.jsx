@@ -60,7 +60,7 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
         <Row>
           <ColStyled span={6}>Adet</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.lotAdedi}</BoldTextStyled>
+            <BoldTextStyled>{record?.adet}</BoldTextStyled>
           </ColStyled>
           <ColStyled span={6}>Kayıt Eden</ColStyled>
           <ColStyled span={6}>
@@ -85,7 +85,7 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           <ColStyled span={6}>
             <img
               alt="referansResim"
-              src={`http://localhost:6333/uploads/referanslar/${record?.resimUrl}`}
+              src={`http://localhost:6333/uploads/referanslar/${record?.Referanslar?.resimUrl}`}
               style={{ maxWidth: "100%" }}
             />
           </ColStyled>

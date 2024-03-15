@@ -1,20 +1,13 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Divider, Form, Input, Select, Upload } from "antd";
+import { Button, Divider, Form, Input, InputNumber, Select, Upload } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
-import referanslarHttp from "services/referanslar.http";
+import referanslarHttp, { referansIslemTipleriHttp } from "services/referanslar.http";
 
 export default function ReferansForm({ record, type }) {
-  const [referenceTypes, setReferenceTypes] = useState([
-    "Fosfat",
-    "Nikel",
-    "Isıl İşlem",
-    "Kumlama",
-    "Anchor",
-  ]);
-
-  const { referanslar, setReferanslar } = useDBContext();
+  const { referanslar, setReferanslar, referansIslemTipleri, setReferansIslemTipleri } =
+    useDBContext();
   const { showModal, showNotification } = useUIContext();
 
   const [fileList, setFileList] = useState([]);
@@ -25,11 +18,15 @@ export default function ReferansForm({ record, type }) {
 
   const onFinish = async (values) => {
     if (type === "update") {
-      const updatedReferanslar = await referanslarHttp.updateData(referanslar, {
-        id: record.id,
-        ...values,
+      const updatedReferans = await referanslarHttp.updateData(record.id, values);
+
+      const updatedReferanslarArray = referanslar.map((referans) => {
+        if (referans.id === updatedReferans.id) {
+          return { ...updatedReferans };
+        }
+        return referans;
       });
-      setReferanslar(updatedReferanslar);
+      setReferanslar(updatedReferanslarArray);
       showModal(false);
       showNotification("success", "Referans güncellendi");
     } else {
@@ -42,8 +39,8 @@ export default function ReferansForm({ record, type }) {
       if (fileList.length > 0) {
         formData.append("photo", fileList[0].originFileObj);
       }
-      await referanslarHttp.addData(formData);
-      setReferanslar([...referanslar, { key: values.referansNo, ...values }]);
+      const newReferans = await referanslarHttp.addData(formData);
+      setReferanslar([...referanslar, { ...newReferans }]);
       showNotification("success", "Referans eklendi");
     }
   };
@@ -51,18 +48,24 @@ export default function ReferansForm({ record, type }) {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const addReferansTypeHandler = () => {
+  const addReferansTypeHandler = async () => {
     const newReference = prompt("Yeni tip girin: ");
-    if (newReference !== null) {
-      setReferenceTypes([...referenceTypes, newReference]);
+
+    if (newReference.trim() === "") {
+      showNotification("error", "Alan boş olamaz");
+    } else if (newReference !== null) {
+      const data = await referansIslemTipleriHttp.addData({ islemTipi: newReference });
+      setReferansIslemTipleri([...referansIslemTipleri, { ...data }]);
+      showNotification("success", `${newReference} işlem tipi olarak eklendi.`);
     }
   };
+
   return (
     <Form
       name="basic"
       labelCol={{ flex: "170px" }}
       labelAlign="left"
-      key={record ? record.key : "form"}
+      key={record ? record.id : "form"}
       initialValues={record || {}}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -93,7 +96,7 @@ export default function ReferansForm({ record, type }) {
           },
         ]}
       >
-        <Input />
+        <InputNumber min={0} />
       </Form.Item>
       <Form.Item
         label="Miktar Sapması"
@@ -105,10 +108,10 @@ export default function ReferansForm({ record, type }) {
           },
         ]}
       >
-        <Input type="number" />
+        <InputNumber min={0} />
       </Form.Item>
       <Form.Item label="Referans Yüzey Alanı" name="referansYuzeyAlani">
-        <Input type="number" />
+        <InputNumber min={0} />
       </Form.Item>
 
       <Divider />
@@ -148,28 +151,30 @@ export default function ReferansForm({ record, type }) {
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        label="Resim"
-        name="resim"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Upload
-          name="photo"
-          listType="picture"
-          accept="image/png, image/jpeg, image/jpg"
-          fileList={fileList}
-          onChange={onFileChange}
-          beforeUpload={() => false}
-          maxCount={1}
+      {type !== "update" && (
+        <Form.Item
+          label="Resim"
+          name="resim"
+          rules={[
+            {
+              required: true,
+              message: "Bu alanı doldurun",
+            },
+          ]}
         >
-          <Button icon={<UploadOutlined />}>Resim seç</Button>
-        </Upload>
-      </Form.Item>
+          <Upload
+            name="photo"
+            listType="picture"
+            accept="image/png, image/jpeg, image/jpg"
+            fileList={fileList}
+            onChange={onFileChange}
+            beforeUpload={() => false}
+            maxCount={1}
+          >
+            <Button icon={<UploadOutlined />}>Resim seç</Button>
+          </Upload>
+        </Form.Item>
+      )}
 
       <Divider />
 
@@ -210,9 +215,9 @@ export default function ReferansForm({ record, type }) {
           </Form.Item>
           <Form.Item label="İşlem Tipi" name="islemTipi">
             <Select placeholder="Tipi Seçin">
-              {referenceTypes.map((referenceType, i) => (
-                <Select.Option key={i} value={referenceType}>
-                  {referenceType}
+              {referansIslemTipleri.map((islemTipi) => (
+                <Select.Option key={islemTipi.id} value={islemTipi.islemTipi}>
+                  {islemTipi.islemTipi}
                 </Select.Option>
               ))}
             </Select>

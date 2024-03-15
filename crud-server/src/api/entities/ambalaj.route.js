@@ -1,8 +1,8 @@
 import express from "express";
-import db from "../../dbConnection.js";
 import multer from "multer";
 import fs from "fs";
-import path from "path";
+import Ambalaj from "./models/ambalaj.model.js";
+import { findDirname } from "../../utils/file.js";
 
 const ambalajResimMiddleware = multer({
   limits: {
@@ -17,7 +17,7 @@ const ambalajResimMiddleware = multer({
       cb(null, `${req.body.kasaAdi}.${file.mimetype.split("/")[1]}`);
     },
     destination: (req, file, cb) => {
-      cb(null, "api/uploads/ambalajlar");
+      cb(null, `${findDirname(import.meta.url)}/../uploads/ambalajlar`);
     },
   }),
 });
@@ -25,7 +25,7 @@ const ambalajResimMiddleware = multer({
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const ambalajlar = await db.query("SELECT * FROM Ambalajlar");
+  const ambalajlar = await Ambalaj.findAll();
   res.send(ambalajlar);
 });
 
@@ -39,10 +39,8 @@ router.post("/", ambalajResimMiddleware.single("photo"), async (req, res) => {
   const resimUrl = `${kasaAdi}.${req.file.mimetype.split("/")[1]}`;
 
   try {
-    await db.query(
-      `INSERT INTO Ambalajlar (kasaAdi, resimUrl) VALUES ('${kasaAdi}', '${resimUrl}')`,
-    );
-    res.status(201).json({ success: true, message: "Kayıt eklendi" });
+    const newAmbalaj = await Ambalaj.create({ ...req.body, resimUrl });
+    res.status(201).json(newAmbalaj);
   } catch (error) {
     res.status(500).json({
       name: error.name,
@@ -52,14 +50,13 @@ router.post("/", ambalajResimMiddleware.single("photo"), async (req, res) => {
 });
 router.put("/", async (req, res) => {
   try {
-    const ambalaj = req.body;
-
-    await db.query(
-      `UPDATE Ambalajlar
-        SET kasaAdi = '${ambalaj.kasaAdi}'
-        WHERE id = '${ambalaj.id}'`,
-    );
-    res.status(200).send("güncelleme başarılı");
+    const ambalaj = await Ambalaj.findByPk(req.body.id);
+    if (ambalaj) {
+      const updatedAmbalaj = await ambalaj.update(req.body);
+      res.json(updatedAmbalaj);
+    } else {
+      res.status(400).send("ambalaj bulunamadı");
+    }
   } catch (error) {
     console.log("error: ", error);
     res.status(500).json({
@@ -71,17 +68,18 @@ router.put("/", async (req, res) => {
 router.delete("/", async (req, res) => {
   const { selectedRows } = req.body;
 
-  selectedRows.forEach(async (row) => {
-    const filePath = path.join("api/uploads/ambalajlar", row.resimUrl);
-
-    try {
-      await db.query(`DELETE FROM Ambalajlar WHERE id IN (${row.id})`);
+  try {
+    selectedRows.forEach(async (row) => {
+      const filePath = `${findDirname(import.meta.url)}/../uploads/ambalajlar/${row.resimUrl}`;
+      await Ambalaj.destroy({
+        where: { id: row.id },
+      });
       fs.unlinkSync(filePath);
-      res.status(200).send("Ambalaj silindi");
-    } catch (error) {
-      res.status(400).send(error.message);
-    }
-  });
+    });
+    res.status(200).send("Kayıtlar silindi");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
 });
 
 export default router;

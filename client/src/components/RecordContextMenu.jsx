@@ -48,13 +48,28 @@ export default function RecordContextMenu({ position, record, contextMenu }) {
   return (
     <ContextMenuWrapperStyled position={position}>
       <MenuStyled>
+        <MenuItemStyled
+          style={{
+            background: "#842c72",
+            color: "whitesmoke",
+            borderRadius: "6px",
+            marginBottom: "8px",
+            display: "flex",
+            justifyContent: "center",
+            fontSize: "14px",
+          }}
+        >
+          {record.referansNo}
+        </MenuItemStyled>
         {contextMenu.extraItems?.map((item, i) => (
           <MenuItemStyled key={i} onClick={() => item.action(record)}>
             {item.title}
           </MenuItemStyled>
         ))}
         <MenuItemStyled onClick={editRecordHandler}>Düzenle</MenuItemStyled>
-        <MenuItemStyled onClick={() => contextMenu.deleteAction(record)}>Sil</MenuItemStyled>
+        <MenuItemStyled onClick={() => contextMenu.deleteAction(record)} style={{ color: "red" }}>
+          Sil
+        </MenuItemStyled>
       </MenuStyled>
     </ContextMenuWrapperStyled>
   );
@@ -68,7 +83,7 @@ RecordContextMenu.propTypes = {
     deleteAction: PropTypes.func,
     extraItems: PropTypes.arrayOf(
       PropTypes.shape({
-        title: PropTypes.string.isRequired,
+        title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
         action: PropTypes.func.isRequired,
       }),
     ), // extraItems, belirli bir şekle sahip nesnelerin bir dizisi

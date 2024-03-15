@@ -71,11 +71,18 @@ function Referanslar() {
         key: "irsaliyeAciklama",
         // width: 300,
       },
-
       {
         title: "Yüzey Alanı",
         dataIndex: "referansYuzeyAlani",
         key: "referansYuzeyAlani",
+      },
+      {
+        title: "İşlem Tipi",
+        dataIndex: "islemTipi",
+        key: "islemTipi",
+        filters: createTableFilterFromData(referanslar, "islemTipi"),
+        onFilter: (value, record) => record.islemTipi.indexOf(value) === 0,
+        filterSearch: true,
       },
     ],
     [referanslar],

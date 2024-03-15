@@ -15,7 +15,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             borderColor: "#d0d0d0",
             cellFontSizeSM: 12,
             headerColor: "rgba(0, 0, 0, 0.8)",
-            colorBgContainer: "rgba(255, 255, 255, 0.5)",
+            colorBgContainer: "rgba(255, 255, 255, 0.7)",
+            // colorBgContainer: "rgba(255, 255, 255, 0.5)",
             // filterDropdownBg: "#fefefe",
             filterDropdownBg: "rgb(222, 227, 237)",
           },
@@ -23,6 +24,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             itemMarginBottom: 6,
           },
           Input: {
+            colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
+            colorBgContainerDisabled: "rgba(0, 0, 0, 0.01)",
+            colorTextDisabled: "rgba(0, 0, 0)",
+            activeBorderColor: "rgb(131, 92, 197)",
+            hoverBorderColor: "rgb(131, 92, 197) ",
+          },
+          InputNumber: {
             colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
             colorBgContainerDisabled: "rgba(0, 0, 0, 0.01)",
             colorTextDisabled: "rgba(0, 0, 0)",
