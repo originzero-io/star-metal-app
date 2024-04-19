@@ -7,7 +7,7 @@ import PageHeader from "components/shared/PageHeader";
 import { FaTemperatureLow } from "react-icons/fa";
 import { createTableFilterFromData } from "utils/table.helper";
 import { getCurrentDateTime } from "utils/time.helper";
-import TableGod from "../shared/TableGod";
+import TableGod from "../components/shared/TableGod";
 
 export const sicaklikData = [];
 

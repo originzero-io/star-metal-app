@@ -8,7 +8,7 @@ import referanslarHttp from "services/referanslar.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import PageHeader from "components/shared/PageHeader";
 import { MdOutlineDocumentScanner } from "react-icons/md";
-import TableGod from "../shared/TableGod";
+import TableGod from "../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);

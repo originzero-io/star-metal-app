@@ -12,9 +12,9 @@ import { useEffect, useMemo, useState } from "react";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 import { fasonFirmasiKontrol, fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
-import TableGod from "../shared/TableGod";
-import UretimSevkiyatHareketleri from "./UretimSevkiyatHareketleri";
 import irsaliyeHttp from "services/irsaliyeler.http";
+import TableGod from "../components/shared/TableGod";
+import SevkEdilecekler from "./SevkEdilecekler";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
@@ -335,7 +335,7 @@ function NormalUretimlerTablo({ data, deleteRecordsFunc }) {
                   // action: (record) =>
                   //   showPanel({
                   //     title: "Üretim / Sevkiyat Hareketleri",
-                  //     content: <UretimSevkiyatHareketleri record={record} />,
+                  //     content: <SevkEdilecekler record={record} />,
                   //     width: 1000,
                   //   }),
                 },
@@ -345,7 +345,7 @@ function NormalUretimlerTablo({ data, deleteRecordsFunc }) {
                   action: (record) =>
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
-                      content: <UretimSevkiyatHareketleri record={record} />,
+                      content: <SevkEdilecekler record={record} />,
                       width: 1000,
                     }),
                 },
@@ -652,14 +652,7 @@ function FasonUretimlerTablo({ data, deleteRecordsFunc }) {
             ).size;
 
             if (refBazliFirmaToplamIrsaliyeSayisi <= limit) {
-              // const butunIrsaliyeler = await irsaliyeHttp.addData(irsaliyeKaydi);
-
-              // setIrsaliyeler(butunIrsaliyeler);
-
-              // const { fasonUretimler, butunIrsaliyeler } =
-              //   await devamEdenUretimHttp.fasonlaraIrsaliyeKes(irsaliyeKaydi);
               const butunIrsaliyeler = await irsaliyeHttp.fasonlaraIrsaliyeKes(irsaliyeKaydi);
-              console.log("butunIrsaliyeler", butunIrsaliyeler);
               const devamEdenUretimler = await devamEdenUretimHttp.getData();
 
               showNotification(
@@ -667,10 +660,6 @@ function FasonUretimlerTablo({ data, deleteRecordsFunc }) {
                 `Seçtiğiniz kayıtlar fason firmasına taşıma irsaliyesi kesmek için kaydedildi.`,
               );
               setDevamEdenUretimler(devamEdenUretimler);
-              // setDevamEdenUretimler((prevState) => ({
-              //   normalUretimler: [...prevState.normalUretimler],
-              //   fasonUretimler,
-              // }));
 
               setIrsaliyeler(butunIrsaliyeler);
             } else {
@@ -728,7 +717,7 @@ function FasonUretimlerTablo({ data, deleteRecordsFunc }) {
                   action: (record) =>
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
-                      content: <UretimSevkiyatHareketleri record={record} />,
+                      content: <SevkEdilecekler record={record} />,
                       width: 1000,
                     }),
                 },
@@ -738,7 +727,7 @@ function FasonUretimlerTablo({ data, deleteRecordsFunc }) {
                   action: (record) =>
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
-                      content: <UretimSevkiyatHareketleri record={record} />,
+                      content: <SevkEdilecekler record={record} />,
                       width: 1000,
                     }),
                 },

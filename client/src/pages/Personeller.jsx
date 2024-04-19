@@ -5,7 +5,7 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import personellerHttp from "services/personeller.http";
 import PersonelForm from "components/forms/PersonelForm";
-import TableGod from "../shared/TableGod";
+import TableGod from "../components/shared/TableGod";
 import PageHeader from "components/shared/PageHeader";
 import { PiUsersThreeBold } from "react-icons/pi";
 import { createTableFilterFromData } from "utils/table.helper";

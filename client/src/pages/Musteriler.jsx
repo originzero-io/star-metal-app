@@ -9,7 +9,7 @@ import musterilerHttp from "services/musteriler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import PageHeader from "components/shared/PageHeader";
 import { RiCustomerServiceLine } from "react-icons/ri";
-import TableGod from "../shared/TableGod";
+import TableGod from "../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);

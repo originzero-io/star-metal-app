@@ -32,7 +32,7 @@ const alertMessage = (musteri, irsaliyeTipi, olan, limit) => (
   </div>
 );
 
-export default function UretimSevkiyatHareketleri({ record }) {
+export default function SevkEdilecekler({ record }) {
   const [uretimGirisleri, setUretimGirisleri] = useState({});
 
   const [selectedRows, setSelectedRows] = useState([]);

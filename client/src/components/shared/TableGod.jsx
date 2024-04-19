@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 import { Button, Divider, Modal, Table, Tag } from "antd";
-import RecordContextMenu from "components/RecordContextMenu";
+import RecordContextMenu from "components/shared/RecordContextMenu";
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import { downloadExcel } from "react-export-table-to-excel";
