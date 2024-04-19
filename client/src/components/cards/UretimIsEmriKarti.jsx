@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useReactToPrint } from "react-to-print";
 import { IoPrintOutline } from "react-icons/io5";
 import { getCurrentDateTime } from "utils/time.helper";
+import PrintButton from "components/shared/PrintButton";
 
 const ContainerStyled = styled.div`
   margin-top: 8px;
@@ -35,6 +36,10 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
 
   return (
     <div style={{ height: "10%" }}>
+      {/* <Button type="primary" icon={<IoPrintOutline />} onClick={handlePrint}>
+        Yazdır
+      </Button> */}
+      <PrintButton colorful handlePrintFunc={handlePrint} />
       <ContainerStyled ref={componentRef}>
         <Row>
           <ColStyled span={6}>
@@ -54,17 +59,17 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           </ColStyled>
           <ColStyled span={6}>Sipariş No</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.siparisNo}</BoldTextStyled>
+            <BoldTextStyled>{record?.Referanslar?.siparisNo}</BoldTextStyled>
           </ColStyled>
         </Row>
         <Row>
           <ColStyled span={6}>Adet</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.adet}</BoldTextStyled>
+            <BoldTextStyled>{record?.gelenMiktar}</BoldTextStyled>
           </ColStyled>
           <ColStyled span={6}>Kayıt Eden</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.kontrolEden}</BoldTextStyled>
+            <BoldTextStyled>{record?.personel}</BoldTextStyled>
           </ColStyled>
         </Row>
         <Row>
@@ -74,13 +79,13 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           </ColStyled>
           <ColStyled span={6}>Kayıt No</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.key}</BoldTextStyled>
+            <BoldTextStyled>{record?.id}</BoldTextStyled>
           </ColStyled>
         </Row>
         <Row style={{ height: "150px" }}>
           <ColStyled span={12}>
             <BoldTextStyled>İŞLEM AÇIKLAMASI</BoldTextStyled>
-            <BoldTextStyled>{record?.islemAciklama}</BoldTextStyled>
+            <BoldTextStyled>{record?.Referanslar?.not}</BoldTextStyled>
           </ColStyled>
           <ColStyled span={6}>
             <img

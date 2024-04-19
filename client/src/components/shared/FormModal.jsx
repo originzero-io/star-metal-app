@@ -1,4 +1,4 @@
-import { Modal } from "antd";
+import { Drawer, Modal } from "antd";
 import { useUIContext } from "context/UIProvider";
 import { useRef, useState } from "react";
 import Draggable from "react-draggable";
@@ -52,11 +52,11 @@ const FormModal = () => {
         <div
           style={{
             marginTop: "-25px",
-            marginLeft: "-2.5%",
-            marginRight: "-2.5%",
+            marginLeft: "-2.1%",
+            marginRight: "-2.1%",
             marginBottom: "25px",
             fontWeight: "bold",
-            background: "#ced4da",
+            background: "#dce0e3",
             color: "#262a2f",
             borderRadius: "8px 8px 0px 0px",
             padding: "6px",
@@ -80,12 +80,12 @@ const FormModal = () => {
       onCancel={handleCancel}
       maskClosable={false}
       centered
-      width={1000}
+      width={1200}
       footer={null}
       closeIcon={
         <CloseCircleFilled
           style={{
-            fontSize: "2.2vmin",
+            fontSize: "22px",
             color: "#373737",
             marginRight: "0%",
             marginTop: "-130%",

@@ -3,8 +3,8 @@ body {
 }
 
 @font-face {
-  font-family: 'NunitoSans-Regular';
-  src: url('/fonts/NunitoSans-Regular.ttf') format('truetype');
+  font-family: "NunitoSans-Regular";
+  src: url("/fonts/NunitoSans-Regular.ttf") format("truetype");
 }
 
 *,
@@ -13,7 +13,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'NunitoSans-Regular', Helvetica;
+  font-family: "NunitoSans-Regular", Helvetica;
 }
 
 /* @media (prefers-color-scheme: light) {

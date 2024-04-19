@@ -1,11 +1,13 @@
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Modal } from "antd";
+import { Button, Modal, Tag } from "antd";
 import ReferansForm from "components/forms/ReferansForm";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import referanslarHttp from "services/referanslar.http";
 import { createTableFilterFromData } from "utils/table.helper";
+import PageHeader from "components/shared/PageHeader";
+import { MdOutlineDocumentScanner } from "react-icons/md";
 import TableGod from "../shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -14,7 +16,7 @@ const onChange = (pagination, filters, sorter, extra) => {
 
 function Referanslar() {
   const [selectedRows, setSelectedRows] = useState([]);
-  const { showModal, showNotification } = useUIContext();
+  const { showPanel, showNotification } = useUIContext();
   const { referanslar, setReferanslar } = useDBContext();
 
   const columns = useMemo(
@@ -28,48 +30,103 @@ function Referanslar() {
         filterSearch: true,
       },
       {
+        title: "Parça Adı",
+        dataIndex: "parcaAdi",
+        key: "parcaAdi",
+        filters: createTableFilterFromData(referanslar, "parcaAdi"),
+        onFilter: (value, record) => record.parcaAdi.indexOf(value) === 0,
+        filterSearch: true,
+      },
+      {
+        title: "Müşteri",
+        dataIndex: "musteriAdi",
+        key: "musteriAdi",
+        filters: createTableFilterFromData(referanslar, "musteriAdi"),
+        onFilter: (value, record) => record.musteriAdi.indexOf(value) === 0,
+        filterSearch: true,
+      },
+      {
+        title: "İrsaliye Açıklaması",
+        dataIndex: "irsaliyeAciklamasi",
+        key: "irsaliyeAciklamasi",
+      },
+      {
+        title: "Çıkış Referans No",
+        dataIndex: "cikisReferansNo",
+        key: "cikisReferansNo",
+        filters: createTableFilterFromData(referanslar, "cikisReferansNo"),
+        onFilter: (value, record) => record.cikisReferansNo.indexOf(value) === 0,
+        filterSearch: true,
+      },
+      {
+        title: "Sipariş Tipi",
+        dataIndex: "siparisTipi",
+        key: "siparisTipi",
+        filters: createTableFilterFromData(referanslar, "siparisTipi"),
+        render: (text, record) =>
+          text === "Seri" ? <Tag color="volcano">{text}</Tag> : <Tag color="purple">{text}</Tag>,
+        onFilter: (value, record) => record.siparisTipi.indexOf(value) === 0,
+        filterSearch: true,
+      },
+      {
         title: "Sipariş No",
         dataIndex: "siparisNo",
         key: "siparisNo",
         filters: createTableFilterFromData(referanslar, "siparisNo"),
-        onFilter: (value, record) => record.siparisNo.indexOf(value) === 0,
+        onFilter: (value, record) => {
+          const siparisNo = record.siparisNo ?? "Boş";
+          return siparisNo.indexOf(value) === 0;
+        },
         filterSearch: true,
       },
       {
-        title: "Firma Adı",
-        dataIndex: "firmaAdi01",
-        key: "firmaAdi01",
-        filters: createTableFilterFromData(referanslar, "firmaAdi01"),
-        onFilter: (value, record) => record.firmaAdi01.indexOf(value) === 0,
+        title: "Talep No",
+        dataIndex: "talepNo",
+        key: "talepNo",
+        filters: createTableFilterFromData(referanslar, "talepNo"),
+        onFilter: (value, record) => {
+          const talepNo = record.talepNo ?? "Boş";
+          return talepNo.indexOf(value) === 0;
+        },
         filterSearch: true,
       },
       {
-        title: "Lot Adedi",
-        dataIndex: "lotAdedi",
-        key: "lotAdedi",
-        filters: createTableFilterFromData(referanslar, "lotAdedi"),
-        onFilter: (value, record) => record.lotAdedi === value,
+        title: "Fason",
+        dataIndex: "fason",
+        key: "fason",
+        render: (text, record) =>
+          record.fason ? <Tag color="green">Evet</Tag> : <Tag color="orange">Hayır</Tag>,
+        filters: [
+          { text: "Evet", value: "true" },
+          { text: "Hayır", value: "false" },
+        ],
+        onFilter: (value, record) => {
+          // value değeri string olarak geliyor, bu yüzden boolean'a çevirmemiz gerekiyor.
+          const filterValue = value === "true";
+          return record.fason === filterValue;
+        },
+        filterSearch: true,
+      },
+      {
+        title: "Fason Firması",
+        dataIndex: "fasonFirmasi",
+        key: "fasonFirmasi",
+        filters: createTableFilterFromData(referanslar, "fasonFirmasi"),
+        onFilter: (value, record) => {
+          const fasonFirmasi = record.fasonFirmasi ?? "Boş";
+          return fasonFirmasi.indexOf(value) === 0;
+        },
         filterSearch: true,
       },
       {
         title: "Miktar Sapması",
         dataIndex: "miktarSapmasi",
         key: "miktarSapmasi",
-        filters: createTableFilterFromData(referanslar, "miktarSapmasi"),
-        onFilter: (value, record) => record.miktarSapmasi === value,
-        filterSearch: true,
       },
       {
-        title: "İşlem Açıklaması",
-        dataIndex: "islemAciklama",
-        key: "adres1",
-        // width: 250,
-      },
-      {
-        title: "İrsaliye için Açıklama",
-        dataIndex: "irsaliyeAciklama",
-        key: "irsaliyeAciklama",
-        // width: 300,
+        title: "Lot Adedi",
+        dataIndex: "lotAdedi",
+        key: "lotAdedi",
       },
       {
         title: "Yüzey Alanı",
@@ -82,6 +139,14 @@ function Referanslar() {
         key: "islemTipi",
         filters: createTableFilterFromData(referanslar, "islemTipi"),
         onFilter: (value, record) => record.islemTipi.indexOf(value) === 0,
+        filterSearch: true,
+      },
+      {
+        title: "Birim",
+        dataIndex: "birim",
+        key: "birim",
+        filters: createTableFilterFromData(referanslar, "birim"),
+        onFilter: (value, record) => record.birim.indexOf(value) === 0,
         filterSearch: true,
       },
     ],
@@ -134,38 +199,41 @@ function Referanslar() {
     });
   };
   return (
-    <TableGod
-      dataSource={referanslar}
-      columns={columns}
-      onChange={onChange}
-      rowSelection={rowSelection}
-      contextMenu={{
-        editForm: ReferansForm,
-        deleteAction: deleteSingleRecordHandler,
-      }}
-      actionButtons={
-        <>
-          {selectedRows.length > 0 && (
+    <div>
+      <PageHeader label="Referanslar" icon={<MdOutlineDocumentScanner />} />
+      <TableGod
+        dataSource={referanslar}
+        columns={columns}
+        onChange={onChange}
+        rowSelection={rowSelection}
+        contextMenu={{
+          editForm: ReferansForm,
+          deleteAction: deleteSingleRecordHandler,
+        }}
+        actionButtons={
+          <>
+            {selectedRows.length > 0 && (
+              <Button
+                style={{ marginRight: "4px" }}
+                danger
+                icon={<DeleteOutlined />}
+                onClick={deleteSelectedRecordsHandler}
+              >
+                Sil ({selectedRows.length})
+              </Button>
+            )}
             <Button
               style={{ marginRight: "4px" }}
-              danger
-              icon={<DeleteOutlined />}
-              onClick={deleteSelectedRecordsHandler}
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => showPanel({ title: "Yeni Referans", content: <ReferansForm /> })}
             >
-              Sil ({selectedRows.length})
+              Yeni Referans
             </Button>
-          )}
-          <Button
-            style={{ marginRight: "4px" }}
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => showModal({ title: "Yeni Referans", content: <ReferansForm /> })}
-          >
-            Yeni Referans
-          </Button>
-        </>
-      }
-    />
+          </>
+        }
+      />
+    </div>
   );
 }
 

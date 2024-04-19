@@ -3,7 +3,7 @@ import { useDBContext } from "context/DBProvider";
 import { getCurrentDateTime } from "utils/time.helper";
 
 export default function MalzemeDuzenlemeForm({ record }) {
-  const { referanslar, ambalajlar } = useDBContext();
+  const { referanslar, ambalajlar, personeller } = useDBContext();
 
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -92,10 +92,11 @@ export default function MalzemeDuzenlemeForm({ record }) {
         ]}
       >
         <Select>
-          <Select.Option value="Anıl Akseki">Anıl Akseki</Select.Option>
-          <Select.Option value="Mustafa Akseki">Mustafa Akseki</Select.Option>
-          <Select.Option value="Özlem Alanç">Özlem Alanç</Select.Option>
-          <Select.Option value="Türkan Kader">Türkan Kader</Select.Option>
+          {personeller.map((personel) => (
+            <Select.Option key={personel.id} value={personel.ad}>
+              {`${personel.ad} ${personel.soyad}`}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
 

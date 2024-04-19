@@ -10,15 +10,15 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       theme={{
         components: {
           Table: {
-            rowHoverBg: "#cfd9f0",
-            rowSelectedBg: "#b72eb714",
-            borderColor: "#d0d0d0",
+            rowHoverBg: "#d7ecfd",
+            rowSelectedBg: "#bae0ff",
+            rowSelectedHoverBg: "#bae0ff",
+
+            borderColor: "#dddddd",
             cellFontSizeSM: 12,
             headerColor: "rgba(0, 0, 0, 0.8)",
-            colorBgContainer: "rgba(255, 255, 255, 0.7)",
-            // colorBgContainer: "rgba(255, 255, 255, 0.5)",
-            // filterDropdownBg: "#fefefe",
-            filterDropdownBg: "rgb(222, 227, 237)",
+            colorBgContainer: "rgba(255, 255, 255, 0.6)",
+            filterDropdownBg: "#ffff",
           },
           Form: {
             itemMarginBottom: 6,
@@ -29,6 +29,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             colorTextDisabled: "rgba(0, 0, 0)",
             activeBorderColor: "rgb(131, 92, 197)",
             hoverBorderColor: "rgb(131, 92, 197) ",
+            colorBgContainer: "#f8f8f8",
+            borderRadius: 20,
           },
           InputNumber: {
             colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
@@ -36,6 +38,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             colorTextDisabled: "rgba(0, 0, 0)",
             activeBorderColor: "rgb(131, 92, 197)",
             hoverBorderColor: "rgb(131, 92, 197) ",
+            colorBgContainer: "#f8f8f8",
+            borderRadius: 20,
           },
           Radio: {
             dotColorDisabled: "#0958d9",
@@ -52,20 +56,31 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
             colorPrimary: "rgb(131, 92, 197)",
             colorPrimaryHover: "rgb(131, 92, 197)",
+
+            colorBgContainer: "#f8f8f8",
+            borderRadius: 20,
           },
           Button: {
-            colorPrimary: "linear-gradient(72deg, rgba(107,67,175,1) 36%, rgba(225,101,193,1) 87%)",
-            colorPrimaryHover: "linear-gradient(72deg, #5d30aa 36%, rgba(224, 75, 187, 0.9) 87%)",
-            colorPrimaryActive: "rgba(107,67,175,1)",
+            colorPrimary: "rgb(107,67,175)",
+            // colorPrimary: "linear-gradient(72deg, rgba(107,67,175,1) 36%, rgba(225,101,193,1) 87%)",
+            colorPrimaryHover: "rgb(128, 84, 206)",
+            // colorPrimaryHover: "linear-gradient(72deg, #5d30aa 36%, rgba(224, 75, 187, 0.9) 87%)",
+            colorPrimaryActive: "rgb(107,67,175)",
             motionDurationMid: "0s",
             colorLink: "purple",
             colorLinkHover: "#e570f7",
           },
           Tabs: {
             inkBarColor: "#4b00ff",
-            itemSelectedColor: "#4b00ff",
+            itemSelectedColor: "#793fff",
             itemHoverColor: "#793fff",
             lineWidthBold: 3,
+            colorBorderSecondary: "#cccccc",
+          },
+          Collapse: {
+            // contentBg: "transparent",
+            // headerBg: "rgba(255, 255, 255, 0.5)",
+            headerBg: "transparent",
           },
         },
       }}

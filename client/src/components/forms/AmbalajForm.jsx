@@ -6,7 +6,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
 
 export default function AmbalajForm({ record, type }) {
-  const { showModal, showNotification } = useUIContext();
+  const { showPanel, showNotification } = useUIContext();
   const { ambalajlar, setAmbalajlar } = useDBContext();
 
   const [fileList, setFileList] = useState([]);
@@ -26,7 +26,7 @@ export default function AmbalajForm({ record, type }) {
         return ambalaj;
       });
       setAmbalajlar(updatedAmbalajlarArray);
-      showModal(false);
+      // showPanel(false);
       showNotification("success", "Ambalaj güncellendi");
     } else {
       const formData = new FormData();
@@ -66,7 +66,7 @@ export default function AmbalajForm({ record, type }) {
           },
         ]}
       >
-        <Input />
+        <Input placeholder="Kasa adı girin" />
       </Form.Item>
       {type !== "update" && (
         <Form.Item
@@ -94,11 +94,9 @@ export default function AmbalajForm({ record, type }) {
       )}
       <Divider />
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Kaydet
-        </Button>
-      </Form.Item>
+      <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+        Kaydet
+      </Button>
     </Form>
   );
 }

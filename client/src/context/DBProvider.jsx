@@ -1,10 +1,15 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
-import referanslarHttp, { referansIslemTipleriHttp } from "services/referanslar.http";
+import referanslarHttp, {
+  referansIslemTipleriHttp,
+  referansIslemAdlariHttp,
+} from "services/referanslar.http";
 import musterilerHttp from "services/musteriler.http";
 import ambalajlarHttp from "services/ambalajlar.http";
-import { devamEdenUretimHttp } from "services/uretim.http";
+import { devamEdenUretimHttp } from "services/uretimler.http";
+import personellerHttp from "services/personeller.http";
+import irsaliyeHttp from "services/irsaliyeler.http";
 import { useUIContext } from "./UIProvider";
 
 const DBContext = createContext();
@@ -16,10 +21,13 @@ export const useDBContext = () => useContext(DBContext);
 export const DBProvider = ({ children }) => {
   const [referanslar, setReferanslar] = useState([]);
   const [referansIslemTipleri, setReferansIslemTipleri] = useState([]);
+  const [referansParcaAdlari, setReferansParcaAdlari] = useState([]);
+  const [irsaliyeler, setIrsaliyeler] = useState([]);
   const [musteriler, setMusteriler] = useState([]);
   const [ambalajlar, setAmbalajlar] = useState([]);
   const [devamEdenUretimler, setDevamEdenUretimler] = useState([]);
   // ? uretimler denip {devamEdenler, tamamlananlar} şeklinde verilebilir
+  const [personeller, setPersoneller] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -32,12 +40,24 @@ export const DBProvider = ({ children }) => {
       setReferanslar(referansData);
       const referansIslemTipiData = await referansIslemTipleriHttp.getData();
       setReferansIslemTipleri(referansIslemTipiData);
+      const referansParcaAdiData = await referansIslemAdlariHttp.getData();
+      setReferansParcaAdlari(referansParcaAdiData);
       setLoading(false);
     } catch (error) {
       showNotification("error", "Referans verisi alınamadı", error.message);
     }
   };
 
+  const fetchIrsaliyeler = async () => {
+    try {
+      setLoading(true);
+      const irsaliyeData = await irsaliyeHttp.getData();
+      setIrsaliyeler(irsaliyeData);
+      setLoading(false);
+    } catch (error) {
+      showNotification("error", "İrsaliye verisi alınamadı", error.message);
+    }
+  };
   const fetchMusteriler = async () => {
     try {
       setLoading(true);
@@ -70,11 +90,24 @@ export const DBProvider = ({ children }) => {
     }
   };
 
+  const fetchPersoneller = async () => {
+    try {
+      setLoading(true);
+      const personelData = await personellerHttp.getData();
+      setPersoneller(personelData);
+      setLoading(false);
+    } catch (error) {
+      showNotification("error", "Personel verisi alınamadı", error.message);
+    }
+  };
+
   useEffect(() => {
+    fetchDevamEdenUretimler();
     fetchReferanslar();
+    fetchIrsaliyeler();
     fetchMusteriler();
     fetchAmbalajlar();
-    fetchDevamEdenUretimler();
+    fetchPersoneller();
   }, []);
 
   const value = {
@@ -82,13 +115,20 @@ export const DBProvider = ({ children }) => {
     setReferanslar,
     referansIslemTipleri,
     setReferansIslemTipleri,
+    referansParcaAdlari,
+    setReferansParcaAdlari,
+    irsaliyeler,
+    setIrsaliyeler,
     musteriler,
     setMusteriler,
     ambalajlar,
     setAmbalajlar,
     devamEdenUretimler,
     setDevamEdenUretimler,
+    personeller,
+    setPersoneller,
     loading,
+    setLoading,
   };
 
   return <DBContext.Provider value={value}>{children}</DBContext.Provider>;

@@ -8,35 +8,36 @@ const ContextMenuWrapperStyled = styled.div`
   top: ${({ position }) => `${position.y}px`};
   left: ${({ position }) => `${position.x}px`};
   z-index: 1000;
-  border: 1px solid #d4d4d4;
-  box-shadow: -5px 14px 24px 0px rgba(0, 0, 0, 0.1);
 `;
 
 const MenuStyled = styled.div`
   background-color: white;
-  padding: 6px;
-  font-size: 15px;
+  box-shadow: -5px 14px 24px 0px rgba(0, 0, 0, 0.1);
+  padding-top: 4px;
+  font-size: 14px;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 8px;
+  border: 1px solid #d4d4d4;
 `;
 const MenuItemStyled = styled.div`
   color: #313131;
-  padding: 4px;
+  padding: 8px;
   padding-left: 10px;
   padding-right: 10px;
   display: flex;
   align-items: center;
+  border-bottom: 1px solid #dbdbdb;
   &:hover {
-    background-color: #ebedf3;
-    color: #4b00ff;
+    background-color: rgb(107, 67, 175);
+    color: whitesmoke;
   }
 `;
 
 export default function RecordContextMenu({ position, record, contextMenu }) {
-  const { showModal } = useUIContext();
+  const { showPanel } = useUIContext();
 
   const editRecordHandler = () => {
-    showModal({
+    showPanel({
       title: "Düzenle",
       content: React.createElement(contextMenu.editForm, {
         record,
@@ -48,28 +49,21 @@ export default function RecordContextMenu({ position, record, contextMenu }) {
   return (
     <ContextMenuWrapperStyled position={position}>
       <MenuStyled>
-        <MenuItemStyled
-          style={{
-            background: "#842c72",
-            color: "whitesmoke",
-            borderRadius: "6px",
-            marginBottom: "8px",
-            display: "flex",
-            justifyContent: "center",
-            fontSize: "14px",
-          }}
-        >
-          {record.referansNo}
-        </MenuItemStyled>
         {contextMenu.extraItems?.map((item, i) => (
           <MenuItemStyled key={i} onClick={() => item.action(record)}>
             {item.title}
           </MenuItemStyled>
         ))}
-        <MenuItemStyled onClick={editRecordHandler}>Düzenle</MenuItemStyled>
-        <MenuItemStyled onClick={() => contextMenu.deleteAction(record)} style={{ color: "red" }}>
-          Sil
-        </MenuItemStyled>
+
+        {contextMenu.editForm && (
+          <MenuItemStyled onClick={editRecordHandler}>Düzenle</MenuItemStyled>
+        )}
+
+        {contextMenu.deleteAction && (
+          <MenuItemStyled onClick={() => contextMenu.deleteAction(record)} style={{ color: "red" }}>
+            Sil
+          </MenuItemStyled>
+        )}
       </MenuStyled>
     </ContextMenuWrapperStyled>
   );

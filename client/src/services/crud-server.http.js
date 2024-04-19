@@ -11,7 +11,7 @@ class CRUDServerHttp {
 
   async getData() {
     const rawData = await axios.get(this.endPoint);
-    console.log("fetched data from server(raw) --> : ", rawData);
+    // console.log("fetched data from server(raw) --> : ", rawData);
     return rawData.data;
   }
 
@@ -53,6 +53,7 @@ class CRUDServerHttp {
     const newDataArray = dataArray.filter(
       (data) => !selectedRows.some((selectedRow) => selectedRow.id === data.id),
     );
+
     return newDataArray;
   }
 }

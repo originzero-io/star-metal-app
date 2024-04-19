@@ -15,14 +15,14 @@ module.exports = {
         DB_PASS: "OriginZero2024",
       },
     },
-    {
-      name: "application",
-      script: "npm",
-      args: "run dev",
-      cwd: "./client/", // client klasörünün yolu
-      autorestart: true,
-      watch: true,
-      ignore_watch: ["node_modules"],
-    },
+    // {
+    //   name: "application",
+    //   script: "npm",
+    //   args: "run dev",
+    //   cwd: "./client/", // client klasörünün yolu
+    //   autorestart: true,
+    //   watch: true,
+    //   ignore_watch: ["node_modules"],
+    // },
   ],
 };

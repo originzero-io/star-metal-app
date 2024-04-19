@@ -4,7 +4,7 @@ import { useUIContext } from "context/UIProvider";
 import musterilerHttp from "services/musteriler.http";
 
 export default function MusteriForm({ record, type }) {
-  const { showModal, showNotification } = useUIContext();
+  const { showPanel, showNotification } = useUIContext();
   const { musteriler, setMusteriler } = useDBContext();
 
   const onFinish = async (values) => {
@@ -17,7 +17,7 @@ export default function MusteriForm({ record, type }) {
         return musteri;
       });
       setMusteriler(updatedMusterilerArray);
-      showModal(false);
+      // showPanel(false);
       showNotification("success", "Kayıt güncellendi");
     } else {
       const newMusteri = await musterilerHttp.addData(values);
@@ -40,8 +40,8 @@ export default function MusteriForm({ record, type }) {
       autoComplete="off"
     >
       <Form.Item
-        label="Müşteri Adı - 1"
-        name="musteriAdi1"
+        label="Müşteri Adı"
+        name="musteriAdi"
         rules={[
           {
             required: true,
@@ -49,11 +49,11 @@ export default function MusteriForm({ record, type }) {
           },
         ]}
       >
-        <Input />
+        <Input placeholder="Müşteri adı girin" />
       </Form.Item>
       <Form.Item
-        label="Müşteri Adı - 2"
-        name="musteriAdi2"
+        label="Adres"
+        name="adres"
         rules={[
           {
             required: true,
@@ -61,46 +61,7 @@ export default function MusteriForm({ record, type }) {
           },
         ]}
       >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        label="Adres - 1"
-        name="adres1"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item label="Adres - 2" name="adres2">
-        <Input />
-      </Form.Item>
-      <Form.Item
-        label="İl"
-        name="il"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        label="İlçe"
-        name="ilce"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input />
+        <Input.TextArea placeholder="Adresi girin" />
       </Form.Item>
       <Form.Item
         label="Vergi Dairesi"
@@ -112,11 +73,11 @@ export default function MusteriForm({ record, type }) {
           },
         ]}
       >
-        <Input />
+        <Input placeholder="Vergi dairesi girin" />
       </Form.Item>
       <Form.Item
-        label="Vergi Hesap No"
-        name="vergiHesapNo"
+        label="Vergi No"
+        name="vergiNo"
         rules={[
           {
             required: true,
@@ -124,16 +85,26 @@ export default function MusteriForm({ record, type }) {
           },
         ]}
       >
-        <Input />
+        <Input placeholder="Vergi no girin" />
+      </Form.Item>
+      <Form.Item label="Telefon" name="telefon">
+        <Input placeholder="Telefon girin" />
+      </Form.Item>
+      <Form.Item label="E-Mail" name="mail">
+        <Input placeholder="E-mail girin" />
+      </Form.Item>
+      <Form.Item label="Yetkili Kişi" name="yetkili">
+        <Input placeholder="Yetkili girin" />
+      </Form.Item>
+      <Form.Item label="Kep Adresi" name="kepAdresi">
+        <Input placeholder="Kep adresi girin" />
       </Form.Item>
 
       <Divider />
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Kaydet
-        </Button>
-      </Form.Item>
+      <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+        Kaydet
+      </Button>
     </Form>
   );
 }

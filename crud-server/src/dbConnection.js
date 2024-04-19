@@ -13,6 +13,7 @@ const sequelize = new Sequelize(dbName, dbUser, dbPass, {
   dialectOptions: {
     // MS SQL Server sürümüne göre ekstra seçenekler burada belirtilebilir
   },
+  logging: false,
   pool: {
     max: 20,
     min: 0,

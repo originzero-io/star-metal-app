@@ -6,16 +6,13 @@ import AmbalajForm from "components/forms/AmbalajForm";
 import { useDBContext } from "context/DBProvider";
 import ambalajlarHttp from "services/ambalajlar.http";
 import styled from "styled-components";
+import PageHeader from "components/shared/PageHeader";
+import { FaDropbox } from "react-icons/fa";
 
-const Container = styled.div`
-  height: 100vh;
-  width: 87%;
-  padding: 14px;
-  overflow: auto;
-`;
+const Container = styled.div``;
 
 function Ambalajlar() {
-  const { showModal, showNotification } = useUIContext();
+  const { showPanel, showNotification, showAlert } = useUIContext();
   const { ambalajlar, setAmbalajlar } = useDBContext();
 
   const deleteSingleRecordHandler = (record) => {
@@ -30,7 +27,7 @@ function Ambalajlar() {
           setAmbalajlar(newMusteriler);
           showNotification("success", `${record.kasaAdi} ambalajı silindi`);
         } catch (error) {
-          showNotification("error", "Hata oluştu", error.message);
+          showAlert("error", "Hata oluştu", error.message);
         }
       },
     });
@@ -38,6 +35,7 @@ function Ambalajlar() {
 
   return (
     <Container>
+      <PageHeader label="Ambalajlar" icon={<FaDropbox />} />
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         <Card
           hoverable
@@ -51,7 +49,7 @@ function Ambalajlar() {
             background: "#1677ff",
             color: "whitesmoke",
           }}
-          onClick={() => showModal({ title: "Yeni Ambalaj", content: <AmbalajForm /> })}
+          onClick={() => showPanel({ title: "Yeni Ambalaj", content: <AmbalajForm /> })}
         >
           <Button
             type="link"
@@ -83,7 +81,7 @@ function Ambalajlar() {
                 <EditOutlined
                   style={{ fontSize: "1.5vmin" }}
                   onClick={() =>
-                    showModal({
+                    showPanel({
                       title: "Düzenle",
                       content: <AmbalajForm record={ambalaj} type="update" />,
                     })

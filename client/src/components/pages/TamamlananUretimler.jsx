@@ -1,8 +1,11 @@
-import { Tag } from "antd";
+import { Tabs, Collapse, Tag, Badge } from "antd";
 import { CgMoreVertical } from "react-icons/cg";
 import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../shared/TableGod";
 import MalzemeDuzenlemeForm from "components/forms/MalzemeDuzenlemeForm";
+import { useState } from "react";
+import PageHeader from "components/shared/PageHeader";
+import { FcOk } from "react-icons/fc";
 
 const data = [];
 for (let i = 0; i < 4; i++) {
@@ -12,7 +15,7 @@ for (let i = 0; i < 4; i++) {
     siparisNo: "RC0236 BELKA",
     talepNo: "IADE",
     islemAciklama: "DIYAFRAM CINKO FOSFAT",
-    irsaliyeNo: "348295",
+    logoIrsaliyeNo: "348295",
     gelenTarih: "14.12.2023 08:47:32",
     gelenMiktar: 1696 + i,
     gidenMiktar: 1696 + i,
@@ -59,9 +62,9 @@ const columns = [
     key: "islemAciklama",
   },
   {
-    title: "Irsaliye No",
-    dataIndex: "irsaliyeNo",
-    key: "irsaliyeNo",
+    title: "Logo Irsaliye No",
+    dataIndex: "logoIrsaliyeNo",
+    key: "logoIrsaliyeNo",
   },
   {
     title: "Gelen Tarih",
@@ -117,27 +120,94 @@ const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
 
-function TamamlananUretimler({ setSelectedRows }) {
-  const rowSelection = {
-    onChange: (_selectedRowKeys, _selectedRows) => {
-      console.log(`selectedRowKeys: ${_selectedRowKeys}`, "selectedRows: ", _selectedRows);
-      setSelectedRows(_selectedRows);
-    },
-  };
+function TamamlananUretimler() {
+  // const [selectedRows, setSelectedRows] = useState([]);
+
+  // const rowSelection = {
+  //   onChange: (_selectedRowKeys, _selectedRows) => {
+  //     console.log(`selectedRowKeys: ${_selectedRowKeys}`, "selectedRows: ", _selectedRows);
+  //     setSelectedRows(_selectedRows);
+  //   },
+  // };
   return (
-    <TableGod
-      dataSource={data}
-      columns={columns}
-      onChange={onChange}
-      rowSelection={rowSelection}
-      expandable
-      contextMenu={{
-        editForm: MalzemeDuzenlemeForm,
-      }}
-    />
+    <div>
+      <PageHeader label="Tamamlanan Üretimler" icon={<FcOk />} />
+      <Collapse
+        // type="card"
+        // size="large"
+        bordered={false}
+        defaultActiveKey="normal" // sağ tıklanarak gelinmişse otomatik olarak panel açık olsun
+        items={[
+          {
+            key: "normal",
+            // label: "Star Metal Üretimler",
+            // key: index.toString(),
+            label: (
+              <Badge count={data.length} offset={[20, 6]}>
+                <div
+                  style={{
+                    // fontSize: "16px",
+                    fontWeight: "600",
+                    color: "#474747",
+                  }}
+                >
+                  Star Metal Üretimler
+                </div>
+              </Badge>
+            ),
+            children: <NormalUretimler />,
+            style: {
+              borderRadius: 10,
+              marginTop: 4,
+              background: "rgba(255, 255, 255, 0.5)",
+            },
+          },
+          {
+            key: "fason",
+            label: "Fason Üretimler",
+            children: <FasonUretimler />,
+            style: {
+              borderRadius: 10,
+              marginTop: 4,
+              background: "rgba(255, 255, 255, 0.4)",
+            },
+          },
+        ]}
+      />
+    </div>
   );
 }
 
 TamamlananUretimler.propTypes = {};
 
 export default TamamlananUretimler;
+
+function FasonUretimler() {
+  return (
+    <TableGod
+      wrapperStyle={{ padding: "0", width: "100%" }}
+      dataSource={data}
+      columns={columns}
+      onChange={onChange}
+      // expandable={{ key: ["Referanslar", "not"] }}
+      // contextMenu={{
+      //   editForm: MalzemeDuzenlemeForm,
+      // }}
+    />
+  );
+}
+
+function NormalUretimler() {
+  return (
+    <TableGod
+      wrapperStyle={{ padding: "0", width: "100%" }}
+      dataSource={data}
+      columns={columns}
+      onChange={onChange}
+      // expandable={{ key: ["Referanslar", "not"] }}
+      // contextMenu={{
+      //   editForm: MalzemeDuzenlemeForm,
+      // }}
+    />
+  );
+}

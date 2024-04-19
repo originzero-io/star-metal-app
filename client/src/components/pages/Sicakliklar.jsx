@@ -1,13 +1,13 @@
 import { Button, Modal, Tag } from "antd";
 import { useState } from "react";
-import { IoIosAddCircleOutline } from "react-icons/io";
 
-import { useUIContext } from "context/UIProvider";
 import { MdOutlineDelete } from "react-icons/md";
 
+import PageHeader from "components/shared/PageHeader";
+import { FaTemperatureLow } from "react-icons/fa";
+import { createTableFilterFromData } from "utils/table.helper";
 import { getCurrentDateTime } from "utils/time.helper";
 import TableGod from "../shared/TableGod";
-import { createTableFilterFromData } from "utils/table.helper";
 
 export const sicaklikData = [];
 
@@ -88,29 +88,32 @@ function Sicakliklar() {
     });
   };
   return (
-    <TableGod
-      dataSource={sicaklikData}
-      columns={columns}
-      onChange={onChange}
-      rowSelection={rowSelection}
-      //   contextMenu={{
-      //     editForm: YeniSicaklikForm,
-      //   }}
-      actionButtons={
-        <>
-          {selectedRows.length > 0 && (
-            <Button
-              style={{ marginRight: "4px" }}
-              danger
-              icon={<MdOutlineDelete />}
-              onClick={deleteRecordHandler}
-            >
-              Sil ({selectedRows.length})
-            </Button>
-          )}
-        </>
-      }
-    />
+    <div>
+      <PageHeader label="Sıcaklık Değerleri" icon={<FaTemperatureLow />} />
+      <TableGod
+        dataSource={sicaklikData}
+        columns={columns}
+        onChange={onChange}
+        rowSelection={rowSelection}
+        //   contextMenu={{
+        //     editForm: YeniSicaklikForm,
+        //   }}
+        actionButtons={
+          <>
+            {selectedRows.length > 0 && (
+              <Button
+                style={{ marginRight: "4px" }}
+                danger
+                icon={<MdOutlineDelete />}
+                onClick={deleteRecordHandler}
+              >
+                Sil ({selectedRows.length})
+              </Button>
+            )}
+          </>
+        }
+      />
+    </div>
   );
 }
 

@@ -1,23 +1,31 @@
-import { PlusCircleFilled } from "@ant-design/icons";
-import { Button, Col, Form, Input, InputNumber, Row, Select, Space, Tag } from "antd";
+import { FolderAddTwoTone, PlusCircleFilled } from "@ant-design/icons";
+import {
+  Button,
+  Col,
+  Divider,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+  Space,
+  Tag,
+  Tooltip,
+} from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import PageHeader from "components/shared/PageHeader";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
 import { FaMinusCircle } from "react-icons/fa";
-import { devamEdenUretimHttp } from "services/uretim.http";
+import { devamEdenUretimHttp } from "services/uretimler.http";
 import styled from "styled-components";
 import { getCurrentDateTime } from "utils/time.helper";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  // align-items: center;
-  padding: 14px;
-  max-width: 87%;
-  width: 90%;
-  overflow: auto;
+  // padding: 14px;
 `;
 
 const FormStyled = styled(Form)`
@@ -39,153 +47,147 @@ const SpaceStyled = styled(Space)`
   margin-bottom: 10px;
   padding: 8px;
   border: 1px solid #e0e0e0;
-  justify-content: space-around;
+  // justify-content: flex-start;
+  justify-content: space-between;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 6px;
+  overflow-y: auto;
+  // align-items: center;
   &:hover {
-    border: 1px solid #b0ddfe;
-    background-color: #e5f3fd;
+    border: 1px solid rgb(131, 92, 197);
   }
 `;
+
+const rules = [
+  {
+    required: true,
+    message: "Bu alan zorunlu",
+  },
+];
+
 export default function GelenMalzemeKayit() {
-  const { devamEdenUretimler, setDevamEdenUretimler } = useDBContext();
-  const { showNotification } = useUIContext();
-
-  const onFinish = async (values) => {
-    console.log("Success:", values);
-
-    const { irsaliyeNo, getirenSofor, kontrolEden, malzemeler } = values;
-
-    const records = malzemeler.map((malzeme) => ({
-      irsaliyeNo,
-      getirenSofor,
-      kontrolEden,
-      ...malzeme,
-      gelenTarih: getCurrentDateTime(),
-      gidenMiktar: 0,
-      kalanMiktar: malzeme.adet,
-      uretilenMiktar: 0,
-      uretilmeyenMiktar: malzeme.adet,
-    }));
-
-    const newMalzemeler = await devamEdenUretimHttp.addData(records);
-
-    setDevamEdenUretimler([...devamEdenUretimler, ...newMalzemeler]);
-    showNotification("success", `${newMalzemeler.length} adet malzeme üretime eklendi.`);
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-
-  const rules = [
-    {
-      required: true,
-      message: "Bu alan zorunlu",
-    },
-  ];
+  const {
+    devamEdenUretimler,
+    setDevamEdenUretimler,
+    musteriler,
+    ambalajlar,
+    referanslar,
+    personeller,
+  } = useDBContext();
+  const { showNotification, showAlert } = useUIContext();
 
   const [form] = Form.useForm();
 
-  const [record, setRecord] = useState(null);
-  const [printTrigger, setPrintTrigger] = useState(false);
-  const { ambalajlar, referanslar } = useDBContext();
+  const [seciliReferansFasonluk, setSeciliReferansFasonluk] = useState({});
 
-  const printRowData = async (name) => {
+  const [printRecord, setPrintRecord] = useState({});
+  const [printTrigger, setPrintTrigger] = useState(false);
+
+  const [musteriReferanslari, setMusteriReferanslari] = useState([]);
+
+  const [kayitDurumu, setKayitDurumu] = useState(false);
+
+  const isEmriYazdir = async (name) => {
     try {
-      const data = await form.validateFields([
-        ["irsaliyeNo"],
-        ["kontrolEden"],
-        ["malzemeler", name, "referansNo"],
-        ["malzemeler", name, "islemAciklama"],
-        ["malzemeler", name, "siparisNo"],
-        ["malzemeler", name, "adet"],
-        ["malzemeler", name, "resimUrl"],
-      ]);
+      const data = form.getFieldsValue();
 
       const cardRecord = {
         key: name,
         irsaliyeNo: data.irsaliyeNo,
-        kontrolEden: data.kontrolEden,
+        personel: data.personel,
         ...data.malzemeler[name],
       };
 
       console.log(">>> Print Card Record: ", cardRecord);
-      setRecord(cardRecord);
+      setPrintRecord(cardRecord);
       setPrintTrigger(true);
     } catch (errorInfo) {
       console.log("Validation failed:", errorInfo);
     }
   };
 
-  const selectReferenceHandle = (value, name) => {
+  const referansSecimiYap = (value, name) => {
     const selectedReference = referanslar.filter((referans) => referans.referansNo === value)[0];
+
+    // bu referans no'lu kayıdın fasonluk bilgisini tut (true/false)
+    setSeciliReferansFasonluk({ ...seciliReferansFasonluk, [name]: selectedReference.fason });
 
     form.setFieldsValue({
       malzemeler: {
         ...form.getFieldValue("malzemeler"),
         [name]: {
           ...form.getFieldValue(["malzemeler", name]),
-          islemAciklama: selectedReference.islemAciklama,
-          siparisNo: selectedReference.siparisNo,
+          islemTipi: selectedReference.islemTipi,
+          fason: selectedReference.fason ? "Fason" : "Fason Değil",
+          fasonFirmasi: selectedReference.fasonFirmasi,
           resimUrl: selectedReference.resimUrl,
         },
       },
     });
   };
 
-  const [selectedIrsaliyeTipi, setSelectedIrsaliyeTipi] = useState({});
+  const musteriSecimiYap = (value) => {
+    const musteriRef = referanslar.filter((referans) => referans.musteriAdi === value);
+    setMusteriReferanslari(musteriRef);
+    form.setFieldsValue({ malzemeler: null }); // müşteri seçimi değiştirildiğinde tüm satırlar temizlensin
+  };
 
-  const selectedIrsaliyeTipiHandler = (value, name) => {
-    if (value === "İade") {
-      // sonradan İade olarak seçilirse mevcut değerler boşaltılsın diye
-      form.setFieldsValue({
-        malzemeler: {
-          ...form.getFieldValue("malzemeler"),
-          [name]: {
-            ...form.getFieldValue(["malzemeler", name]),
-            islemAciklama: "",
-            siparisNo: "",
-          },
-        },
-      });
-    } else if (value === "Talep Nolu") {
-      // sonradan Talep Nolu olarak seçilirse mevcut değerler boşaltılsın diye
-      form.setFieldsValue({
-        malzemeler: {
-          ...form.getFieldValue("malzemeler"),
-          [name]: {
-            ...form.getFieldValue(["malzemeler", name]),
-            siparisNo: "",
-          },
-        },
-      });
-    } else if (value === "Sipariş Nolu") {
-      // sonradan Sipariş Nolu olarak seçilirse mevcut değerler boşaltılsın diye
-      form.setFieldsValue({
-        malzemeler: {
-          ...form.getFieldValue("malzemeler"),
-          [name]: {
-            ...form.getFieldValue(["malzemeler", name]),
-            talepNo: "",
-          },
-        },
-      });
+  const satirEkle = (addRowFunc) => {
+    if (form.getFieldValue("musteriAdi")) {
+      addRowFunc();
+    } else {
+      showAlert("warning", "Malzeme eklemeden önce müşteri seçimi yapın.");
     }
-    setSelectedIrsaliyeTipi({ ...selectedIrsaliyeTipi, [name]: value });
+  };
+
+  const satiriSil = (name, removeRowFunc) => {
+    removeRowFunc(name);
+    setSeciliReferansFasonluk((prevState) => {
+      const newState = { ...prevState };
+      delete newState[name];
+      return newState;
+    });
+  };
+
+  const onFinish = async (values) => {
+    console.log("Success:", values);
+
+    const { irsaliyeNo, getirenSofor, personel, malzemeler } = values;
+
+    const yeniMalzemeler = malzemeler.map((malzeme) => ({
+      gelenTarih: getCurrentDateTime(),
+      irsaliyeNo,
+      getirenSofor,
+      personel,
+      referansNo: malzeme.referansNo,
+      iade: malzeme.iade,
+      birinciAmbalaj: malzeme.birinciAmbalaj,
+      ikinciAmbalaj: malzeme.ikinciAmbalaj,
+      fason: malzeme.fason === "Fason", // true or false
+      fasonFirmasi: malzeme.fasonFirmasi,
+      gelenMiktar: malzeme.gelenMiktar,
+      gidenMiktar: 0,
+      kalanMiktar: malzeme.gelenMiktar,
+      uretilenMiktar: 0,
+      uretilmeyenMiktar: malzeme.gelenMiktar,
+    }));
+
+    console.log("records to db: ", yeniMalzemeler);
+
+    const { normalUretimler, fasonUretimler } = await devamEdenUretimHttp.addData(yeniMalzemeler);
+
+    setDevamEdenUretimler((prevState) => ({
+      normalUretimler: [...prevState.normalUretimler, ...normalUretimler],
+      fasonUretimler: [...prevState.fasonUretimler, ...fasonUretimler],
+    }));
+    showNotification("success", `Malzemeler üretime eklendi.`);
+    setKayitDurumu(true);
   };
 
   return (
     <Container>
+      <PageHeader label="Gelen Malzeme Kaydı" icon={<FolderAddTwoTone twoToneColor="#5c0099" />} />
       <FormStyled layout="vertical" onFinish={onFinish} form={form}>
-        <div
-          style={{
-            marginBottom: "20px",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <PageHeader />
-        </div>
         <Row
           gutter={4}
           style={{
@@ -195,23 +197,35 @@ export default function GelenMalzemeKayit() {
             background: "rgba(255,255,255, 0.7)",
           }}
         >
-          <Col span={8}>
+          <Col span={6}>
+            <Form.Item label="Müşteri" name="musteriAdi" rules={rules}>
+              <Select placeholder="Müşteri Seçin" onChange={musteriSecimiYap}>
+                {musteriler.map((musteri) => (
+                  <Select.Option key={musteri.id} value={musteri.musteriAdi}>
+                    {musteri.musteriAdi}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={6}>
             <Form.Item label="İrsaliye No" name="irsaliyeNo" rules={rules}>
               <Input placeholder="İrsaliye No" />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={6}>
             <Form.Item label="Şoför" name="getirenSofor" rules={rules}>
               <Input placeholder="Şoför" />
             </Form.Item>
           </Col>
-          <Col span={8}>
-            <Form.Item label="Kontrol Eden" name="kontrolEden" rules={rules}>
-              <Select placeholder="Kontrol Eden">
-                <Select.Option value="Anıl Akseki">Anıl Akseki</Select.Option>
-                <Select.Option value="Mustafa Akseki">Mustafa Akseki</Select.Option>
-                <Select.Option value="Özlem Alanç">Özlem Alanç</Select.Option>
-                <Select.Option value="Türkan Kader">Türkan Kader</Select.Option>
+          <Col span={6}>
+            <Form.Item label="Personel" name="personel" rules={rules}>
+              <Select placeholder="Personel">
+                {personeller.map((personel) => (
+                  <Select.Option key={personel.id} value={personel.ad}>
+                    {`${personel.ad} ${personel.soyad}`}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
           </Col>
@@ -224,134 +238,137 @@ export default function GelenMalzemeKayit() {
               }}
             >
               {fields.map(({ key, name, ...restField }, i) => (
-                <SpaceStyled key={key} align="baseline">
-                  <Tag color="blue">{i}</Tag>
-
-                  <Form.Item
-                    {...restField}
-                    name={[name, "malzemeTipi"]}
-                    rules={rules}
-                    style={{ width: "120px" }}
-                  >
-                    <Select
-                      placeholder="İrsaliye Tipi"
-                      style={{ width: "120px" }}
-                      onChange={(value) => selectedIrsaliyeTipiHandler(value, name)}
+                <SpaceStyled key={key} align="start">
+                  <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                    <Tag color="purple">{i}</Tag>
+                    <Form.Item
+                      {...restField}
+                      name={[name, "referansNo"]}
+                      rules={rules}
+                      style={{ width: "160px" }}
                     >
-                      <Select.Option value="Sipariş Nolu">Sipariş Nolu</Select.Option>
-                      <Select.Option value="Talep Nolu">Talep Nolu</Select.Option>
-                      <Select.Option value="İade">İade</Select.Option>
-                    </Select>
-                  </Form.Item>
-
-                  <Form.Item
-                    {...restField}
-                    name={[name, "referansNo"]}
-                    rules={rules}
-                    style={{ width: "140px" }}
-                  >
-                    {selectedIrsaliyeTipi[name] !== "Sipariş Nolu" ? (
-                      <Input placeholder="Referans No" />
-                    ) : (
                       <Select
                         showSearch
                         placeholder="Referans No"
                         name={name}
-                        onChange={(value) => selectReferenceHandle(value, name)}
+                        onChange={(value) => referansSecimiYap(value, name)}
                       >
-                        {referanslar.map((referans) => (
+                        {musteriReferanslari.map((referans) => (
                           <Select.Option key={referans.referansNo} value={referans.referansNo}>
                             {referans.referansNo}
                           </Select.Option>
                         ))}
                       </Select>
+                    </Form.Item>
+
+                    <Form.Item
+                      {...restField}
+                      name={[name, "iade"]}
+                      rules={rules}
+                      style={{ width: "120px" }}
+                    >
+                      <Select placeholder="İade mi?" name={name}>
+                        <Select.Option value="Evet">İade</Select.Option>
+                        <Select.Option value="Hayır">İade Değil</Select.Option>
+                      </Select>
+                    </Form.Item>
+
+                    <Form.Item {...restField} name={[name, "gelenMiktar"]} rules={rules}>
+                      <InputNumber placeholder="Gelen Miktar" min={0} style={{ width: "140px" }} />
+                    </Form.Item>
+
+                    <Form.Item
+                      {...restField}
+                      name={[name, "birinciAmbalaj"]}
+                      rules={rules}
+                      style={{ width: "130px" }}
+                    >
+                      <Select placeholder="1. Ambalaj">
+                        {ambalajlar.map((ambalaj) => (
+                          <Select.Option key={ambalaj.id} value={ambalaj.kasaAdi}>
+                            {ambalaj.kasaAdi}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+
+                    <Form.Item
+                      {...restField}
+                      name={[name, "ikinciAmbalaj"]}
+                      style={{ width: "130px" }}
+                    >
+                      <Select placeholder="2. Ambalaj">
+                        {ambalajlar.map((ambalaj) => (
+                          <Select.Option key={ambalaj.id} value={ambalaj.kasaAdi}>
+                            {ambalaj.kasaAdi}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+
+                    <Divider type="vertical" style={{ background: "#cfcfcf", height: "35px" }} />
+
+                    <Form.Item {...restField} name={[name, "islemTipi"]}>
+                      <Input disabled placeholder="İşlem Tipi" style={{ width: "140px" }} />
+                    </Form.Item>
+
+                    {seciliReferansFasonluk[name] && (
+                      <Form.Item {...restField} name={[name, "fasonFirmasi"]}>
+                        <Input
+                          disabled
+                          placeholder="Fason Firması Yok"
+                          style={{
+                            width: "145px",
+                            background: seciliReferansFasonluk[name] ? "#588157" : "",
+                            color: seciliReferansFasonluk[name] ? "white" : "",
+                          }}
+                        />
+                      </Form.Item>
                     )}
-                  </Form.Item>
-
-                  <Form.Item
-                    {...restField}
-                    name={[name, "islemAciklama"]}
-                    rules={selectedIrsaliyeTipi[name] === "İade" ? rules : null}
-                  >
-                    <Input
-                      disabled={selectedIrsaliyeTipi[name] === "Sipariş Nolu"}
-                      placeholder="Açıklama"
-                    />
-                  </Form.Item>
-
-                  <Form.Item
-                    {...restField}
-                    name={[name, "siparisNo"]}
-                    rules={[
-                      {
-                        required: selectedIrsaliyeTipi[name] === "Sipariş Nolu",
-                        message: "Bu alan zorunlu",
-                      },
-                    ]}
-                  >
-                    <Input
-                      disabled={selectedIrsaliyeTipi[name] !== "İade"}
-                      placeholder="Sipariş No"
-                    />
-                  </Form.Item>
-
-                  <Form.Item
-                    {...restField}
-                    name={[name, "talepNo"]}
-                    rules={selectedIrsaliyeTipi[name] === "Talep Nolu" ? rules : null}
-                  >
-                    <Input
-                      disabled={selectedIrsaliyeTipi[name] !== "Talep Nolu"}
-                      placeholder="Talep No"
-                    />
-                  </Form.Item>
-
-                  <Form.Item {...restField} name={[name, "adet"]} rules={rules}>
-                    <InputNumber placeholder="Adet" min={0} style={{ width: "100%" }} />
-                  </Form.Item>
-
-                  <Form.Item
-                    {...restField}
-                    name={[name, "birinciAmbalaj"]}
-                    rules={rules}
-                    style={{ width: "120px" }}
-                  >
-                    <Select placeholder="1. Ambalaj">
-                      {ambalajlar.map((ambalaj) => (
-                        <Select.Option key={ambalaj.id} value={ambalaj.kasaAdi}>
-                          {ambalaj.kasaAdi}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-
-                  <Form.Item
-                    {...restField}
-                    name={[name, "ikinciAmbalaj"]}
-                    style={{ width: "120px" }}
-                  >
-                    <Select placeholder="2. Ambalaj">
-                      {ambalajlar.map((ambalaj) => (
-                        <Select.Option key={ambalaj.id} value={ambalaj.kasaAdi}>
-                          {ambalaj.kasaAdi}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-
-                  <Form.Item {...restField}>
-                    <Button type="primary" onClick={() => printRowData(name)}>
-                      İş Emri Yazdır
-                    </Button>
-                  </Form.Item>
-
-                  <FaMinusCircle onClick={() => remove(name)} />
+                  </div>
+                  <Space>
+                    <Tooltip title={!kayitDurumu ? "Önce kaydetmelisiniz" : ""}>
+                      {!seciliReferansFasonluk[name] && (
+                        <Form.Item {...restField}>
+                          <Button
+                            type="primary"
+                            disabled={!kayitDurumu}
+                            onClick={() => isEmriYazdir(name)}
+                          >
+                            İş Emri Yazdır
+                          </Button>
+                        </Form.Item>
+                      )}
+                      {/* {seciliReferansFasonluk[name] ? (
+                        <Form.Item {...restField}>
+                          <Button
+                            type="primary"
+                            disabled={!kayitDurumu}
+                            onClick={() => fasonaIrsaliyeKes(name)}
+                          >
+                            Fasona İrsaliye Kes
+                          </Button>
+                        </Form.Item>
+                      ) : (
+                        <Form.Item {...restField}>
+                          <Button
+                            type="primary"
+                            disabled={!kayitDurumu}
+                            onClick={() => isEmriYazdir(name)}
+                          >
+                            İş Emri Yazdır
+                          </Button>
+                        </Form.Item>
+                      )} */}
+                    </Tooltip>
+                    <FaMinusCircle onClick={() => satiriSil(name, remove)} />
+                  </Space>
                 </SpaceStyled>
               ))}
               <Form.Item style={{ marginBottom: "20px" }}>
                 <Button
                   type="dashed"
-                  onClick={() => add()}
+                  onClick={() => satirEkle(add)}
                   block
                   icon={<PlusCircleFilled style={{ fontSize: "15px" }} />}
                   style={{
@@ -377,7 +394,7 @@ export default function GelenMalzemeKayit() {
         </Form.Item>
         <div style={{ display: "none" }}>
           <UretimIsEmriKarti
-            record={record}
+            record={printRecord}
             printTrigger={printTrigger}
             setPrintTrigger={setPrintTrigger}
           />

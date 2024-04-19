@@ -1,22 +1,51 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Divider, Form, Input, InputNumber, Select, Upload } from "antd";
+import {
+  Button,
+  Checkbox,
+  Divider,
+  Form,
+  Input,
+  InputNumber,
+  Menu,
+  Radio,
+  Select,
+  Space,
+  Upload,
+} from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { useState } from "react";
-import referanslarHttp, { referansIslemTipleriHttp } from "services/referanslar.http";
+import { useRef, useState } from "react";
+import { IoPulseOutline } from "react-icons/io5";
+import referanslarHttp, {
+  referansIslemAdlariHttp,
+  referansIslemTipleriHttp,
+} from "services/referanslar.http";
 
 export default function ReferansForm({ record, type }) {
-  const { referanslar, setReferanslar, referansIslemTipleri, setReferansIslemTipleri } =
-    useDBContext();
-  const { showModal, showNotification } = useUIContext();
+  const {
+    referanslar,
+    setReferanslar,
+    referansIslemTipleri,
+    setReferansIslemTipleri,
+    referansParcaAdlari,
+    setReferansParcaAdlari,
+    musteriler,
+  } = useDBContext();
+  const { showPanel, showNotification } = useUIContext();
 
   const [fileList, setFileList] = useState([]);
+
+  const [form] = Form.useForm();
+
+  const [siparisTipi, setSiparisTipi] = useState(record?.siparisTipi);
+  const [fason, setFason] = useState(record?.fason || false);
 
   const onFileChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
 
   const onFinish = async (values) => {
+    console.log("values:", values);
     if (type === "update") {
       const updatedReferans = await referanslarHttp.updateData(record.id, values);
 
@@ -27,7 +56,7 @@ export default function ReferansForm({ record, type }) {
         return referans;
       });
       setReferanslar(updatedReferanslarArray);
-      showModal(false);
+      // showPanel(false)
       showNotification("success", "Referans güncellendi");
     } else {
       const formData = new FormData();
@@ -48,7 +77,7 @@ export default function ReferansForm({ record, type }) {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const addReferansTypeHandler = async () => {
+  const referansTipiEkle = async () => {
     const newReference = prompt("Yeni tip girin: ");
 
     if (newReference.trim() === "") {
@@ -59,62 +88,43 @@ export default function ReferansForm({ record, type }) {
       showNotification("success", `${newReference} işlem tipi olarak eklendi.`);
     }
   };
+  const parcaAdiEkle = async () => {
+    const newParcaAdi = prompt("Yeni parça adı girin: ");
+
+    if (newParcaAdi.trim() === "") {
+      showNotification("error", "Alan boş olamaz");
+    } else if (newParcaAdi !== null) {
+      const data = await referansIslemAdlariHttp.addData({ parcaAdi: newParcaAdi });
+      // setReferansParcaAdlari([...referansParcaAdlari, { ...data }]);
+      setReferansParcaAdlari((prevState) => [...prevState, { ...data }]);
+      showNotification("success", `${newParcaAdi} parça adı olarak eklendi.`);
+    }
+  };
+
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const [name, setName] = useState("");
+  const inputRef = useRef(null);
+  const onNameChange = (event) => {
+    setName(event.target.value);
+  };
+
+  const handleSelectChange = (selected) => {
+    setSelectedItems(selected);
+  };
 
   return (
     <Form
-      name="basic"
+      form={form}
+      name="referans-form"
       labelCol={{ flex: "170px" }}
       labelAlign="left"
       key={record ? record.id : "form"}
-      initialValues={record || {}}
+      initialValues={record || { miktarSapmasi: 0, fason: record?.fason || false }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Form.Item
-        label="Çıkış Referans No"
-        name="referansNo"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item label="İrsaliye Açıklama" name="irsaliyeAciklama">
-        <Input.TextArea />
-      </Form.Item>
-      <Form.Item
-        label="Lot Adedi"
-        name="lotAdedi"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <InputNumber min={0} />
-      </Form.Item>
-      <Form.Item
-        label="Miktar Sapması"
-        name="miktarSapmasi"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <InputNumber min={0} />
-      </Form.Item>
-      <Form.Item label="Referans Yüzey Alanı" name="referansYuzeyAlani">
-        <InputNumber min={0} />
-      </Form.Item>
-
-      <Divider />
       <Form.Item
         label="Referans No"
         name="referansNo"
@@ -125,11 +135,12 @@ export default function ReferansForm({ record, type }) {
           },
         ]}
       >
-        <Input />
+        <Input placeholder="Referans No" />
       </Form.Item>
+
       <Form.Item
-        label="Sipariş No"
-        name="siparisNo"
+        label="Parça Adı"
+        name="parcaAdi"
         rules={[
           {
             required: true,
@@ -137,11 +148,66 @@ export default function ReferansForm({ record, type }) {
           },
         ]}
       >
-        <Input />
+        <Space.Compact block>
+          <Form.Item name="parcaAdi" noStyle>
+            <Select
+              placeholder="Parça Adı Seçiniz"
+              onChange={handleSelectChange}
+              labelRender={(label) => <div>{label} - fsdfs</div>}
+              dropdownRender={(menu) => (
+                <>
+                  {menu}
+                  <Divider
+                    style={{
+                      margin: "8px 0",
+                    }}
+                  />
+                  <Space.Compact
+                    style={
+                      {
+                        // padding: "0 8px 4px",
+                      }
+                    }
+                    block
+                  >
+                    <Input
+                      placeholder="Silinecek parça"
+                      ref={inputRef}
+                      value={name}
+                      onChange={onNameChange}
+                      onKeyDown={(e) => e.stopPropagation()}
+                    />
+                    <Button type="text" danger icon={<IoPulseOutline />}>
+                      Sil
+                    </Button>
+                  </Space.Compact>
+                </>
+              )}
+            >
+              {referansParcaAdlari.map((parcaAdi) => (
+                <Select.Option key={parcaAdi.id} value={parcaAdi.parcaAdi}>
+                  {parcaAdi.parcaAdi}
+                  {/* <Button>Sil</Button> */}
+                </Select.Option>
+              ))}
+            </Select>
+            {/* <div>
+              {selectedItems.map((item) => (
+                <div key={item.id}>
+                  {item.parcaAdi}
+                  <Button type="link">Sil</Button>
+                </div>
+              ))}
+            </div> */}
+          </Form.Item>
+          <Button type="primary" onClick={parcaAdiEkle} style={{ width: "100px" }}>
+            Ekle
+          </Button>
+        </Space.Compact>
       </Form.Item>
       <Form.Item
-        label="İşlem Açıklaması"
-        name="islemAciklama"
+        label="İrsaliye Açıklaması"
+        name="irsaliyeAciklamasi"
         rules={[
           {
             required: true,
@@ -149,19 +215,221 @@ export default function ReferansForm({ record, type }) {
           },
         ]}
       >
-        <Input />
+        <Input placeholder="İrsaliye için açıklama girin" />
       </Form.Item>
+      <Form.Item
+        label="Müşteri"
+        name="musteriAdi"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Select placeholder="Müşteri Adı Seçiniz">
+          {musteriler.map((musteri) => (
+            <Select.Option key={musteri.id} value={musteri.musteriAdi}>
+              {musteri.musteriAdi}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        label="Çıkış Referans No"
+        name="cikisReferansNo"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Input placeholder="Çıkış Referans No" />
+      </Form.Item>
+
+      <Divider />
+
+      <Form.Item
+        name="siparisTipi"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Radio.Group value={"Seri"} onChange={(e) => setSiparisTipi(e.target.value)}>
+          <Space direction="vertical">
+            <Radio value="Seri">
+              <div
+                style={{
+                  width: "500px",
+                  height: "30px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <div>Seri</div>
+                {siparisTipi === "Seri" && (
+                  <Form.Item
+                    name="siparisNo"
+                    style={{ width: 200, marginLeft: "7%" }}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Bu alanı doldurun",
+                      },
+                    ]}
+                  >
+                    <Input title="Sipariş No" placeholder="Sipariş No Girin" />
+                  </Form.Item>
+                )}
+              </div>
+            </Radio>
+            <Radio value="Talepli">
+              <div
+                style={{
+                  width: "500px",
+                  height: "30px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <div>Talepli</div>
+                {siparisTipi === "Talepli" && (
+                  <>
+                    <Form.Item name="talepNo" style={{ width: 200, marginLeft: "3%" }}>
+                      <Input title="Talep No" placeholder="Talep No Girin" />
+                    </Form.Item>
+                  </>
+                )}
+              </div>
+            </Radio>
+          </Space>
+        </Radio.Group>
+      </Form.Item>
+
+      <Divider />
+
+      <div style={{ display: "flex" }}>
+        <Form.Item name="fason" valuePropName="checked">
+          <Checkbox
+            onChange={(e) => {
+              setFason(e.target.checked);
+              form.setFieldsValue({ fason: e.target.checked });
+            }}
+            checked={fason}
+          >
+            Fason
+          </Checkbox>
+        </Form.Item>
+
+        {fason && (
+          <Form.Item
+            name="fasonFirmasi"
+            rules={[{ required: fason, message: "Fason firması giriniz" }]}
+            style={{ marginLeft: "2%", width: 200 }}
+          >
+            <Input title="Fason Firması" placeholder="Fason Firması" />
+          </Form.Item>
+        )}
+      </div>
+
+      <Divider />
+
+      <Form.Item
+        label="Miktar Sapması"
+        name="miktarSapmasi"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <InputNumber min={0} placeholder="Miktar sapması girin" style={{ width: "100%" }} />
+      </Form.Item>
+
+      <Form.Item
+        label="Lot Adedi"
+        name="lotAdedi"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <InputNumber
+          min={0}
+          placeholder="Lot adedi girin"
+          addonAfter="adet"
+          style={{ width: "100%" }}
+        />
+      </Form.Item>
+
+      <Form.Item
+        label="Referans Yüzey Alanı"
+        name="referansYuzeyAlani"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <InputNumber
+          min={0}
+          placeholder="Yüzey alanı girin"
+          addonAfter="dm2"
+          style={{ width: "100%" }}
+        />
+      </Form.Item>
+
+      <Divider />
+
+      <Form.Item label="İşlem Tipi">
+        <Space.Compact block>
+          <Form.Item
+            name="islemTipi"
+            noStyle
+            rules={[{ required: true, message: "Bu alanı doldurun" }]}
+          >
+            <Select placeholder="Tipi Seçin">
+              {referansIslemTipleri.map((islemTipi) => (
+                <Select.Option key={islemTipi.id} value={islemTipi.islemTipi}>
+                  {islemTipi.islemTipi}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Button type="primary" onClick={referansTipiEkle} style={{ width: "100px" }}>
+            Ekle
+          </Button>
+        </Space.Compact>
+      </Form.Item>
+
+      <Form.Item
+        label="Birim"
+        name="birim"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Select placeholder="Birim seçin">
+          <Select.Option value="kg">kg</Select.Option>
+          <Select.Option value="lt">gram</Select.Option>
+          <Select.Option value="adet">adet</Select.Option>
+        </Select>
+      </Form.Item>
+
       {type !== "update" && (
-        <Form.Item
-          label="Resim"
-          name="resim"
-          rules={[
-            {
-              required: true,
-              message: "Bu alanı doldurun",
-            },
-          ]}
-        >
+        <Form.Item label="Resim" name="resim">
           <Upload
             name="photo"
             listType="picture"
@@ -176,70 +444,15 @@ export default function ReferansForm({ record, type }) {
         </Form.Item>
       )}
 
+      <Form.Item label="Üretim Notu" name="not">
+        <Input.TextArea />
+      </Form.Item>
+
       <Divider />
 
-      <Form.Item label="Firma Adı.01" name="firmaAdi01">
-        <div style={{ display: "flex", gap: "16px" }}>
-          <Form.Item
-            name="firmaAdi01"
-            rules={[
-              {
-                required: true,
-                message: "Bu alanı doldurun",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Birim" name="birim">
-            <Select placeholder="Birim seçin">
-              <Select.Option value="kg">kg</Select.Option>
-              <Select.Option value="lt">lt</Select.Option>
-            </Select>
-          </Form.Item>
-        </div>
-      </Form.Item>
-
-      <Form.Item label="Firma Adı.02" name="firmaAdi02">
-        <div style={{ display: "flex", gap: "16px" }}>
-          <Form.Item
-            name="firmaAdi02"
-            rules={[
-              {
-                required: true,
-                message: "Bu alanı doldurun",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="İşlem Tipi" name="islemTipi">
-            <Select placeholder="Tipi Seçin">
-              {referansIslemTipleri.map((islemTipi) => (
-                <Select.Option key={islemTipi.id} value={islemTipi.islemTipi}>
-                  {islemTipi.islemTipi}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Button shape="circle" type="primary" onClick={addReferansTypeHandler}>
-            +
-          </Button>
-        </div>
-      </Form.Item>
-
-      <Form.Item label="Üretim Adedi Değiştirme" name="uretimAdediDegistirme">
-        <Select style={{ width: "50%" }}>
-          <Select.Option value="Hayır">Hayır</Select.Option>
-          <Select.Option value="Evet">Evet</Select.Option>
-        </Select>
-      </Form.Item>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Kaydet
-        </Button>
-      </Form.Item>
+      <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+        Kaydet
+      </Button>
     </Form>
   );
 }

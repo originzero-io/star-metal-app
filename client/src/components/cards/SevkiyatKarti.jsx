@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useReactToPrint } from "react-to-print";
 import { IoPrintOutline } from "react-icons/io5";
 import { getCurrentDateTime } from "utils/time.helper";
+import PrintButton from "components/shared/PrintButton";
 
 const ContainerStyled = styled.div`
   margin-top: 8px;
@@ -32,11 +33,12 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
       setPrintTrigger(false);
     }
   }, [handlePrint, record]);
+
+  console.log("record", record);
+
   return (
     <div>
-      <Button type="primary" icon={<IoPrintOutline />} onClick={handlePrint}>
-        Yazdır
-      </Button>
+      <PrintButton colorful handlePrintFunc={handlePrint} />
       <ContainerStyled ref={componentRef}>
         <Row>
           <ColStyled span={6}>
@@ -81,7 +83,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
           <ColStyled span={12}>
             <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
               <BoldTextStyled>ADET</BoldTextStyled>
-              <div>*{record.adet} *</div>
+              <div>*{record.uretimAdedi} *</div>
             </div>
             <div style={{ textAlign: "end", fontSize: "2.2vmin", marginRight: "40px" }}>
               {/* <BoldTextStyled>{record.siparisNo}</BoldTextStyled> */}
@@ -118,7 +120,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BoldTextStyled>BRÜT</BoldTextStyled>
             </div>
             <div style={{ textAlign: "center", fontSize: "2.2vmin" }}>
-              {/* <BoldTextStyled>{}</BoldTextStyled> */}
+              <BoldTextStyled>{record.brut}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={3}>
@@ -126,7 +128,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BoldTextStyled>DARA</BoldTextStyled>
             </div>
             <div style={{ textAlign: "center", fontSize: "2.2vmin" }}>
-              {/* <BoldTextStyled>{}</BoldTextStyled> */}
+              <BoldTextStyled>{record.dara}</BoldTextStyled>
             </div>
           </ColStyled>
         </Row>
@@ -144,7 +146,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BoldTextStyled>KONTROL EDEN</BoldTextStyled>
             </div>
             <div style={{ textAlign: "center", fontSize: "2.2vmin", marginTop: "8px" }}>
-              <BoldTextStyled>{record.kontrolEden}</BoldTextStyled>
+              <BoldTextStyled>{record.personel}</BoldTextStyled>
             </div>
           </ColStyled>
         </Row>

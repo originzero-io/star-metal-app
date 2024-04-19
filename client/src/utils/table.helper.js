@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 // verilen obje keyine göre
-export const createTableFilterFromData = (data, objectKey) => {
+export const createTableFilterFromData = (objectArray, objectKey) => {
   // filters: [
   //   {
   //     text: "London",
@@ -11,7 +11,15 @@ export const createTableFilterFromData = (data, objectKey) => {
   //     value: "New York",
   //   },
   // ],
-  const referencesSet = new Set(data.map((ds) => ds[objectKey]));
+
+  // const referencesSet = new Set(data.map((ds) => ds[objectKey]));
+
+  const referencesSet = new Set(
+    objectArray.map((object) =>
+      object[objectKey] || object[objectKey] === 0 ? object[objectKey] : "Boş",
+    ),
+  );
+
   const uniqueReferences = [...referencesSet].map((r) => ({
     text: r,
     value: r,

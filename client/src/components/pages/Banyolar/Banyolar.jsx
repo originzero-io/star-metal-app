@@ -89,9 +89,9 @@ const tabItems = [
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 14px;
-  max-width: 87%;
-  width: 90%;
+  // padding: 4px;
+  // max-width: 87%;
+  // width: 90%;
   overflow: auto;
 `;
 

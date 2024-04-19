@@ -1,11 +1,14 @@
 import express from "express";
-import uretimler from "./entities/uretim.route.js";
-import musteriler from "./entities/musteri.route.js";
-import referanslar from "./entities/referans.route.js";
-import ambalajlar from "./entities/ambalaj.route.js";
-import sicakliklar from "./entities/sicaklik.route.js";
-import banyolar from "./entities/banyo.route.js";
-import butonlar from "./entities/buton.route.js";
+import uretimler from "./routes/uretim.route.js";
+import uretimGirisleri from "./routes/uretim-girisi.route.js";
+import irsaliyeler from "./routes/irsaliye.route.js";
+import musteriler from "./routes/musteri.route.js";
+import referanslar from "./routes/referans.route.js";
+import ambalajlar from "./routes/ambalaj.route.js";
+import personeller from "./routes/personel.route.js";
+import sicakliklar from "./routes/sicaklik.route.js";
+import banyolar from "./routes/banyo.route.js";
+import butonlar from "./routes/buton.route.js";
 
 import db from "../dbConnection.js";
 
@@ -20,10 +23,13 @@ router.use("/", async (req, res, next) => {
   }
 });
 
-router.use("/uretim", uretimler); // devam-eden / tamamlanan / rapor
+router.use("/uretim", uretimler); // devam-eden / tamamlanan
+router.use("/uretim-girisleri", uretimGirisleri);
+router.use("/irsaliyeler", irsaliyeler);
 router.use("/musteriler", musteriler);
 router.use("/referanslar", referanslar);
 router.use("/ambalajlar", ambalajlar);
+router.use("/personeller", personeller);
 
 router.use("/sicaklik", sicakliklar); // sadece get
 router.use("/banyo", banyolar); // sadece get

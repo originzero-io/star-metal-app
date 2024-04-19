@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import CRUDServerHttp from "./crud-server.http";
 
 export default new CRUDServerHttp("/referanslar", "referansNo");
@@ -9,4 +10,11 @@ class ReferansIslemTipi extends CRUDServerHttp {
 }
 const referansIslemTipleriHttp = new ReferansIslemTipi();
 
-export { referansIslemTipleriHttp };
+class ReferansParcaAdi extends CRUDServerHttp {
+  constructor() {
+    super("/referanslar/parca-adi", "id");
+  }
+}
+const referansIslemAdlariHttp = new ReferansParcaAdi();
+
+export { referansIslemTipleriHttp, referansIslemAdlariHttp };

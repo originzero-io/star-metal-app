@@ -5,7 +5,7 @@ import Logo from "assets/images/logo.png";
 export default function CompanyLogo() {
   return (
     <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
-      <img src={Logo} height={65} width={140} />
+      <img src={Logo} style={{ maxWidth: "8vw", height: "auto" }} />
     </div>
   );
 }

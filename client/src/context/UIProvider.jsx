@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import PropTypes from "prop-types";
-import { notification } from "antd";
+import { Modal, notification } from "antd";
 
 const UIContext = createContext();
 
@@ -10,7 +10,6 @@ export const UIProvider = ({ children }) => {
   const [modal, setOpenModal] = useState({
     title: null, // form title
     content: null, // form component
-    type: "add", // add or update
     width: 1000, // modal width
   });
 
@@ -18,7 +17,19 @@ export const UIProvider = ({ children }) => {
     setOpenModal({ title, content, width });
   };
 
-  const [api, contextHolder] = notification.useNotification();
+  const [panel, setOpenPanel] = useState({
+    title: null, // form title
+    content: null, // form component
+    type: "add", // add or update
+    width: 1000, // panel default width
+  });
+
+  const showPanel = ({ title, content, width }) => {
+    setOpenPanel({ title, content, width });
+  };
+
+  const [api, notificationContextHolder] = notification.useNotification();
+  const [alert, alertContextHolder] = Modal.useModal();
 
   const showNotification = (type, title, description) => {
     api[type]({
@@ -28,20 +39,26 @@ export const UIProvider = ({ children }) => {
     });
   };
 
-  const [pageHeader, setPageHeader] = useState({
-    title: "",
-    icon: "",
-  });
+  const showAlert = (type = "success", title, content) => {
+    // type = confirm , warning, info, error
+    alert[type]({
+      title,
+      content,
+    });
+  };
+
   const value = {
     modal,
     showModal,
+    panel,
+    showPanel,
     showNotification,
-    pageHeader,
-    setPageHeader,
+    showAlert,
   };
   return (
     <UIContext.Provider value={value}>
-      {contextHolder}
+      {notificationContextHolder}
+      {alertContextHolder}
       {children}
     </UIContext.Provider>
   );

@@ -1,29 +1,21 @@
 /* eslint-disable indent */
-import { PrinterOutlined } from "@ant-design/icons";
-import { Button, Divider, Modal, Table } from "antd";
+import { Button, Divider, Modal, Table, Tag } from "antd";
 import RecordContextMenu from "components/RecordContextMenu";
-import { useUIContext } from "context/UIProvider";
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import { downloadExcel } from "react-export-table-to-excel";
 
-import PageHeader from "components/shared/PageHeader";
+import { useDBContext } from "context/DBProvider";
 import { useReactToPrint } from "react-to-print";
 import styled from "styled-components";
 import ExcelIcon from "../../../public/excel.png";
-import { useDBContext } from "context/DBProvider";
+import PrintButton from "./PrintButton";
 
-const TableWrapperStyled = styled.div`
-  height: 100vh;
-  width: 87%;
-  padding: 14px;
-  overflow: auto;
-`;
 const TableTitleWrapperStyled = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  padding: 4px;
+  padding: 0px;
 `;
 export default function TableGod({
   dataSource,
@@ -31,15 +23,18 @@ export default function TableGod({
   onChange,
   rowSelection,
   expandable,
+  pagination,
+  hideDefaultTitleButtons,
   actionButtons,
   // contextMenu = { editForm: null, extraItems: [] },
   contextMenu,
+  wrapperStyle,
+  rowStyle,
 }) {
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-  const { pageHeader } = useUIContext();
 
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
@@ -67,7 +62,7 @@ export default function TableGod({
         const body = dataSource.map(({ key, ...rest }) => Object.values(rest));
 
         downloadExcel({
-          fileName: pageHeader.title,
+          fileName: "Tablo",
           // sheet: "react-export-table-to-excel",
           tablePayload: {
             header,
@@ -80,30 +75,46 @@ export default function TableGod({
       },
     });
   };
+
+  const getObjectValueByKey = (obj, pathArr) => {
+    return pathArr.reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : null), obj);
+  };
+
   return (
-    <TableWrapperStyled
+    <div
       onClick={() => setSelectedRecord(null)}
       onContextMenu={(e) => e.preventDefault()}
+      style={wrapperStyle}
     >
-      {contextMenu?.editForm && selectedRecord && (
+      {contextMenu && selectedRecord && (
         <RecordContextMenu
           position={contextMenuPosition}
           record={selectedRecord}
           contextMenu={contextMenu}
         />
       )}
+      {/* {contextMenu?.editForm && selectedRecord && (
+        <RecordContextMenu
+          position={contextMenuPosition}
+          record={selectedRecord}
+          contextMenu={contextMenu}
+        />
+      )} */}
       <div ref={componentRef}>
         <Table
           dataSource={dataSource}
           columns={columns}
+          // columns={newColumns}
           rowKey={(record) => record.id}
           size="small"
           onChange={onChange && onChange}
           // bordered
-          pagination={{
-            defaultPageSize: 20,
-            showSizeChanger: true,
-          }}
+          pagination={
+            pagination && {
+              defaultPageSize: 20,
+              showSizeChanger: true,
+            }
+          }
           rowSelection={
             rowSelection && {
               type: "checkbox",
@@ -112,33 +123,33 @@ export default function TableGod({
           }
           title={() => (
             <TableTitleWrapperStyled>
-              <PageHeader />
               <div style={{ display: "flex" }}>
                 {actionButtons}
-                <Divider
-                  style={{
-                    height: "35px",
-                    background: "#e7e5e5",
-                  }}
-                  type="vertical"
-                />
-                <Button
-                  style={{ marginRight: "4px" }}
-                  icon={<PrinterOutlined />}
-                  onClick={handlePrint}
-                >
-                  Yazdır
-                </Button>
-                <Button onClick={downloadExcelHandler}>
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <img src={ExcelIcon} width={20} />
-                    <div style={{ marginLeft: "10px" }}>Excel</div>
-                  </div>
-                </Button>
+                {!hideDefaultTitleButtons && (
+                  <>
+                    <Divider
+                      style={{
+                        height: "35px",
+                        background: "#e7e5e5",
+                      }}
+                      type="vertical"
+                    />
+
+                    <PrintButton style={{ marginRight: "4px" }} handlePrintFunc={handlePrint} />
+
+                    <Button onClick={downloadExcelHandler}>
+                      <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <img src={ExcelIcon} width={20} />
+                        <div style={{ marginLeft: "10px" }}>Excel</div>
+                      </div>
+                    </Button>
+                  </>
+                )}
               </div>
             </TableTitleWrapperStyled>
           )}
           onRow={(record, rowIndex) => ({
+            style: rowStyle && rowStyle(record),
             onClick: (event) => {},
             onDoubleClick: (event) => {},
             onContextMenu: (event) => contextMenuHandler(record, event),
@@ -154,20 +165,23 @@ export default function TableGod({
                     fontSize: "1.4vmin",
                   }}
                 >
-                  <span style={{ fontWeight: "700" }}>İşlem Açıklaması - </span>{" "}
-                  {record.islemAciklama}
+                  <Tag color="magenta" style={{ fontWeight: "700" }}>
+                    NOT:{" "}
+                  </Tag>
+                  <span>{getObjectValueByKey(record, expandable.key)}</span>
                 </p>
               ),
+              rowExpandable: (record) => expandable,
             }
           }
           loading={loading}
           // sticky={{
           //   offsetHeader: 64,
           // }}
-          // scroll={{ y: 660 }}
+          scroll={{ x: 1500 }}
         />
       </div>
-    </TableWrapperStyled>
+    </div>
   );
 }
 
@@ -176,12 +190,16 @@ TableGod.propTypes = {
   columns: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   rowSelection: PropTypes.object,
-  expandable: PropTypes.bool,
+  expandable: PropTypes.shape({
+    key: PropTypes.array.isRequired,
+  }),
+  pagination: PropTypes.bool,
+  hideDefaultTitleButtons: PropTypes.bool,
   hasContextMenu: PropTypes.bool,
   actionButtons: PropTypes.node,
   contextMenu: PropTypes.shape({
-    editForm: PropTypes.elementType.isRequired,
-    deleteAction: PropTypes.func.isRequired,
+    editForm: PropTypes.elementType,
+    deleteAction: PropTypes.func,
     extraItems: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
@@ -189,4 +207,6 @@ TableGod.propTypes = {
       }),
     ), // extraItems, belirli bir şekle sahip nesnelerin bir dizisi
   }),
+  wrapperStyle: PropTypes.object,
+  rowStyle: PropTypes.func,
 };
