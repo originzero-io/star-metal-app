@@ -1,5 +1,5 @@
 import { CaretRightOutlined, CloudUploadOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Badge, Button, Collapse, Modal, Tag, Input, Select } from "antd";
+import { Badge, Button, Collapse, Modal, Tag, Input, Select, Flex } from "antd";
 import PageHeader from "components/shared/PageHeader";
 import TableGod from "components/shared/TableGod";
 import { useDBContext } from "context/DBProvider";
@@ -9,6 +9,7 @@ import { FcRules } from "react-icons/fc";
 import irsaliyeHttp from "services/irsaliyeler.http";
 import uretimGirisleriHttp from "services/uretim-girisleri.http";
 import { devamEdenUretimHttp } from "services/uretimler.http";
+import { getCurrentDateTime } from "utils/time.helper";
 
 export default function IrsaliyeSayfasi() {
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
@@ -141,31 +142,37 @@ export default function IrsaliyeSayfasi() {
           {
             key: "sevk",
             label: (
-              <Badge
-                count={sevkIrsaliyeleri.length}
-                offset={[20, 6]}
-                title="Toplam sevk irsaliyesi sayısı"
-              >
-                <div
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    color: "#474747",
-                  }}
+              <Flex justify="center">
+                <Badge
+                  count={sevkIrsaliyeleri.length}
+                  offset={[20, 6]}
+                  title="Toplam sevk irsaliyesi sayısı"
                 >
-                  Sevk İrsaliyesi
-                </div>
-              </Badge>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      color: "#474747",
+                    }}
+                  >
+                    Sevk İrsaliyesi
+                  </div>
+                </Badge>
+              </Flex>
             ),
             style: {
               borderRadius: 10,
               marginBottom: 6,
-              // background: "rgba(229, 33, 46, 0.099)",
-              background: "rgba(255, 255, 255, 0.5)",
+              background: "rgba(76, 144, 85, 0.072)",
+              // background: "rgba(229, 33, 46, 0.061)",
+              // background: "rgba(255, 255, 255, 0.5)",
             },
             children: (
               <Collapse
                 bordered={false}
+                defaultActiveKey={Object.keys(musteriBazliIrsaliye).map((_, index) =>
+                  index.toString(),
+                )}
                 items={
                   musteriBazliIrsaliye.sevk &&
                   Object.entries(musteriBazliIrsaliye.sevk).map(
@@ -214,33 +221,38 @@ export default function IrsaliyeSayfasi() {
           {
             key: "tasima",
             label: (
-              <Badge
-                count={tasimaIrsaliyeleri.length}
-                offset={[20, 6]}
-                color="purple"
-                title="Toplam taşıma irsaliyesi sayısı"
-              >
-                <div
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    color: "#474747",
-                  }}
+              <Flex justify="center">
+                <Badge
+                  count={tasimaIrsaliyeleri.length}
+                  offset={[20, 6]}
+                  color="purple"
+                  title="Toplam taşıma irsaliyesi sayısı"
                 >
-                  Taşıma İrsaliyesi
-                </div>
-              </Badge>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      color: "#474747",
+                    }}
+                  >
+                    Taşıma İrsaliyesi
+                  </div>
+                </Badge>
+              </Flex>
             ),
             style: {
               borderRadius: 10,
               marginBottom: 6,
-              background: "rgba(161, 46, 134, 0.1)",
+              background: "rgba(161, 46, 134, 0.061)",
+              // background: "rgba(161, 46, 134, 0.1)",
               // background: "rgba(255, 255, 255, 0.5)",
             },
             children: (
               <Collapse
                 bordered={false}
-                defaultActiveKey="sevk"
+                defaultActiveKey={Object.keys(musteriBazliIrsaliye).map((_, index) =>
+                  index.toString(),
+                )}
                 // expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                 items={
                   musteriBazliIrsaliye.tasima &&
@@ -365,7 +377,8 @@ function TasimaIrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
 }
 
 function LogoyaGonderButton({ type, kayitlar }) {
-  const { personeller } = useDBContext();
+  const { personeller, irsaliyeler, setIrsaliyeler } = useDBContext();
+  const { showNotification } = useUIContext();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [soforAdi, setSoforAdi] = useState("");
   const [personelAdi, setPersonelAdi] = useState("");
@@ -377,21 +390,33 @@ function LogoyaGonderButton({ type, kayitlar }) {
     setIsModalVisible(true);
   };
 
-  const handleOk = (e) => {
+  const handleOk = async (e) => {
     e.stopPropagation();
 
     if (soforAdi === "") {
       setError("Şöför adı boş olamaz");
     } else {
-      console.log("Şoför Adı:", soforAdi);
       // console.log("Kayıtlar:", kayitlar);
-      const soforluKayitlar = kayitlar.map((kayit) => ({
+      const gonderilecekKayitlar = kayitlar.map((kayit) => ({
         ...kayit,
         sofor: soforAdi,
         personel: personelAdi,
+        irsaliyeNo: "14-ABCDE",
+        sevkTarihi: getCurrentDateTime(),
       }));
-      console.log("Kayıtlar:", soforluKayitlar);
-      setIsModalVisible(false);
+      console.log("Kayıtlar:", gonderilecekKayitlar);
+      try {
+        await uretimGirisleriHttp.logoyaGonderilenleriGuncelle(gonderilecekKayitlar);
+        const newIrsaliyeler = await irsaliyeHttp.deleteData(irsaliyeler, gonderilecekKayitlar);
+        await uretimGirisleriHttp.deleteData(gonderilecekKayitlar);
+
+        setIrsaliyeler(newIrsaliyeler);
+        setIsModalVisible(false);
+        const { musteriAdi } = kayitlar[0].Referanslar;
+        showNotification("success", `${musteriAdi} müşterisine irsaliye kesildi.`);
+      } catch (err) {
+        showNotification("error", err.message);
+      }
     }
   };
 

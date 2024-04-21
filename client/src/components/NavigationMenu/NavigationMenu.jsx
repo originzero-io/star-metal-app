@@ -92,7 +92,7 @@ const RegisterButtonItemStyled = styled.div`
 
   margin-bottom: 12px;
   background: rgba(107, 67, 175, 1);
-  color: white;
+  color: #e8e8e8;
   padding: 8px;
 
   &:hover {

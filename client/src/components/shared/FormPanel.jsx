@@ -17,9 +17,14 @@ const FormPanel = () => {
       styles={{
         header: {
           padding: "8px 14px",
-          background: "#dce0e3",
+          // background: "#dce0e3",
+          background: "#edf1fb",
         },
-        mask: { background: "transparent" },
+        body: {
+          background: "#edf1fb",
+        },
+
+        // mask: { background: "transparent" },
       }}
       key={panel.content?.props?.record?.id} // başka kayıtlar seçildiğinde içerik otomatik değişsin diye benzersiz key
       open={panel.title}

@@ -23,7 +23,7 @@ const UretimGirisi = sequelize.define(
     },
     irsaliyeNo: {
       type: DataTypes.STRING(50),
-      allowNull: false,
+      allowNull: true,
     },
     iade: {
       type: DataTypes.STRING(5), // EVET / HAYIR
@@ -33,13 +33,21 @@ const UretimGirisi = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
+    sevkTarihi: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
+    sofor: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
     uretimAdedi: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     personel: {
       type: DataTypes.STRING(50),
-      allowNull: false,
+      allowNull: true,
     },
     birinciAmbalaj: {
       type: DataTypes.STRING(30),
@@ -63,7 +71,7 @@ const UretimGirisi = sequelize.define(
     },
     aktif: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
+      allowNull: false,
       defaultValue: true,
     },
   },

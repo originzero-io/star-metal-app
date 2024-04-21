@@ -29,8 +29,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             colorTextDisabled: "rgba(0, 0, 0)",
             activeBorderColor: "rgb(131, 92, 197)",
             hoverBorderColor: "rgb(131, 92, 197) ",
-            colorBgContainer: "#f8f8f8",
-            borderRadius: 20,
+            // colorBgContainer: "#f8f8f8",
+            colorBgContainer: "#ffffffa1",
+            borderRadius: 12,
           },
           InputNumber: {
             colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
@@ -38,8 +39,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             colorTextDisabled: "rgba(0, 0, 0)",
             activeBorderColor: "rgb(131, 92, 197)",
             hoverBorderColor: "rgb(131, 92, 197) ",
-            colorBgContainer: "#f8f8f8",
-            borderRadius: 20,
+            // colorBgContainer: "#f8f8f8",
+            colorBgContainer: "#ffffffa1",
+            borderRadius: 12,
           },
           Radio: {
             dotColorDisabled: "#0958d9",
@@ -56,9 +58,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             colorTextPlaceholder: "rgba(0, 0, 0, 0.6)",
             colorPrimary: "rgb(131, 92, 197)",
             colorPrimaryHover: "rgb(131, 92, 197)",
-
-            colorBgContainer: "#f8f8f8",
-            borderRadius: 20,
+            // colorBgContainer: "#f8f8f8",
+            colorBgContainer: "#ffffffa1",
+            borderRadius: 12,
           },
           Button: {
             colorPrimary: "rgb(107,67,175)",

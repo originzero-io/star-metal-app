@@ -150,55 +150,13 @@ export default function ReferansForm({ record, type }) {
       >
         <Space.Compact block>
           <Form.Item name="parcaAdi" noStyle>
-            <Select
-              placeholder="Parça Adı Seçiniz"
-              onChange={handleSelectChange}
-              labelRender={(label) => <div>{label} - fsdfs</div>}
-              dropdownRender={(menu) => (
-                <>
-                  {menu}
-                  <Divider
-                    style={{
-                      margin: "8px 0",
-                    }}
-                  />
-                  <Space.Compact
-                    style={
-                      {
-                        // padding: "0 8px 4px",
-                      }
-                    }
-                    block
-                  >
-                    <Input
-                      placeholder="Silinecek parça"
-                      ref={inputRef}
-                      value={name}
-                      onChange={onNameChange}
-                      onKeyDown={(e) => e.stopPropagation()}
-                    />
-                    <Button type="text" danger icon={<IoPulseOutline />}>
-                      Sil
-                    </Button>
-                  </Space.Compact>
-                </>
-              )}
-            >
+            <Select placeholder="Parça Adı Seçiniz" onChange={handleSelectChange}>
               {referansParcaAdlari.map((parcaAdi) => (
                 <Select.Option key={parcaAdi.id} value={parcaAdi.parcaAdi}>
                   {parcaAdi.parcaAdi}
-                  {/* <Button>Sil</Button> */}
                 </Select.Option>
               ))}
             </Select>
-            {/* <div>
-              {selectedItems.map((item) => (
-                <div key={item.id}>
-                  {item.parcaAdi}
-                  <Button type="link">Sil</Button>
-                </div>
-              ))}
-            </div> */}
           </Form.Item>
           <Button type="primary" onClick={parcaAdiEkle} style={{ width: "100px" }}>
             Ekle

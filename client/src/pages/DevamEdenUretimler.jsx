@@ -1,7 +1,7 @@
 import { CaretRightOutlined, ContainerOutlined, DeleteOutlined } from "@ant-design/icons";
 import { FcSynchronize } from "react-icons/fc";
 
-import { Badge, Button, Collapse, Modal, Tag } from "antd";
+import { Badge, Button, Collapse, Modal, Tag, Flex } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import MalzemeDuzenlemeForm from "components/forms/MalzemeDuzenlemeForm";
 import UretimGirisi from "components/forms/UretimGirisi";
@@ -13,8 +13,8 @@ import { devamEdenUretimHttp } from "services/uretimler.http";
 import { fasonFirmasiKontrol, fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
 import irsaliyeHttp from "services/irsaliyeler.http";
+import UretimSevkiyatHareketleri from "components/UretimSevkiyatHareketleri";
 import TableGod from "../components/shared/TableGod";
-import SevkEdilecekler from "./SevkEdilecekler";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
@@ -35,22 +35,6 @@ const subCollapseItemStyle = {
 function DevamEdenUretimler() {
   const { devamEdenUretimler } = useDBContext();
 
-  const deleteRecordHandler = () => {
-    Modal.confirm({
-      title: "Emin misiniz?",
-      content:
-        "Seçili kayıtları silmek üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?",
-      okText: "Tamam",
-      cancelText: "İptal",
-      onOk() {
-        console.log("Evet, eminim");
-      },
-      onCancel() {
-        console.log("Hayır, vazgeçtim");
-      },
-    });
-  };
-
   return (
     <div>
       <PageHeader label="Devam Eden Üretimler" icon={<FcSynchronize />} />
@@ -65,51 +49,45 @@ function DevamEdenUretimler() {
             key: "normal",
             style: collapseItemStyle,
             label: (
-              <Badge count={devamEdenUretimler.normalUretimler?.length} offset={[20, 6]}>
-                <div
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    color: "#474747",
-                  }}
-                >
-                  Star Metal Üretimler
-                </div>
-              </Badge>
+              <Flex justify="center">
+                <Badge count={devamEdenUretimler.normalUretimler?.length} offset={[20, 9]}>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      color: "#474747",
+                    }}
+                  >
+                    Star Metal Üretimler
+                  </div>
+                </Badge>
+              </Flex>
             ),
-            children: (
-              <NormalUretimlerTablo
-                data={devamEdenUretimler.normalUretimler || []}
-                deleteRecordsFunc={deleteRecordHandler}
-              />
-            ),
+            children: <NormalUretimlerTablo data={devamEdenUretimler.normalUretimler || []} />,
           },
           {
             key: "fason",
             style: collapseItemStyle,
             label: (
-              <Badge
-                count={devamEdenUretimler.fasonUretimler?.length}
-                offset={[20, 6]}
-                color="blue"
-              >
-                <div
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    color: "#474747",
-                  }}
+              <Flex justify="center">
+                <Badge
+                  count={devamEdenUretimler.fasonUretimler?.length}
+                  offset={[20, 9]}
+                  color="blue"
                 >
-                  Fason Üretimler
-                </div>
-              </Badge>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      color: "#474747",
+                    }}
+                  >
+                    Fason Üretimler
+                  </div>
+                </Badge>
+              </Flex>
             ),
-            children: (
-              <FasonUretimlerTablo
-                data={devamEdenUretimler.fasonUretimler || []}
-                deleteRecordsFunc={deleteRecordHandler}
-              />
-            ),
+            children: <FasonUretimlerTablo data={devamEdenUretimler.fasonUretimler || []} />,
           },
         ]}
       />
@@ -117,9 +95,9 @@ function DevamEdenUretimler() {
   );
 }
 
-function NormalUretimlerTablo({ data, deleteRecordsFunc }) {
+function NormalUretimlerTablo({ data }) {
   const [selectedRows, setSelectedRows] = useState([]);
-  const { showPanel } = useUIContext();
+  const { showPanel, showAlert } = useUIContext();
 
   const [musteriBazliKayitlar, setMusteriBazliKayitlar] = useState([]);
 
@@ -132,7 +110,7 @@ function NormalUretimlerTablo({ data, deleteRecordsFunc }) {
         filters: createTableFilterFromData(data, "referansNo"),
         onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
         filterSearch: true,
-        render: (text) => (
+        render: (text, record) => (
           <Tag color="orange" style={{ fontSize: "14px" }}>
             {text}
           </Tag>
@@ -249,6 +227,7 @@ function NormalUretimlerTablo({ data, deleteRecordsFunc }) {
         dataIndex: "uretilenMiktar",
         key: "uretilenMiktar",
         sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
+        render: (text) => <Tag color={text > 0 ? "blue" : ""}>{text}</Tag>,
       },
       {
         title: "Üretilmeyen",
@@ -302,6 +281,22 @@ function NormalUretimlerTablo({ data, deleteRecordsFunc }) {
     },
   });
 
+  const normalUretimSil = () => {
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content:
+        "Bu Star Metal üretimini silmek üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?",
+      okText: "Tamam",
+      cancelText: "İptal",
+      onOk() {
+        showAlert("info", "Bu özellik henüz geliştiriliyor...");
+      },
+      onCancel() {
+        console.log("Hayır, vazgeçtim");
+      },
+    });
+  };
+
   return (
     <Collapse
       bordered={false}
@@ -325,28 +320,18 @@ function NormalUretimlerTablo({ data, deleteRecordsFunc }) {
             dataSource={kayitlar}
             columns={columns}
             onChange={onChange}
+            hideDefaultTitleButtons
             rowSelection={createRowSelection(musteriAdi)}
             contextMenu={{
               // editForm: MalzemeDuzenlemeForm,
               extraItems: [
                 {
-                  title: "Gelen Malzeme Miktarını Değiştir",
-                  // action: (record) => window.electron.send("openNewWindow"),
-                  // action: (record) =>
-                  //   showPanel({
-                  //     title: "Üretim / Sevkiyat Hareketleri",
-                  //     content: <SevkEdilecekler record={record} />,
-                  //     width: 1000,
-                  //   }),
-                },
-                {
                   title: "Üretim / Sevkiyat Hareketleri",
-                  // action: (record) => window.electron.send("openNewWindow"),
                   action: (record) =>
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
-                      content: <SevkEdilecekler record={record} />,
-                      width: 1000,
+                      content: <UretimSevkiyatHareketleri record={record} />,
+                      width: 1100,
                     }),
                 },
                 {
@@ -357,6 +342,16 @@ function NormalUretimlerTablo({ data, deleteRecordsFunc }) {
                       content: <UretimIsEmriKarti record={record} />,
                       width: 800,
                     }),
+                },
+                {
+                  title: "Gelen Malzeme Miktarını Değiştir",
+                  // action: (record) => window.electron.send("openNewWindow"),
+                  // action: (record) =>
+                  //   showPanel({
+                  //     title: "Üretim / Sevkiyat Hareketleri",
+                  //     content: <SevkEdilecekler record={record} />,
+                  //     width: 1000,
+                  //   }),
                 },
               ],
             }}
@@ -384,7 +379,7 @@ function NormalUretimlerTablo({ data, deleteRecordsFunc }) {
                       style={{ marginRight: "4px" }}
                       danger
                       icon={<DeleteOutlined />}
-                      onClick={deleteRecordsFunc}
+                      onClick={normalUretimSil}
                     >
                       Sil ({selectedRows[musteriAdi].length})
                     </Button>
@@ -400,7 +395,7 @@ function NormalUretimlerTablo({ data, deleteRecordsFunc }) {
   );
 }
 
-function FasonUretimlerTablo({ data, deleteRecordsFunc }) {
+function FasonUretimlerTablo({ data }) {
   const [selectedRows, setSelectedRows] = useState([]);
   const [secilmisIrsaliyeler, setSecilmisIrsaliyeler] = useState([]);
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
@@ -559,6 +554,7 @@ function FasonUretimlerTablo({ data, deleteRecordsFunc }) {
         dataIndex: "uretilenMiktar",
         key: "uretilenMiktar",
         sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
+        render: (text) => <Tag color={text > 0 ? "blue" : ""}>{text}</Tag>,
       },
       {
         title: "Sevk Edilen",
@@ -619,6 +615,22 @@ function FasonUretimlerTablo({ data, deleteRecordsFunc }) {
     //   disabled: record.gelenMiktar === record.gidenMiktar, // Aktif olmayanlar için checkbox'ı devre dışı bırak
     // }),
   });
+
+  const fasonUretimSil = () => {
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content:
+        "Bu fason üretimini silmek üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?",
+      okText: "Tamam",
+      cancelText: "İptal",
+      onOk() {
+        showAlert("info", "Bu özellik henüz geliştiriliyor...");
+      },
+      onCancel() {
+        console.log("Hayır, vazgeçtim");
+      },
+    });
+  };
 
   const fasonaIrsaliyeKes = async (musteriAdi) => {
     const { fasonFirmasi: seciliFasonFirmasi } = selectedRows[musteriAdi][0].Referanslar;
@@ -708,27 +720,18 @@ function FasonUretimlerTablo({ data, deleteRecordsFunc }) {
             columns={columns}
             onChange={onChange}
             rowSelection={createRowSelection(musteriAdi)}
+            hideDefaultTitleButtons
             contextMenu={{
               editForm: MalzemeDuzenlemeForm,
               extraItems: [
-                {
-                  title: "Gelen Malzeme Miktarını Değiştir",
-                  // action: (record) => window.electron.send("openNewWindow"),
-                  action: (record) =>
-                    showPanel({
-                      title: "Üretim / Sevkiyat Hareketleri",
-                      content: <SevkEdilecekler record={record} />,
-                      width: 1000,
-                    }),
-                },
                 {
                   title: "Üretim / Sevkiyat Hareketleri",
                   // action: (record) => window.electron.send("openNewWindow"),
                   action: (record) =>
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
-                      content: <SevkEdilecekler record={record} />,
-                      width: 1000,
+                      content: <UretimSevkiyatHareketleri record={record} />,
+                      width: 1100,
                     }),
                 },
                 {
@@ -738,6 +741,16 @@ function FasonUretimlerTablo({ data, deleteRecordsFunc }) {
                       title: "Üretim İş Emri Kartı",
                       content: <UretimIsEmriKarti record={record} />,
                       width: 800,
+                    }),
+                },
+                {
+                  title: "Gelen Malzeme Miktarını Değiştir",
+                  // action: (record) => window.electron.send("openNewWindow"),
+                  action: (record) =>
+                    showPanel({
+                      title: "Adet Değiştir",
+                      content: <div>Yapılıyor...</div>,
+                      width: 1000,
                     }),
                 },
               ],
@@ -776,7 +789,7 @@ function FasonUretimlerTablo({ data, deleteRecordsFunc }) {
 
                 {selectedRows[musteriAdi]?.length > 0 && (
                   <>
-                    <Button danger icon={<DeleteOutlined />} onClick={deleteRecordsFunc}>
+                    <Button danger icon={<DeleteOutlined />} onClick={fasonUretimSil}>
                       Sil ({selectedRows[musteriAdi].length})
                     </Button>
                   </>

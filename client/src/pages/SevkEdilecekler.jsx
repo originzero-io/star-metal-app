@@ -32,7 +32,7 @@ const alertMessage = (musteri, irsaliyeTipi, olan, limit) => (
   </div>
 );
 
-export default function SevkEdilecekler({ record }) {
+export default function SevkEdilecekler() {
   const [uretimGirisleri, setUretimGirisleri] = useState({});
 
   const [selectedRows, setSelectedRows] = useState([]);
@@ -44,21 +44,14 @@ export default function SevkEdilecekler({ record }) {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      if (record) {
-        const uretimResponse = await uretimGirisiHttp.getDataByReferans(record.referansNo);
-        console.log("Referansa göre üretim girişleri: ", Object.entries(uretimResponse));
-        setUretimGirisleri(uretimResponse);
-        setLoading(false);
-      } else {
-        const uretimResponse = await uretimGirisiHttp.getData();
-        console.log("Müşteriye göre üretim girişleri: ", uretimResponse);
-        setUretimGirisleri(uretimResponse);
-        setLoading(false);
-      }
+      const uretimResponse = await uretimGirisiHttp.getData();
+      console.log("Müşteriye göre üretim girişleri: ", uretimResponse);
+      setUretimGirisleri(uretimResponse);
+      setLoading(false);
     }
 
     fetchData();
-  }, [record]);
+  }, []);
 
   const createColumnsForCustomer = (musteriAdi) => [
     {
@@ -456,14 +449,11 @@ function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUre
           if (sevkKayitlari.length > 0) {
             if (refBazliToplamSevkSayisi <= limit) {
               const butunIrsaliyeler = await irsaliyeHttp.addData(sevkKayitlari);
-              const butunUretimGirisleri = await uretimGirisiHttp.aktiflikDegistir(
-                false,
-                musteriKayitlari,
-              );
+              await uretimGirisiHttp.aktiflikDegistir(false, musteriKayitlari);
+              const uretimGirisleri = await uretimGirisiHttp.getData();
 
-              console.log("butunUretimGirisleri", butunUretimGirisleri);
               setIrsaliyeler(butunIrsaliyeler);
-              setUretimGirisleri(butunUretimGirisleri);
+              setUretimGirisleri(uretimGirisleri);
 
               showNotification(
                 "success",
@@ -481,14 +471,11 @@ function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUre
           if (tasimaKayitlari.length > 0) {
             if (refBazliToplamTasimaSayisi <= limit) {
               const butunIrsaliyeler = await irsaliyeHttp.addData(tasimaKayitlari);
-              const butunUretimGirisleri = await uretimGirisiHttp.aktiflikDegistir(
-                false,
-                musteriKayitlari,
-              );
+              await uretimGirisiHttp.aktiflikDegistir(false, musteriKayitlari);
+              const uretimGirisleri = await uretimGirisiHttp.getData();
 
-              console.log("butunUretimGirisleri", butunUretimGirisleri);
               setIrsaliyeler(butunIrsaliyeler);
-              setUretimGirisleri(butunUretimGirisleri);
+              setUretimGirisleri(uretimGirisleri);
               showNotification(
                 "success",
                 `${musteriAdi} müşterisine ait taşıma irsaliyesi kesilecek kayıtlar irsaliye sayfasına eklendi.`,

@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
   res.json(musteriBazliUretimGirisleri);
 });
 
-router.get("/:referansNo", async (req, res) => {
+router.get("/:id", async (req, res) => {
   const uretimGirisleri = await UretimGirisi.findAll({
     include: [
       {
@@ -44,21 +44,21 @@ router.get("/:referansNo", async (req, res) => {
       },
     ],
     where: {
-      referansNo: req.params.referansNo,
+      uretimSiraNo: req.params.id,
     },
-    order: [["referansNo", "ASC"]],
+    order: [["id", "ASC"]],
   });
 
-  const referansBazliUretimGirisleri = uretimGirisleri.reduce((acc, item) => {
-    // referansNo'ya göre gruplama
-    if (!acc[item.referansNo]) {
-      acc[item.referansNo] = [];
+  const uretimIdsiBazliUretimGirisleri = uretimGirisleri.reduce((acc, item) => {
+    // uretimSıraNo'ya göre gruplama
+    if (!acc[item.uretimSiraNo]) {
+      acc[item.uretimSiraNo] = [];
     }
-    acc[item.referansNo].push(item);
+    acc[item.uretimSiraNo].push(item);
     return acc;
   }, {});
 
-  res.json(referansBazliUretimGirisleri);
+  res.json(uretimIdsiBazliUretimGirisleri);
 });
 
 router.post("/", async (req, res) => {
@@ -105,7 +105,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.post("/aktiflik-degistir", async (req, res) => {
+router.put("/aktiflik-degistir", async (req, res) => {
   const { istenenAktiflik, kayitlar } = req.body;
 
   if (istenenAktiflik === false) {
@@ -136,6 +136,41 @@ router.post("/aktiflik-degistir", async (req, res) => {
   }
 
   res.send("aktiflik değişti");
+});
+
+router.put("/logoya-gonderilenler", async (req, res) => {
+  const { kayitlar } = req.body;
+  console.log("kayitlar", kayitlar);
+  try {
+    // Tüm kayıtlar üzerinde döngü
+    kayitlar.forEach(async (kayit) => {
+      const uretimIdleri = kayit.uretimIdleri.split(",").map(Number);
+      console.log("uretimIdleri", uretimIdleri);
+      // UretimGirisi modelindeki kayıtları bul ve güncelle
+      const sonuc = await UretimGirisi.update(
+        {
+          sevkTarihi: kayit.sevkTarihi,
+          personel: kayit.personel,
+          sofor: kayit.sofor,
+          irsaliyeNo: kayit.irsaliyeNo,
+        },
+        {
+          where: {
+            id: uretimIdleri,
+          },
+        },
+      );
+
+      console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}`);
+      console.log("Güncellenen kayıtlar: ", sonuc);
+    });
+
+    res.send("Tüm kayıtlar başarıyla güncellendi.");
+  } catch (error) {
+    console.error("Güncelleme işlemi sırasında bir hata oluştu:", error);
+    res.status(500).send("Güncelleme işlemi sırasında bir hata oluştu.");
+  }
+  // res.send("selam");
 });
 
 router.delete("/", async (req, res) => {

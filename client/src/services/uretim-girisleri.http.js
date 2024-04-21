@@ -6,15 +6,22 @@ class UretimGirisi extends CRUDServerHttp {
     super("/uretim-girisleri", "id");
   }
 
-  async getDataByReferans(recordReferansNo) {
-    const rawData = await axios.get(`${this.endPoint}/${recordReferansNo}`);
+  async getDataById(recordId) {
+    const rawData = await axios.get(`${this.endPoint}/${recordId}`);
     return rawData.data;
   }
 
   async aktiflikDegistir(istenenAktiflik, kayitlar = []) {
-    const rawData = await axios.post(`${this.endPoint}/aktiflik-degistir`, {
+    const rawData = await axios.put(`${this.endPoint}/aktiflik-degistir`, {
       kayitlar,
       istenenAktiflik,
+    });
+    return rawData.data;
+  }
+
+  async logoyaGonderilenleriGuncelle(kayitlar = []) {
+    const rawData = await axios.put(`${this.endPoint}/logoya-gonderilenler`, {
+      kayitlar,
     });
     return rawData.data;
   }

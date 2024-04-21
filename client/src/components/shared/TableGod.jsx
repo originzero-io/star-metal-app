@@ -178,7 +178,7 @@ export default function TableGod({
           // sticky={{
           //   offsetHeader: 64,
           // }}
-          scroll={{ x: 1500 }}
+          // scroll={{ x: 1500 }}
         />
       </div>
     </div>

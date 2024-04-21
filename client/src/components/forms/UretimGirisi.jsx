@@ -111,11 +111,11 @@ export default function UretimGirisi({ record }) {
       uretimSiraNo: record.id,
       siparisNo: record.Referanslar.siparisNo,
       talepNo: record.Referanslar.talepNo,
-      irsaliyeNo: record.irsaliyeNo,
+      // irsaliyeNo: record.irsaliyeNo,
       iade: record.iade,
-      uretimTarihi: values.uretimTarihi,
+      uretimTarihi: getCurrentDateTime(),
       uretimAdedi: values.uretimAdedi,
-      personel: values.personel,
+      // personel: values.personel,
       birinciAmbalaj: values.birinciAmbalaj,
       ikinciAmbalaj: values.ikinciAmbalaj,
       brut: teraziOlcum.brut,
@@ -311,7 +311,7 @@ export default function UretimGirisi({ record }) {
                   },
                 ]}
               >
-                <Select>
+                <Select placeholder="Personel giriniz">
                   {personeller.map((personel) => (
                     <Select.Option key={personel.id} value={personel.ad}>
                       {`${personel.ad} ${personel.soyad}`}
@@ -329,7 +329,7 @@ export default function UretimGirisi({ record }) {
                   },
                 ]}
               >
-                <Select>
+                <Select placeholder="Ambalaj giriniz">
                   {ambalajlar.map((ambalaj, i) => (
                     <Select.Option key={i} value={ambalaj.kasaAdi}>
                       {ambalaj.kasaAdi}
@@ -337,17 +337,8 @@ export default function UretimGirisi({ record }) {
                   ))}
                 </Select>
               </Form.Item>
-              <Form.Item
-                label="Ambalaj Tanımı 2"
-                name="ikinciAmbalaj"
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: "Bu alanı doldurun",
-                //   },
-                // ]}
-              >
-                <Select>
+              <Form.Item label="Ambalaj Tanımı 2" name="ikinciAmbalaj">
+                <Select placeholder="Ambalaj giriniz">
                   {ambalajlar.map((ambalaj, i) => (
                     <Select.Option key={i} value={ambalaj.kasaAdi}>
                       {ambalaj.kasaAdi}
