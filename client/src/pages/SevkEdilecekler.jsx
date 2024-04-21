@@ -45,7 +45,7 @@ export default function SevkEdilecekler() {
     async function fetchData() {
       setLoading(true);
       const uretimResponse = await uretimGirisiHttp.getData();
-      console.log("Müşteriye göre üretim girişleri: ", uretimResponse);
+      console.log("Müşteriye göre sevk edilmemiş üretim girişleri: ", uretimResponse);
       setUretimGirisleri(uretimResponse);
       setLoading(false);
     }
@@ -371,6 +371,7 @@ function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUre
         // Eğer accumulator'da (acc) şu anki item için bir kayıt varsa, üretimAdedi değerini topla ve uretimId'leri string olarak ekle
         if (acc[key]) {
           acc[key].uretimAdedi += item.uretimAdedi;
+          // ? uretimGirisi id leri;
           acc[key].uretimIdleri = acc[key].uretimIdleri + "," + item.id; // String olarak ID'leri birleştir
         } else {
           // Eğer yoksa, yeni bir kayıt olarak ekle, tipi ayarla ve ilk uretimId'yi string olarak ekle

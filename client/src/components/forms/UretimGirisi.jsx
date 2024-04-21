@@ -7,6 +7,7 @@ import SevkiyatKarti from "../cards/SevkiyatKarti";
 import { useDBContext } from "context/DBProvider";
 import uretimGirisiHttp from "services/uretim-girisleri.http";
 import { useUIContext } from "context/UIProvider";
+import sevkiyatHareketleriHttp from "services/sevkiyat-hareketleri.http";
 
 const SectionBase = styled.div`
   border: 1px solid #d0d0d0;
@@ -123,7 +124,6 @@ export default function UretimGirisi({ record }) {
       net: teraziOlcum.net,
     };
 
-    // adet girişinin olması gerekenden fazla yapılmadığı Input validasyonlarında garantilendi
     if (data.uretimAdedi + record.uretilenMiktar <= record.gelenMiktar) {
       const updatedUretim = await uretimGirisiHttp.addData(data);
       let newDevamEdenUretimler = [];
@@ -152,6 +152,7 @@ export default function UretimGirisi({ record }) {
           }),
         };
       }
+      console.log("amannnn");
       setDevamEdenUretimler(newDevamEdenUretimler);
       setSevkiyatKartiKayit(data);
       showNotification(

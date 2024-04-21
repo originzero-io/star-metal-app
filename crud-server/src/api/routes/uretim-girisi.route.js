@@ -15,6 +15,9 @@ router.get("/", async (req, res) => {
         as: "Referanslar",
       },
     ],
+    where: {
+      sevkTarihi: null, // sevk edilmemiş kayıtları filtrele (sevk edilmişse sevk tarihi doludur)
+    },
     order: [["referansNo", "ASC"]],
   });
 
@@ -138,9 +141,9 @@ router.put("/aktiflik-degistir", async (req, res) => {
   res.send("aktiflik değişti");
 });
 
-router.put("/logoya-gonderilenler", async (req, res) => {
+router.put("/sevk-et", async (req, res) => {
   const { kayitlar } = req.body;
-  console.log("kayitlar", kayitlar);
+  // console.log("kayitlar", kayitlar);
   try {
     // Tüm kayıtlar üzerinde döngü
     kayitlar.forEach(async (kayit) => {
@@ -162,7 +165,6 @@ router.put("/logoya-gonderilenler", async (req, res) => {
       );
 
       console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}`);
-      console.log("Güncellenen kayıtlar: ", sonuc);
     });
 
     res.send("Tüm kayıtlar başarıyla güncellendi.");
@@ -210,30 +212,22 @@ const uretimKaydiniDuzenle = async (row) => {
   if (row.Referanslar.fason) {
     const uretim = await FasonUretim.findByPk(row.uretimSiraNo);
     if (uretim) {
-      const updatedUretim = await uretim.update({
+      await uretim.update({
         uretilenMiktar: uretim.uretilenMiktar - row.uretimAdedi,
         // uretilmeyenMiktar: uretim.uretilmeyenMiktar + req.body.uretimAdedi,
       });
-      // console.log("fason-updated-Uretim", updatedUretim);
-
-      // res.json(updatedUretim);
     } else {
-      // res.status(400).send("üretim girişi bulunamadı");
       console.log("böyle bir fason üretim bulunamadı");
     }
   } else {
     const uretim = await NormalUretim.findByPk(row.uretimSiraNo);
 
     if (uretim) {
-      const updatedUretim = await uretim.update({
+      await uretim.update({
         uretilenMiktar: uretim.uretilenMiktar - row.uretimAdedi,
         uretilmeyenMiktar: uretim.uretilmeyenMiktar + row.uretimAdedi,
       });
-      // console.log("normal-updated-Uretim", updatedUretim);
-
-      // res.json(updatedUretim);
     } else {
-      // res.status(400).send("üretim girişi bulunamadı");
       console.log("böyle bir normal üretim bulunamadı");
     }
   }

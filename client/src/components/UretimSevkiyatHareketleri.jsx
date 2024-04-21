@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import uretimGirisleriHttp from "services/uretim-girisleri.http";
 import styled from "styled-components";
 import TableGod from "./shared/TableGod";
+import sevkiyatHareketleriHttp from "services/sevkiyat-hareketleri.http";
 
 const TopSectionItem = styled.div`
   flex: 1 1 400px; // Her öğe en az 200px olacak şekilde esneyebilir
@@ -45,8 +46,9 @@ export default function UretimSevkiyatHareketleri({ record }) {
     async function fetchData() {
       setLoading(true);
       const uretimResponse = await uretimGirisleriHttp.getDataById(record.id);
-      console.log("Üretim Id'ye göre üretim girişleri: ", Object.entries(uretimResponse));
+      console.log("Üretim Id'ye göre sevkiyat hareketleri: ", Object.entries(uretimGirisleri));
       setUretimGirisleri(uretimResponse);
+
       setLoading(false);
     }
 
@@ -218,7 +220,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
             </div>
           ))
         ) : (
-          <Alert description={`Üretim girişi bulunamadı.`} type="info" showIcon />
+          <Alert description={`Sevkiyat hareketi bulunamadı.`} type="info" showIcon />
         )}
       </div>
     </div>
