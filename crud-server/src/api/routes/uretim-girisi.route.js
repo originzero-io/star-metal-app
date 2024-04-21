@@ -125,7 +125,9 @@ router.put("/aktiflik-degistir", async (req, res) => {
     );
   } else {
     // "1,2,3" şeklinde gönderilmiş id leri parçala ve sayıya çevir.
-    const uretimGirisiIds = kayitlar.flatMap((kayit) => kayit.uretimIdleri.split(",").map(Number));
+    const uretimGirisiIds = kayitlar.flatMap((kayit) =>
+      kayit.uretimGirisiIdleri.split(",").map(Number),
+    );
 
     console.log("uretimGirisiIds", uretimGirisiIds);
     await UretimGirisi.update(
@@ -147,8 +149,8 @@ router.put("/sevk-et", async (req, res) => {
   try {
     // Tüm kayıtlar üzerinde döngü
     kayitlar.forEach(async (kayit) => {
-      const uretimIdleri = kayit.uretimIdleri.split(",").map(Number);
-      console.log("uretimIdleri", uretimIdleri);
+      const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
+      console.log("uretimGirisiIdleri", uretimGirisiIdleri);
       // UretimGirisi modelindeki kayıtları bul ve güncelle
       const sonuc = await UretimGirisi.update(
         {
@@ -159,7 +161,7 @@ router.put("/sevk-et", async (req, res) => {
         },
         {
           where: {
-            id: uretimIdleri,
+            id: uretimGirisiIdleri,
           },
         },
       );

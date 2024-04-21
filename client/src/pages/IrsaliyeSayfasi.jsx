@@ -7,7 +7,6 @@ import { useUIContext } from "context/UIProvider";
 import { useEffect, useMemo, useState } from "react";
 import { FcRules } from "react-icons/fc";
 import irsaliyeHttp from "services/irsaliyeler.http";
-import sevkiyatHareketleriHttp from "services/sevkiyat-hareketleri.http";
 import uretimGirisleriHttp from "services/uretim-girisleri.http";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 import { getCurrentDateTime } from "utils/time.helper";

@@ -9,7 +9,7 @@ export const fasonaIrsaliyeKaydiOlustur = (kayitlar = []) => {
     talepNo: kayit.Referanslar.talepNo,
     uretimTarihi: getCurrentDateTime(),
     uretimAdedi: kayit.gelenMiktar,
-    uretimIdleri: kayit.id,
+    uretimGirisiIdleri: kayit.id,
     fasona: true,
   }));
   return irsaliyeKaydi;

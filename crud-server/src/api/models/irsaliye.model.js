@@ -5,7 +5,7 @@ import Referans from "./referans.model.js";
 const Irsaliye = sequelize.define(
   "Irsaliyeler",
   {
-    uretimIdleri: {
+    uretimGirisiIdleri: {
       type: DataTypes.STRING(70), // farklı üretim kayıtlarının id lerini tutar '1,2,3' gibi bir şekilde
       allowNull: false,
     },

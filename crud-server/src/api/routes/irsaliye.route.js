@@ -96,7 +96,7 @@ router.delete("/", async (req, res) => {
 });
 
 const fasonKaydiniSifirla = async (row) => {
-  const uretim = await FasonUretim.findByPk(Number(row.uretimIdleri));
+  const uretim = await FasonUretim.findByPk(Number(row.uretimGirisiIdleri));
   if (uretim) {
     await uretim.update({
       gidenMiktar: 0,
