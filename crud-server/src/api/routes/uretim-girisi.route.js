@@ -166,6 +166,9 @@ router.put("/sevk-et", async (req, res) => {
         },
       );
 
+      // üretim giden kalan kayıtlarını güncelle;
+      const updatedUretim = await uretimGidenVeKalanMiktarlariGuncelle(kayit);
+
       console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}`);
     });
 
@@ -176,6 +179,37 @@ router.put("/sevk-et", async (req, res) => {
   }
   // res.send("selam");
 });
+
+const uretimGidenVeKalanMiktarlariGuncelle = async (kayit) => {
+  if (kayit.fasona) {
+    console.log("BURADAYIM ÇÜNKÜ FASON");
+    const fasonUretim = await FasonUretim.findByPk(kayit.uretimSiraNo);
+
+    console.log("fasonUretim", fasonUretim);
+    if (fasonUretim) {
+      const updatedUretim = await fasonUretim.update({
+        sevkEdilenMiktar: fasonUretim.sevkEdilenMiktar + kayit.uretimAdedi,
+      });
+
+      return updatedUretim;
+    } else {
+      return null;
+    }
+  } else {
+    const normalUretim = await NormalUretim.findByPk(kayit.uretimSiraNo);
+
+    if (normalUretim) {
+      const updatedUretim = await normalUretim.update({
+        gidenMiktar: normalUretim.gidenMiktar + kayit.uretimAdedi,
+        kalanMiktar: normalUretim.kalanMiktar - kayit.uretimAdedi,
+      });
+
+      return updatedUretim;
+    } else {
+      return null;
+    }
+  }
+};
 
 router.delete("/", async (req, res) => {
   const { selectedRows } = req.body;

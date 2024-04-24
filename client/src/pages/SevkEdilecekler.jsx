@@ -373,9 +373,15 @@ function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUre
           acc[key].uretimAdedi += item.uretimAdedi;
           // ? uretimGirisi id leri;
           acc[key].uretimGirisiIdleri = acc[key].uretimGirisiIdleri + "," + item.id; // String olarak ID'leri birleştir
+          acc[key].uretimSiraNo = item.uretimSiraNo;
         } else {
           // Eğer yoksa, yeni bir kayıt olarak ekle, tipi ayarla ve ilk uretimId'yi string olarak ekle
-          acc[key] = { ...item, uretimGirisiIdleri: item.id.toString(), tip };
+          acc[key] = {
+            ...item,
+            uretimGirisiIdleri: item.id.toString(),
+            uretimSiraNo: item.uretimSiraNo,
+            tip,
+          };
           // delete acc[key].id; // her kayıdın id lerini sil (kayıt eşsizliğini bozmamak için)
         }
 

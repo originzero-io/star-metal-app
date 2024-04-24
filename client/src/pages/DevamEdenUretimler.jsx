@@ -29,7 +29,7 @@ const collapseItemStyle = {
 const subCollapseItemStyle = {
   borderRadius: 10,
   marginTop: 4,
-  background: "rgba(255, 255, 255, 0.4)",
+  background: "rgba(255, 255, 255, 0.3)",
 };
 
 function DevamEdenUretimler() {
@@ -215,6 +215,7 @@ function NormalUretimlerTablo({ data }) {
         dataIndex: "gidenMiktar",
         key: "gidenMiktar",
         sorter: (a, b) => a.gidenMiktar - b.gidenMiktar,
+        render: (text) => <Tag color={text > 0 ? "cyan" : ""}>{text}</Tag>,
       },
       {
         title: "Kalan",

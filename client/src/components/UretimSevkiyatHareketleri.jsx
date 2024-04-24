@@ -184,10 +184,8 @@ export default function UretimSevkiyatHareketleri({ record }) {
               </TopSectionItem>
             ) : (
               <TopSectionItem>
-                <TopSectionItemName></TopSectionItemName>
-                <TopSectionItemValue style={{ background: "#4887ed", color: "whitesmoke" }}>
-                  İADE
-                </TopSectionItemValue>
+                <TopSectionItemName>İade: </TopSectionItemName>
+                <TopSectionItemValue>{record.iade}</TopSectionItemValue>
               </TopSectionItem>
             )}
           </Col>
