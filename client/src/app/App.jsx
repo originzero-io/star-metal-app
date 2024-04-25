@@ -1,26 +1,24 @@
 import NavigationMenu from "components/NavigationMenu/NavigationMenu";
-import styled from "styled-components";
 import FormModal from "components/shared/FormModal";
 import FormPanel from "components/shared/FormPanel";
-import { UIProvider } from "context/UIProvider";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import TamamlananUretimler from "pages/TamamlananUretimler";
-import DevamEdenUretimler from "pages/DevamEdenUretimler";
-import Musteriler from "pages/Musteriler";
-import Referanslar from "pages/Referanslar";
-import Ambalajlar from "pages/Ambalajlar";
-import Sicakliklar from "pages/Sicakliklar";
-import GelenMalzemeKayit from "pages/GelenMalzemeKayit";
-import Banyolar from "pages/Banyolar/Banyolar";
 import { DBProvider } from "context/DBProvider";
-import SevkEdilecekler from "pages/SevkEdilecekler";
-import Personeller from "pages/Personeller";
+import { UIProvider } from "context/UIProvider";
+import Ambalajlar from "pages/Ambalajlar";
+import Banyolar from "pages/Banyolar/Banyolar";
+import DevamEdenUretimler from "pages/DevamEdenUretimler";
+import GelenMalzemeKayit from "pages/GelenMalzemeKayit";
 import Irsaliyeler from "pages/Irsaliyeler";
 import Login from "pages/Login";
-import { useState } from "react";
-// import useAuth from "utils/useAuth";
+import Musteriler from "pages/Musteriler";
+import Personeller from "pages/Personeller";
+import Referanslar from "pages/Referanslar";
+import SevkEdilecekler from "pages/SevkEdilecekler";
+import Sicakliklar from "pages/Sicakliklar";
+import TamamlananUretimler from "pages/TamamlananUretimler";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import styled from "styled-components";
+import { AuthProvider } from "context/AuthProvider";
 import ProtectedRoute from "pages/ProtectedRoute";
-import { AuthProvider, useAuth } from "context/AuthProvider";
 
 const AppWrapperStyled = styled.div`
   height: 100vh;
@@ -46,7 +44,6 @@ function App() {
           <AuthProvider>
             <DBProvider>
               <NavigationMenu />
-
               <PageWrapperStyled>
                 <Routes>
                   <Route path="/giris" element={<Login />} />
