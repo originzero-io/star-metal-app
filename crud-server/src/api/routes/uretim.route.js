@@ -97,7 +97,56 @@ router.post("/devam-eden", async (req, res) => {
   res.json(newMalzemeler);
 });
 
-router.put("/devam-eden", async (req, res) => {});
+router.put("/devam-eden", async (req, res) => {
+  console.log(req.body);
+  try {
+    const { currentRecord, newData } = req.body;
+    let uretim;
+    if (currentRecord.Referanslar.fason) {
+      uretim = await FasonUretim.findByPk(currentRecord.id);
+      await uretim.update({
+        gelenMiktar: newData.gelenMiktar,
+        gidenMiktar: uretim.gidenMiktar === 0 ? 0 : newData.gelenMiktar,
+      });
+    } else {
+      uretim = await NormalUretim.findByPk(currentRecord.id);
+      await uretim.update({
+        gelenMiktar: newData.gelenMiktar,
+        kalanMiktar: newData.gelenMiktar - uretim.gidenMiktar,
+        uretilmeyenMiktar: newData.gelenMiktar - uretim.uretilenMiktar,
+      });
+    }
+    res.json(uretim); // güncellenen ilk değer
+  } catch (error) {
+    res.status(500).json({
+      name: error.name,
+      fields: error.fields,
+      message: error.message,
+    });
+  }
+  // try {
+  //   const { currentRecord, newData } = req.body;
+  //   let updatedUretim;
+  //   if (currentRecord.Referanslar.fason) {
+  //     updatedUretim = await FasonUretim.update(
+  //       newData, // Güncellenecek yeni değerler
+  //       { where: { id: currentRecord.id }, returning: true, individualHooks: true },
+  //     );
+  //   } else {
+  //     updatedUretim = await NormalUretim.update(
+  //       newData, // Güncellenecek yeni değerler
+  //       { where: { id: currentRecord.id }, returning: true, individualHooks: true },
+  //     );
+  //   }
+  //   res.json(updatedUretim[1][0]); // güncellenen ilk değer
+  // } catch (error) {
+  //   console.log("error: ", error);
+  //   res.status(500).json({
+  //     name: error.name,
+  //     fields: error.fields,
+  //   });
+  // }
+});
 
 router.put("/devam-eden/fasonlara-irsaliye-kes", async (req, res) => {
   const irsaliyeKaydi = req.body;

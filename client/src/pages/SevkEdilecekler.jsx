@@ -271,6 +271,7 @@ export default function SevkEdilecekler() {
               borderRadius: 10,
               marginBottom: 4,
               background: "rgba(255, 255, 255, 0.5)",
+              // background: "rgba(161, 46, 134, 0.061)",
             },
             children: (
               <TableGod
@@ -281,13 +282,14 @@ export default function SevkEdilecekler() {
                 rowSelection={createRowSelection(musteriAdi)}
                 rowStyle={(row) =>
                   !row.aktif && {
-                    // background: "#f74a1f",
-                    background: "rgba(81, 81, 81, 0.1)",
+                    // background: "rgba(62, 27, 54, 0.4)",
+                    background: "rgba(81, 81, 81, 0.5)",
                     // background: "rgb(216, 216, 216)",
                     cursor: "not-allowed",
+                    opacity: 0.5,
+                    filter: "blur(1px)",
                   }
                 }
-                // rowStyle={{ background: "red" }}
                 actionButtons={
                   <>
                     {selectedRows[musteriAdi]?.length === 1 && (

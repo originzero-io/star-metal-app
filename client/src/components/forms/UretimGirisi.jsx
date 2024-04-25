@@ -151,7 +151,6 @@ export default function UretimGirisi({ record }) {
           }),
         };
       }
-      console.log("amannnn");
       setDevamEdenUretimler(newDevamEdenUretimler);
       setSevkiyatKartiKayit(data);
       showNotification(

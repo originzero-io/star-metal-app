@@ -71,6 +71,7 @@ NormalUretim.afterCreate(async (instance, options) => {
   await instance.reload({ include: [{ model: Referans, as: "Referanslar" }] });
 });
 NormalUretim.afterUpdate(async (instance, options) => {
+  console.log("of amk");
   await instance.reload({ include: [{ model: Referans, as: "Referanslar" }] });
 });
 

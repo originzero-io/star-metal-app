@@ -2,7 +2,6 @@ import { getCurrentDateTime } from "./time.helper";
 
 /* eslint-disable import/prefer-default-export */
 export const fasonaIrsaliyeKaydiOlustur = (kayitlar = []) => {
-  console.log("ilgiliKAYIT", kayitlar);
   const irsaliyeKaydi = kayitlar.map((kayit) => ({
     ...kayit,
     tip: "tasima",

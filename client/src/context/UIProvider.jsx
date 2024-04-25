@@ -10,7 +10,6 @@ export const UIProvider = ({ children }) => {
   const [modal, setOpenModal] = useState({
     title: null, // form title
     content: null, // form component
-    width: 1000, // modal width
   });
 
   const showModal = ({ title, content, width }) => {

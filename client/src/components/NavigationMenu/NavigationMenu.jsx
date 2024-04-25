@@ -67,7 +67,8 @@ const MenuListGroupItemStyled = styled.div`
   align-items: center;
   color: #5a5a5a;
 
-  background-color: ${(props) => (props.selected ? "rgb(137, 78, 238)" : "transparent")};
+  // background-color: ${(props) => (props.selected ? "rgb(137, 78, 238)" : "transparent")};
+  background-color: ${(props) => (props.selected ? "#6a4c93" : "transparent")};
   color: ${(props) => (props.selected ? "whitesmoke" : "")};
   border-radius: 4px;
   /* background-color: ${(props) => (props.selected ? "rgb(206, 215, 237)" : "transparent")};
@@ -91,7 +92,8 @@ const RegisterButtonItemStyled = styled.div`
   border-radius: 12px;
 
   margin-bottom: 12px;
-  background: rgba(107, 67, 175, 1);
+  background: #6a4c93;
+  // background: rgba(107, 67, 175, 1);
   color: #e8e8e8;
   padding: 8px;
 

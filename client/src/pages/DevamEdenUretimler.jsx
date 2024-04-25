@@ -23,13 +23,14 @@ const onChange = (pagination, filters, sorter, extra) => {
 const collapseItemStyle = {
   borderRadius: 10,
   marginBottom: 6,
-  background: "rgba(255, 255, 255, 0.5)",
+  background: "rgba(255, 255, 255, 0.4)",
+  // background: "rgba(161, 46, 134, 0.061)",
 };
 
 const subCollapseItemStyle = {
   borderRadius: 10,
   marginTop: 4,
-  background: "rgba(255, 255, 255, 0.3)",
+  background: "rgba(255, 255, 255, 0.4)",
 };
 
 function DevamEdenUretimler() {
@@ -97,7 +98,7 @@ function DevamEdenUretimler() {
 
 function NormalUretimlerTablo({ data }) {
   const [selectedRows, setSelectedRows] = useState([]);
-  const { showPanel, showAlert } = useUIContext();
+  const { showPanel, showAlert, showModal } = useUIContext();
 
   const [musteriBazliKayitlar, setMusteriBazliKayitlar] = useState([]);
 
@@ -301,6 +302,7 @@ function NormalUretimlerTablo({ data }) {
   return (
     <Collapse
       bordered={false}
+      expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
       items={Object.entries(musteriBazliKayitlar).map(([musteriAdi, kayitlar], index) => ({
         key: index.toString(),
         label: (
@@ -347,12 +349,12 @@ function NormalUretimlerTablo({ data }) {
                 {
                   title: "Gelen Malzeme Miktarını Değiştir",
                   // action: (record) => window.electron.send("openNewWindow"),
-                  // action: (record) =>
-                  //   showPanel({
-                  //     title: "Üretim / Sevkiyat Hareketleri",
-                  //     content: <SevkEdilecekler record={record} />,
-                  //     width: 1000,
-                  //   }),
+                  action: (record) =>
+                    showModal({
+                      title: "Gelen Malzeme Miktarını Düzenle",
+                      content: <MalzemeDuzenlemeForm record={record} />,
+                      width: 400,
+                    }),
                 },
               ],
             }}
@@ -400,7 +402,7 @@ function FasonUretimlerTablo({ data }) {
   const [selectedRows, setSelectedRows] = useState([]);
   const [secilmisIrsaliyeler, setSecilmisIrsaliyeler] = useState([]);
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
-  const { showPanel, showNotification, showAlert } = useUIContext();
+  const { showPanel, showNotification, showAlert, showModal } = useUIContext();
 
   const [musteriBazliKayitlar, setMusteriBazliKayitlar] = useState([]);
 
@@ -700,6 +702,7 @@ function FasonUretimlerTablo({ data }) {
   return (
     <Collapse
       bordered={false}
+      expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
       items={Object.entries(musteriBazliKayitlar).map(([musteriAdi, kayitlar], index) => ({
         key: index.toString(),
         label: (
@@ -723,7 +726,7 @@ function FasonUretimlerTablo({ data }) {
             rowSelection={createRowSelection(musteriAdi)}
             hideDefaultTitleButtons
             contextMenu={{
-              editForm: MalzemeDuzenlemeForm,
+              // editForm: MalzemeDuzenlemeForm,
               extraItems: [
                 {
                   title: "Üretim / Sevkiyat Hareketleri",
@@ -748,10 +751,10 @@ function FasonUretimlerTablo({ data }) {
                   title: "Gelen Malzeme Miktarını Değiştir",
                   // action: (record) => window.electron.send("openNewWindow"),
                   action: (record) =>
-                    showPanel({
-                      title: "Adet Değiştir",
-                      content: <div>Yapılıyor...</div>,
-                      width: 1000,
+                    showModal({
+                      title: "Gelen Malzeme Miktarını Düzenle",
+                      content: <MalzemeDuzenlemeForm record={record} />,
+                      width: 400,
                     }),
                 },
               ],

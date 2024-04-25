@@ -48,47 +48,19 @@ const FormModal = () => {
 
   return (
     <Modal
-      title={
-        <div
-          style={{
-            marginTop: "-25px",
-            marginLeft: "-2.1%",
-            marginRight: "-2.1%",
-            marginBottom: "25px",
-            fontWeight: "bold",
-            background: "#dce0e3",
-            color: "#262a2f",
-            borderRadius: "8px 8px 0px 0px",
-            padding: "6px",
-            paddingLeft: "12px",
-            cursor: "move",
-          }}
-          onMouseOver={() => {
-            if (disabled) {
-              setDisabled(false);
-            }
-          }}
-          onMouseOut={() => {
-            setDisabled(true);
-          }}
-        >
-          {modal.title}
-        </div>
-      }
+      title={modal.title}
       open={modal.title}
       onOk={handleOk}
       onCancel={handleCancel}
       maskClosable={false}
       centered
-      width={1200}
+      width={modal.width}
       footer={null}
       closeIcon={
         <CloseCircleFilled
           style={{
-            fontSize: "22px",
+            fontSize: "20px",
             color: "#373737",
-            marginRight: "0%",
-            marginTop: "-130%",
           }}
         />
       }
@@ -105,7 +77,7 @@ const FormModal = () => {
         </Draggable>
       )}
     >
-      {modal.content}
+      <div style={{ marginTop: "20px" }}>{modal.content}</div>
     </Modal>
   );
 };

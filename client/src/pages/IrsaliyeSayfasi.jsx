@@ -18,10 +18,10 @@ export default function IrsaliyeSayfasi() {
   const sevkIrsaliyeleri = irsaliyeler?.filter((irsaliye) => irsaliye.tip === "sevk");
   const tasimaIrsaliyeleri = irsaliyeler?.filter((irsaliye) => irsaliye.tip === "tasima");
 
-  const [musteriBazliIrsaliye, setMusteriBazliIrsaliye] = useState({ tasima: {}, sevk: {} });
+  const [tipBazliIrsaliye, setTipBazliIrsaliye] = useState({ tasima: {}, sevk: {} });
 
-  useEffect(() => {
-    const musteriBazliGruplama = irsaliyeler.reduce((acc, item) => {
+  const tipeGoreGrupla = () => {
+    const tipBazliGruplama = irsaliyeler.reduce((acc, item) => {
       // Tip'e göre gruplama
       if (!acc[item.tip]) {
         acc[item.tip] = {};
@@ -39,8 +39,8 @@ export default function IrsaliyeSayfasi() {
       return acc;
     }, {});
 
-    setMusteriBazliIrsaliye(musteriBazliGruplama);
-  }, [irsaliyeler]);
+    setTipBazliIrsaliye(tipBazliGruplama);
+  };
 
   const columns = useMemo(
     () => [
@@ -103,7 +103,7 @@ export default function IrsaliyeSayfasi() {
     [irsaliyeler],
   );
 
-  const deleteSelectedRecordsHandler = (selectedRows) => {
+  const secilenKaydiSil = (kayit) => {
     Modal.confirm({
       title: "Emin misiniz?",
       content:
@@ -112,15 +112,18 @@ export default function IrsaliyeSayfasi() {
       cancelText: "İptal",
       async onOk() {
         try {
-          const newReferanslar = await irsaliyeHttp.deleteData(irsaliyeler, selectedRows);
+          const newReferanslar = await irsaliyeHttp.deleteData(irsaliyeler, [kayit]);
 
-          await uretimGirisleriHttp.aktiflikDegistir(true, selectedRows);
+          await uretimGirisleriHttp.aktiflikDegistir(true, [kayit]);
 
           const devamEdenUretimler = await devamEdenUretimHttp.getData();
           setDevamEdenUretimler(devamEdenUretimler);
           setIrsaliyeler(newReferanslar);
 
-          showNotification("success", "Seçili irsaliye kayıtları silindi");
+          showNotification(
+            "success",
+            `${kayit.Referanslar.musteriAdi} müşterine ait seçili irsaliye kaydı silindi.`,
+          );
         } catch (error) {
           showNotification("error", `Hata oluştu: ${error.message}`);
         }
@@ -130,6 +133,10 @@ export default function IrsaliyeSayfasi() {
       },
     });
   };
+
+  useEffect(() => {
+    tipeGoreGrupla();
+  }, [irsaliyeler]);
 
   return (
     <div>
@@ -170,50 +177,47 @@ export default function IrsaliyeSayfasi() {
             children: (
               <Collapse
                 bordered={false}
-                defaultActiveKey={Object.keys(musteriBazliIrsaliye).map((_, index) =>
-                  index.toString(),
-                )}
+                expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+                defaultActiveKey={Object.keys(tipBazliIrsaliye).map((_, index) => index.toString())}
                 items={
-                  musteriBazliIrsaliye.sevk &&
-                  Object.entries(musteriBazliIrsaliye.sevk).map(
-                    ([musteriAdi, kayitlar], index) => ({
-                      key: index.toString(),
-                      label: (
-                        <Badge
-                          count={new Set(kayitlar?.map((item) => item.referansNo)).size}
-                          offset={[50, 7]}
-                          color="cyan"
-                          title="Farklı referans sayısı"
-                        >
-                          <Badge count={kayitlar.length} offset={[20, 6]} title="Kayıt sayısı">
-                            <div
-                              style={{
-                                // fontSize: "16px",
-                                fontWeight: "600",
-                                color: "#474747",
-                              }}
-                            >
-                              {musteriAdi}
-                            </div>
-                          </Badge>
+                  tipBazliIrsaliye.sevk &&
+                  Object.entries(tipBazliIrsaliye.sevk).map(([musteriAdi, kayitlar], index) => ({
+                    key: index.toString(),
+                    label: (
+                      <Badge
+                        count={new Set(kayitlar?.map((item) => item.referansNo)).size}
+                        offset={[50, 7]}
+                        color="cyan"
+                        title="Farklı referans sayısı"
+                      >
+                        <Badge count={kayitlar.length} offset={[20, 6]} title="Kayıt sayısı">
+                          <div
+                            style={{
+                              // fontSize: "16px",
+                              fontWeight: "600",
+                              color: "#474747",
+                            }}
+                          >
+                            {musteriAdi}
+                          </div>
                         </Badge>
-                      ),
-                      children: (
-                        <SevkIrsaliyeTablo
-                          data={kayitlar}
-                          columns={columns}
-                          deleteRecordsFunc={deleteSelectedRecordsHandler}
-                        />
-                      ),
-                      style: {
-                        borderRadius: 10,
-                        marginTop: 6,
-                        // background: "red",
-                        background: "rgba(255, 255, 255, 0.4)",
-                      },
-                      extra: <LogoyaGonderButton type="sevk" kayitlar={kayitlar} />,
-                    }),
-                  )
+                      </Badge>
+                    ),
+                    children: (
+                      <IrsaliyeTablo
+                        data={kayitlar}
+                        columns={columns}
+                        deleteRecordsFunc={secilenKaydiSil}
+                      />
+                    ),
+                    style: {
+                      borderRadius: 10,
+                      marginTop: 6,
+                      // background: "red",
+                      background: "rgba(255, 255, 255, 0.4)",
+                    },
+                    extra: <LogoyaGonderButton type="sevk" kayitlar={kayitlar} />,
+                  }))
                 }
               />
             ),
@@ -250,56 +254,52 @@ export default function IrsaliyeSayfasi() {
             children: (
               <Collapse
                 bordered={false}
-                defaultActiveKey={Object.keys(musteriBazliIrsaliye).map((_, index) =>
-                  index.toString(),
-                )}
-                // expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+                defaultActiveKey={Object.keys(tipBazliIrsaliye).map((_, index) => index.toString())}
+                expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                 items={
-                  musteriBazliIrsaliye.tasima &&
-                  Object.entries(musteriBazliIrsaliye.tasima).map(
-                    ([musteriAdi, kayitlar], index) => ({
-                      key: index.toString(),
-                      label: (
+                  tipBazliIrsaliye.tasima &&
+                  Object.entries(tipBazliIrsaliye.tasima).map(([musteriAdi, kayitlar], index) => ({
+                    key: index.toString(),
+                    label: (
+                      <Badge
+                        count={new Set(kayitlar?.map((item) => item.referansNo)).size}
+                        offset={[50, 7]}
+                        color="cyan"
+                        title="Farklı referans sayısı"
+                      >
                         <Badge
-                          count={new Set(kayitlar?.map((item) => item.referansNo)).size}
-                          offset={[50, 7]}
-                          color="cyan"
-                          title="Farklı referans sayısı"
+                          count={kayitlar.length}
+                          offset={[20, 6]}
+                          color="purple"
+                          title="Kayıt sayısı"
                         >
-                          <Badge
-                            count={kayitlar.length}
-                            offset={[20, 6]}
-                            color="purple"
-                            title="Kayıt sayısı"
+                          <div
+                            style={{
+                              // fontSize: "16px",
+                              fontWeight: "600",
+                              color: "#474747",
+                            }}
                           >
-                            <div
-                              style={{
-                                // fontSize: "16px",
-                                fontWeight: "600",
-                                color: "#474747",
-                              }}
-                            >
-                              {musteriAdi}
-                            </div>
-                          </Badge>
+                            {musteriAdi}
+                          </div>
                         </Badge>
-                      ),
-                      children: (
-                        <TasimaIrsaliyeTablo
-                          data={kayitlar}
-                          columns={columns}
-                          deleteRecordsFunc={deleteSelectedRecordsHandler}
-                        />
-                      ),
-                      style: {
-                        borderRadius: 10,
-                        marginTop: 6,
-                        // background: "red",
-                        background: "rgba(255, 255, 255, 0.4)",
-                      },
-                      extra: <LogoyaGonderButton type="tasima" kayitlar={kayitlar} />,
-                    }),
-                  )
+                      </Badge>
+                    ),
+                    children: (
+                      <IrsaliyeTablo
+                        data={kayitlar}
+                        columns={columns}
+                        deleteRecordsFunc={secilenKaydiSil}
+                      />
+                    ),
+                    style: {
+                      borderRadius: 10,
+                      marginTop: 6,
+                      // background: "red",
+                      background: "rgba(255, 255, 255, 0.4)",
+                    },
+                    extra: <LogoyaGonderButton type="tasima" kayitlar={kayitlar} />,
+                  }))
                 }
               />
             ),
@@ -310,68 +310,16 @@ export default function IrsaliyeSayfasi() {
   );
 }
 
-function SevkIrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
-  const [selectedRows, setSelectedRows] = useState([]);
-
+function IrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
   return (
     <TableGod
       dataSource={data}
       columns={columns}
-      // onChange={onChange}
       hideDefaultTitleButtons
       pagination={false}
-      rowSelection={{
-        onChange: (_selectedRowKeys, _selectedRows) => {
-          setSelectedRows(_selectedRows);
-        },
+      contextMenu={{
+        deleteAction: deleteRecordsFunc,
       }}
-      actionButtons={
-        <>
-          {selectedRows.length > 0 && (
-            <Button
-              style={{ marginRight: "4px" }}
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => deleteRecordsFunc(selectedRows)}
-            >
-              Sil ({selectedRows.length})
-            </Button>
-          )}
-        </>
-      }
-    />
-  );
-}
-
-function TasimaIrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
-  const [selectedRows, setSelectedRows] = useState([]);
-
-  return (
-    <TableGod
-      dataSource={data}
-      columns={columns}
-      // onChange={onChange}
-      hideDefaultTitleButtons
-      pagination={false}
-      rowSelection={{
-        onChange: (_selectedRowKeys, _selectedRows) => {
-          setSelectedRows(_selectedRows);
-        },
-      }}
-      actionButtons={
-        <>
-          {selectedRows.length > 0 && (
-            <Button
-              style={{ marginRight: "4px" }}
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => deleteRecordsFunc(selectedRows)}
-            >
-              Sil ({selectedRows.length})
-            </Button>
-          )}
-        </>
-      }
     />
   );
 }

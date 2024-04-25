@@ -149,9 +149,9 @@ export default function UretimSevkiyatHareketleri({ record }) {
       <div onContextMenu={(e) => e.preventDefault()}>
         <Row
           style={{
-            background: "#d4e0fa",
+            background: "#e2e9f9",
             padding: 12,
-            borderRadius: 12,
+            borderRadius: 8,
             display: "flex",
           }}
         >

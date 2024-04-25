@@ -1,235 +1,119 @@
-import { Button, Divider, Form, Input, Radio, Select } from "antd";
+/* eslint-disable no-lonely-if */
+import { Button, Form, InputNumber } from "antd";
 import { useDBContext } from "context/DBProvider";
-import { getCurrentDateTime } from "utils/time.helper";
+import { useUIContext } from "context/UIProvider";
+import { devamEdenUretimHttp } from "services/uretimler.http";
 
 export default function MalzemeDuzenlemeForm({ record }) {
-  const { referanslar, ambalajlar, personeller } = useDBContext();
+  const { setDevamEdenUretimler } = useDBContext();
+  const { showModal, showNotification, showAlert } = useUIContext();
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const adediDegistir = async (values) => {
+    const updatedUretim = await devamEdenUretimHttp.updateData(record, values);
+
+    setDevamEdenUretimler((prevState) => {
+      if (updatedUretim.Referanslar.fason) {
+        return {
+          ...prevState,
+          fasonUretimler: prevState.fasonUretimler.map((fason) => {
+            if (fason.id === updatedUretim.id) {
+              return { ...updatedUretim };
+            }
+            return fason;
+          }),
+        };
+      }
+      return {
+        ...prevState,
+        normalUretimler: prevState.normalUretimler.map((normal) => {
+          if (normal.id === updatedUretim.id) {
+            return { ...updatedUretim };
+          }
+          return normal;
+        }),
+      };
+    });
+
+    showModal(false);
+    showNotification(
+      "success",
+      `${record.referansNo} referans numaralı kaydın gelen malzeme miktarı ${values.gelenMiktar} olarak değiştirildi`,
+    );
   };
+
+  const onFinish = async (values) => {
+    // console.log("Values:", values);
+    try {
+      if (record.Referanslar.fason) {
+        if (values.gelenMiktar >= record.uretilenMiktar) {
+          await adediDegistir(values);
+        } else {
+          showAlert(
+            "warning",
+            `Yeni gelen malzeme miktar değeri, üretilen miktardan az olamaz. Üretilen miktar: ${record.uretilenMiktar}`,
+          );
+        }
+      } else if (!record.Referanslar.fason) {
+        if (
+          values.gelenMiktar >= record.uretilenMiktar &&
+          values.gelenMiktar >= record.gidenMiktar
+        ) {
+          await adediDegistir(values);
+        } else {
+          showAlert(
+            "warning",
+            `Yeni gelen malzeme miktar değeri, üretilen miktardan ve giden miktardan az olamaz. Üretilen miktar: ${record.uretilenMiktar} Giden Miktar: ${record.gidenMiktar}`,
+          );
+        }
+      }
+    } catch (error) {
+      console.log("error", error);
+      showNotification("error", error.response.data.message);
+    }
+  };
+
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
-  const options = [
-    { label: "Sipariş Nolu", value: "Sipariş Nolu" },
-    { label: "Talep Nolu", value: "Talep Nolu" },
-    { label: "İade", value: "İade" },
-  ];
-
-  const onRadioButtonChange = ({ target: { value } }) => {
-    console.log("radio3 checked", value);
-  };
   return (
     <Form
       name="basic"
-      labelCol={{ flex: "150px" }}
+      // labelCol={{ flex: "150px" }}
       labelAlign="left"
       key={record ? record.id : "form"}
-      initialValues={record || {}}
+      initialValues={{ gelenMiktar: record.gelenMiktar }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Form.Item label="Referans Sıra No" name="siraNo">
-        <Input disabled placeholder={record.id} />
-      </Form.Item>
-      <Form.Item label="Tarih" name="tarih">
-        <div>{getCurrentDateTime()}</div>
-      </Form.Item>
-
-      <Divider />
-
-      <Form.Item
-        label="Gelen Malzeme Tipi"
-        name="malzemeTipi"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
+      <div
+        style={{
+          marginBottom: "10px",
+          fontWeight: "500",
+          borderBottom: "1px solid #d1d1d1",
+          padding: "4px",
+          fontSize: "15px",
+        }}
       >
-        <Radio.Group
-          options={options}
-          onChange={onRadioButtonChange}
-          // value={options[0].value}
-          optionType="button"
-          buttonStyle="solid"
-        />
-      </Form.Item>
-
-      <Divider />
-
-      <Form.Item
-        label="Referans No"
-        name="referansNo"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Select>
-          {referanslar.map((referans) => (
-            <Select.Option key={referans.id} value={referans.referansNo}>
-              {referans.referansNo}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-
-      <Form.Item
-        label="Kontrol Eden"
-        name="kontrolEden"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Select>
-          {personeller.map((personel) => (
-            <Select.Option key={personel.id} value={personel.ad}>
-              {`${personel.ad} ${personel.soyad}`}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-
-      <Divider />
-
-      <Form.Item label="Gelen İrsaliye No" name="gelenIrsaliyeNo">
-        <div style={{ display: "flex", gap: "16px" }}>
-          <Form.Item
-            name="irsaliyeNo"
-            rules={[
-              {
-                required: true,
-                message: "Bu alanı doldurun",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Kat Sayı" name="katSayi">
-            <Input />
-          </Form.Item>
-          <Button>Kaydet</Button>
-        </div>
-      </Form.Item>
-
-      <Form.Item
-        label="Getiren Şoför"
-        name="getirenSofor"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Divider />
-
-      <Form.Item
-        label="İşlem Açıklaması"
-        name="islemAciklama"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input.TextArea />
-      </Form.Item>
-
-      <Divider />
-
-      <Form.Item
-        label="Sipariş No"
-        name="siparisNo"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label="Talep No"
-        name="talepNo"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Divider />
-
-      <div style={{ display: "flex", gap: "10px" }}>
-        <Form.Item
-          label="1. Ambalaj"
-          name="birinciAmbalaj"
-          rules={[{ required: true, message: "Ambalaj seçimi zorunludur" }]}
-          style={{ flex: 1 }} // margin: 0 ile iç içe Form.Item'larda boşluk sorununu düzeltir
-        >
-          <Select>
-            {ambalajlar.map((ambalaj, i) => (
-              <Select.Option key={i} value={ambalaj.kasaAdi}>
-                {ambalaj.kasaAdi}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item
-          name="birinciAmbalajInput"
-          rules={[{ required: true, message: "Bu alanı doldurun" }]}
-          style={{ width: "10%", margin: 0 }}
-        >
-          <Input type="number" placeholder="0" />
-        </Form.Item>
+        <div>Referans No: {record.referansNo}</div>
+        <div>Müşteri: {record.Referanslar.musteriAdi}</div>
       </div>
+      <Form.Item
+        name="gelenMiktar"
+        ü
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <InputNumber placeholder="Gelen malzeme miktarı" style={{ width: "100%" }} />
+      </Form.Item>
 
-      <div style={{ display: "flex", gap: "10px" }}>
-        <Form.Item
-          label="2. Ambalaj"
-          name="ikinciAmbalaj"
-          rules={[{ required: true, message: "Ambalaj seçimi zorunludur" }]}
-          style={{ flex: 1 }}
-        >
-          <Select>
-            {ambalajlar.map((ambalaj, i) => (
-              <Select.Option key={i} value={ambalaj.kasaAdi}>
-                {ambalaj.kasaAdi}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item
-          name="ikinciAmbalajInput"
-          rules={[{ required: true, message: "Bu alanı doldurun" }]}
-          style={{ width: "10%", margin: 0 }}
-        >
-          <Input type="number" placeholder="0" />
-        </Form.Item>
-      </div>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
+      <Form.Item style={{ marginTop: "20px" }}>
+        <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
           Kaydet
         </Button>
       </Form.Item>

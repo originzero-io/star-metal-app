@@ -81,6 +81,7 @@ router.post("/fasona", async (req, res) => {
 });
 
 router.delete("/", async (req, res) => {
+  console.log("req.body", req.body);
   const { selectedRows } = req.body;
 
   selectedRows.forEach(async (row) => {

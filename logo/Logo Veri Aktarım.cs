@@ -17,6 +17,7 @@ namespace WorkboxSpecial.Model
             return IntZaman;
         }
 
+        //? LG_FİRMANO_01_STFICHE adındaki tabloya bir kayıt eklemek (CariRef, İrsaliye Tarihi, İrsaliye Zamanı, Fiş No, Son ID)
         public int IrsaliyeBaslikEkle(int CariRef, DateTime Tarih)
         {
             int cevap = 0;
@@ -54,6 +55,7 @@ namespace WorkboxSpecial.Model
             }
         }
 
+        //? LG_FİRMANO_01_STLINE adındaki tabloya bir kayıt eklemek (MalzemeRef, IrsaliyeTarihi, FişRef, SiraNo, CariRef, Miktar, Ay, Yıl, Son ID)
         public int IrsaliyeSatirEkle(int MalzemeRef, DateTime IrsaliyeTarihi, int FisRef, int SiraNo, int CariRef, decimal Miktar)
         {
             string firmaNo = Program.logoFirmaNo.PadLeft(3, '0');
@@ -109,6 +111,7 @@ namespace WorkboxSpecial.Model
             return cevap;
         }
 
+        //? LG_FİRMANO_ITEMS adındaki tablodan ilgili malzeme kodlu kaydı çekmek
         public int MalzemeRef(string MalzemeKodu)
         {
             string firmaNo = Program.logoFirmaNo.PadLeft(3, '0');
@@ -131,6 +134,7 @@ namespace WorkboxSpecial.Model
             return cevap;
         }
 
+        //? LG_FİRMANO_CLCARD adındaki tablodan ilgili vergi numarasına sahip kaydı çekmek
         public int CariRef(string VergiNumarasi)
         {
             string firmaNo = Program.logoFirmaNo.PadLeft(3, '0');
@@ -153,6 +157,8 @@ namespace WorkboxSpecial.Model
             return cevap;
         }
 
+
+        //? LG_FİRMANO_01_STFICHE isimli tablodan "NY" ifadesi ile başlayan en son kaydı çek, eğer yoksa default bir fiş no ata  
         public string IrsaliyeFisNo()
         {
             string firmaNo = Program.logoFirmaNo.PadLeft(3, '0');

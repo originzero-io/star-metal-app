@@ -40,6 +40,18 @@ export default function MusteriForm({ record, type }) {
       autoComplete="off"
     >
       <Form.Item
+        label="Müşteri Logo Kodu"
+        name="musteriLogoKodu"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Input placeholder="Müşteri logo kodu girin" />
+      </Form.Item>
+      <Form.Item
         label="Müşteri Adı"
         name="musteriAdi"
         rules={[

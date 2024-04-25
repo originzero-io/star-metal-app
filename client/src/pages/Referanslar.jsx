@@ -189,9 +189,10 @@ function Referanslar() {
       cancelText: "İptal",
       async onOk() {
         try {
-          const newReferanslar = await referanslarHttp.deleteData(referanslar, [record]);
-          setReferanslar(newReferanslar);
-          showNotification("success", `${record.referansNo} referansı silindi`);
+          console.log("record", record);
+          // const newReferanslar = await referanslarHttp.deleteData(referanslar, [record]);
+          // setReferanslar(newReferanslar);
+          // showNotification("success", `${record.referansNo} referansı silindi`);
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }

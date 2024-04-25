@@ -10,9 +10,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       theme={{
         components: {
           Table: {
-            rowHoverBg: "#d7ecfd",
-            rowSelectedBg: "#bae0ff",
-            rowSelectedHoverBg: "#bae0ff",
+            // rowHoverBg: "#d7ecfd",
+            // rowSelectedBg: "#bae0ff",
+            // rowSelectedHoverBg: "#bae0ff",
+
+            rowHoverBg: "rgb(229, 222, 243)",
+            rowSelectedBg: "rgb(204, 185, 242)",
+            rowSelectedHoverBg: "rgb(204, 185, 242)",
 
             borderColor: "#dddddd",
             cellFontSizeSM: 12,
@@ -83,6 +87,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             // contentBg: "transparent",
             // headerBg: "rgba(255, 255, 255, 0.5)",
             headerBg: "transparent",
+          },
+          Modal: {
+            colorBgElevated: "#edf1fb",
+          },
+          Notification: {
+            colorBgElevated: "#edf1fb",
           },
         },
       }}
