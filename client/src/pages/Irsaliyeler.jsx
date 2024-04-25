@@ -11,7 +11,7 @@ import uretimGirisleriHttp from "services/uretim-girisleri.http";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 import { getCurrentDateTime } from "utils/time.helper";
 
-export default function IrsaliyeSayfasi() {
+export default function Irsaliyeler() {
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
   const { showNotification } = useUIContext();
 

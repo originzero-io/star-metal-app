@@ -15,7 +15,12 @@ import Banyolar from "pages/Banyolar/Banyolar";
 import { DBProvider } from "context/DBProvider";
 import SevkEdilecekler from "pages/SevkEdilecekler";
 import Personeller from "pages/Personeller";
-import IrsaliyeSayfasi from "pages/IrsaliyeSayfasi";
+import Irsaliyeler from "pages/Irsaliyeler";
+import Login from "pages/Login";
+import { useState } from "react";
+// import useAuth from "utils/useAuth";
+import ProtectedRoute from "pages/ProtectedRoute";
+import { AuthProvider, useAuth } from "context/AuthProvider";
 
 const AppWrapperStyled = styled.div`
   height: 100vh;
@@ -37,29 +42,110 @@ function App() {
   return (
     <AppWrapperStyled>
       <UIProvider>
-        <DBProvider>
-          <Router>
-            <NavigationMenu />
-            <PageWrapperStyled>
-              <Routes>
-                <Route path="/" element={<Navigate replace to="/uretim/devam-eden" />} />
-                <Route path="/uretim/devam-eden" element={<DevamEdenUretimler />} />
-                <Route path="/uretim/sevk-edilecekler" element={<SevkEdilecekler />} />
-                <Route path="/uretim/irsaliye-sayfasi" element={<IrsaliyeSayfasi />} />
-                <Route path="/uretim/tamamlanan" element={<TamamlananUretimler />} />
-                <Route path="/gelen-malzeme-kayit" element={<GelenMalzemeKayit />} />
-                <Route path="/musteriler" element={<Musteriler />} />
-                <Route path="/referanslar" element={<Referanslar />} />
-                <Route path="/ambalajlar" element={<Ambalajlar />} />
-                <Route path="/personeller" element={<Personeller />} />
-                <Route path="/sicakliklar" element={<Sicakliklar />} />
-                <Route path="/banyo-degerleri" element={<Banyolar />} />
-              </Routes>
-            </PageWrapperStyled>
-            <FormModal />
-            <FormPanel />
-          </Router>
-        </DBProvider>
+        <Router>
+          <AuthProvider>
+            <DBProvider>
+              <NavigationMenu />
+
+              <PageWrapperStyled>
+                <Routes>
+                  <Route path="/giris" element={<Login />} />
+                  <Route
+                    path="/uretim/devam-eden"
+                    element={
+                      <ProtectedRoute>
+                        <DevamEdenUretimler />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/uretim/sevk-edilecekler"
+                    element={
+                      <ProtectedRoute>
+                        <SevkEdilecekler />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/uretim/irsaliye-sayfasi"
+                    element={
+                      <ProtectedRoute>
+                        <Irsaliyeler />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/uretim/tamamlanan"
+                    element={
+                      <ProtectedRoute>
+                        <TamamlananUretimler />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/gelen-malzeme-kayit"
+                    element={
+                      <ProtectedRoute>
+                        <GelenMalzemeKayit />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/musteriler"
+                    element={
+                      <ProtectedRoute>
+                        <Musteriler />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/referanslar"
+                    element={
+                      <ProtectedRoute>
+                        <Referanslar />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/ambalajlar"
+                    element={
+                      <ProtectedRoute>
+                        <Ambalajlar />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/personeller"
+                    element={
+                      <ProtectedRoute>
+                        <Personeller />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/sicakliklar"
+                    element={
+                      <ProtectedRoute>
+                        <Sicakliklar />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/banyo-degerleri"
+                    element={
+                      <ProtectedRoute>
+                        <Banyolar />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </PageWrapperStyled>
+            </DBProvider>
+          </AuthProvider>
+
+          <FormModal />
+          <FormPanel />
+        </Router>
       </UIProvider>
     </AppWrapperStyled>
   );

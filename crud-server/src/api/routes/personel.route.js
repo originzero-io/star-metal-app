@@ -50,4 +50,24 @@ router.delete("/", async (req, res) => {
   res.send("silme isteği alındı");
 });
 
+router.post("/giris", async (req, res) => {
+  try {
+    const personel = await Personel.findOne({
+      where: {
+        ad: req.body.ad,
+        parola: req.body.parola,
+      },
+    });
+
+    if (personel) {
+      res.send(personel);
+    } else {
+      res.send(null);
+    }
+  } catch (error) {
+    console.error("Giriş işleminde hata: ", error);
+    res.status(500).send({ message: "Sunucu hatası." });
+  }
+});
+
 export default router;

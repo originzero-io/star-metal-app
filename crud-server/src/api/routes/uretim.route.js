@@ -98,7 +98,6 @@ router.post("/devam-eden", async (req, res) => {
 });
 
 router.put("/devam-eden", async (req, res) => {
-  console.log(req.body);
   try {
     const { currentRecord, newData } = req.body;
     let uretim;
@@ -124,28 +123,6 @@ router.put("/devam-eden", async (req, res) => {
       message: error.message,
     });
   }
-  // try {
-  //   const { currentRecord, newData } = req.body;
-  //   let updatedUretim;
-  //   if (currentRecord.Referanslar.fason) {
-  //     updatedUretim = await FasonUretim.update(
-  //       newData, // Güncellenecek yeni değerler
-  //       { where: { id: currentRecord.id }, returning: true, individualHooks: true },
-  //     );
-  //   } else {
-  //     updatedUretim = await NormalUretim.update(
-  //       newData, // Güncellenecek yeni değerler
-  //       { where: { id: currentRecord.id }, returning: true, individualHooks: true },
-  //     );
-  //   }
-  //   res.json(updatedUretim[1][0]); // güncellenen ilk değer
-  // } catch (error) {
-  //   console.log("error: ", error);
-  //   res.status(500).json({
-  //     name: error.name,
-  //     fields: error.fields,
-  //   });
-  // }
 });
 
 router.put("/devam-eden/fasonlara-irsaliye-kes", async (req, res) => {

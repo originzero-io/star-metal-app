@@ -113,7 +113,7 @@ export default function MalzemeDuzenlemeForm({ record }) {
       </Form.Item>
 
       <Form.Item style={{ marginTop: "20px" }}>
-        <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+        <Button type="primary" htmlType="submit" block>
           Kaydet
         </Button>
       </Form.Item>
