@@ -9,12 +9,15 @@ import { createTableFilterFromData } from "utils/table.helper";
 import PageHeader from "components/shared/PageHeader";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 import TableGod from "../components/shared/TableGod";
+import { useAuth } from "context/AuthProvider";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
 
 function Referanslar() {
+  const { user } = useAuth();
+
   const [selectedRows, setSelectedRows] = useState([]);
   const { showPanel, showNotification } = useUIContext();
   const { referanslar, setReferanslar } = useDBContext();
@@ -189,10 +192,9 @@ function Referanslar() {
       cancelText: "İptal",
       async onOk() {
         try {
-          console.log("record", record);
-          // const newReferanslar = await referanslarHttp.deleteData(referanslar, [record]);
-          // setReferanslar(newReferanslar);
-          // showNotification("success", `${record.referansNo} referansı silindi`);
+          const newReferanslar = await referanslarHttp.deleteData(referanslar, [record]);
+          setReferanslar(newReferanslar);
+          showNotification("success", `${record.referansNo} referansı silindi`);
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
@@ -206,7 +208,7 @@ function Referanslar() {
         dataSource={referanslar}
         columns={columns}
         onChange={onChange}
-        rowSelection={rowSelection}
+        rowSelection={user.yetki === "admin" && rowSelection}
         contextMenu={{
           editForm: ReferansForm,
           deleteAction: deleteSingleRecordHandler,

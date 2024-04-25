@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
 import { useUIContext } from "context/UIProvider";
+import { useAuth } from "context/AuthProvider";
 
 const ContextMenuWrapperStyled = styled.div`
   position: absolute;
@@ -34,6 +35,8 @@ const MenuItemStyled = styled.div`
 `;
 
 export default function RecordContextMenu({ position, record, contextMenu }) {
+  const { user } = useAuth();
+
   const { showPanel } = useUIContext();
 
   const editRecordHandler = () => {
@@ -59,7 +62,7 @@ export default function RecordContextMenu({ position, record, contextMenu }) {
           <MenuItemStyled onClick={editRecordHandler}>Düzenle</MenuItemStyled>
         )}
 
-        {contextMenu.deleteAction && (
+        {user.yetki === "admin" && contextMenu.deleteAction && (
           <MenuItemStyled onClick={() => contextMenu.deleteAction(record)} style={{ color: "red" }}>
             Sil
           </MenuItemStyled>

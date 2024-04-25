@@ -12,6 +12,7 @@ import irsaliyeHttp from "services/irsaliyeler.http";
 import uretimGirisiHttp from "services/uretim-girisleri.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import { devamEdenUretimHttp } from "services/uretimler.http";
+import { useAuth } from "context/AuthProvider";
 
 const alertMessage = (musteri, irsaliyeTipi, olan, limit) => (
   <div>
@@ -33,6 +34,8 @@ const alertMessage = (musteri, irsaliyeTipi, olan, limit) => (
 );
 
 export default function SevkEdilecekler() {
+  const { user } = useAuth();
+
   const [uretimGirisleri, setUretimGirisleri] = useState({});
 
   const [selectedRows, setSelectedRows] = useState([]);
@@ -310,7 +313,7 @@ export default function SevkEdilecekler() {
                         Sevkiyat Kartı Çıkart
                       </Button>
                     )}
-                    {selectedRows[musteriAdi]?.length > 0 && (
+                    {user.yetki === "admin" && selectedRows[musteriAdi]?.length > 0 && (
                       <Button
                         danger
                         icon={<DeleteOutlined />}

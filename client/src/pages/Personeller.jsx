@@ -5,15 +5,18 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import personellerHttp from "services/personeller.http";
 import PersonelForm from "components/forms/PersonelForm";
-import TableGod from "../components/shared/TableGod";
 import PageHeader from "components/shared/PageHeader";
 import { PiUsersThreeBold } from "react-icons/pi";
 import { createTableFilterFromData } from "utils/table.helper";
+import { useAuth } from "context/AuthProvider";
+import TableGod from "../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
 function Personeller() {
+  const { user } = useAuth();
+
   const [selectedRows, setSelectedRows] = useState([]);
   const { showPanel, showNotification, showAlert } = useUIContext();
   const { personeller, setPersoneller } = useDBContext();
@@ -106,6 +109,7 @@ function Personeller() {
       },
     });
   };
+
   return (
     <div>
       <PageHeader label="Personeller" icon={<PiUsersThreeBold />} />
@@ -113,11 +117,13 @@ function Personeller() {
         dataSource={personeller}
         columns={columns}
         onChange={onChange}
-        rowSelection={rowSelection}
-        contextMenu={{
-          editForm: PersonelForm,
-          deleteAction: deleteSingleRecordHandler,
-        }}
+        rowSelection={user.yetki === "admin" && rowSelection}
+        contextMenu={
+          user.yetki === "admin" && {
+            editForm: PersonelForm,
+            deleteAction: deleteSingleRecordHandler,
+          }
+        }
         actionButtons={
           <>
             {selectedRows.length > 0 && (
@@ -130,14 +136,16 @@ function Personeller() {
                 Sil ({selectedRows.length})
               </Button>
             )}
-            <Button
-              style={{ marginRight: "4px" }}
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => showPanel({ title: "Yeni Personel", content: <PersonelForm /> })}
-            >
-              Yeni Personel
-            </Button>
+            {user.yetki === "admin" && (
+              <Button
+                style={{ marginRight: "4px" }}
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => showPanel({ title: "Yeni Personel", content: <PersonelForm /> })}
+              >
+                Yeni Personel
+              </Button>
+            )}
           </>
         }
       />

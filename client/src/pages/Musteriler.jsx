@@ -10,11 +10,14 @@ import { createTableFilterFromData } from "utils/table.helper";
 import PageHeader from "components/shared/PageHeader";
 import { RiCustomerServiceLine } from "react-icons/ri";
 import TableGod from "../components/shared/TableGod";
+import { useAuth } from "context/AuthProvider";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
 function Musteriler() {
+  const { user } = useAuth();
+
   const [selectedRows, setSelectedRows] = useState([]);
   const { showPanel, showNotification } = useUIContext();
   const { musteriler, setMusteriler } = useDBContext();
@@ -138,7 +141,7 @@ function Musteriler() {
         dataSource={musteriler}
         columns={columns}
         onChange={onChange}
-        rowSelection={rowSelection}
+        rowSelection={user.yetki === "admin" && rowSelection}
         contextMenu={{
           editForm: MusteriForm,
           deleteAction: deleteSingleRecordHandler,

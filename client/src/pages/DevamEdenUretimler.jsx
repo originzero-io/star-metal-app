@@ -14,6 +14,7 @@ import { fasonFirmasiKontrol, fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.
 import { createTableFilterFromData } from "utils/table.helper";
 import irsaliyeHttp from "services/irsaliyeler.http";
 import UretimSevkiyatHareketleri from "components/UretimSevkiyatHareketleri";
+import { useAuth } from "context/AuthProvider";
 import TableGod from "../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -97,6 +98,8 @@ function DevamEdenUretimler() {
 }
 
 function NormalUretimlerTablo({ data }) {
+  const { user } = useAuth();
+
   const [selectedRows, setSelectedRows] = useState([]);
   const { showPanel, showAlert, showModal } = useUIContext();
 
@@ -376,7 +379,7 @@ function NormalUretimlerTablo({ data }) {
                     Üretim Girişi Yap
                   </Button>
                 )}
-                {selectedRows[musteriAdi]?.length > 0 && (
+                {user.yetki === "admin" && selectedRows[musteriAdi]?.length > 0 && (
                   <>
                     <Button
                       style={{ marginRight: "4px" }}
@@ -399,6 +402,8 @@ function NormalUretimlerTablo({ data }) {
 }
 
 function FasonUretimlerTablo({ data }) {
+  const { user } = useAuth();
+
   const [selectedRows, setSelectedRows] = useState([]);
   const [secilmisIrsaliyeler, setSecilmisIrsaliyeler] = useState([]);
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
@@ -791,7 +796,7 @@ function FasonUretimlerTablo({ data }) {
                   </>
                 )}
 
-                {selectedRows[musteriAdi]?.length > 0 && (
+                {user.yetki === "admin" && selectedRows[musteriAdi]?.length > 0 && (
                   <>
                     <Button danger icon={<DeleteOutlined />} onClick={fasonUretimSil}>
                       Sil ({selectedRows[musteriAdi].length})

@@ -46,6 +46,8 @@ export const UIProvider = ({ children }) => {
     });
   };
 
+  const [selectedPage, setSelectedPage] = useState(null);
+
   const value = {
     modal,
     showModal,
@@ -53,6 +55,8 @@ export const UIProvider = ({ children }) => {
     showPanel,
     showNotification,
     showAlert,
+    selectedPage,
+    setSelectedPage,
   };
   return (
     <UIContext.Provider value={value}>

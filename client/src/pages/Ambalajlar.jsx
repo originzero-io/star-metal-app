@@ -8,10 +8,13 @@ import ambalajlarHttp from "services/ambalajlar.http";
 import styled from "styled-components";
 import PageHeader from "components/shared/PageHeader";
 import { FaDropbox } from "react-icons/fa";
+import { useAuth } from "context/AuthProvider";
 
 const Container = styled.div``;
 
 function Ambalajlar() {
+  const { user } = useAuth();
+
   const { showPanel, showNotification, showAlert } = useUIContext();
   const { ambalajlar, setAmbalajlar } = useDBContext();
 
@@ -88,13 +91,15 @@ function Ambalajlar() {
                   }
                 />
               </Tooltip>,
-              <Tooltip key="delete" placement="bottom" title="Sil">
-                <DeleteOutlined
-                  style={{ fontSize: "1.5vmin" }}
-                  onClick={() => deleteSingleRecordHandler(ambalaj)}
-                />
-              </Tooltip>,
-            ]}
+              user.yetki === "admin" && (
+                <Tooltip key="delete" placement="bottom" title="Sil">
+                  <DeleteOutlined
+                    style={{ fontSize: "1.5vmin" }}
+                    onClick={() => deleteSingleRecordHandler(ambalaj)}
+                  />
+                </Tooltip>
+              ),
+            ].filter(Boolean)}
           >
             <Card.Meta title={ambalaj.kasaAdi} />
           </Card>

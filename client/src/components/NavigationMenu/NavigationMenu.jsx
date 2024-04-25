@@ -214,7 +214,7 @@ const pages = {
 
 function NavigationMenu() {
   const { showPanel } = useUIContext();
-  const [selectedPage, setSelectedPage] = useState(null);
+  const { selectedPage, setSelectedPage } = useUIContext();
 
   return (
     <ContainerStyled>
@@ -240,9 +240,13 @@ function NavigationMenu() {
               </MenuListGroupHeaderStyled>
               <MenuListGroupContentStyled>
                 {pages[category.key].map((content, i) => (
-                  <LinkStyled key={i} to={content.link} onClick={() => setSelectedPage(content)}>
+                  <LinkStyled
+                    key={i}
+                    to={content.link}
+                    onClick={() => setSelectedPage(content.link)}
+                  >
                     <MenuListGroupItemStyled
-                      selected={selectedPage === content}
+                      selected={selectedPage === content.link}
                       onClick={() => {
                         showPanel(false);
                       }}

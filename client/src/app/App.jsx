@@ -40,9 +40,9 @@ function App() {
   return (
     <AppWrapperStyled>
       <UIProvider>
-        <Router>
-          <AuthProvider>
-            <DBProvider>
+        <DBProvider>
+          <Router>
+            <AuthProvider>
               <NavigationMenu />
               <PageWrapperStyled>
                 <Routes>
@@ -137,12 +137,12 @@ function App() {
                   />
                 </Routes>
               </PageWrapperStyled>
-            </DBProvider>
-          </AuthProvider>
+            </AuthProvider>
 
-          <FormModal />
-          <FormPanel />
-        </Router>
+            <FormModal />
+            <FormPanel />
+          </Router>
+        </DBProvider>
       </UIProvider>
     </AppWrapperStyled>
   );
