@@ -115,6 +115,11 @@ router.put("/devam-eden", async (req, res) => {
         uretilmeyenMiktar: newData.gelenMiktar - uretim.uretilenMiktar,
       });
     }
+    console.log("uretim", uretim);
+
+    // newData, mevcut değerle aynı gelirse update hook u çalışmıyor. Bu durumun önüne geçmek için modeli reload yapıyoruz.
+    await uretim.reload({ include: [{ model: Referans, as: "Referanslar" }] });
+
     res.json(uretim); // güncellenen ilk değer
   } catch (error) {
     res.status(500).json({
