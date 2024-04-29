@@ -325,7 +325,7 @@ function IrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
 }
 
 function LogoyaGonderButton({ type, kayitlar }) {
-  const { personeller, irsaliyeler, setIrsaliyeler } = useDBContext();
+  const { personeller, irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
   const { showNotification } = useUIContext();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [soforAdi, setSoforAdi] = useState("");
@@ -357,8 +357,10 @@ function LogoyaGonderButton({ type, kayitlar }) {
         await uretimGirisleriHttp.sevkEt(gonderilecekKayitlar);
         const newIrsaliyeler = await irsaliyeHttp.deleteData(irsaliyeler, gonderilecekKayitlar);
         await uretimGirisleriHttp.deleteData(gonderilecekKayitlar);
+        const devamEdenler = await devamEdenUretimHttp.getData();
 
         setIrsaliyeler(newIrsaliyeler);
+        setDevamEdenUretimler(devamEdenler);
         setIsModalVisible(false);
         const { musteriAdi } = kayitlar[0].Referanslar;
         showNotification("success", `${musteriAdi} müşterisine irsaliye kesildi.`);

@@ -65,17 +65,6 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  // const referenceAttributes = [
-  //   "musteriAdi",
-  //   "fasonFirmasi",
-  //   "islemTipi",
-  //   "irsaliyeAciklamasi",
-  //   "cikisReferansNo",
-  //   "siparisTipi",
-  //   "siparisNo",
-  //   "talepNo",
-  //   "referansYuzeyAlani",
-  // ];
   const { fason } = req.body;
 
   await UretimGirisi.create(req.body);
@@ -145,13 +134,12 @@ router.put("/aktiflik-degistir", async (req, res) => {
 
 router.put("/sevk-et", async (req, res) => {
   const { kayitlar } = req.body;
-  // console.log("kayitlar", kayitlar);
   try {
-    // Tüm kayıtlar üzerinde döngü
     kayitlar.forEach(async (kayit) => {
       const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
+
       console.log("uretimGirisiIdleri", uretimGirisiIdleri);
-      // UretimGirisi modelindeki kayıtları bul ve güncelle
+
       const sonuc = await UretimGirisi.update(
         {
           sevkTarihi: kayit.sevkTarihi,
@@ -169,23 +157,20 @@ router.put("/sevk-et", async (req, res) => {
       // üretim giden kalan kayıtlarını güncelle;
       const updatedUretim = await uretimGidenVeKalanMiktarlariGuncelle(kayit);
 
-      console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}`);
+      console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}, üretim kayıtları: ${updatedUretim}`);
     });
 
-    res.send("Tüm kayıtlar başarıyla güncellendi.");
+    res.send("Tüm kayıtlar başarıyla sevk edildi.");
   } catch (error) {
     console.error("Güncelleme işlemi sırasında bir hata oluştu:", error);
     res.status(500).send("Güncelleme işlemi sırasında bir hata oluştu.");
   }
-  // res.send("selam");
 });
 
 const uretimGidenVeKalanMiktarlariGuncelle = async (kayit) => {
-  if (kayit.fasona) {
-    console.log("BURADAYIM ÇÜNKÜ FASON");
+  if (kayit.Referanslar.fasonFirmasi) {
     const fasonUretim = await FasonUretim.findByPk(kayit.uretimSiraNo);
 
-    console.log("fasonUretim", fasonUretim);
     if (fasonUretim) {
       const updatedUretim = await fasonUretim.update({
         sevkEdilenMiktar: fasonUretim.sevkEdilenMiktar + kayit.uretimAdedi,
@@ -228,7 +213,6 @@ router.delete("/", async (req, res) => {
       });
       await uretimKaydiniDuzenle(row);
     }
-    console.log("BURASI ÇALIŞACAK");
     res.send("işlem başarılı");
   } catch (error) {
     res.status(500).send("Bir hata oluştu");
