@@ -158,14 +158,16 @@ function Musteriler() {
                 Sil ({selectedRows.length})
               </Button>
             )}
-            <Button
-              style={{ marginRight: "4px" }}
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => showPanel({ title: "Yeni Müşteri", content: <MusteriForm /> })}
-            >
-              Yeni Müşteri
-            </Button>
+            {user.yetki === "admin" && (
+              <Button
+                style={{ marginRight: "4px" }}
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => showPanel({ title: "Yeni Müşteri", content: <MusteriForm /> })}
+              >
+                Yeni Müşteri
+              </Button>
+            )}
           </>
         }
       />

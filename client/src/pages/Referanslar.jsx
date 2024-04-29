@@ -225,14 +225,16 @@ function Referanslar() {
                 Sil ({selectedRows.length})
               </Button>
             )}
-            <Button
-              style={{ marginRight: "4px" }}
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => showPanel({ title: "Yeni Referans", content: <ReferansForm /> })}
-            >
-              Yeni Referans
-            </Button>
+            {user.yetki === "admin" && (
+              <Button
+                style={{ marginRight: "4px" }}
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => showPanel({ title: "Yeni Referans", content: <ReferansForm /> })}
+              >
+                Yeni Referans
+              </Button>
+            )}
           </>
         }
       />

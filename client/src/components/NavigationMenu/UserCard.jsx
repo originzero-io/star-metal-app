@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import { Button, Tooltip, Modal } from "antd";
-import { LogoutOutlined, PoweroffOutlined } from "@ant-design/icons";
-import { useUIContext } from "context/UIProvider";
+import { PoweroffOutlined } from "@ant-design/icons";
+import { Button, Modal, Tooltip } from "antd";
 import { useAuth } from "context/AuthProvider";
+import { useUIContext } from "context/UIProvider";
+import styled from "styled-components";
 
 const WrapperStyled = styled.div`
   display: flex;
@@ -53,7 +53,9 @@ export default function UserCard() {
       {user && (
         <ContainerStyled>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <UserNameStyled>{user.ad}</UserNameStyled>
+            <UserNameStyled>
+              {user.ad} {user.soyad}
+            </UserNameStyled>
             <UserRoleStyled>{user.yetki}</UserRoleStyled>
           </div>
           <Tooltip title="Çıkış yap">

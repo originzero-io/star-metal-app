@@ -40,33 +40,35 @@ function Ambalajlar() {
     <Container>
       <PageHeader label="Ambalajlar" icon={<FaDropbox />} />
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        <Card
-          hoverable
-          style={{
-            width: 240,
-            margin: "10px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "3vmin",
-            background: "#1677ff",
-            color: "whitesmoke",
-          }}
-          onClick={() => showPanel({ title: "Yeni Ambalaj", content: <AmbalajForm /> })}
-        >
-          <Button
-            type="link"
+        {user.yetki === "admin" && (
+          <Card
+            hoverable
             style={{
-              fontSize: "2vmin",
-              color: "whitesmoke",
+              width: 240,
+              margin: "10px",
               display: "flex",
+              justifyContent: "center",
               alignItems: "center",
+              fontSize: "3vmin",
+              background: "#1677ff",
+              color: "whitesmoke",
             }}
-            icon={<PlusCircleOutlined style={{ fontSize: "3.2vmin" }} />}
+            onClick={() => showPanel({ title: "Yeni Ambalaj", content: <AmbalajForm /> })}
           >
-            Ambalaj Ekle
-          </Button>
-        </Card>
+            <Button
+              type="link"
+              style={{
+                fontSize: "2vmin",
+                color: "whitesmoke",
+                display: "flex",
+                alignItems: "center",
+              }}
+              icon={<PlusCircleOutlined style={{ fontSize: "3.2vmin" }} />}
+            >
+              Ambalaj Ekle
+            </Button>
+          </Card>
+        )}
         {ambalajlar.map((ambalaj) => (
           <Card
             key={ambalaj.id}
@@ -79,27 +81,27 @@ function Ambalajlar() {
                 height={200}
               />
             }
-            actions={[
-              <Tooltip key="edit" placement="bottom" title="Düzenle">
-                <EditOutlined
-                  style={{ fontSize: "1.5vmin" }}
-                  onClick={() =>
-                    showPanel({
-                      title: "Düzenle",
-                      content: <AmbalajForm record={ambalaj} type="update" />,
-                    })
-                  }
-                />
-              </Tooltip>,
-              user.yetki === "admin" && (
+            actions={
+              user.yetki === "admin" && [
+                <Tooltip key="edit" placement="bottom" title="Düzenle">
+                  <EditOutlined
+                    style={{ fontSize: "1.5vmin" }}
+                    onClick={() =>
+                      showPanel({
+                        title: "Düzenle",
+                        content: <AmbalajForm record={ambalaj} type="update" />,
+                      })
+                    }
+                  />
+                </Tooltip>,
                 <Tooltip key="delete" placement="bottom" title="Sil">
                   <DeleteOutlined
                     style={{ fontSize: "1.5vmin" }}
                     onClick={() => deleteSingleRecordHandler(ambalaj)}
                   />
-                </Tooltip>
-              ),
-            ].filter(Boolean)}
+                </Tooltip>,
+              ]
+            }
           >
             <Card.Meta title={ambalaj.kasaAdi} />
           </Card>

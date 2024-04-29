@@ -6,7 +6,7 @@ import { useUIContext } from "./UIProvider";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const { setSelectedPage } = useUIContext();
+  const { setSelectedPage, showNotification } = useUIContext();
 
   const [user, setUser] = useState(
     () => JSON.parse(localStorage.getItem("star-metal-login")), // İlk değeri doğrudan localStorage'dan oku
@@ -15,10 +15,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (_user) => {
     const data = await personelHttp.login(_user);
-    localStorage.setItem("star-metal-login", JSON.stringify(data));
-    setUser(data);
-    navigate("/uretim/devam-eden");
-    setSelectedPage("/uretim/devam-eden");
+    if (data) {
+      localStorage.setItem("star-metal-login", JSON.stringify(data));
+      setUser(data);
+      navigate("/uretim/devam-eden");
+      setSelectedPage("/uretim/devam-eden");
+    } else {
+      showNotification("error", "Kullanıcı adı veya parola yanlış.");
+    }
   };
 
   const logout = () => {

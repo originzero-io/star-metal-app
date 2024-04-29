@@ -349,9 +349,8 @@ function NormalUretimlerTablo({ data }) {
                       width: 800,
                     }),
                 },
-                {
+                user.yetki === "admin" && {
                   title: "Gelen Malzeme Miktarını Değiştir",
-                  // action: (record) => window.electron.send("openNewWindow"),
                   action: (record) =>
                     showModal({
                       title: "Gelen Malzeme Miktarını Düzenle",
@@ -752,9 +751,8 @@ function FasonUretimlerTablo({ data }) {
                       width: 800,
                     }),
                 },
-                {
+                user.yetki === "admin" && {
                   title: "Gelen Malzeme Miktarını Değiştir",
-                  // action: (record) => window.electron.send("openNewWindow"),
                   action: (record) =>
                     showModal({
                       title: "Gelen Malzeme Miktarını Düzenle",

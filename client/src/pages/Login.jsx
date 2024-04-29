@@ -1,4 +1,4 @@
-import { LockOutlined } from "@ant-design/icons";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Select, Tag } from "antd";
 import CompanyLogo from "components/shared/CompanyLogo";
 import styled from "styled-components";
@@ -41,8 +41,8 @@ function Login() {
           onFinish={onFinish}
         >
           <Form.Item name="ad" rules={[{ required: true, message: "Bu alan boş olamaz!" }]}>
-            {/* <Input prefix={<UserOutlined />} placeholder="Personel Adı" /> */}
-            <Select placeholder="Personel giriniz">
+            <Input prefix={<UserOutlined />} placeholder="Personel Adı" />
+            {/* <Select placeholder="Personel giriniz">
               {personeller.map((personel) => (
                 <Select.Option key={personel.id} value={personel.ad}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -53,7 +53,7 @@ function Login() {
                   </div>
                 </Select.Option>
               ))}
-            </Select>
+            </Select> */}
           </Form.Item>
           <Form.Item name="parola" rules={[{ required: true, message: "Bu alan boş olamaz!" }]}>
             <Input.Password prefix={<LockOutlined />} placeholder="Parola" />

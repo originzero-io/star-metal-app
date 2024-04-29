@@ -112,6 +112,7 @@ namespace WorkboxSpecial.Model
         }
 
         //? LG_FİRMANO_ITEMS adındaki tablodan ilgili malzeme kodlu kaydı çekmek
+        //? Malzeme Kodu = Sipariş Numarası
         public int MalzemeRef(string MalzemeKodu)
         {
             string firmaNo = Program.logoFirmaNo.PadLeft(3, '0');

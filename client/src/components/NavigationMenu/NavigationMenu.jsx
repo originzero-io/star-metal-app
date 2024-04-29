@@ -12,6 +12,7 @@ import { TbRulerMeasure } from "react-icons/tb";
 import { PiUsersThreeBold } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import useDetectUserInteraction from "utils/useDetectInteraction.hook";
 import CompanyLogo from "../shared/CompanyLogo";
 import UserCard from "./UserCard";
 
@@ -213,6 +214,8 @@ const pages = {
 };
 
 function NavigationMenu() {
+  useDetectUserInteraction();
+
   const { showPanel } = useUIContext();
   const { selectedPage, setSelectedPage } = useUIContext();
 

@@ -58,7 +58,7 @@ export default function RecordContextMenu({ position, record, contextMenu }) {
           </MenuItemStyled>
         ))}
 
-        {contextMenu.editForm && (
+        {user.yetki === "admin" && contextMenu.editForm && (
           <MenuItemStyled onClick={editRecordHandler}>Düzenle</MenuItemStyled>
         )}
 

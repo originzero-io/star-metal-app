@@ -10,7 +10,6 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    console.log("req.body:", req.body);
     const newPersonel = await Personel.create(req.body);
     res.json(newPersonel);
   } catch (error) {
@@ -51,11 +50,12 @@ router.delete("/", async (req, res) => {
 });
 
 router.post("/giris", async (req, res) => {
+  const { ad, parola } = req.body;
   try {
     const personel = await Personel.findOne({
       where: {
-        ad: req.body.ad,
-        parola: req.body.parola,
+        ad,
+        parola,
       },
     });
 
