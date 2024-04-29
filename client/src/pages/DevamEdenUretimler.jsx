@@ -105,164 +105,167 @@ function NormalUretimlerTablo({ data }) {
 
   const [musteriBazliKayitlar, setMusteriBazliKayitlar] = useState([]);
 
-  const columns = useMemo(
-    () => [
-      {
-        title: "Referans",
-        dataIndex: "referansNo",
-        key: "referansNo",
-        filters: createTableFilterFromData(data, "referansNo"),
-        onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
-        filterSearch: true,
-        render: (text, record) => (
-          <Tag color="orange" style={{ fontSize: "14px" }}>
-            {text}
-          </Tag>
+  const createColumnsForCustomer = (musteriAdi) => [
+    {
+      title: "Referans",
+      dataIndex: "referansNo",
+      key: "referansNo",
+      filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "referansNo"),
+      onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
+      filterSearch: true,
+      render: (text) => (
+        <Tag color="orange" style={{ fontSize: "14px" }}>
+          {text}
+        </Tag>
+      ),
+      width: 120,
+    },
+    {
+      title: "Çıkış Referansı",
+      dataIndex: "cikisReferansNo",
+      key: "cikisReferansNo",
+      filters: [
+        ...new Set(
+          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.cikisReferansNo),
         ),
-        width: 120,
-      },
-      {
-        title: "Çıkış Referansı",
-        dataIndex: "cikisReferansNo",
-        key: "cikisReferansNo",
-        filters: [...new Set(data?.map((item) => item.Referanslar?.cikisReferansNo))].map(
-          (cikisReferansNo) => ({
-            text: cikisReferansNo,
-            value: cikisReferansNo,
-          }),
+      ].map((cikisReferansNo) => ({
+        text: cikisReferansNo,
+        value: cikisReferansNo,
+      })),
+      onFilter: (value, record) => record.Referanslar?.cikisReferansNo.indexOf(value) === 0,
+      filterSearch: true,
+      render: (text, record) => (
+        <Tag color="orange" style={{ fontSize: "14px" }}>
+          {record?.Referanslar?.cikisReferansNo}
+        </Tag>
+      ),
+      width: 120,
+    },
+    {
+      title: "İade",
+      dataIndex: "iade",
+      key: "iade",
+      render: (text) =>
+        text === "Evet" ? <Tag color="volcano">{text}</Tag> : <Tag color="purple">{text}</Tag>,
+      filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "iade"),
+      onFilter: (value, record) => record.iade.indexOf(value) === 0,
+      filterSearch: true,
+    },
+    {
+      title: "Sipariş Tipi",
+      dataIndex: "siparisTipi",
+      key: "siparisTipi",
+      render: (text, record) => record.Referanslar.siparisTipi,
+      filters: [
+        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisTipi)),
+      ].map((siparisTipi) => ({
+        text: siparisTipi,
+        value: siparisTipi,
+      })),
+      onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
+      filterSearch: true,
+    },
+    {
+      title: "Sipariş No",
+      dataIndex: "siparisNo",
+      key: "siparisNo",
+      render: (text, record) => record?.Referanslar?.siparisNo,
+      filters: [
+        ...new Set(
+          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisNo || "Boş"),
         ),
-        onFilter: (value, record) => record.Referanslar?.cikisReferansNo.indexOf(value) === 0,
-        filterSearch: true,
-        render: (text, record) => (
-          <Tag color="orange" style={{ fontSize: "14px" }}>
-            {record?.Referanslar?.cikisReferansNo}
-          </Tag>
+      ].map((siparisNo) => ({
+        text: siparisNo,
+        value: siparisNo,
+      })),
+      onFilter: (value, record) => {
+        const siparisNo = record.Referanslar?.siparisNo || "Boş";
+        return siparisNo.indexOf(value) === 0;
+      },
+      filterSearch: true,
+    },
+    {
+      title: "Talep No",
+      dataIndex: "talepNo",
+      key: "talepNo",
+      render: (text, record) => record.Referanslar?.talepNo,
+      filters: [
+        ...new Set(
+          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.talepNo || "Boş"),
         ),
-        width: 120,
+      ].map((talepNo) => ({
+        text: talepNo,
+        value: talepNo,
+      })),
+      onFilter: (value, record) => {
+        const talepNo = record.Referanslar?.talepNo || "Boş";
+        return talepNo.indexOf(value) === 0;
       },
-      {
-        title: "İade",
-        dataIndex: "iade",
-        key: "iade",
-        render: (text, record) =>
-          text === "Evet" ? <Tag color="volcano">{text}</Tag> : <Tag color="purple">{text}</Tag>,
-        filters: createTableFilterFromData(data, "iade"),
-        onFilter: (value, record) => record.iade.indexOf(value) === 0,
-        filterSearch: true,
-      },
-      {
-        title: "Sipariş Tipi",
-        dataIndex: "siparisTipi",
-        key: "siparisTipi",
-        render: (text, record) => record.Referanslar.siparisTipi,
-        filters: [...new Set(data?.map((item) => item.Referanslar?.siparisTipi))].map(
-          (siparisTipi) => ({
-            text: siparisTipi,
-            value: siparisTipi,
-          }),
-        ),
-        onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
-        filterSearch: true,
-      },
-      {
-        title: "Sipariş No",
-        dataIndex: "siparisNo",
-        key: "siparisNo",
-        render: (text, record) => record?.Referanslar?.siparisNo,
-        filters: [...new Set(data?.map((item) => item.Referanslar?.siparisNo || "Boş"))].map(
-          (siparisNo) => ({
-            text: siparisNo,
-            value: siparisNo,
-          }),
-        ),
-        onFilter: (value, record) => {
-          const siparisNo = record.Referanslar?.siparisNo || "Boş";
-          return siparisNo.indexOf(value) === 0;
-        },
-        filterSearch: true,
-      },
-      {
-        title: "Talep No",
-        dataIndex: "talepNo",
-        key: "talepNo",
-        render: (text, record) => record.Referanslar?.talepNo,
-        filters: [...new Set(data?.map((item) => item.Referanslar?.talepNo || "Boş"))].map(
-          (talepNo) => ({
-            text: talepNo,
-            value: talepNo,
-          }),
-        ),
-        onFilter: (value, record) => {
-          const talepNo = record.Referanslar?.talepNo || "Boş";
-          return talepNo.indexOf(value) === 0;
-        },
-      },
-      {
-        title: "İrsaliye No",
-        dataIndex: "irsaliyeNo",
-        key: "irsaliyeNo",
-      },
-      {
-        title: "Gelen Tarih",
-        dataIndex: "gelenTarih",
-        key: "gelenTarih",
-        width: 160,
-      },
-      {
-        title: "Gelen",
-        dataIndex: "gelenMiktar",
-        key: "gelenMiktar",
-        sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
-      },
-      {
-        title: "Giden",
-        dataIndex: "gidenMiktar",
-        key: "gidenMiktar",
-        sorter: (a, b) => a.gidenMiktar - b.gidenMiktar,
-        render: (text) => <Tag color={text > 0 ? "cyan" : ""}>{text}</Tag>,
-      },
-      {
-        title: "Kalan",
-        dataIndex: "kalanMiktar",
-        key: "kalanMiktar",
-        sorter: (a, b) => a.kalanMiktar - b.kalanMiktar,
-      },
-      {
-        title: "Üretilen",
-        dataIndex: "uretilenMiktar",
-        key: "uretilenMiktar",
-        sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
-        render: (text) => <Tag color={text > 0 ? "blue" : ""}>{text}</Tag>,
-      },
-      {
-        title: "Üretilmeyen",
-        dataIndex: "uretilmeyenMiktar",
-        key: "uretilmeyenMiktar",
-        sorter: (a, b) => a.uretilmeyenMiktar - b.uretilmeyenMiktar,
-      },
-      {
-        title: "Referans Yüzey Alanı",
-        // dataIndex: ["Referanslar", "referansYuzeyAlani"],
-        key: "referansYuzeyAlanı",
-        render: (text, record) => record.Referanslar?.referansYuzeyAlani,
-      },
-      {
-        title: "İşlem Tipi",
-        // dataIndex: "referansTipi",
-        render: (text, record) => record.Referanslar?.islemTipi,
-        key: "islemTipi",
-        filters: [...new Set(data?.map((item) => item.Referanslar?.islemTipi))].map(
-          (islemTipi) => ({
-            text: islemTipi,
-            value: islemTipi,
-          }),
-        ),
-        onFilter: (value, record) => record.Referanslar?.islemTipi.indexOf(value) === 0,
-        filterSearch: true,
-      },
-    ],
-    [data],
-  );
+    },
+    {
+      title: "İrsaliye No",
+      dataIndex: "irsaliyeNo",
+      key: "irsaliyeNo",
+    },
+    {
+      title: "Gelen Tarih",
+      dataIndex: "gelenTarih",
+      key: "gelenTarih",
+      width: 160,
+    },
+    {
+      title: "Gelen",
+      dataIndex: "gelenMiktar",
+      key: "gelenMiktar",
+      sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
+    },
+    {
+      title: "Giden",
+      dataIndex: "gidenMiktar",
+      key: "gidenMiktar",
+      sorter: (a, b) => a.gidenMiktar - b.gidenMiktar,
+      render: (text) => <Tag color={text > 0 ? "cyan" : ""}>{text}</Tag>,
+    },
+    {
+      title: "Kalan",
+      dataIndex: "kalanMiktar",
+      key: "kalanMiktar",
+      sorter: (a, b) => a.kalanMiktar - b.kalanMiktar,
+    },
+    {
+      title: "Üretilen",
+      dataIndex: "uretilenMiktar",
+      key: "uretilenMiktar",
+      sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
+      render: (text) => <Tag color={text > 0 ? "blue" : ""}>{text}</Tag>,
+    },
+    {
+      title: "Üretilmeyen",
+      dataIndex: "uretilmeyenMiktar",
+      key: "uretilmeyenMiktar",
+      sorter: (a, b) => a.uretilmeyenMiktar - b.uretilmeyenMiktar,
+    },
+    {
+      title: "Referans Yüzey Alanı",
+      // dataIndex: ["Referanslar", "referansYuzeyAlani"],
+      key: "referansYuzeyAlanı",
+      render: (text, record) => record.Referanslar?.referansYuzeyAlani,
+    },
+    {
+      title: "İşlem Tipi",
+      // dataIndex: "referansTipi",
+      render: (text, record) => record.Referanslar?.islemTipi,
+      key: "islemTipi",
+      filters: [
+        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.islemTipi)),
+      ].map((islemTipi) => ({
+        text: islemTipi,
+        value: islemTipi,
+      })),
+      onFilter: (value, record) => record.Referanslar?.islemTipi.indexOf(value) === 0,
+      filterSearch: true,
+    },
+  ];
 
   useEffect(() => {
     const musteriBazli = data.reduce((acc, uretim) => {
@@ -324,7 +327,7 @@ function NormalUretimlerTablo({ data }) {
         children: (
           <TableGod
             dataSource={kayitlar}
-            columns={columns}
+            columns={createColumnsForCustomer(musteriAdi)}
             onChange={onChange}
             hideDefaultTitleButtons
             rowSelection={createRowSelection(musteriAdi)}
@@ -410,188 +413,192 @@ function FasonUretimlerTablo({ data }) {
 
   const [musteriBazliKayitlar, setMusteriBazliKayitlar] = useState([]);
 
-  const columns = useMemo(
-    () => [
-      {
-        title: "Fason Firması",
-        dataIndex: "fasonFirmasi",
-        key: "fasonFirmasi",
-        render: (text, record) => (
-          <Tag color="blue" style={{ fontSize: "14px" }}>
-            {record.Referanslar?.fasonFirmasi}
-          </Tag>
+  const createColumnsForCustomer = (musteriAdi) => [
+    {
+      title: "Fason Firması",
+      dataIndex: "fasonFirmasi",
+      key: "fasonFirmasi",
+      render: (text, record) => (
+        <Tag color="blue" style={{ fontSize: "14px" }}>
+          {record.Referanslar?.fasonFirmasi}
+        </Tag>
+      ),
+      filters: [
+        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.fasonFirmasi)),
+      ].map((fasonFirmasi) => ({
+        text: fasonFirmasi,
+        value: fasonFirmasi,
+      })),
+      onFilter: (value, record) => record.Referanslar?.fasonFirmasi.indexOf(value) === 0,
+      filterSearch: true,
+      width: 120,
+    },
+    {
+      title: "Referans",
+      dataIndex: "referansNo",
+      key: "referansNo",
+      filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "referansNo"),
+      onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
+      filterSearch: true,
+      render: (text) => (
+        <Tag color="orange" style={{ fontSize: "14px" }}>
+          {text}
+        </Tag>
+      ),
+      width: 120,
+    },
+    {
+      title: "Çıkış Referansı",
+      dataIndex: "cikisReferansNo",
+      key: "cikisReferansNo",
+      filters: [
+        ...new Set(
+          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.cikisReferansNo),
         ),
-        filters: [...new Set(data?.map((item) => item.Referanslar?.fasonFirmasi))].map(
-          (fasonFirmasi) => ({
-            text: fasonFirmasi,
-            value: fasonFirmasi,
-          }),
+      ].map((cikisReferansNo) => ({
+        text: cikisReferansNo,
+        value: cikisReferansNo,
+      })),
+      onFilter: (value, record) => record.Referanslar?.cikisReferansNo.indexOf(value) === 0,
+      filterSearch: true,
+      render: (text, record) => (
+        <Tag color="orange" style={{ fontSize: "14px" }}>
+          {record.Referanslar.cikisReferansNo}
+        </Tag>
+      ),
+      width: 120,
+    },
+    {
+      title: "İade",
+      dataIndex: "iade",
+      key: "iade",
+      render: (text, record) =>
+        text === "Evet" ? <Tag color="volcano">{text}</Tag> : <Tag color="purple">{text}</Tag>,
+      filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "iade"),
+      onFilter: (value, record) => record.iade.indexOf(value) === 0,
+      filterSearch: true,
+    },
+    {
+      title: "Sipariş Tipi",
+      dataIndex: "siparisTipi",
+      key: "siparisTipi",
+      render: (text, record) => record.Referanslar.siparisTipi,
+      filters: [
+        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisTipi)),
+      ].map((siparisTipi) => ({
+        text: siparisTipi,
+        value: siparisTipi,
+      })),
+      onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
+      filterSearch: true,
+    },
+    {
+      title: "Sipariş No",
+      dataIndex: "siparisNo",
+      key: "siparisNo",
+      render: (text, record) => record.Referanslar?.siparisNo,
+      filters: [
+        ...new Set(
+          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisNo || "Boş"),
         ),
-        onFilter: (value, record) => record.Referanslar?.fasonFirmasi.indexOf(value) === 0,
-        filterSearch: true,
-        width: 120,
+      ].map((siparisNo) => ({
+        text: siparisNo,
+        value: siparisNo,
+      })),
+      onFilter: (value, record) => {
+        const siparisNo = record.Referanslar?.siparisNo || "Boş";
+        return siparisNo.indexOf(value) === 0;
       },
-      {
-        title: "Referans",
-        dataIndex: "referansNo",
-        key: "referansNo",
-        filters: createTableFilterFromData(data, "referansNo"),
-        onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
-        filterSearch: true,
-        render: (text) => (
-          <Tag color="orange" style={{ fontSize: "14px" }}>
-            {text}
-          </Tag>
+      filterSearch: true,
+    },
+    {
+      title: "Talep No",
+      dataIndex: "talepNo",
+      key: "talepNo",
+      render: (text, record) => record.Referanslar?.talepNo,
+      filters: [
+        ...new Set(
+          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.talepNo || "Boş"),
         ),
-        width: 120,
+      ].map((talepNo) => ({
+        text: talepNo,
+        value: talepNo,
+      })),
+      onFilter: (value, record) => {
+        const talepNo = record.Referanslar?.talepNo || "Boş";
+        return talepNo.indexOf(value) === 0;
       },
-      {
-        title: "Çıkış Referansı",
-        dataIndex: "cikisReferansNo",
-        key: "cikisReferansNo",
-        filters: [...new Set(data?.map((item) => item.Referanslar?.cikisReferansNo))].map(
-          (cikisReferansNo) => ({
-            text: cikisReferansNo,
-            value: cikisReferansNo,
-          }),
+    },
+    {
+      title: "İrsaliye No",
+      dataIndex: "irsaliyeNo",
+      key: "irsaliyeNo",
+    },
+    {
+      title: "Gelen Tarih",
+      dataIndex: "gelenTarih",
+      key: "gelenTarih",
+      width: 160,
+    },
+    {
+      title: "Gelen",
+      dataIndex: "gelenMiktar",
+      key: "gelenMiktar",
+      sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
+      render: (text, record) =>
+        record.gelenMiktar === record.gidenMiktar ? (
+          <Tag color="green">{text}</Tag>
+        ) : (
+          <Tag>{text}</Tag>
         ),
-        onFilter: (value, record) => record.Referanslar?.cikisReferansNo.indexOf(value) === 0,
-        filterSearch: true,
-        render: (text, record) => (
-          <Tag color="orange" style={{ fontSize: "14px" }}>
-            {record.Referanslar.cikisReferansNo}
-          </Tag>
+    },
+    {
+      title: "Fasona Gönderilen",
+      dataIndex: "gidenMiktar",
+      key: "gidenMiktar",
+      sorter: (a, b) => a.gidenMiktar - b.gidenMiktar,
+      render: (text, record) =>
+        record.gelenMiktar === record.gidenMiktar ? (
+          <Tag color="green">{text}</Tag>
+        ) : (
+          <Tag>{text}</Tag>
         ),
-        width: 120,
-      },
-      {
-        title: "İade",
-        dataIndex: "iade",
-        key: "iade",
-        render: (text, record) =>
-          text === "Evet" ? <Tag color="volcano">{text}</Tag> : <Tag color="purple">{text}</Tag>,
-        filters: createTableFilterFromData(data, "iade"),
-        onFilter: (value, record) => record.iade.indexOf(value) === 0,
-        filterSearch: true,
-      },
-      {
-        title: "Sipariş Tipi",
-        dataIndex: "siparisTipi",
-        key: "siparisTipi",
-        render: (text, record) => record.Referanslar.siparisTipi,
-        filters: [...new Set(data?.map((item) => item.Referanslar?.siparisTipi))].map(
-          (siparisTipi) => ({
-            text: siparisTipi,
-            value: siparisTipi,
-          }),
-        ),
-        onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
-        filterSearch: true,
-      },
-      {
-        title: "Sipariş No",
-        dataIndex: "siparisNo",
-        key: "siparisNo",
-        render: (text, record) => record.Referanslar?.siparisNo,
-        filters: [...new Set(data?.map((item) => item.Referanslar?.siparisNo || "Boş"))].map(
-          (siparisNo) => ({
-            text: siparisNo,
-            value: siparisNo,
-          }),
-        ),
-        onFilter: (value, record) => {
-          const siparisNo = record.Referanslar?.siparisNo || "Boş";
-          return siparisNo.indexOf(value) === 0;
-        },
-        filterSearch: true,
-      },
-      {
-        title: "Talep No",
-        dataIndex: "talepNo",
-        key: "talepNo",
-        render: (text, record) => record.Referanslar?.talepNo,
-        filters: [...new Set(data?.map((item) => item.Referanslar?.talepNo || "Boş"))].map(
-          (talepNo) => ({
-            text: talepNo,
-            value: talepNo,
-          }),
-        ),
-        onFilter: (value, record) => {
-          const talepNo = record.Referanslar?.talepNo || "Boş";
-          return talepNo.indexOf(value) === 0;
-        },
-      },
-      {
-        title: "İrsaliye No",
-        dataIndex: "irsaliyeNo",
-        key: "irsaliyeNo",
-      },
-      {
-        title: "Gelen Tarih",
-        dataIndex: "gelenTarih",
-        key: "gelenTarih",
-        width: 160,
-      },
-      {
-        title: "Gelen",
-        dataIndex: "gelenMiktar",
-        key: "gelenMiktar",
-        sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
-        render: (text, record) =>
-          record.gelenMiktar === record.gidenMiktar ? (
-            <Tag color="green">{text}</Tag>
-          ) : (
-            <Tag>{text}</Tag>
-          ),
-      },
-      {
-        title: "Fasona Gönderilen",
-        dataIndex: "gidenMiktar",
-        key: "gidenMiktar",
-        sorter: (a, b) => a.gidenMiktar - b.gidenMiktar,
-        render: (text, record) =>
-          record.gelenMiktar === record.gidenMiktar ? (
-            <Tag color="green">{text}</Tag>
-          ) : (
-            <Tag>{text}</Tag>
-          ),
-      },
-      {
-        title: "Fasonda Üretilen",
-        dataIndex: "uretilenMiktar",
-        key: "uretilenMiktar",
-        sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
-        render: (text) => <Tag color={text > 0 ? "blue" : ""}>{text}</Tag>,
-      },
-      {
-        title: "Sevk Edilen",
-        dataIndex: "sevkEdilenMiktar",
-        key: "sevkEdilenMiktar",
-        sorter: (a, b) => a.sevkEdilenMiktar - b.sevkEdilenMiktar,
-      },
-      {
-        title: "Referans Yüzey Alanı",
-        // dataIndex: ["Referanslar", "referansYuzeyAlani"],
-        key: "referansYuzeyAlanı",
-        render: (text, record) => record.Referanslar?.referansYuzeyAlani,
-      },
-      {
-        title: "İşlem Tipi",
-        // dataIndex: "referansTipi",
-        render: (text, record) => record.Referanslar?.islemTipi,
-        key: "islemTipi",
-        filters: [...new Set(data?.map((item) => item.Referanslar?.islemTipi))].map(
-          (islemTipi) => ({
-            text: islemTipi,
-            value: islemTipi,
-          }),
-        ),
-        onFilter: (value, record) => record.Referanslar?.islemTipi.indexOf(value) === 0,
-        filterSearch: true,
-      },
-    ],
-    [data],
-  );
+    },
+    {
+      title: "Fasonda Üretilen",
+      dataIndex: "uretilenMiktar",
+      key: "uretilenMiktar",
+      sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
+      render: (text) => <Tag color={text > 0 ? "blue" : ""}>{text}</Tag>,
+    },
+    {
+      title: "Sevk Edilen",
+      dataIndex: "sevkEdilenMiktar",
+      key: "sevkEdilenMiktar",
+      render: (text) => <Tag color={text > 0 && "cyan"}>{text}</Tag>,
+      sorter: (a, b) => a.sevkEdilenMiktar - b.sevkEdilenMiktar,
+    },
+    {
+      title: "Referans Yüzey Alanı",
+      // dataIndex: ["Referanslar", "referansYuzeyAlani"],
+      key: "referansYuzeyAlanı",
+      render: (text, record) => record.Referanslar?.referansYuzeyAlani,
+    },
+    {
+      title: "İşlem Tipi",
+      // dataIndex: "referansTipi",
+      render: (text, record) => record.Referanslar?.islemTipi,
+      key: "islemTipi",
+      filters: [
+        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.islemTipi)),
+      ].map((islemTipi) => ({
+        text: islemTipi,
+        value: islemTipi,
+      })),
+      onFilter: (value, record) => record.Referanslar?.islemTipi.indexOf(value) === 0,
+      filterSearch: true,
+    },
+  ];
 
   useEffect(() => {
     const musteriBazli = data.reduce((acc, uretim) => {
@@ -618,9 +625,6 @@ function FasonUretimlerTablo({ data }) {
       setSelectedRows({ ...selectedRows, [musteriAdi]: _selectedRows });
       setSecilmisIrsaliyeler({ ...secilmisIrsaliyeler, [musteriAdi]: irsaliyesiKesilmemisOlanlar });
     },
-    // getCheckboxProps: (record) => ({
-    //   disabled: record.gelenMiktar === record.gidenMiktar, // Aktif olmayanlar için checkbox'ı devre dışı bırak
-    // }),
   });
 
   const fasonUretimSil = () => {
@@ -725,7 +729,7 @@ function FasonUretimlerTablo({ data }) {
         children: (
           <TableGod
             dataSource={kayitlar}
-            columns={columns}
+            columns={createColumnsForCustomer(musteriAdi)}
             onChange={onChange}
             rowSelection={createRowSelection(musteriAdi)}
             hideDefaultTitleButtons
@@ -734,7 +738,6 @@ function FasonUretimlerTablo({ data }) {
               extraItems: [
                 {
                   title: "Üretim / Sevkiyat Hareketleri",
-                  // action: (record) => window.electron.send("openNewWindow"),
                   action: (record) =>
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
