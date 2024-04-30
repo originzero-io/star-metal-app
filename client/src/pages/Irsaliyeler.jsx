@@ -1,5 +1,6 @@
 import { CaretRightOutlined, CloudUploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Badge, Button, Collapse, Modal, Tag, Input, Select, Flex } from "antd";
+import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
 import TableGod from "components/shared/TableGod";
 import { useDBContext } from "context/DBProvider";
@@ -44,6 +45,13 @@ export default function Irsaliyeler() {
 
   const columns = useMemo(
     () => [
+      {
+        title: "Sıra No",
+        dataIndex: "uretimSiraNo",
+        key: "uretimSiraNo",
+        render: (text) => <IdBadge value={text} />,
+        width: 70,
+      },
       {
         title: "Referans No",
         dataIndex: "referansNo",

@@ -3,16 +3,17 @@ import { Alert, Badge, Button, Collapse, Modal, Tag } from "antd";
 import { FcInTransit } from "react-icons/fc";
 
 import SevkiyatKarti from "components/cards/SevkiyatKarti";
+import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
 import TableGod from "components/shared/TableGod";
+import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import React, { useEffect, useMemo, useState } from "react";
 import irsaliyeHttp from "services/irsaliyeler.http";
 import uretimGirisiHttp from "services/uretim-girisleri.http";
-import { createTableFilterFromData } from "utils/table.helper";
 import { devamEdenUretimHttp } from "services/uretimler.http";
-import { useAuth } from "context/AuthProvider";
+import { createTableFilterFromData } from "utils/table.helper";
 
 const alertMessage = (musteri, irsaliyeTipi, olan, limit) => (
   <div>
@@ -57,6 +58,13 @@ export default function SevkEdilecekler() {
   }, []);
 
   const createColumnsForCustomer = (musteriAdi) => [
+    {
+      title: "Sıra No",
+      dataIndex: "uretimSiraNo",
+      key: "uretimSiraNo",
+      render: (text) => <IdBadge value={text} />,
+      width: 70,
+    },
     {
       title: "İrsaliye Tipi",
       dataIndex: "irsaliyeTipi",
@@ -285,12 +293,10 @@ export default function SevkEdilecekler() {
                 rowSelection={createRowSelection(musteriAdi)}
                 rowStyle={(row) =>
                   !row.aktif && {
-                    // background: "rgba(62, 27, 54, 0.4)",
-                    background: "rgba(81, 81, 81, 0.5)",
-                    // background: "rgb(216, 216, 216)",
+                    background: "rgba(81, 81, 81, 0.3)",
                     cursor: "not-allowed",
                     opacity: 0.5,
-                    filter: "blur(1px)",
+                    // filter: "blur(0.7px)",
                   }
                 }
                 actionButtons={

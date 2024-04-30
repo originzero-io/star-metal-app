@@ -1,20 +1,21 @@
 import { CaretRightOutlined, ContainerOutlined, DeleteOutlined } from "@ant-design/icons";
 import { FcSynchronize } from "react-icons/fc";
 
-import { Badge, Button, Collapse, Modal, Tag, Flex } from "antd";
+import { Badge, Button, Collapse, Flex, Modal, Tag } from "antd";
+import UretimSevkiyatHareketleri from "components/UretimSevkiyatHareketleri";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import MalzemeDuzenlemeForm from "components/forms/MalzemeDuzenlemeForm";
 import UretimGirisi from "components/forms/UretimGirisi";
+import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
+import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import irsaliyeHttp from "services/irsaliyeler.http";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 import { fasonFirmasiKontrol, fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
-import irsaliyeHttp from "services/irsaliyeler.http";
-import UretimSevkiyatHareketleri from "components/UretimSevkiyatHareketleri";
-import { useAuth } from "context/AuthProvider";
 import TableGod from "../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -106,6 +107,13 @@ function NormalUretimlerTablo({ data }) {
   const [musteriBazliKayitlar, setMusteriBazliKayitlar] = useState([]);
 
   const createColumnsForCustomer = (musteriAdi) => [
+    {
+      title: "Sıra No",
+      dataIndex: "id",
+      key: "id",
+      render: (text) => <IdBadge value={text} />,
+      width: 70,
+    },
     {
       title: "Referans",
       dataIndex: "referansNo",
@@ -246,7 +254,7 @@ function NormalUretimlerTablo({ data }) {
       sorter: (a, b) => a.uretilmeyenMiktar - b.uretilmeyenMiktar,
     },
     {
-      title: "Referans Yüzey Alanı",
+      title: "Yüzey Alanı",
       // dataIndex: ["Referanslar", "referansYuzeyAlani"],
       key: "referansYuzeyAlanı",
       render: (text, record) => record.Referanslar?.referansYuzeyAlani,
@@ -415,6 +423,13 @@ function FasonUretimlerTablo({ data }) {
 
   const createColumnsForCustomer = (musteriAdi) => [
     {
+      title: "Sıra No",
+      dataIndex: "id",
+      key: "id",
+      render: (text) => <IdBadge value={text} />,
+      width: 70,
+    },
+    {
       title: "Fason Firması",
       dataIndex: "fasonFirmasi",
       key: "fasonFirmasi",
@@ -579,7 +594,7 @@ function FasonUretimlerTablo({ data }) {
       sorter: (a, b) => a.sevkEdilenMiktar - b.sevkEdilenMiktar,
     },
     {
-      title: "Referans Yüzey Alanı",
+      title: "Yüzey Alanı",
       // dataIndex: ["Referanslar", "referansYuzeyAlani"],
       key: "referansYuzeyAlanı",
       render: (text, record) => record.Referanslar?.referansYuzeyAlani,

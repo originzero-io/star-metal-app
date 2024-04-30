@@ -1,4 +1,4 @@
-import { Button, Col, Form, Radio, Row, Select, InputNumber, Input, Tag } from "antd";
+import { Button, Col, Form, Radio, Row, Select, InputNumber, Input, Tag, Badge } from "antd";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { FormOutlined, CreditCardOutlined, PrinterOutlined } from "@ant-design/icons";
@@ -7,6 +7,7 @@ import SevkiyatKarti from "../cards/SevkiyatKarti";
 import { useDBContext } from "context/DBProvider";
 import uretimGirisiHttp from "services/uretim-girisleri.http";
 import { useUIContext } from "context/UIProvider";
+import IdBadge from "components/shared/IdBadge";
 
 const SectionBase = styled.div`
   border: 1px solid #d0d0d0;
@@ -222,7 +223,7 @@ export default function UretimGirisi({ record }) {
           <Row gutter={32}>
             <Col span={12}>
               <Form.Item label="Üretim Sıra No">
-                <div>{record.id}</div>
+                <IdBadge value={record.id} />
               </Form.Item>
               <Form.Item label="Referans Sıra No">
                 <div>{record.Referanslar.id}</div>
