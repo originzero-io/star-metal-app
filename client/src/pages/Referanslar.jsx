@@ -230,9 +230,9 @@ function Referanslar() {
                 style={{ marginRight: "4px" }}
                 type="primary"
                 icon={<PlusOutlined />}
-                onClick={() => showPanel({ title: "Yeni Referans", content: <ReferansForm /> })}
+                onClick={() => showPanel({ title: "Referans Ekle", content: <ReferansForm /> })}
               >
-                Yeni Referans
+                Referans Ekle
               </Button>
             )}
           </>

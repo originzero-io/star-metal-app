@@ -389,7 +389,7 @@ export default function GelenMalzemeKayit() {
             Sıfırla
           </Button>
           <Button type="primary" htmlType="submit">
-            Kaydet
+            Malzemeleri Kaydet
           </Button>
         </Form.Item>
         <div style={{ display: "none" }}>

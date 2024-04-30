@@ -165,9 +165,9 @@ function Musteriler() {
                 style={{ marginRight: "4px" }}
                 type="primary"
                 icon={<PlusOutlined />}
-                onClick={() => showPanel({ title: "Yeni Müşteri", content: <MusteriForm /> })}
+                onClick={() => showPanel({ title: "Müşteri Ekle", content: <MusteriForm /> })}
               >
-                Yeni Müşteri
+                Müşteri Ekle
               </Button>
             )}
           </>

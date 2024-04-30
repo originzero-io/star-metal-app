@@ -141,9 +141,9 @@ function Personeller() {
                 style={{ marginRight: "4px" }}
                 type="primary"
                 icon={<PlusOutlined />}
-                onClick={() => showPanel({ title: "Yeni Personel", content: <PersonelForm /> })}
+                onClick={() => showPanel({ title: "Personel Ekle", content: <PersonelForm /> })}
               >
-                Yeni Personel
+                Personel Ekle
               </Button>
             )}
           </>

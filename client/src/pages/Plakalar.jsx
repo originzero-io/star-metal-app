@@ -112,9 +112,9 @@ function Plakalar() {
                 style={{ marginRight: "4px" }}
                 type="primary"
                 icon={<PlusOutlined />}
-                onClick={() => showPanel({ title: "Yeni Şoför", content: <PlakaForm /> })}
+                onClick={() => showPanel({ title: "Plaka Ekle", content: <PlakaForm /> })}
               >
-                Yeni Plaka
+                Plaka Ekle
               </Button>
             )}
           </>

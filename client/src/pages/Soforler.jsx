@@ -122,9 +122,9 @@ function Soforler() {
                 style={{ marginRight: "4px" }}
                 type="primary"
                 icon={<PlusOutlined />}
-                onClick={() => showPanel({ title: "Yeni Şoför", content: <SoforForm /> })}
+                onClick={() => showPanel({ title: "Şoför Ekle", content: <SoforForm /> })}
               >
-                Yeni Şoför
+                Şoför Ekle
               </Button>
             )}
           </>
