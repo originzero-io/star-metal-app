@@ -2,95 +2,52 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 
-import MusteriForm from "components/forms/MusteriForm";
+import SoforForm from "components/forms/SoforForm";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { RiCustomerServiceLine } from "react-icons/ri";
-import musterilerHttp from "services/musteriler.http";
-import { createTableFilterFromData } from "utils/table.helper";
+import { GiSteeringWheel } from "react-icons/gi";
+import soforlerHttp from "services/soforler.http";
 import TableGod from "../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
-function Musteriler() {
+function Soforler() {
   const { user } = useAuth();
 
   const [selectedRows, setSelectedRows] = useState([]);
   const { showPanel, showNotification } = useUIContext();
-  const { musteriler, setMusteriler } = useDBContext();
+  const { soforler, setSoforler } = useDBContext();
 
   const columns = useMemo(
     () => [
       {
-        title: "Müşteri Logo Kodu",
-        dataIndex: "musteriLogoKodu",
-        key: "musteriLogoKodu",
+        title: "Şoför Logo Kodu",
+        dataIndex: "soforLogoKodu",
+        key: "soforLogoKodu",
         render: (text) => <IdBadge value={text} />,
-        filters: createTableFilterFromData(musteriler, "musteriLogoKodu"),
-        onFilter: (value, record) => record.musteriLogoKodu.indexOf(value) === 0,
-        filterSearch: true,
         width: 150,
       },
       {
-        title: "Müşteri Adı",
-        dataIndex: "musteriAdi",
-        key: "musteriAdi",
-        filters: createTableFilterFromData(musteriler, "musteriAdi"),
-        onFilter: (value, record) => record.musteriAdi.indexOf(value) === 0,
-        filterSearch: true,
-        // width: 200,
+        title: "Adı",
+        dataIndex: "ad",
+        key: "adi",
       },
       {
-        title: "Adres",
-        dataIndex: "adres",
-        key: "adres1",
-        filters: createTableFilterFromData(musteriler, "adres"),
-        onFilter: (value, record) => record.adres.indexOf(value) === 0,
-        filterSearch: true,
-        // width: 200,
+        title: "Soyadı",
+        dataIndex: "soyad",
+        key: "soyad",
       },
       {
-        title: "Vergi Dairesi",
-        dataIndex: "vergiDairesi",
-        key: "vergiDairesi",
-        width: 100,
-      },
-      {
-        title: "Vergi No",
-        dataIndex: "vergiNo",
-        key: "vergiNo",
-        // width: 150,
-      },
-      {
-        title: "Telefon",
-        dataIndex: "telefon",
-        key: "telefon",
-        width: 120,
-      },
-      {
-        title: "E-Mail",
-        dataIndex: "mail",
-        key: "mail",
-        // width: 160,
-      },
-      {
-        title: "Yetkili Kişi",
-        dataIndex: "yetkili",
-        key: "yetkili",
-        // width: 150,
-      },
-      {
-        title: "Kep Adresi",
-        dataIndex: "kepAdresi",
-        key: "kepAdresi",
-        // width: 150,
+        title: "Kimlik No",
+        dataIndex: "tc",
+        key: "tc",
       },
     ],
-    [musteriler],
+    [],
   );
 
   const rowSelection = {
@@ -109,9 +66,9 @@ function Musteriler() {
       cancelText: "İptal",
       async onOk() {
         try {
-          const newMusteriler = await musterilerHttp.deleteData(musteriler, selectedRows);
-          setMusteriler(newMusteriler);
-          showNotification("success", "Seçili müşteriler silindi");
+          const newSoforler = await soforlerHttp.deleteData(soforler, selectedRows);
+          setSoforler(newSoforler);
+          showNotification("success", "Seçili şoförler silindi");
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
@@ -122,14 +79,14 @@ function Musteriler() {
   const deleteSingleRecordHandler = (record) => {
     Modal.confirm({
       title: "Emin misiniz?",
-      content: `${record.musteriAdi} isimli müşteriyi üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
+      content: `${record.ad} isimli şoförü üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
       okText: "Tamam",
       cancelText: "İptal",
       async onOk() {
         try {
-          const newMusteriler = await musterilerHttp.deleteData(musteriler, [record]);
-          setMusteriler(newMusteriler);
-          showNotification("success", `${record.musteriAdi} müşterisi silindi`);
+          const newSoforler = await soforlerHttp.deleteData(soforler, [record]);
+          setSoforler(newSoforler);
+          showNotification("success", `${record.ad} isimli şoför silindi`);
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
@@ -138,14 +95,14 @@ function Musteriler() {
   };
   return (
     <div>
-      <PageHeader label="Müşteriler" icon={<RiCustomerServiceLine />} />
+      <PageHeader label="Şoförler" icon={<GiSteeringWheel />} />
       <TableGod
-        dataSource={musteriler}
+        dataSource={soforler}
         columns={columns}
         onChange={onChange}
         rowSelection={user.yetki === "admin" && rowSelection}
         contextMenu={{
-          editForm: MusteriForm,
+          editForm: SoforForm,
           deleteAction: deleteSingleRecordHandler,
         }}
         actionButtons={
@@ -165,9 +122,9 @@ function Musteriler() {
                 style={{ marginRight: "4px" }}
                 type="primary"
                 icon={<PlusOutlined />}
-                onClick={() => showPanel({ title: "Yeni Müşteri", content: <MusteriForm /> })}
+                onClick={() => showPanel({ title: "Yeni Şoför", content: <SoforForm /> })}
               >
-                Yeni Müşteri
+                Yeni Şoför
               </Button>
             )}
           </>
@@ -177,4 +134,4 @@ function Musteriler() {
   );
 }
 
-export default Musteriler;
+export default Soforler;

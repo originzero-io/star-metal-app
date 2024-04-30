@@ -41,6 +41,10 @@ const UretimGirisi = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: true,
     },
+    plaka: {
+      type: DataTypes.STRING(14),
+      allowNull: true,
+    },
     uretimAdedi: {
       type: DataTypes.INTEGER,
       allowNull: false,

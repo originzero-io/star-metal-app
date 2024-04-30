@@ -9,6 +9,8 @@ import musterilerHttp from "services/musteriler.http";
 import ambalajlarHttp from "services/ambalajlar.http";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 import personellerHttp from "services/personeller.http";
+import soforlerHttp from "services/soforler.http";
+import plakalarHttp from "services/plakalar.http";
 import irsaliyeHttp from "services/irsaliyeler.http";
 import { useUIContext } from "./UIProvider";
 
@@ -28,6 +30,8 @@ export const DBProvider = ({ children }) => {
   const [devamEdenUretimler, setDevamEdenUretimler] = useState([]);
   // ? uretimler denip {devamEdenler, tamamlananlar} şeklinde verilebilir
   const [personeller, setPersoneller] = useState([]);
+  const [soforler, setSoforler] = useState([]);
+  const [plakalar, setPlakalar] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -101,6 +105,28 @@ export const DBProvider = ({ children }) => {
     }
   };
 
+  const fetchSoforler = async () => {
+    try {
+      setLoading(true);
+      const soforData = await soforlerHttp.getData();
+      setSoforler(soforData);
+      setLoading(false);
+    } catch (error) {
+      showNotification("error", "Şoför verisi alınamadı", error.message);
+    }
+  };
+
+  const fetchPlakalar = async () => {
+    try {
+      setLoading(true);
+      const plakaData = await plakalarHttp.getData();
+      setPlakalar(plakaData);
+      setLoading(false);
+    } catch (error) {
+      showNotification("error", "Plaka verisi alınamadı", error.message);
+    }
+  };
+
   useEffect(() => {
     fetchDevamEdenUretimler();
     fetchReferanslar();
@@ -108,6 +134,8 @@ export const DBProvider = ({ children }) => {
     fetchMusteriler();
     fetchAmbalajlar();
     fetchPersoneller();
+    fetchSoforler();
+    fetchPlakalar();
   }, []);
 
   const value = {
@@ -127,6 +155,10 @@ export const DBProvider = ({ children }) => {
     setDevamEdenUretimler,
     personeller,
     setPersoneller,
+    soforler,
+    setSoforler,
+    plakalar,
+    setPlakalar,
     loading,
     setLoading,
   };

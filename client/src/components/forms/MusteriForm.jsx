@@ -18,11 +18,11 @@ export default function MusteriForm({ record, type }) {
       });
       setMusteriler(updatedMusterilerArray);
       // showPanel(false);
-      showNotification("success", "Kayıt güncellendi");
+      showNotification("success", "Müşteri güncellendi");
     } else {
       const newMusteri = await musterilerHttp.addData(values);
       setMusteriler([...musteriler, { ...newMusteri }]);
-      showNotification("success", "Kayıt eklendi");
+      showNotification("success", "Müşteri eklendi");
     }
   };
   const onFinishFailed = (errorInfo) => {

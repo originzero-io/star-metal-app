@@ -1,15 +1,14 @@
-import { FolderAddTwoTone } from "@ant-design/icons";
 import { useUIContext } from "context/UIProvider";
-import { useState } from "react";
 import { FaTemperatureLow, FaWpforms } from "react-icons/fa";
 import { FaDropbox } from "react-icons/fa6";
-import { FcOk, FcPieChart, FcSynchronize, FcRules, FcInTransit } from "react-icons/fc";
-import { GoDatabase } from "react-icons/go";
+import { FcInTransit, FcOk, FcRules, FcSynchronize } from "react-icons/fc";
+import { GiSteeringWheel } from "react-icons/gi";
 import { GrHostMaintenance } from "react-icons/gr";
 import { MdOutlineDocumentScanner } from "react-icons/md";
-import { RiCustomerServiceLine } from "react-icons/ri";
-import { TbRulerMeasure } from "react-icons/tb";
 import { PiUsersThreeBold } from "react-icons/pi";
+import { RiCustomerServiceLine } from "react-icons/ri";
+import { TbRulerMeasure, TbSquareRoundedLetterP } from "react-icons/tb";
+
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import useDetectUserInteraction from "utils/useDetectInteraction.hook";
@@ -192,6 +191,16 @@ const pages = {
       title: "Personeller",
       icon: <PiUsersThreeBold />,
       link: "/personeller",
+    },
+    {
+      title: "Şoförler",
+      icon: <GiSteeringWheel />,
+      link: "/soforler",
+    },
+    {
+      title: "Plakalar",
+      icon: <TbSquareRoundedLetterP />,
+      link: "/plakalar",
     },
   ],
   veriler: [

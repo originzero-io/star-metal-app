@@ -56,7 +56,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
 
   const uretimIdsiBazli = Object.entries(uretimGirisleri);
 
-  const createColumnsByReferansNo = (referansNo) => [
+  const columns = [
     {
       title: "Durum",
       // dataIndex: "id",
@@ -77,14 +77,12 @@ export default function UretimSevkiyatHareketleri({ record }) {
       title: "Sıra No",
       dataIndex: "id",
       key: "id",
-      render: (text) => text,
       width: 60,
     },
     {
       title: "Üretim No",
       dataIndex: "uretimSiraNo",
       key: "uretimSiraNo",
-      render: (text) => text,
       width: 80,
     },
     {
@@ -97,49 +95,48 @@ export default function UretimSevkiyatHareketleri({ record }) {
       title: "Personel",
       dataIndex: "personel",
       key: "personel",
-      render: (text) => text,
       width: 90,
     },
     {
       title: "Üretim Tarih",
       dataIndex: "uretimTarihi",
       key: "uretimTarihi",
-      render: (text) => text,
       width: 150,
     },
     {
       title: "Brüt",
       dataIndex: "brut",
       key: "brut",
-      render: (text) => text,
       // width: 150,
     },
     {
       title: "Dara",
       dataIndex: "dara",
       key: "dara",
-      render: (text) => text,
       // width: 150,
     },
     {
       title: "Sevkiyat Tarihi",
       dataIndex: "sevkTarihi",
       key: "sevkTarihi",
-      render: (text) => text,
       width: 150,
     },
     {
       title: "İrsaliye No",
       dataIndex: "irsaliyeNo",
       key: "irsaliyeNo",
-      render: (text) => text,
       // width: 150,
     },
     {
       title: "Şoför",
       dataIndex: "sofor",
       key: "sofor",
-      render: (text) => text,
+      // width: 150,
+    },
+    {
+      title: "Plaka",
+      dataIndex: "plaka",
+      key: "plaka",
       // width: 150,
     },
   ];
@@ -202,15 +199,15 @@ export default function UretimSevkiyatHareketleri({ record }) {
         </Row>
         <Divider />
         {uretimIdsiBazli.length > 0 ? (
-          uretimIdsiBazli.map(([referansNo, kayitlar], index) => (
+          uretimIdsiBazli.map(([uretimId, kayitlar], index) => (
             <div key={index}>
               <TableGod
                 dataSource={kayitlar}
-                columns={createColumnsByReferansNo(referansNo)}
+                columns={columns}
                 pagination={false}
                 hideDefaultTitleButtons
                 // rowStyle={(row) => ({
-                //   background: row.sevkTarihi ? "#31b73199" : "#f4e96fe",
+                //   background: row.sevkTarihi ? "#40cc4099" : "#f4e96fe",
                 //   cursor: !row.aktif ? "not-allowed" : undefined,
                 // })}
               />

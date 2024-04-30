@@ -145,6 +145,7 @@ router.put("/sevk-et", async (req, res) => {
           sevkTarihi: kayit.sevkTarihi,
           personel: kayit.personel,
           sofor: kayit.sofor,
+          plaka: kayit.plaka,
           irsaliyeNo: kayit.irsaliyeNo,
         },
         {

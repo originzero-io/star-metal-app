@@ -18,11 +18,11 @@ export default function PersonelForm({ record, type }) {
       });
       setPersoneller(updatedPersonellerArray);
       showPanel(false);
-      showNotification("success", "Kayıt güncellendi");
+      showNotification("success", "Personel güncellendi");
     } else {
       const newPersonel = await personelHttp.addData(values);
       setPersoneller([...personeller, { ...newPersonel }]);
-      showNotification("success", "Kayıt eklendi");
+      showNotification("success", "Personel eklendi");
     }
   };
   const onFinishFailed = (errorInfo) => {

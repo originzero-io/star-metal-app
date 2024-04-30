@@ -11,6 +11,8 @@ import Irsaliyeler from "pages/Irsaliyeler";
 import Login from "pages/Login";
 import Musteriler from "pages/Musteriler";
 import Personeller from "pages/Personeller";
+import Soforler from "pages/Soforler";
+import Plakalar from "pages/Plakalar";
 import Referanslar from "pages/Referanslar";
 import SevkEdilecekler from "pages/SevkEdilecekler";
 import Sicakliklar from "pages/Sicakliklar";
@@ -116,6 +118,22 @@ function App() {
                     element={
                       <ProtectedRoute>
                         <Personeller />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/soforler"
+                    element={
+                      <ProtectedRoute>
+                        <Soforler />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/plakalar"
+                    element={
+                      <ProtectedRoute>
+                        <Plakalar />
                       </ProtectedRoute>
                     }
                   />

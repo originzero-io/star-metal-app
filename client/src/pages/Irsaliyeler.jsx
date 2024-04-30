@@ -1,5 +1,5 @@
-import { CaretRightOutlined, CloudUploadOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Badge, Button, Collapse, Modal, Tag, Input, Select, Flex } from "antd";
+import { CaretRightOutlined, CloudUploadOutlined } from "@ant-design/icons";
+import { Badge, Button, Collapse, Divider, Flex, Form, Modal, Select, Tag } from "antd";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
 import TableGod from "components/shared/TableGod";
@@ -333,48 +333,38 @@ function IrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
 }
 
 function LogoyaGonderButton({ type, kayitlar }) {
-  const { personeller, irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
+  const { personeller, soforler, plakalar, irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } =
+    useDBContext();
   const { showNotification } = useUIContext();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [soforAdi, setSoforAdi] = useState("");
-  const [personelAdi, setPersonelAdi] = useState("");
-  const [error, setError] = useState("");
 
   const showModal = (e) => {
     e.stopPropagation();
-
     setIsModalVisible(true);
   };
 
-  const handleOk = async (e) => {
-    e.stopPropagation();
-
-    if (soforAdi === "") {
-      setError("Şöför adı boş olamaz");
-    } else {
-      // console.log("Kayıtlar:", kayitlar);
-      const gonderilecekKayitlar = kayitlar.map((kayit) => ({
-        ...kayit,
-        sofor: soforAdi,
-        personel: personelAdi,
-        irsaliyeNo: "14-ABCDE",
-        sevkTarihi: getCurrentDateTime(),
-      }));
-      console.log("Kayıtlar:", gonderilecekKayitlar);
-      try {
-        await uretimGirisleriHttp.sevkEt(gonderilecekKayitlar);
-        const newIrsaliyeler = await irsaliyeHttp.deleteData(irsaliyeler, gonderilecekKayitlar);
-        await uretimGirisleriHttp.deleteData(gonderilecekKayitlar);
-        const devamEdenler = await devamEdenUretimHttp.getData();
-
-        setIrsaliyeler(newIrsaliyeler);
-        setDevamEdenUretimler(devamEdenler);
-        setIsModalVisible(false);
-        const { musteriAdi } = kayitlar[0].Referanslar;
-        showNotification("success", `${musteriAdi} müşterisine irsaliye kesildi.`);
-      } catch (err) {
-        showNotification("error", err.message);
-      }
+  const handleOk = async (values) => {
+    const gonderilecekKayitlar = kayitlar.map((kayit) => ({
+      ...kayit,
+      sofor: values.soforAdi,
+      plaka: values.plaka,
+      personel: values.personelAdi,
+      irsaliyeNo: "14-ABCDE",
+      sevkTarihi: getCurrentDateTime(),
+    }));
+    console.log("Kayıtlar:", gonderilecekKayitlar);
+    try {
+      await uretimGirisleriHttp.sevkEt(gonderilecekKayitlar);
+      const newIrsaliyeler = await irsaliyeHttp.deleteData(irsaliyeler, gonderilecekKayitlar);
+      await uretimGirisleriHttp.deleteData(gonderilecekKayitlar);
+      const devamEdenler = await devamEdenUretimHttp.getData();
+      setIrsaliyeler(newIrsaliyeler);
+      setDevamEdenUretimler(devamEdenler);
+      setIsModalVisible(false);
+      const { musteriAdi } = kayitlar[0].Referanslar;
+      showNotification("success", `${musteriAdi} müşterisine irsaliye kesildi.`);
+    } catch (err) {
+      showNotification("error", err.message);
     }
   };
 
@@ -383,55 +373,93 @@ function LogoyaGonderButton({ type, kayitlar }) {
     setIsModalVisible(false);
   };
 
-  const handleChange = (e) => {
-    e.stopPropagation();
-    setError("");
-    setSoforAdi(e.target.value);
-  };
-
-  const handleSelectChange = (value, e) => {
-    console.log("e", e);
-
-    setPersonelAdi(value);
-  };
   return (
-    <>
-      <Button
-        style={{ marginRight: "4px" }}
-        type="primary"
-        danger={type === "sevk"}
-        icon={<CloudUploadOutlined />}
-        onClick={showModal}
-      >
-        Logoya Gönder
-      </Button>
+    <Button
+      style={{ marginRight: "4px" }}
+      type="primary"
+      danger={type === "sevk"}
+      icon={<CloudUploadOutlined />}
+      onClick={showModal}
+    >
+      Logoya Gönder
       <Modal
         title="Bilgileri Doldurun"
         open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
-        // maskClosable={false}
+        maskClosable={false}
         destroyOnClose
+        footer={null}
       >
-        <Input
-          value={soforAdi}
-          onChange={handleChange}
-          placeholder="Şoför adı giriniz"
-          onClick={(e) => e.stopPropagation()}
-        />
-        <div style={{ marginLeft: "6px", marginTop: "4px", color: "red" }}>{error}</div>
-        <Select
-          placeholder="Personel seçiniz"
-          style={{ width: "100%", marginTop: "8px" }}
-          onChange={handleSelectChange}
+        <Form
+          labelCol={{ flex: "100px" }}
+          labelAlign="left"
+          onFinish={handleOk}
+          style={{ marginTop: "20px" }}
         >
-          {personeller.map((personel) => (
-            <Select.Option key={personel.id} value={`${personel.ad} ${personel.soyad}`}>
-              {`${personel.ad} ${personel.soyad}`}
-            </Select.Option>
-          ))}
-        </Select>
+          <Form.Item
+            label="Personel"
+            name="personelAdi"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Select placeholder="Personel seçiniz">
+              {personeller.map((personel) => (
+                <Select.Option key={personel.id} value={`${personel.ad} ${personel.soyad}`}>
+                  {`${personel.ad} ${personel.soyad}`}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            label="Şoför"
+            name="soforAdi"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Select placeholder="Şoför seçiniz">
+              {soforler.map((sofor) => (
+                <Select.Option key={sofor.id} value={`${sofor.ad} ${sofor.soyad}`}>
+                  {`${sofor.ad} ${sofor.soyad}`}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Plaka"
+            name="plaka"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Select placeholder="Plaka seçiniz">
+              {plakalar.map((plaka) => (
+                <Select.Option key={plaka.id} value={plaka.plaka}>
+                  {plaka.plaka}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Divider />
+
+          <Button type="primary" htmlType="submit" block icon={<CloudUploadOutlined />}>
+            Logoya Gönder
+          </Button>
+        </Form>
       </Modal>
-    </>
+    </Button>
   );
 }
