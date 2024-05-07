@@ -1,6 +1,6 @@
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal, Tag } from "antd";
-import ReferansForm from "components/forms/ReferansForm";
+import ReferansForm from "pages/Tanimlamalar/Referanslar/ReferansForm";
 import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 import referanslarHttp from "services/referanslar.http";
 import { createTableFilterFromData } from "utils/table.helper";
-import TableGod from "../components/shared/TableGod";
+import TableGod from "../../../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);

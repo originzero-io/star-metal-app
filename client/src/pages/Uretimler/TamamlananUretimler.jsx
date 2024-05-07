@@ -1,8 +1,8 @@
 import { Tabs, Collapse, Tag, Badge } from "antd";
 import { CgMoreVertical } from "react-icons/cg";
 import { createTableFilterFromData } from "utils/table.helper";
-import TableGod from "../components/shared/TableGod";
-import MalzemeDuzenlemeForm from "components/forms/MalzemeDuzenlemeForm";
+import TableGod from "../../components/shared/TableGod";
+import MalzemeDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeForm";
 import { useState } from "react";
 import PageHeader from "components/shared/PageHeader";
 import { FcOk } from "react-icons/fc";

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import uretimGirisleriHttp from "services/uretim-girisleri.http";
 import styled from "styled-components";
-import TableGod from "./shared/TableGod";
+import TableGod from "../../../components/shared/TableGod";
 
 const TopSectionItem = styled.div`
   flex: 1 1 400px; // Her öğe en az 200px olacak şekilde esneyebilir

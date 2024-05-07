@@ -4,12 +4,12 @@ import { useMemo, useState } from "react";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import personellerHttp from "services/personeller.http";
-import PersonelForm from "components/forms/PersonelForm";
+import PersonelForm from "pages/Tanimlamalar/Personeller/PersonelForm";
 import PageHeader from "components/shared/PageHeader";
 import { PiUsersThreeBold } from "react-icons/pi";
 import { createTableFilterFromData } from "utils/table.helper";
 import { useAuth } from "context/AuthProvider";
-import TableGod from "../components/shared/TableGod";
+import TableGod from "../../../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);

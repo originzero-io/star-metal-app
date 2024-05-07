@@ -2,7 +2,7 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 
-import MusteriForm from "components/forms/MusteriForm";
+import MusteriForm from "pages/Tanimlamalar/Musteriler/MusteriForm";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
@@ -12,7 +12,7 @@ import { RiCustomerServiceLine } from "react-icons/ri";
 import musterilerHttp from "services/musteriler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import LogoSyncButton from "components/shared/LogoSyncButton";
-import TableGod from "../components/shared/TableGod";
+import TableGod from "../../../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);

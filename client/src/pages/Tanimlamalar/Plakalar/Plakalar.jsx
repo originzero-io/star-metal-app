@@ -2,50 +2,41 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 
-import SoforForm from "components/forms/SoforForm";
+import PlakaForm from "pages/Tanimlamalar/Plakalar/PlakaForm";
 import IdBadge from "components/shared/IdBadge";
 import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { GiSteeringWheel } from "react-icons/gi";
-import soforlerHttp from "services/soforler.http";
-import TableGod from "../components/shared/TableGod";
+import { TbSquareRoundedLetterP } from "react-icons/tb";
+import plakalarHttp from "services/plakalar.http";
+import TableGod from "../../../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
-function Soforler() {
+function Plakalar() {
   const { user } = useAuth();
 
   const [selectedRows, setSelectedRows] = useState([]);
   const { showPanel, showNotification } = useUIContext();
-  const { soforler, setSoforler } = useDBContext();
+  const { plakalar, setPlakalar } = useDBContext();
 
   const columns = useMemo(
     () => [
       {
-        title: "Şoför Logo Kodu",
-        dataIndex: "soforLogoKodu",
-        key: "soforLogoKodu",
+        title: "Plaka Logo Kodu",
+        dataIndex: "plakaLogoKodu",
+        key: "plakaLogoKodu",
         render: (text) => <IdBadge value={text} />,
-        width: 150,
+        width: 120,
       },
       {
-        title: "Adı",
-        dataIndex: "ad",
-        key: "adi",
-      },
-      {
-        title: "Soyadı",
-        dataIndex: "soyad",
-        key: "soyad",
-      },
-      {
-        title: "Kimlik No",
-        dataIndex: "tc",
-        key: "tc",
+        title: "Plaka",
+        dataIndex: "plaka",
+        key: "plaka",
+        render: (text) => <div style={{ fontSize: "14px" }}>{text}</div>,
       },
     ],
     [],
@@ -67,9 +58,9 @@ function Soforler() {
       cancelText: "İptal",
       async onOk() {
         try {
-          const newSoforler = await soforlerHttp.deleteData(soforler, selectedRows);
-          setSoforler(newSoforler);
-          showNotification("success", "Seçili şoförler silindi");
+          const newPlakalar = await plakalarHttp.deleteData(plakalar, selectedRows);
+          setPlakalar(newPlakalar);
+          showNotification("success", "Seçili plakalar silindi");
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
@@ -80,14 +71,14 @@ function Soforler() {
   const deleteSingleRecordHandler = (record) => {
     Modal.confirm({
       title: "Emin misiniz?",
-      content: `${record.ad} isimli şoförü üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
+      content: `${record.plaka} plakasını silmek üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
       okText: "Tamam",
       cancelText: "İptal",
       async onOk() {
         try {
-          const newSoforler = await soforlerHttp.deleteData(soforler, [record]);
-          setSoforler(newSoforler);
-          showNotification("success", `${record.ad} isimli şoför silindi`);
+          const newPlakalar = await plakalarHttp.deleteData(plakalar, [record]);
+          setPlakalar(newPlakalar);
+          showNotification("success", `${record.plaka} plakası silindi`);
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
@@ -96,20 +87,20 @@ function Soforler() {
   };
 
   const logoSync = () => {
-    console.log("soforler: ", soforler);
+    console.log("plakalar: ", plakalar);
   };
 
   return (
     <div>
-      <PageHeader label="Şoförler" icon={<GiSteeringWheel />} />
+      <PageHeader label="Plakalar" icon={<TbSquareRoundedLetterP />} />
       <TableGod
-        dataSource={soforler}
+        dataSource={plakalar}
         columns={columns}
         onChange={onChange}
         rowSelection={user.yetki === "admin" && rowSelection}
         pagination={false}
         contextMenu={{
-          editForm: SoforForm,
+          editForm: PlakaForm,
           deleteAction: deleteSingleRecordHandler,
         }}
         actionButtons={
@@ -130,9 +121,9 @@ function Soforler() {
                   style={{ marginRight: "4px" }}
                   type="primary"
                   icon={<PlusOutlined />}
-                  onClick={() => showPanel({ title: "Şoför Ekle", content: <SoforForm /> })}
+                  onClick={() => showPanel({ title: "Plaka Ekle", content: <PlakaForm /> })}
                 >
-                  Şoför Ekle
+                  Plaka Ekle
                 </Button>
                 <LogoSyncButton onClick={logoSync} />
               </>
@@ -144,4 +135,4 @@ function Soforler() {
   );
 }
 
-export default Soforler;
+export default Plakalar;

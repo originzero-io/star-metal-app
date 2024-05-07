@@ -4,7 +4,7 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 
-export default function MalzemeDuzenlemeForm({ record }) {
+export default function AdetDuzenlemeForm({ record }) {
   const { setDevamEdenUretimler } = useDBContext();
   const { showModal, showNotification, showAlert } = useUIContext();
 

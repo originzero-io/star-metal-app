@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FormOutlined, CreditCardOutlined, PrinterOutlined } from "@ant-design/icons";
 import { getCurrentDateTime } from "utils/time.helper";
-import SevkiyatKarti from "../cards/SevkiyatKarti";
+import SevkiyatKarti from "../../../components/cards/SevkiyatKarti";
 import { useDBContext } from "context/DBProvider";
 import uretimGirisiHttp from "services/uretim-girisleri.http";
 import { useUIContext } from "context/UIProvider";

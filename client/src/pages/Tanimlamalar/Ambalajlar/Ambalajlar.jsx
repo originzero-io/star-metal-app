@@ -2,7 +2,7 @@ import { Button, Card, Modal, Tooltip } from "antd";
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { useUIContext } from "context/UIProvider";
 
-import AmbalajForm from "components/forms/AmbalajForm";
+import AmbalajForm from "pages/Tanimlamalar/Ambalajlar/AmbalajForm";
 import { useDBContext } from "context/DBProvider";
 import ambalajlarHttp from "services/ambalajlar.http";
 import styled from "styled-components";
