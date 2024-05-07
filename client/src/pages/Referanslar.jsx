@@ -1,15 +1,16 @@
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal, Tag } from "antd";
 import ReferansForm from "components/forms/ReferansForm";
+import LogoSyncButton from "components/shared/LogoSyncButton";
+import PageHeader from "components/shared/PageHeader";
+import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { MdOutlineDocumentScanner } from "react-icons/md";
 import referanslarHttp from "services/referanslar.http";
 import { createTableFilterFromData } from "utils/table.helper";
-import PageHeader from "components/shared/PageHeader";
-import { MdOutlineDocumentScanner } from "react-icons/md";
 import TableGod from "../components/shared/TableGod";
-import { useAuth } from "context/AuthProvider";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
@@ -201,6 +202,11 @@ function Referanslar() {
       },
     });
   };
+
+  const logoSync = () => {
+    console.log("referanslar: ", referanslar);
+  };
+
   return (
     <div>
       <PageHeader label="Referanslar" icon={<MdOutlineDocumentScanner />} />
@@ -227,14 +233,17 @@ function Referanslar() {
               </Button>
             )}
             {user.yetki === "admin" && (
-              <Button
-                style={{ marginRight: "4px" }}
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => showPanel({ title: "Referans Ekle", content: <ReferansForm /> })}
-              >
-                Referans Ekle
-              </Button>
+              <>
+                <Button
+                  style={{ marginRight: "4px" }}
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => showPanel({ title: "Referans Ekle", content: <ReferansForm /> })}
+                >
+                  Referans Ekle
+                </Button>
+                <LogoSyncButton onClick={logoSync} />
+              </>
             )}
           </>
         }

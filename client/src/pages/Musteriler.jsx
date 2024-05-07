@@ -11,6 +11,7 @@ import { useUIContext } from "context/UIProvider";
 import { RiCustomerServiceLine } from "react-icons/ri";
 import musterilerHttp from "services/musteriler.http";
 import { createTableFilterFromData } from "utils/table.helper";
+import LogoSyncButton from "components/shared/LogoSyncButton";
 import TableGod from "../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -136,6 +137,11 @@ function Musteriler() {
       },
     });
   };
+
+  const logoSync = () => {
+    console.log("müşteriler: ", musteriler);
+  };
+
   return (
     <div>
       <PageHeader label="Müşteriler" icon={<RiCustomerServiceLine />} />
@@ -162,14 +168,17 @@ function Musteriler() {
               </Button>
             )}
             {user.yetki === "admin" && (
-              <Button
-                style={{ marginRight: "4px" }}
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => showPanel({ title: "Müşteri Ekle", content: <MusteriForm /> })}
-              >
-                Müşteri Ekle
-              </Button>
+              <>
+                <Button
+                  style={{ marginRight: "4px" }}
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => showPanel({ title: "Müşteri Ekle", content: <MusteriForm /> })}
+                >
+                  Müşteri Ekle
+                </Button>
+                <LogoSyncButton onClick={logoSync} />
+              </>
             )}
           </>
         }

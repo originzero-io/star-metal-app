@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import SoforForm from "components/forms/SoforForm";
 import IdBadge from "components/shared/IdBadge";
+import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
@@ -93,6 +94,11 @@ function Soforler() {
       },
     });
   };
+
+  const logoSync = () => {
+    console.log("soforler: ", soforler);
+  };
+
   return (
     <div>
       <PageHeader label="Şoförler" icon={<GiSteeringWheel />} />
@@ -119,14 +125,17 @@ function Soforler() {
               </Button>
             )}
             {user.yetki === "admin" && (
-              <Button
-                style={{ marginRight: "4px" }}
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => showPanel({ title: "Şoför Ekle", content: <SoforForm /> })}
-              >
-                Şoför Ekle
-              </Button>
+              <>
+                <Button
+                  style={{ marginRight: "4px" }}
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => showPanel({ title: "Şoför Ekle", content: <SoforForm /> })}
+                >
+                  Şoför Ekle
+                </Button>
+                <LogoSyncButton onClick={logoSync} />
+              </>
             )}
           </>
         }

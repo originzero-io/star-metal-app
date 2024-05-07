@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import PlakaForm from "components/forms/PlakaForm";
 import IdBadge from "components/shared/IdBadge";
+import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
@@ -83,6 +84,11 @@ function Plakalar() {
       },
     });
   };
+
+  const logoSync = () => {
+    console.log("plakalar: ", plakalar);
+  };
+
   return (
     <div>
       <PageHeader label="Plakalar" icon={<TbSquareRoundedLetterP />} />
@@ -109,14 +115,17 @@ function Plakalar() {
               </Button>
             )}
             {user.yetki === "admin" && (
-              <Button
-                style={{ marginRight: "4px" }}
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => showPanel({ title: "Plaka Ekle", content: <PlakaForm /> })}
-              >
-                Plaka Ekle
-              </Button>
+              <>
+                <Button
+                  style={{ marginRight: "4px" }}
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => showPanel({ title: "Plaka Ekle", content: <PlakaForm /> })}
+                >
+                  Plaka Ekle
+                </Button>
+                <LogoSyncButton onClick={logoSync} />
+              </>
             )}
           </>
         }
