@@ -10,8 +10,19 @@ class DevamEdenUretim extends CRUDServerHttp {
     super("/uretim/devam-eden", "id");
   }
 
-  async updateData(currentRecord, newData) {
-    const { data } = await axios.put(this.endPoint, { currentRecord, newData });
+  async gelenMalzemeMiktariGuncelle(currentRecord, newData) {
+    const { data } = await axios.put(`${this.endPoint}/gelen-malzeme-miktari`, {
+      currentRecord,
+      newData,
+    });
+    return data;
+  }
+
+  async talepNoGir(currentRecord, newData) {
+    const { data } = await axios.put(`${this.endPoint}/talepNo`, {
+      currentRecord,
+      newData,
+    });
     return data;
   }
 }

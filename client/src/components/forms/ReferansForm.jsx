@@ -256,13 +256,6 @@ export default function ReferansForm({ record, type }) {
                 }}
               >
                 <div>Talepli</div>
-                {siparisTipi === "Talepli" && (
-                  <>
-                    <Form.Item name="talepNo" style={{ width: 200, marginLeft: "3%" }}>
-                      <Input title="Talep No" placeholder="Talep No Girin" />
-                    </Form.Item>
-                  </>
-                )}
               </div>
             </Radio>
           </Space>

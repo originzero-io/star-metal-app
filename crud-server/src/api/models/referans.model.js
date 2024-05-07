@@ -33,10 +33,6 @@ const Referans = sequelize.define(
       type: DataTypes.STRING(10),
       allowNull: true,
     },
-    talepNo: {
-      type: DataTypes.STRING(10),
-      allowNull: true,
-    },
     fason: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

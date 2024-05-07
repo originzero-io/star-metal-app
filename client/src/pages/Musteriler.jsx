@@ -144,6 +144,7 @@ function Musteriler() {
         columns={columns}
         onChange={onChange}
         rowSelection={user.yetki === "admin" && rowSelection}
+        pagination={false}
         contextMenu={{
           editForm: MusteriForm,
           deleteAction: deleteSingleRecordHandler,

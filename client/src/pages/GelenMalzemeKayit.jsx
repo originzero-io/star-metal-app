@@ -79,6 +79,7 @@ export default function GelenMalzemeKayit() {
   const [form] = Form.useForm();
 
   const [seciliReferansFasonluk, setSeciliReferansFasonluk] = useState({});
+  const [seciliReferansSiparisTipi, setSeciliReferansSiparisTipi] = useState({});
 
   const [printRecord, setPrintRecord] = useState({});
   const [printTrigger, setPrintTrigger] = useState(false);
@@ -111,6 +112,12 @@ export default function GelenMalzemeKayit() {
 
     // bu referans no'lu kayıdın fasonluk bilgisini tut (true/false)
     setSeciliReferansFasonluk({ ...seciliReferansFasonluk, [name]: selectedReference.fason });
+
+    // bu referans no'lu kayıdın sipariş tipi bilgisini tut (Seri/Talepli)
+    setSeciliReferansSiparisTipi({
+      ...seciliReferansSiparisTipi,
+      [name]: selectedReference.siparisTipi,
+    });
 
     form.setFieldsValue({
       malzemeler: {
@@ -160,7 +167,8 @@ export default function GelenMalzemeKayit() {
       getirenSofor,
       personel,
       referansNo: malzeme.referansNo,
-      iade: malzeme.iade,
+      iade: malzeme.iade, // ? bu true false da yapılabilir
+      talepNo: malzeme.talepNo,
       birinciAmbalaj: malzeme.birinciAmbalaj,
       ikinciAmbalaj: malzeme.ikinciAmbalaj,
       fason: malzeme.fason === "Fason", // true or false
@@ -273,6 +281,12 @@ export default function GelenMalzemeKayit() {
                       </Select>
                     </Form.Item>
 
+                    {seciliReferansSiparisTipi[name] === "Talepli" && (
+                      <Form.Item {...restField} name={[name, "talepNo"]} style={{ width: "120px" }}>
+                        <Input placeholder="Talep no" />
+                      </Form.Item>
+                    )}
+
                     <Form.Item {...restField} name={[name, "gelenMiktar"]} rules={rules}>
                       <InputNumber placeholder="Gelen Miktar" min={0} style={{ width: "140px" }} />
                     </Form.Item>
@@ -339,27 +353,6 @@ export default function GelenMalzemeKayit() {
                           </Button>
                         </Form.Item>
                       )}
-                      {/* {seciliReferansFasonluk[name] ? (
-                        <Form.Item {...restField}>
-                          <Button
-                            type="primary"
-                            disabled={!kayitDurumu}
-                            onClick={() => fasonaIrsaliyeKes(name)}
-                          >
-                            Fasona İrsaliye Kes
-                          </Button>
-                        </Form.Item>
-                      ) : (
-                        <Form.Item {...restField}>
-                          <Button
-                            type="primary"
-                            disabled={!kayitDurumu}
-                            onClick={() => isEmriYazdir(name)}
-                          >
-                            İş Emri Yazdır
-                          </Button>
-                        </Form.Item>
-                      )} */}
                     </Tooltip>
                     <FaMinusCircle onClick={() => satiriSil(name, remove)} />
                   </Space>

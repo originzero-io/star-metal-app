@@ -16,6 +16,7 @@ import irsaliyeHttp from "services/irsaliyeler.http";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 import { fasonFirmasiKontrol, fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
+import TalepNoGiris from "components/forms/TalepNoGiris";
 import TableGod from "../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -196,17 +197,14 @@ function NormalUretimlerTablo({ data }) {
       title: "Talep No",
       dataIndex: "talepNo",
       key: "talepNo",
-      render: (text, record) => record.Referanslar?.talepNo,
       filters: [
-        ...new Set(
-          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.talepNo || "Boş"),
-        ),
+        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.talepNo || "Boş")),
       ].map((talepNo) => ({
         text: talepNo,
         value: talepNo,
       })),
       onFilter: (value, record) => {
-        const talepNo = record.Referanslar?.talepNo || "Boş";
+        const talepNo = record.talepNo || "Boş";
         return talepNo.indexOf(value) === 0;
       },
     },
@@ -358,6 +356,15 @@ function NormalUretimlerTablo({ data }) {
                       title: "Üretim İş Emri Kartı",
                       content: <UretimIsEmriKarti record={record} />,
                       width: 800,
+                    }),
+                },
+                {
+                  title: "Talep No Gir",
+                  action: (record) =>
+                    showModal({
+                      title: "Talep No Girişi",
+                      content: <TalepNoGiris record={record} />,
+                      width: 400,
                     }),
                 },
                 user.yetki === "admin" && {
@@ -530,17 +537,14 @@ function FasonUretimlerTablo({ data }) {
       title: "Talep No",
       dataIndex: "talepNo",
       key: "talepNo",
-      render: (text, record) => record.Referanslar?.talepNo,
       filters: [
-        ...new Set(
-          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.talepNo || "Boş"),
-        ),
+        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.talepNo || "Boş")),
       ].map((talepNo) => ({
         text: talepNo,
         value: talepNo,
       })),
       onFilter: (value, record) => {
-        const talepNo = record.Referanslar?.talepNo || "Boş";
+        const talepNo = record.talepNo || "Boş";
         return talepNo.indexOf(value) === 0;
       },
     },
@@ -767,6 +771,15 @@ function FasonUretimlerTablo({ data }) {
                       title: "Üretim İş Emri Kartı",
                       content: <UretimIsEmriKarti record={record} />,
                       width: 800,
+                    }),
+                },
+                {
+                  title: "Talep No Gir",
+                  action: (record) =>
+                    showModal({
+                      title: "Talep No Girişi",
+                      content: <TalepNoGiris record={record} />,
+                      width: 400,
                     }),
                 },
                 user.yetki === "admin" && {

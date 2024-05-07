@@ -56,37 +56,14 @@ router.post("/devam-eden", async (req, res) => {
   const createPromises = malzemeler.map(async (malzeme) => {
     if (malzeme.fason) {
       const fasonUretimler = await FasonUretim.create({
-        irsaliyeNo: malzeme.irsaliyeNo,
-        getirenSofor: malzeme.getirenSofor,
-        personel: malzeme.personel,
-        fasonFirmasi: malzeme.fasonFirmasi,
-        referansNo: malzeme.referansNo,
-        iade: malzeme.iade,
-        gelenTarih: malzeme.gelenTarih,
-        birinciAmbalaj: malzeme.birinciAmbalaj,
-        ikinciAmbalaj: malzeme.ikinciAmbalaj,
-        gelenMiktar: malzeme.gelenMiktar,
-        gidenMiktar: malzeme.gidenMiktar,
-        uretilenMiktar: malzeme.uretilenMiktar,
+        ...malzeme,
         sevkEdilenMiktar: malzeme.gidenMiktar,
       });
       newMalzemeler.fasonUretimler.push(fasonUretimler);
       return fasonUretimler;
     } else {
       const normalUretimler = await NormalUretim.create({
-        irsaliyeNo: malzeme.irsaliyeNo,
-        getirenSofor: malzeme.getirenSofor,
-        personel: malzeme.personel,
-        referansNo: malzeme.referansNo,
-        iade: malzeme.iade, // ? bu true false da yapılabilir
-        gelenTarih: malzeme.gelenTarih,
-        birinciAmbalaj: malzeme.birinciAmbalaj,
-        ikinciAmbalaj: malzeme.ikinciAmbalaj,
-        gelenMiktar: malzeme.gelenMiktar,
-        gidenMiktar: malzeme.gidenMiktar,
-        kalanMiktar: malzeme.kalanMiktar,
-        uretilenMiktar: malzeme.uretilenMiktar,
-        uretilmeyenMiktar: malzeme.uretilmeyenMiktar,
+        ...malzeme,
       });
       newMalzemeler.normalUretimler.push(normalUretimler);
       return normalUretimler;
@@ -97,7 +74,7 @@ router.post("/devam-eden", async (req, res) => {
   res.json(newMalzemeler);
 });
 
-router.put("/devam-eden", async (req, res) => {
+router.put("/devam-eden/gelen-malzeme-miktari", async (req, res) => {
   try {
     const { currentRecord, newData } = req.body;
     let uretim;
@@ -113,6 +90,36 @@ router.put("/devam-eden", async (req, res) => {
         gelenMiktar: newData.gelenMiktar,
         kalanMiktar: newData.gelenMiktar - uretim.gidenMiktar,
         uretilmeyenMiktar: newData.gelenMiktar - uretim.uretilenMiktar,
+      });
+    }
+    console.log("uretim", uretim);
+
+    // newData, mevcut değerle aynı gelirse update hook u çalışmıyor. Bu durumun önüne geçmek için modeli reload yapıyoruz.
+    await uretim.reload({ include: [{ model: Referans, as: "Referanslar" }] });
+
+    res.json(uretim); // güncellenen ilk değer
+  } catch (error) {
+    res.status(500).json({
+      name: error.name,
+      fields: error.fields,
+      message: error.message,
+    });
+  }
+});
+
+router.put("/devam-eden/talepNo", async (req, res) => {
+  try {
+    const { currentRecord, newData } = req.body;
+    let uretim;
+    if (currentRecord.Referanslar.fason) {
+      uretim = await FasonUretim.findByPk(currentRecord.id);
+      await uretim.update({
+        talepNo: newData.talepNo,
+      });
+    } else {
+      uretim = await NormalUretim.findByPk(currentRecord.id);
+      await uretim.update({
+        talepNo: newData.talepNo,
       });
     }
     console.log("uretim", uretim);

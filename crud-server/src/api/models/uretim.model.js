@@ -25,6 +25,10 @@ export const NormalUretim = sequelize.define(
       type: DataTypes.STRING(5), // EVET / HAYIR
       allowNull: false,
     },
+    talepNo: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
+    },
     gelenTarih: {
       type: DataTypes.STRING(50),
       allowNull: false,
@@ -71,7 +75,6 @@ NormalUretim.afterCreate(async (instance, options) => {
   await instance.reload({ include: [{ model: Referans, as: "Referanslar" }] });
 });
 NormalUretim.afterUpdate(async (instance, options) => {
-  console.log("after updateee");
   await instance.reload({ include: [{ model: Referans, as: "Referanslar" }] });
 });
 
@@ -97,6 +100,10 @@ export const FasonUretim = sequelize.define(
     iade: {
       type: DataTypes.STRING(5), // EVET / HAYIR
       allowNull: false,
+    },
+    talepNo: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
     },
     gelenTarih: {
       type: DataTypes.STRING(50),

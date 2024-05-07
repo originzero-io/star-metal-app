@@ -174,10 +174,10 @@ export default function UretimSevkiyatHareketleri({ record }) {
                 <TopSectionItemName>Sipariş No:</TopSectionItemName>
                 <TopSectionItemValue>{record.Referanslar.siparisNo}</TopSectionItemValue>
               </TopSectionItem>
-            ) : record.Referanslar.talepNo ? (
+            ) : record.talepNo ? (
               <TopSectionItem>
                 <TopSectionItemName>Talep No:</TopSectionItemName>
-                <TopSectionItemValue>{record.Referanslar.talepNo}</TopSectionItemValue>
+                <TopSectionItemValue>{record.talepNo}</TopSectionItemValue>
               </TopSectionItem>
             ) : (
               <TopSectionItem>

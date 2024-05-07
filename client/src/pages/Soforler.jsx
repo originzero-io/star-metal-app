@@ -101,6 +101,7 @@ function Soforler() {
         columns={columns}
         onChange={onChange}
         rowSelection={user.yetki === "admin" && rowSelection}
+        pagination={false}
         contextMenu={{
           editForm: SoforForm,
           deleteAction: deleteSingleRecordHandler,

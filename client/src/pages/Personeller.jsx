@@ -118,6 +118,7 @@ function Personeller() {
         columns={columns}
         onChange={onChange}
         rowSelection={user.yetki === "admin" && rowSelection}
+        pagination={false}
         contextMenu={
           user.yetki === "admin" && {
             editForm: PersonelForm,

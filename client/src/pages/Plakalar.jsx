@@ -91,6 +91,7 @@ function Plakalar() {
         columns={columns}
         onChange={onChange}
         rowSelection={user.yetki === "admin" && rowSelection}
+        pagination={false}
         contextMenu={{
           editForm: PlakaForm,
           deleteAction: deleteSingleRecordHandler,

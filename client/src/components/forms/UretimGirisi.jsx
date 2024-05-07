@@ -111,7 +111,7 @@ export default function UretimGirisi({ record }) {
       referansNo: record.referansNo,
       uretimSiraNo: record.id,
       siparisNo: record.Referanslar.siparisNo,
-      talepNo: record.Referanslar.talepNo,
+      talepNo: record.talepNo,
       // irsaliyeNo: record.irsaliyeNo,
       iade: record.iade,
       uretimTarihi: getCurrentDateTime(),
@@ -234,7 +234,7 @@ export default function UretimGirisi({ record }) {
                 </Form.Item>
               ) : (
                 <Form.Item label="Talep No">
-                  <div>{record.Referanslar.talepNo}</div>
+                  <div>{record.talepNo}</div>
                 </Form.Item>
               )}
               <Form.Item label="İrsaliye No">

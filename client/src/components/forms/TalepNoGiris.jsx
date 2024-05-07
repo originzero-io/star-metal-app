@@ -1,15 +1,15 @@
 /* eslint-disable no-lonely-if */
-import { Button, Form, InputNumber } from "antd";
+import { Button, Form, Input } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 
-export default function MalzemeDuzenlemeForm({ record }) {
+export default function TalepNoGiris({ record }) {
   const { setDevamEdenUretimler } = useDBContext();
   const { showModal, showNotification, showAlert } = useUIContext();
 
-  const adediDegistir = async (values) => {
-    const updatedUretim = await devamEdenUretimHttp.gelenMalzemeMiktariGuncelle(record, values);
+  const onFinish = async (values) => {
+    const updatedUretim = await devamEdenUretimHttp.talepNoGir(record, values);
 
     setDevamEdenUretimler((prevState) => {
       if (updatedUretim.Referanslar.fason) {
@@ -37,39 +37,8 @@ export default function MalzemeDuzenlemeForm({ record }) {
     showModal(false);
     showNotification(
       "success",
-      `${record.referansNo} referans numaralı kaydın gelen malzeme miktarı ${values.gelenMiktar} olarak değiştirildi`,
+      `${record.id} numaralı üretimin talep numarası ${values.talepNo} olarak kaydedildi.`,
     );
-  };
-
-  const onFinish = async (values) => {
-    // console.log("Values:", values);
-    try {
-      if (record.Referanslar.fason) {
-        if (values.gelenMiktar >= record.uretilenMiktar) {
-          await adediDegistir(values);
-        } else {
-          showAlert(
-            "warning",
-            `Yeni gelen malzeme miktar değeri, üretilen miktardan az olamaz. Üretilen miktar: ${record.uretilenMiktar}`,
-          );
-        }
-      } else if (!record.Referanslar.fason) {
-        if (
-          values.gelenMiktar >= record.uretilenMiktar &&
-          values.gelenMiktar >= record.gidenMiktar
-        ) {
-          await adediDegistir(values);
-        } else {
-          showAlert(
-            "warning",
-            `Yeni gelen malzeme miktar değeri, üretilen miktardan ve giden miktardan az olamaz. Üretilen miktar: ${record.uretilenMiktar} Giden Miktar: ${record.gidenMiktar}`,
-          );
-        }
-      }
-    } catch (error) {
-      console.log("error", error);
-      showNotification("error", error.response.data.message);
-    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -82,7 +51,7 @@ export default function MalzemeDuzenlemeForm({ record }) {
       // labelCol={{ flex: "150px" }}
       labelAlign="left"
       key={record ? record.id : "form"}
-      initialValues={{ gelenMiktar: record.gelenMiktar }}
+      initialValues={{ talepNo: record.talepNo }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -100,7 +69,7 @@ export default function MalzemeDuzenlemeForm({ record }) {
         <div>Müşteri: {record.Referanslar.musteriAdi}</div>
       </div>
       <Form.Item
-        name="gelenMiktar"
+        name="talepNo"
         rules={[
           {
             required: true,
@@ -108,7 +77,7 @@ export default function MalzemeDuzenlemeForm({ record }) {
           },
         ]}
       >
-        <InputNumber placeholder="Gelen malzeme miktarı" style={{ width: "100%" }} />
+        <Input placeholder="Talep no giriniz" style={{ width: "100%" }} />
       </Form.Item>
 
       <Form.Item style={{ marginTop: "20px" }}>
