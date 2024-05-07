@@ -143,11 +143,8 @@ function NormalUretimlerTablo({ data }) {
       })),
       onFilter: (value, record) => record.Referanslar?.cikisReferansNo.indexOf(value) === 0,
       filterSearch: true,
-      render: (text, record) => (
-        <Tag color="orange" style={{ fontSize: "14px" }}>
-          {record?.Referanslar?.cikisReferansNo}
-        </Tag>
-      ),
+      render: (text, record) => record.Referanslar.cikisReferansNo,
+
       width: 120,
     },
     {
@@ -155,7 +152,7 @@ function NormalUretimlerTablo({ data }) {
       dataIndex: "iade",
       key: "iade",
       render: (text) =>
-        text === "Evet" ? <Tag color="volcano">{text}</Tag> : <Tag color="purple">{text}</Tag>,
+        text === "Evet" ? <Tag color="green">{text}</Tag> : <Tag color="red">{text}</Tag>,
       filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "iade"),
       onFilter: (value, record) => record.iade.indexOf(value) === 0,
       filterSearch: true,
@@ -164,7 +161,12 @@ function NormalUretimlerTablo({ data }) {
       title: "Sipariş Tipi",
       dataIndex: "siparisTipi",
       key: "siparisTipi",
-      render: (text, record) => record.Referanslar.siparisTipi,
+      render: (text, record) =>
+        record.Referanslar.siparisTipi === "Seri" ? (
+          <Tag color="volcano">{record.Referanslar.siparisTipi}</Tag>
+        ) : (
+          <Tag color="purple">{record.Referanslar.siparisTipi}</Tag>
+        ),
       filters: [
         ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisTipi)),
       ].map((siparisTipi) => ({
@@ -260,7 +262,7 @@ function NormalUretimlerTablo({ data }) {
     {
       title: "İşlem Tipi",
       // dataIndex: "referansTipi",
-      render: (text, record) => record.Referanslar?.islemTipi,
+      render: (text, record) => <Tag color="blue">{record.Referanslar?.islemTipi}</Tag>,
       key: "islemTipi",
       filters: [
         ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.islemTipi)),
@@ -483,19 +485,15 @@ function FasonUretimlerTablo({ data }) {
       })),
       onFilter: (value, record) => record.Referanslar?.cikisReferansNo.indexOf(value) === 0,
       filterSearch: true,
-      render: (text, record) => (
-        <Tag color="orange" style={{ fontSize: "14px" }}>
-          {record.Referanslar.cikisReferansNo}
-        </Tag>
-      ),
+      render: (text, record) => record.Referanslar.cikisReferansNo,
       width: 120,
     },
     {
       title: "İade",
       dataIndex: "iade",
       key: "iade",
-      render: (text, record) =>
-        text === "Evet" ? <Tag color="volcano">{text}</Tag> : <Tag color="purple">{text}</Tag>,
+      render: (text) =>
+        text === "Evet" ? <Tag color="green">{text}</Tag> : <Tag color="red">{text}</Tag>,
       filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "iade"),
       onFilter: (value, record) => record.iade.indexOf(value) === 0,
       filterSearch: true,
@@ -504,7 +502,12 @@ function FasonUretimlerTablo({ data }) {
       title: "Sipariş Tipi",
       dataIndex: "siparisTipi",
       key: "siparisTipi",
-      render: (text, record) => record.Referanslar.siparisTipi,
+      render: (text, record) =>
+        record.Referanslar.siparisTipi === "Seri" ? (
+          <Tag color="volcano">{record.Referanslar.siparisTipi}</Tag>
+        ) : (
+          <Tag color="purple">{record.Referanslar.siparisTipi}</Tag>
+        ),
       filters: [
         ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisTipi)),
       ].map((siparisTipi) => ({
@@ -606,7 +609,7 @@ function FasonUretimlerTablo({ data }) {
     {
       title: "İşlem Tipi",
       // dataIndex: "referansTipi",
-      render: (text, record) => record.Referanslar?.islemTipi,
+      render: (text, record) => <Tag color="blue">{record.Referanslar?.islemTipi}</Tag>,
       key: "islemTipi",
       filters: [
         ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.islemTipi)),

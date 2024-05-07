@@ -106,7 +106,7 @@ export default function SevkEdilecekler() {
       title: "Referans No",
       dataIndex: "referansNo",
       key: "referansNo",
-      render: (text) => <Tag color="blue">{text}</Tag>,
+      render: (text) => <Tag color="orange">{text}</Tag>,
       filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "referansNo"),
       onFilter: (value, _record) => _record.referansNo.indexOf(value) === 0,
       filterSearch: true,
@@ -123,7 +123,8 @@ export default function SevkEdilecekler() {
       title: "İade",
       dataIndex: "iade",
       key: "iade",
-      render: (text) => text,
+      render: (text) =>
+        text === "Evet" ? <Tag color="green">{text}</Tag> : <Tag color="red">{text}</Tag>,
       width: 100,
     },
 

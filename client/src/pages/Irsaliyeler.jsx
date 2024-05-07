@@ -57,7 +57,7 @@ export default function Irsaliyeler() {
         dataIndex: "referansNo",
         key: "referansNo",
         render: (text) => (
-          <Tag color="blue" style={{ fontSize: "14px" }}>
+          <Tag color="orange" style={{ fontSize: "14px" }}>
             {text}
           </Tag>
         ),
@@ -67,7 +67,8 @@ export default function Irsaliyeler() {
         title: "İade",
         dataIndex: "iade",
         key: "iade",
-        // width: 100,
+        render: (text) =>
+          text === "Evet" ? <Tag color="green">{text}</Tag> : <Tag color="red">{text}</Tag>,
       },
       {
         title: "Sipariş No",

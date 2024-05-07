@@ -32,6 +32,11 @@ function Referanslar() {
         filters: createTableFilterFromData(referanslar, "referansNo"),
         onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
         filterSearch: true,
+        render: (text) => (
+          <Tag color="orange" style={{ fontSize: "14px" }}>
+            {text}
+          </Tag>
+        ),
       },
       {
         title: "Parça Adı",
@@ -84,22 +89,11 @@ function Referanslar() {
         filterSearch: true,
       },
       {
-        title: "Talep No",
-        dataIndex: "talepNo",
-        key: "talepNo",
-        filters: createTableFilterFromData(referanslar, "talepNo"),
-        onFilter: (value, record) => {
-          const talepNo = record.talepNo ?? "Boş";
-          return talepNo.indexOf(value) === 0;
-        },
-        filterSearch: true,
-      },
-      {
         title: "Fason",
         dataIndex: "fason",
         key: "fason",
         render: (text, record) =>
-          record.fason ? <Tag color="green">Evet</Tag> : <Tag color="orange">Hayır</Tag>,
+          record.fason ? <Tag color="green">Evet</Tag> : <Tag color="red">Hayır</Tag>,
         filters: [
           { text: "Evet", value: "true" },
           { text: "Hayır", value: "false" },
@@ -141,6 +135,7 @@ function Referanslar() {
         title: "İşlem Tipi",
         dataIndex: "islemTipi",
         key: "islemTipi",
+        render: (text, record) => <Tag color="blue">{record.islemTipi}</Tag>,
         filters: createTableFilterFromData(referanslar, "islemTipi"),
         onFilter: (value, record) => record.islemTipi.indexOf(value) === 0,
         filterSearch: true,
