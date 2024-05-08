@@ -377,7 +377,7 @@ export default function FasonUretimlerTablo({ data }) {
                       width: 800,
                     }),
                 },
-                {
+                user.yetki === "admin" && {
                   title: "Talep No Gir",
                   action: (record) =>
                     showModal({

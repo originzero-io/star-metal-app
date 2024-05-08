@@ -225,7 +225,7 @@ export default function Irsaliyeler() {
                       // background: "red",
                       background: "rgba(255, 255, 255, 0.4)",
                     },
-                    extra: <LogoyaGonderButton type="sevk" kayitlar={kayitlar} />,
+                    extra: <IrsaliyeKesButon type="sevk" kayitlar={kayitlar} />,
                   }))
                 }
               />
@@ -307,7 +307,7 @@ export default function Irsaliyeler() {
                       // background: "red",
                       background: "rgba(255, 255, 255, 0.4)",
                     },
-                    extra: <LogoyaGonderButton type="tasima" kayitlar={kayitlar} />,
+                    extra: <IrsaliyeKesButon type="tasima" kayitlar={kayitlar} />,
                   }))
                 }
               />
@@ -333,7 +333,7 @@ function IrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
   );
 }
 
-function LogoyaGonderButton({ type, kayitlar }) {
+function IrsaliyeKesButon({ type, kayitlar }) {
   const { personeller, soforler, plakalar, irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } =
     useDBContext();
   const { showNotification } = useUIContext();
@@ -376,13 +376,13 @@ function LogoyaGonderButton({ type, kayitlar }) {
 
   return (
     <Button
-      style={{ marginRight: "4px" }}
+      style={{ marginRight: "4px", background: "#08bf8e", color: "white" }}
       type="primary"
       danger={type === "sevk"}
       icon={<CloudUploadOutlined />}
       onClick={showModal}
     >
-      Logoya Gönder
+      e-İrsaliye Kes
       <Modal
         title="Bilgileri Doldurun"
         open={isModalVisible}
@@ -456,8 +456,14 @@ function LogoyaGonderButton({ type, kayitlar }) {
 
           <Divider />
 
-          <Button type="primary" htmlType="submit" block icon={<CloudUploadOutlined />}>
-            Logoya Gönder
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            icon={<CloudUploadOutlined />}
+            style={{ background: "#08bf8e", color: "white" }}
+          >
+            e-İrsaliye Kes
           </Button>
         </Form>
       </Modal>
