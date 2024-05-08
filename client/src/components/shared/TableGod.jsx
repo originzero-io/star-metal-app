@@ -93,18 +93,10 @@ export default function TableGod({
           contextMenu={contextMenu}
         />
       )}
-      {/* {contextMenu?.editForm && selectedRecord && (
-        <RecordContextMenu
-          position={contextMenuPosition}
-          record={selectedRecord}
-          contextMenu={contextMenu}
-        />
-      )} */}
       <div ref={componentRef}>
         <Table
           dataSource={dataSource}
           columns={columns}
-          // columns={newColumns}
           rowKey={(record) => record.id}
           size="small"
           onChange={onChange && onChange}
@@ -200,12 +192,7 @@ TableGod.propTypes = {
   contextMenu: PropTypes.shape({
     editForm: PropTypes.elementType,
     deleteAction: PropTypes.func,
-    extraItems: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-        action: PropTypes.func.isRequired,
-      }),
-    ), // extraItems, belirli bir şekle sahip nesnelerin bir dizisi
+    extraItems: PropTypes.func,
   }),
   wrapperStyle: PropTypes.object,
   rowStyle: PropTypes.func,

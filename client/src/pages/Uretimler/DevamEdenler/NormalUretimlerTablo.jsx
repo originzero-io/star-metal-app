@@ -259,10 +259,10 @@ export default function NormalUretimlerTablo({ data }) {
             rowSelection={createRowSelection(musteriAdi)}
             contextMenu={{
               // editForm: MiktarDuzenlemeForm,
-              extraItems: [
+              extraItems: (record) => [
                 {
                   title: "Üretim / Sevkiyat Hareketleri",
-                  action: (record) =>
+                  action: () =>
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
                       content: <UretimSevkiyatHareketleri record={record} />,
@@ -271,25 +271,27 @@ export default function NormalUretimlerTablo({ data }) {
                 },
                 {
                   title: "Üretim İş Emri Kartı Çıkart",
-                  action: (record) =>
+                  action: () =>
                     showPanel({
                       title: "Üretim İş Emri Kartı",
                       content: <UretimIsEmriKarti record={record} />,
                       width: 800,
                     }),
                 },
-                user.yetki === "admin" && {
-                  title: "Talep No Gir",
-                  action: (record) =>
-                    showModal({
-                      title: "Talep No Girişi",
-                      content: <TalepNoGiris record={record} />,
-                      width: 400,
-                    }),
-                },
+                user.yetki === "admin" &&
+                  record.Referanslar.siparisTipi === "Talepli" && {
+                    title: "Talep No Gir",
+                    action: () => {
+                      showModal({
+                        title: "Talep No Girişi",
+                        content: <TalepNoGiris record={record} />,
+                        width: 400,
+                      });
+                    },
+                  },
                 user.yetki === "admin" && {
                   title: "Gelen Malzeme Miktarını Değiştir",
-                  action: (record) =>
+                  action: () =>
                     showModal({
                       title: "Gelen Malzeme Miktarını Düzenle",
                       content: <MiktarDuzenlemeForm record={record} />,
