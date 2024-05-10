@@ -1,8 +1,8 @@
 import { getCurrentDateTime } from "./time.helper";
 
 /* eslint-disable import/prefer-default-export */
-export const fasonaIrsaliyeKaydiOlustur = (kayitlar = []) => {
-  const irsaliyeKaydi = kayitlar.map((kayit) => ({
+export const fasonaIrsaliyeKaydiOlustur = (kayit) => {
+  const irsaliyeKaydi = {
     ...kayit,
     tip: "tasima",
     siparisNo: kayit.Referanslar.siparisNo,
@@ -12,7 +12,7 @@ export const fasonaIrsaliyeKaydiOlustur = (kayitlar = []) => {
     uretimSiraNo: kayit.id,
     uretimGirisiIdleri: kayit.id,
     fasona: true,
-  }));
+  };
   return irsaliyeKaydi;
 };
 

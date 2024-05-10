@@ -59,7 +59,7 @@ export default function RecordContextMenu({ position, record, contextMenu }) {
             .filter(Boolean) // şarta uymayan boş alanlar gösterilmesin
             .map((item, i) => (
               <MenuItemStyled key={i} onClick={item.action}>
-                <span>{item.icon}</span>
+                <span style={{ fontSize: "16px" }}>{item.icon}</span>
                 <span style={{ marginLeft: "6px" }}>{item.title}</span>
               </MenuItemStyled>
             ))}
@@ -69,7 +69,7 @@ export default function RecordContextMenu({ position, record, contextMenu }) {
             <span>
               <EditOutlined />
             </span>
-            <span style={{ marginLeft: "6px" }}>Düzenle</span>
+            <span style={{ marginLeft: "6px", fontSize: "16px" }}>Düzenle</span>
           </MenuItemStyled>
         )}
 
@@ -79,7 +79,7 @@ export default function RecordContextMenu({ position, record, contextMenu }) {
             style={{ color: "red" }}
             remove
           >
-            <span>
+            <span style={{ fontSize: "16px" }}>
               <DeleteOutlined />
             </span>
             <span style={{ marginLeft: "6px" }}>Sil</span>

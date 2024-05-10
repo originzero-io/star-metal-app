@@ -2,12 +2,11 @@ import {
   CarOutlined,
   CaretRightOutlined,
   ContainerOutlined,
-  DeleteOutlined,
   EditOutlined,
   PrinterOutlined,
+  SnippetsOutlined,
 } from "@ant-design/icons";
-import { Badge, Button, Collapse, Modal, Tag } from "antd";
-import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
+import { Badge, Collapse, Modal, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import IdBadge from "components/shared/IdBadge";
 import TableGod from "components/shared/TableGod";
@@ -17,10 +16,11 @@ import { useUIContext } from "context/UIProvider";
 import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeForm";
 import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
+import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
 import { useEffect, useState } from "react";
 import irsaliyeHttp from "services/irsaliyeler.http";
 import { devamEdenUretimHttp } from "services/uretimler.http";
-import { fasonFirmasiKontrol, fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
+import { fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
 
 const subCollapseItemStyle = {
@@ -32,8 +32,6 @@ const subCollapseItemStyle = {
 export default function FasonUretimlerTablo({ data }) {
   const { user } = useAuth();
 
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [secilmisIrsaliyeler, setSecilmisIrsaliyeler] = useState([]);
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
   const { showPanel, showNotification, showAlert, showModal } = useUIContext();
 
@@ -246,18 +244,6 @@ export default function FasonUretimlerTablo({ data }) {
     setMusteriBazliKayitlar(musteriBazli);
   }, [data]);
 
-  const createRowSelection = (musteriAdi) => ({
-    type: "checkbox",
-    onChange: (_selectedRowKeys, _selectedRows) => {
-      console.log(`selectedRowKeys: ${_selectedRowKeys}`, "selectedRows: ", _selectedRows);
-      const irsaliyesiKesilmemisOlanlar = _selectedRows.filter(
-        (row) => row.gelenMiktar !== row.gidenMiktar,
-      );
-      setSelectedRows({ ...selectedRows, [musteriAdi]: _selectedRows });
-      setSecilmisIrsaliyeler({ ...secilmisIrsaliyeler, [musteriAdi]: irsaliyesiKesilmemisOlanlar });
-    },
-  });
-
   const fasonUretimSil = () => {
     Modal.confirm({
       title: "Emin misiniz?",
@@ -274,68 +260,59 @@ export default function FasonUretimlerTablo({ data }) {
     });
   };
 
-  const fasonaIrsaliyeKes = async (musteriAdi) => {
-    const { fasonFirmasi: seciliFasonFirmasi } = selectedRows[musteriAdi][0].Referanslar;
-    if (fasonFirmasiKontrol(selectedRows[musteriAdi])) {
-      Modal.confirm({
-        title: "Emin misiniz?",
-        content: `Seçtiğiniz kayıtlar ${seciliFasonFirmasi} firmasına taşıma irsaliyesi kesmek için kaydedilecek. Onaylıyor musunuz?`,
-        okText: "Tamam",
-        cancelText: "İptal",
-        async onOk() {
-          try {
-            const limit = 5;
+  const fasonaIrsaliyeKes = async (record) => {
+    const { fasonFirmasi: seciliFasonFirmasi } = record.Referanslar;
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content: `Seçtiğiniz ${record.referansNo} referans numaralı kayıt ${seciliFasonFirmasi} firmasına taşıma irsaliyesi kesmek için kaydedilecek. Onaylıyor musunuz?`,
+      okText: "Tamam",
+      cancelText: "İptal",
+      async onOk() {
+        try {
+          const limit = 4;
 
-            const irsaliyeKaydi = fasonaIrsaliyeKaydiOlustur(secilmisIrsaliyeler[musteriAdi]);
+          const irsaliyeKaydi = fasonaIrsaliyeKaydiOlustur(record);
 
-            console.log("irsaliye kaydı: ", irsaliyeKaydi);
+          console.log("irsaliye kaydı: ", irsaliyeKaydi);
 
-            const { fasonFirmasi } = irsaliyeKaydi[0].Referanslar;
+          const { fasonFirmasi } = irsaliyeKaydi.Referanslar;
 
-            const fasonFirmasindakiMevcutIrsaliyeler = irsaliyeler.filter(
-              (irsaliye) => irsaliye.Referanslar.fasonFirmasi === fasonFirmasi,
+          const fasonFirmasindakiMevcutIrsaliyeler = irsaliyeler.filter(
+            (irsaliye) => irsaliye.Referanslar.fasonFirmasi === fasonFirmasi,
+          );
+
+          const firmadaOlacakToplamIrsaliyeler = [
+            ...fasonFirmasindakiMevcutIrsaliyeler,
+            irsaliyeKaydi,
+          ];
+
+          const refBazliFirmaToplamIrsaliyeSayisi = new Set(
+            firmadaOlacakToplamIrsaliyeler.map((item) => item.referansNo),
+          ).size;
+
+          if (refBazliFirmaToplamIrsaliyeSayisi <= limit) {
+            const butunIrsaliyeler = await irsaliyeHttp.fasonlaraIrsaliyeKes(irsaliyeKaydi);
+            const devamEdenUretimler = await devamEdenUretimHttp.getData();
+            showNotification(
+              "success",
+              `Seçtiğiniz kayıtlar fason firmasına taşıma irsaliyesi kesmek için kaydedildi.`,
             );
-
-            const firmadaOlacakToplamIrsaliyeler = [
-              ...fasonFirmasindakiMevcutIrsaliyeler,
-              ...irsaliyeKaydi,
-            ];
-
-            const refBazliFirmaToplamIrsaliyeSayisi = new Set(
-              firmadaOlacakToplamIrsaliyeler.map((item) => item.referansNo),
-            ).size;
-
-            if (refBazliFirmaToplamIrsaliyeSayisi <= limit) {
-              const butunIrsaliyeler = await irsaliyeHttp.fasonlaraIrsaliyeKes(irsaliyeKaydi);
-              const devamEdenUretimler = await devamEdenUretimHttp.getData();
-
-              showNotification(
-                "success",
-                `Seçtiğiniz kayıtlar fason firmasına taşıma irsaliyesi kesmek için kaydedildi.`,
-              );
-              setDevamEdenUretimler(devamEdenUretimler);
-
-              setIrsaliyeler(butunIrsaliyeler);
-            } else {
-              showAlert(
-                "error",
-                `İrsaliye kesilemedi. Bu referansları da eklediğinizde, ${fasonFirmasi} firmasına irsaliye kesilecek toplam referans sayısı ${refBazliFirmaToplamIrsaliyeSayisi} olacak. Bir firmaya en fazla ${limit} adet farklı referans gönderilebilir. Önce firmaya mevcut irsaliyeyi kesin ve sonra tekrar deneyin.`,
-              );
-            }
-          } catch (error) {
-            showNotification("error", error.message);
+            setDevamEdenUretimler(devamEdenUretimler);
+            setIrsaliyeler(butunIrsaliyeler);
+          } else {
+            showAlert(
+              "error",
+              `İrsaliye kesilemedi. Bu referansları da eklediğinizde, ${fasonFirmasi} firmasına irsaliye kesilecek toplam referans sayısı ${refBazliFirmaToplamIrsaliyeSayisi} olacak. Bir firmaya en fazla ${limit} adet farklı referans gönderilebilir. Önce firmaya mevcut irsaliyeyi kesin ve sonra tekrar deneyin.`,
+            );
           }
-        },
-        onCancel() {
-          showNotification("warning", "İşlem iptal edildi");
-        },
-      });
-    } else {
-      showAlert(
-        "warning",
-        "Fason firması farklı olan kayıtlar seçtiniz. Lütfen aynı firmaya ait kayıtları seçip tekrar deneyin.",
-      );
-    }
+        } catch (error) {
+          showNotification("error", error.message);
+        }
+      },
+      onCancel() {
+        showNotification("warning", "İşlem iptal edildi");
+      },
+    });
   };
 
   return (
@@ -365,12 +342,24 @@ export default function FasonUretimlerTablo({ data }) {
             contextMenu={{
               deleteAction: fasonUretimSil,
               extraItems: (record) => [
+                record.gelenMiktar !== record.gidenMiktar && {
+                  icon: <SnippetsOutlined />,
+                  title: (
+                    <div>
+                      Fasona İrsaliye Kes
+                      <Tag color="blue" style={{ marginLeft: "12px" }}>
+                        {record.Referanslar.fasonFirmasi}
+                      </Tag>
+                    </div>
+                  ),
+                  action: () => fasonaIrsaliyeKes(record),
+                },
                 {
                   icon: <ContainerOutlined />,
-                  title: "Üretim Girişi Yap",
+                  title: "Fason Üretim Girişi Yap",
                   action: () =>
                     showPanel({
-                      title: "Üretim Girişi",
+                      title: "Fason Üretim Girişi",
                       content: <UretimGirisi record={record} />,
                       width: 800,
                     }),
@@ -418,47 +407,6 @@ export default function FasonUretimlerTablo({ data }) {
                 },
               ],
             }}
-            actionButtons={
-              <>
-                {secilmisIrsaliyeler[musteriAdi]?.length > 0 && (
-                  <Button
-                    style={{ marginRight: "4px" }}
-                    type="primary"
-                    icon={<ContainerOutlined />}
-                    onClick={() => fasonaIrsaliyeKes(musteriAdi)}
-                  >
-                    Fasona İrsaliye Kes
-                    <Badge count={secilmisIrsaliyeler[musteriAdi].length} offset={[5, -4]} />
-                  </Button>
-                )}
-                {selectedRows[musteriAdi]?.length === 1 && (
-                  <>
-                    <Button
-                      style={{ marginRight: "4px" }}
-                      type="primary"
-                      icon={<ContainerOutlined />}
-                      onClick={() =>
-                        showPanel({
-                          title: "Üretim Girişi",
-                          content: <UretimGirisi record={selectedRows[musteriAdi][0]} />,
-                          width: 800,
-                        })
-                      }
-                    >
-                      Fason Üretim Girişi Yap
-                    </Button>
-                  </>
-                )}
-
-                {user.yetki === "admin" && selectedRows[musteriAdi]?.length > 0 && (
-                  <>
-                    <Button danger icon={<DeleteOutlined />} onClick={fasonUretimSil}>
-                      Sil ({selectedRows[musteriAdi].length})
-                    </Button>
-                  </>
-                )}
-              </>
-            }
           />
         ),
         style: subCollapseItemStyle,

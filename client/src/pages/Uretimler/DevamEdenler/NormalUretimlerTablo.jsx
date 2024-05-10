@@ -2,13 +2,10 @@ import {
   CarOutlined,
   CaretRightOutlined,
   ContainerOutlined,
-  CreditCardOutlined,
-  DeleteOutlined,
   EditOutlined,
   PrinterOutlined,
 } from "@ant-design/icons";
-import { Badge, Button, Collapse, Modal, Tag } from "antd";
-import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
+import { Badge, Collapse, Modal, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import IdBadge from "components/shared/IdBadge";
 import TableGod from "components/shared/TableGod";
@@ -17,9 +14,9 @@ import { useUIContext } from "context/UIProvider";
 import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeForm";
 import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
+import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
 import { useEffect, useState } from "react";
 import { createTableFilterFromData } from "utils/table.helper";
-import { LuCar } from "react-icons/lu";
 
 const subCollapseItemStyle = {
   borderRadius: 10,
@@ -30,7 +27,6 @@ const subCollapseItemStyle = {
 export default function NormalUretimlerTablo({ data }) {
   const { user } = useAuth();
 
-  const [selectedRows, setSelectedRows] = useState([]);
   const { showPanel, showAlert, showModal } = useUIContext();
 
   const [musteriBazliKayitlar, setMusteriBazliKayitlar] = useState([]);
@@ -218,13 +214,6 @@ export default function NormalUretimlerTablo({ data }) {
     setMusteriBazliKayitlar(musteriBazli);
   }, [data]);
 
-  const createRowSelection = (musteriAdi) => ({
-    type: "checkbox",
-    onChange: (_selectedRowKeys, _selectedRows) => {
-      setSelectedRows({ ...selectedRows, [musteriAdi]: _selectedRows });
-    },
-  });
-
   const normalUretimSil = () => {
     Modal.confirm({
       title: "Emin misiniz?",
@@ -265,7 +254,6 @@ export default function NormalUretimlerTablo({ data }) {
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
             hideDefaultTitleButtons
-            // rowSelection={createRowSelection(musteriAdi)}
             contextMenu={{
               // editForm: MiktarDuzenlemeForm,
               deleteAction: normalUretimSil,

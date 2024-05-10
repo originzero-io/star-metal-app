@@ -45,9 +45,11 @@ router.post("/", async (req, res) => {
 router.post("/fasona", async (req, res) => {
   const irsaliyeKaydi = req.body;
 
-  const idsizİrsaliyeler = irsaliyeKaydi.map(({ id, ...kayit }) => kayit);
+  const idsizIrsaliyeKaydi = { ...irsaliyeKaydi };
+  delete idsizIrsaliyeKaydi.id;
+
   try {
-    await Irsaliye.bulkCreate(idsizİrsaliyeler);
+    await Irsaliye.create(idsizIrsaliyeKaydi);
 
     const butunIrsaliyeler = await Irsaliye.findAll({
       include: [
@@ -59,16 +61,13 @@ router.post("/fasona", async (req, res) => {
       ],
     });
 
-    const requests = irsaliyeKaydi.map(async (item) => {
-      const fasonUretim = await FasonUretim.findOne({ where: { id: item.id } });
+    const fasonUretim = await FasonUretim.findOne({ where: { id: irsaliyeKaydi.id } });
 
-      if (fasonUretim) {
-        await fasonUretim.update({ gidenMiktar: item.gelenMiktar });
-      } else {
-        console.log(`ReferansNo ${item.referansNo} için kayıt bulunamadı.`);
-      }
-    });
-    await Promise.all(requests);
+    if (fasonUretim) {
+      await fasonUretim.update({ gidenMiktar: irsaliyeKaydi.gelenMiktar });
+    } else {
+      console.log(`ReferansNo ${irsaliyeKaydi.referansNo} için kayıt bulunamadı.`);
+    }
 
     res.json(butunIrsaliyeler);
   } catch (error) {
