@@ -10,7 +10,6 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    console.log("req.body", req.body);
     const newMusteri = await Musteri.create(req.body);
     res.json(newMusteri);
   } catch (error) {

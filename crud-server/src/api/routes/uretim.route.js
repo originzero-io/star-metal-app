@@ -43,7 +43,7 @@ router.get("/devam-eden/fason/:id", async (req, res) => {
     });
     res.send(fasonUretim);
   } catch (error) {
-    console.error("Fason üretim kayıtlarını güncellerken bir hata oluştu:", error);
+    console.error("Fason üretim kaydı bulunamadı:", error);
     res.status(500).send("Bir hata oluştu.");
   }
 });
@@ -157,14 +157,11 @@ router.put("/devam-eden/fasonlara-irsaliye-kes", async (req, res) => {
     //
 
     const requests = irsaliyeKaydi.map(async (item) => {
-      // const fasonUretim = await FasonUretim.findOne({ where: { referansNo: item.referansNo } });
       const fasonUretim = await FasonUretim.findOne({ where: { id: item.id } });
 
       if (fasonUretim) {
-        // Kayıt varsa, gidenMiktar'ı gelenMiktar ile güncelle
         await fasonUretim.update({ gidenMiktar: item.gelenMiktar });
       } else {
-        // İlgili referansNo'ya ait kayıt yoksa, bir hata mesajı gönder
         console.log(`ReferansNo ${item.referansNo} için kayıt bulunamadı.`);
       }
     });
@@ -184,7 +181,6 @@ router.get("/tamamlanan", async (req, res) => {
 });
 
 router.post("/tamamlanan", async (req, res) => {
-  console.log("body:", req.body);
   res.send("aman");
 });
 

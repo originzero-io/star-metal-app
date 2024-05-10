@@ -60,14 +60,11 @@ router.post("/fasona", async (req, res) => {
     });
 
     const requests = irsaliyeKaydi.map(async (item) => {
-      // const fasonUretim = await FasonUretim.findOne({ where: { referansNo: item.referansNo } });
       const fasonUretim = await FasonUretim.findOne({ where: { id: item.id } });
 
       if (fasonUretim) {
-        // Kayıt varsa, gidenMiktar'ı gelenMiktar ile güncelle
         await fasonUretim.update({ gidenMiktar: item.gelenMiktar });
       } else {
-        // İlgili referansNo'ya ait kayıt yoksa, bir hata mesajı gönder
         console.log(`ReferansNo ${item.referansNo} için kayıt bulunamadı.`);
       }
     });
@@ -81,7 +78,6 @@ router.post("/fasona", async (req, res) => {
 });
 
 router.delete("/", async (req, res) => {
-  console.log("req.body", req.body);
   const { selectedRows } = req.body;
 
   selectedRows.forEach(async (row) => {

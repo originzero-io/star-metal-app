@@ -11,7 +11,6 @@ router.get("/", async (req, res) => {
       {
         model: Referans,
         required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
-        // attributes: ["musteriAdi", "fasonFirmasi", "islemTipi", "irsaliyeAciklamasi"], // Sadece bu alanlar
         as: "Referanslar",
       },
     ],
@@ -42,7 +41,6 @@ router.get("/:id", async (req, res) => {
       {
         model: Referans,
         required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
-        //attributes: ["musteriAdi"], // Sadece bu alanlar
         as: "Referanslar", // Sadece bu alanlar
       },
     ],
@@ -53,7 +51,6 @@ router.get("/:id", async (req, res) => {
   });
 
   const uretimIdsiBazliUretimGirisleri = uretimGirisleri.reduce((acc, item) => {
-    // uretimSıraNo'ya göre gruplama
     if (!acc[item.uretimSiraNo]) {
       acc[item.uretimSiraNo] = [];
     }
@@ -74,7 +71,6 @@ router.post("/", async (req, res) => {
     if (uretim) {
       const updatedUretim = await uretim.update({
         uretilenMiktar: uretim.uretilenMiktar + req.body.uretimAdedi,
-        // uretilmeyenMiktar: uretim.uretilmeyenMiktar - req.body.uretimAdedi,
       });
 
       res.json(updatedUretim);
@@ -118,7 +114,6 @@ router.put("/aktiflik-degistir", async (req, res) => {
       kayit.uretimGirisiIdleri.split(",").map(Number),
     );
 
-    console.log("uretimGirisiIds", uretimGirisiIds);
     await UretimGirisi.update(
       { aktif: istenenAktiflik },
       {
@@ -137,8 +132,6 @@ router.put("/sevk-et", async (req, res) => {
   try {
     kayitlar.forEach(async (kayit) => {
       const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
-
-      console.log("uretimGirisiIdleri", uretimGirisiIdleri);
 
       const sonuc = await UretimGirisi.update(
         {
@@ -200,13 +193,6 @@ const uretimGidenVeKalanMiktarlariGuncelle = async (kayit) => {
 router.delete("/", async (req, res) => {
   const { selectedRows } = req.body;
 
-  // const promises = selectedRows.map(async (row) => {
-  //   await UretimGirisi.destroy({
-  //     where: { id: row.id },
-  //   });
-  //   await uretimKaydiniDuzenle(row);
-  // });
-
   try {
     for (const row of selectedRows) {
       await UretimGirisi.destroy({
@@ -219,14 +205,6 @@ router.delete("/", async (req, res) => {
     res.status(500).send("Bir hata oluştu");
     console.error("Hata: ", error);
   }
-  // try {
-  //   await Promise.all(promises);
-  //   console.log("BURASI ÇALIŞACAK");
-  //   res.send("işlem başarılı");
-  // } catch (error) {
-  //   res.status(500).send("Bir hata oluştu");
-  //   console.error("Hata: ", error);
-  // }
 });
 
 const uretimKaydiniDuzenle = async (row) => {
@@ -235,7 +213,6 @@ const uretimKaydiniDuzenle = async (row) => {
     if (uretim) {
       await uretim.update({
         uretilenMiktar: uretim.uretilenMiktar - row.uretimAdedi,
-        // uretilmeyenMiktar: uretim.uretilmeyenMiktar + req.body.uretimAdedi,
       });
     } else {
       console.log("böyle bir fason üretim bulunamadı");
