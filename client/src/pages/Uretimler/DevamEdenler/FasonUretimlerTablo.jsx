@@ -1,4 +1,11 @@
-import { CaretRightOutlined, ContainerOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  CarOutlined,
+  CaretRightOutlined,
+  ContainerOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PrinterOutlined,
+} from "@ant-design/icons";
 import { Badge, Button, Collapse, Modal, Tag } from "antd";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
@@ -354,11 +361,22 @@ export default function FasonUretimlerTablo({ data }) {
           <TableGod
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
-            rowSelection={createRowSelection(musteriAdi)}
             hideDefaultTitleButtons
             contextMenu={{
+              deleteAction: fasonUretimSil,
               extraItems: (record) => [
                 {
+                  icon: <ContainerOutlined />,
+                  title: "Üretim Girişi Yap",
+                  action: () =>
+                    showPanel({
+                      title: "Üretim Girişi",
+                      content: <UretimGirisi record={record} />,
+                      width: 800,
+                    }),
+                },
+                {
+                  icon: <CarOutlined />,
                   title: "Üretim / Sevkiyat Hareketleri",
                   action: () =>
                     showPanel({
@@ -368,6 +386,7 @@ export default function FasonUretimlerTablo({ data }) {
                     }),
                 },
                 {
+                  icon: <PrinterOutlined />,
                   title: "Üretim İş Emri Kartı Çıkart",
                   action: () =>
                     showPanel({
@@ -378,6 +397,7 @@ export default function FasonUretimlerTablo({ data }) {
                 },
                 user.yetki === "admin" &&
                   record.Referanslar.siparisTipi === "Talepli" && {
+                    icon: <EditOutlined />,
                     title: "Talep No Gir",
                     action: () =>
                       showModal({
@@ -387,6 +407,7 @@ export default function FasonUretimlerTablo({ data }) {
                       }),
                   },
                 user.yetki === "admin" && {
+                  icon: <EditOutlined />,
                   title: "Gelen Malzeme Miktarını Değiştir",
                   action: () =>
                     showModal({

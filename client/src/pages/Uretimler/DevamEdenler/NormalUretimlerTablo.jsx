@@ -1,4 +1,12 @@
-import { CaretRightOutlined, ContainerOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  CarOutlined,
+  CaretRightOutlined,
+  ContainerOutlined,
+  CreditCardOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PrinterOutlined,
+} from "@ant-design/icons";
 import { Badge, Button, Collapse, Modal, Tag } from "antd";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
@@ -11,6 +19,7 @@ import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import { useEffect, useState } from "react";
 import { createTableFilterFromData } from "utils/table.helper";
+import { LuCar } from "react-icons/lu";
 
 const subCollapseItemStyle = {
   borderRadius: 10,
@@ -256,11 +265,23 @@ export default function NormalUretimlerTablo({ data }) {
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
             hideDefaultTitleButtons
-            rowSelection={createRowSelection(musteriAdi)}
+            // rowSelection={createRowSelection(musteriAdi)}
             contextMenu={{
               // editForm: MiktarDuzenlemeForm,
+              deleteAction: normalUretimSil,
               extraItems: (record) => [
                 {
+                  icon: <ContainerOutlined />,
+                  title: "Üretim Girişi Yap",
+                  action: () =>
+                    showPanel({
+                      title: "Üretim Girişi",
+                      content: <UretimGirisi record={record} />,
+                      width: 800,
+                    }),
+                },
+                {
+                  icon: <CarOutlined />,
                   title: "Üretim / Sevkiyat Hareketleri",
                   action: () =>
                     showPanel({
@@ -270,6 +291,7 @@ export default function NormalUretimlerTablo({ data }) {
                     }),
                 },
                 {
+                  icon: <PrinterOutlined />,
                   title: "Üretim İş Emri Kartı Çıkart",
                   action: () =>
                     showPanel({
@@ -280,6 +302,7 @@ export default function NormalUretimlerTablo({ data }) {
                 },
                 user.yetki === "admin" &&
                   record.Referanslar.siparisTipi === "Talepli" && {
+                    icon: <EditOutlined />,
                     title: "Talep No Gir",
                     action: () => {
                       showModal({
@@ -290,6 +313,7 @@ export default function NormalUretimlerTablo({ data }) {
                     },
                   },
                 user.yetki === "admin" && {
+                  icon: <EditOutlined />,
                   title: "Gelen Malzeme Miktarını Değiştir",
                   action: () =>
                     showModal({
@@ -300,38 +324,6 @@ export default function NormalUretimlerTablo({ data }) {
                 },
               ],
             }}
-            actionButtons={
-              <>
-                {selectedRows[musteriAdi]?.length === 1 && (
-                  <Button
-                    style={{ marginRight: "4px" }}
-                    type="primary"
-                    icon={<ContainerOutlined />}
-                    onClick={() =>
-                      showPanel({
-                        title: "Üretim Girişi",
-                        content: <UretimGirisi record={selectedRows[musteriAdi][0]} />,
-                        width: 800,
-                      })
-                    }
-                  >
-                    Üretim Girişi Yap
-                  </Button>
-                )}
-                {user.yetki === "admin" && selectedRows[musteriAdi]?.length > 0 && (
-                  <>
-                    <Button
-                      style={{ marginRight: "4px" }}
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={normalUretimSil}
-                    >
-                      Sil ({selectedRows[musteriAdi].length})
-                    </Button>
-                  </>
-                )}
-              </>
-            }
           />
         ),
         style: subCollapseItemStyle,

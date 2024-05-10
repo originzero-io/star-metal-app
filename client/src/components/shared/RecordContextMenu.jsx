@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import { useUIContext } from "context/UIProvider";
 import { useAuth } from "context/AuthProvider";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const ContextMenuWrapperStyled = styled.div`
   position: absolute;
@@ -23,13 +24,13 @@ const MenuStyled = styled.div`
 const MenuItemStyled = styled.div`
   color: #313131;
   padding: 8px;
-  padding-left: 10px;
+  padding-left: 8px;
   padding-right: 10px;
   display: flex;
   align-items: center;
   border-bottom: 1px solid #dbdbdb;
   &:hover {
-    background-color: rgb(107, 67, 175);
+    background-color: ${({ remove }) => (remove ? "rgb(236, 159, 163)" : "rgb(144, 100, 219)")};
     color: whitesmoke;
   }
 `;
@@ -58,17 +59,30 @@ export default function RecordContextMenu({ position, record, contextMenu }) {
             .filter(Boolean) // şarta uymayan boş alanlar gösterilmesin
             .map((item, i) => (
               <MenuItemStyled key={i} onClick={item.action}>
-                {item.title}
+                <span>{item.icon}</span>
+                <span style={{ marginLeft: "6px" }}>{item.title}</span>
               </MenuItemStyled>
             ))}
 
         {user.yetki === "admin" && contextMenu.editForm && (
-          <MenuItemStyled onClick={editRecordHandler}>Düzenle</MenuItemStyled>
+          <MenuItemStyled onClick={editRecordHandler}>
+            <span>
+              <EditOutlined />
+            </span>
+            <span style={{ marginLeft: "6px" }}>Düzenle</span>
+          </MenuItemStyled>
         )}
 
         {user.yetki === "admin" && contextMenu.deleteAction && (
-          <MenuItemStyled onClick={() => contextMenu.deleteAction(record)} style={{ color: "red" }}>
-            Sil
+          <MenuItemStyled
+            onClick={() => contextMenu.deleteAction(record)}
+            style={{ color: "red" }}
+            remove
+          >
+            <span>
+              <DeleteOutlined />
+            </span>
+            <span style={{ marginLeft: "6px" }}>Sil</span>
           </MenuItemStyled>
         )}
       </MenuStyled>
