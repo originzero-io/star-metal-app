@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
-import { Alert, Col, Divider, Row, Tag } from "antd";
-import { useDBContext } from "context/DBProvider";
 import PropTypes from "prop-types";
+import { Alert, Col, Row, Tag } from "antd";
+import { useDBContext } from "context/DBProvider";
 import { useEffect, useState } from "react";
 import uretimGirisleriHttp from "services/uretim-girisleri.http";
 import styled from "styled-components";
@@ -11,29 +11,22 @@ const TopSectionItem = styled.div`
   flex: 1 1 400px; // Her öğe en az 200px olacak şekilde esneyebilir
   display: flex;
   align-items: center;
-  // margin-top: 6px;
   padding: 4px;
-  // border-bottom: 1px solid #ccc; // Her öğenin altında bir çizgi
-  // background-color: red;
 `;
 
 const TopSectionItemName = styled.div`
   width: 20%;
-  // background-color: red;
 `;
 const TopSectionItemValue = styled.div`
   padding: 8px;
-  // text-align: center;
   color: #016bcd;
-  // color: whitesmoke;
-  // color: #4e5b48;
   border-radius: 6px;
-  background-color: #bbd5fa;
-  // background-color: #3b89f7;
   width: 120px;
   text-align: center;
   margin-left: 8px;
   font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 2px 3px 8px -8px rgba(0, 0, 0, 0.75);
 `;
 
 export default function UretimSevkiyatHareketleri({ record }) {
@@ -147,6 +140,9 @@ export default function UretimSevkiyatHareketleri({ record }) {
         <Row
           style={{
             background: "#e2e9f9",
+            backgroundColor: "rgba(255, 255, 255, 0.3)",
+            boxShadow: "2px 3px 8px -8px rgba(0, 0, 0, 0.75)",
+            border: "1px solid #dcdcdc",
             padding: 12,
             borderRadius: 8,
             display: "flex",
@@ -197,19 +193,22 @@ export default function UretimSevkiyatHareketleri({ record }) {
             </TopSectionItem>
           </Col>
         </Row>
-        <Divider />
         {uretimIdsiBazli.length > 0 ? (
           uretimIdsiBazli.map(([uretimId, kayitlar], index) => (
-            <div key={index}>
+            <div
+              key={index}
+              style={{
+                boxShadow: "2px 3px 8px -8px rgba(0, 0, 0, 0.75)",
+                border: "1px solid #dcdcdc",
+                borderRadius: 8,
+                marginTop: 10,
+              }}
+            >
               <TableGod
                 dataSource={kayitlar}
                 columns={columns}
                 pagination={false}
                 hideDefaultTitleButtons
-                // rowStyle={(row) => ({
-                //   background: row.sevkTarihi ? "#40cc4099" : "#f4e96fe",
-                //   cursor: !row.aktif ? "not-allowed" : undefined,
-                // })}
               />
             </div>
           ))
