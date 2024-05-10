@@ -34,8 +34,6 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
     }
   }, [handlePrint, record]);
 
-  console.log("record", record);
-
   return (
     <div>
       <PrintButton colorful handlePrintFunc={handlePrint} />
@@ -104,7 +102,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BoldTextStyled>AÇIKLAMA</BoldTextStyled>
             </div>
             <div style={{ textAlign: "start", fontSize: "2.2vmin" }}>
-              <BoldTextStyled>{record.islemAciklama}</BoldTextStyled>
+              <BoldTextStyled>{record.islemAciklamasi}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={6}>
@@ -138,7 +136,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BoldTextStyled>İŞLEM AÇIKLAMASI</BoldTextStyled>
             </div>
             <div style={{ textAlign: "start", fontSize: "2.2vmin", marginTop: "8px" }}>
-              <BoldTextStyled>{record.islemAciklama}</BoldTextStyled>
+              <BoldTextStyled>{record.islemAciklamasi}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={6}>

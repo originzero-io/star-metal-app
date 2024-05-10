@@ -1,82 +1,73 @@
-import { Button, Col, Form, Radio, Row, Select, InputNumber, Input, Tag, Badge } from "antd";
-import React, { useState } from "react";
+import { CreditCardOutlined, FormOutlined, PrinterOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, InputNumber, Row, Select, Table, Tag } from "antd";
+import IdBadge from "components/shared/IdBadge";
+import { useDBContext } from "context/DBProvider";
+import { useUIContext } from "context/UIProvider";
+import { useEffect, useState } from "react";
+import uretimGirisiHttp from "services/uretim-girisleri.http";
 import styled from "styled-components";
-import { FormOutlined, CreditCardOutlined, PrinterOutlined } from "@ant-design/icons";
 import { getCurrentDateTime } from "utils/time.helper";
 import SevkiyatKarti from "../../../components/cards/SevkiyatKarti";
-import { useDBContext } from "context/DBProvider";
-import uretimGirisiHttp from "services/uretim-girisleri.http";
-import { useUIContext } from "context/UIProvider";
-import IdBadge from "components/shared/IdBadge";
 
 const SectionBase = styled.div`
-  border: 1px solid #d0d0d0;
+  border: 1px solid #dcdcdc;
   padding: 10px;
   border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 2px 3px 8px -8px rgba(0, 0, 0, 0.75);
 `;
 const Container = styled.div``;
-const TopSection = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-const MeasureSection = styled(SectionBase)`
+const TeraziSection = styled(SectionBase)`
   margin-top: 10px;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
 `;
-const MeasureItem = styled.div`
+const TeraziItem = styled.div`
   border: 1px solid #c4c4c4;
   margin: 10px;
   width: 20%;
   height: 85px;
   border-radius: 6px;
 `;
-const MeasureItemHeader = styled.div`
+const TeraziItemHeader = styled.div`
   text-align: center;
   background-color: rgb(107, 67, 175);
   color: whitesmoke;
   padding: 2px;
   font-size: 16px;
 `;
-const MeasureItemContent = styled.div`
+const TeraziItemContent = styled.div`
   font-size: 3vmin;
   font-weight: 700;
   text-align: center;
 `;
 
-const MiddleSection = styled(SectionBase)`
-  margin-top: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
 const FormSection = styled(SectionBase)`
   margin-top: 5px;
 `;
-const BottomSection = styled(SectionBase)`
+const TabloSection = styled(SectionBase)`
   margin-top: 5px;
-  display: flex;
-  justify-content: space-between;
-  background-color: #c3c3c3;
-  // background-image: linear-gradient(135deg, #c3c3c3 10%, #eeeeee 100%);
-`;
-const BottomItem = styled.div``;
-const BottomHeader = styled.div``;
-const BottomContent = styled.div`
-  text-align: center;
-  font-weight: 700;
-  font-size: 2.3vmin;
 `;
 
 export default function UretimGirisi({ record }) {
+  const [localRecord, setLocalRecord] = useState(record);
+
   const { ambalajlar, referanslar, devamEdenUretimler, setDevamEdenUretimler, personeller } =
     useDBContext();
   const { showNotification, showPanel, showAlert } = useUIContext();
   const [form] = Form.useForm();
 
   const [miktarSapmasi, setMiktarSapmasi] = useState(
-    referanslar.filter((referans) => referans.referansNo === record.referansNo)[0]?.miktarSapmasi,
+    referanslar.filter((referans) => referans.referansNo === localRecord.referansNo)[0]
+      ?.miktarSapmasi,
   );
+
+  // record değiştiğinde panelin içindeki verilerin de değişmesi için
+  useEffect(() => {
+    setLocalRecord(record);
+  }, [record]);
 
   const [printTrigger, setPrintTrigger] = useState(false);
   const [sevkiyatKartiKayit, setSevkiyatKartiKayit] = useState(null);
@@ -104,19 +95,19 @@ export default function UretimGirisi({ record }) {
   };
 
   const onFinish = async (values) => {
-    // console.log("record: ", record);
+    // console.log("localRecord: ", localRecord);
     // console.log("values: ", values);
     const data = {
-      fason: record.Referanslar.fason,
-      referansNo: record.referansNo,
-      uretimSiraNo: record.id,
-      siparisNo: record.Referanslar.siparisNo,
-      talepNo: record.talepNo,
-      // irsaliyeNo: record.irsaliyeNo,
-      iade: record.iade,
+      fason: localRecord.Referanslar.fason,
+      referansNo: localRecord.referansNo,
+      uretimSiraNo: localRecord.id,
+      siparisNo: localRecord.Referanslar.siparisNo,
+      talepNo: localRecord.talepNo,
+      iade: localRecord.iade,
       uretimTarihi: getCurrentDateTime(),
       uretimAdedi: values.uretimAdedi,
-      // personel: values.personel,
+      personel: values.personel,
+      islemAciklamasi: record.Referanslar.not,
       birinciAmbalaj: values.birinciAmbalaj,
       ikinciAmbalaj: values.ikinciAmbalaj,
       brut: teraziOlcum.brut,
@@ -124,8 +115,9 @@ export default function UretimGirisi({ record }) {
       net: teraziOlcum.net,
     };
 
-    if (data.uretimAdedi + record.uretilenMiktar <= record.gelenMiktar) {
+    if (data.uretimAdedi + localRecord.uretilenMiktar <= localRecord.gelenMiktar) {
       const updatedUretim = await uretimGirisiHttp.addData(data);
+      setLocalRecord(updatedUretim);
       let newDevamEdenUretimler = [];
       if (data.fason) {
         newDevamEdenUretimler = {
@@ -166,100 +158,97 @@ export default function UretimGirisi({ record }) {
     }
   };
 
-  const uretimAdediMinInput = !record.Referanslar.fason ? teraziOlcum.adet - miktarSapmasi : 0;
-  const uretimAdediMaxInput = !record.Referanslar.fason
+  const uretimAdediMinInput = !localRecord.Referanslar.fason ? teraziOlcum.adet - miktarSapmasi : 0;
+  const uretimAdediMaxInput = !localRecord.Referanslar.fason
     ? teraziOlcum.adet + miktarSapmasi
-    : record.gelenMiktar - record.uretilenMiktar;
+    : localRecord.gelenMiktar - localRecord.uretilenMiktar;
 
   return (
     <Container>
-      {!record.Referanslar.fason && (
+      {!localRecord.Referanslar.fason && (
         <div>
-          <TopSection>
-            <Button type="primary" icon={<FormOutlined />} onClick={fakeTeraziOlcumHandler}>
-              Teraziden Ölçüm Al
-            </Button>
-          </TopSection>
-          <MeasureSection>
-            <MeasureItem>
-              <MeasureItemHeader>Brüt</MeasureItemHeader>
-              <MeasureItemContent>{teraziOlcum.brut}</MeasureItemContent>
-            </MeasureItem>
-            <MeasureItem>
-              <MeasureItemHeader>Dara</MeasureItemHeader>
-              <MeasureItemContent>{teraziOlcum.dara}</MeasureItemContent>
-            </MeasureItem>
-            <MeasureItem>
-              <MeasureItemHeader>Net</MeasureItemHeader>
-              <MeasureItemContent>{teraziOlcum.net}</MeasureItemContent>
-            </MeasureItem>
-            <MeasureItem>
-              <MeasureItemHeader>Adet</MeasureItemHeader>
-              <MeasureItemContent>{teraziOlcum.adet}</MeasureItemContent>
-            </MeasureItem>
-          </MeasureSection>
+          <TeraziSection>
+            <div>
+              <Button type="primary" icon={<FormOutlined />} onClick={fakeTeraziOlcumHandler}>
+                Teraziden Ölçüm Al
+              </Button>
+            </div>
+            <div style={{ display: "flex", width: "100%", justifyContent: "center" }}>
+              <TeraziItem>
+                <TeraziItemHeader>Brüt</TeraziItemHeader>
+                <TeraziItemContent>{teraziOlcum.brut}</TeraziItemContent>
+              </TeraziItem>
+              <TeraziItem>
+                <TeraziItemHeader>Dara</TeraziItemHeader>
+                <TeraziItemContent>{teraziOlcum.dara}</TeraziItemContent>
+              </TeraziItem>
+              <TeraziItem>
+                <TeraziItemHeader>Net</TeraziItemHeader>
+                <TeraziItemContent>{teraziOlcum.net}</TeraziItemContent>
+              </TeraziItem>
+              <TeraziItem>
+                <TeraziItemHeader>Adet</TeraziItemHeader>
+                <TeraziItemContent>{teraziOlcum.adet}</TeraziItemContent>
+              </TeraziItem>
+            </div>
+          </TeraziSection>
         </div>
       )}
-      <MiddleSection>
-        <Radio.Group value={record.Referanslar.siparisTipi} disabled>
-          <Radio value="Seri">Seri</Radio>
-          <Radio value="Talepli">Talepli</Radio>
-        </Radio.Group>
-      </MiddleSection>
       <FormSection>
         <Form
           form={form}
-          name="basic"
-          layout="horizontal"
           labelCol={{ flex: "150px" }}
           labelAlign="left"
-          // key={record ? record.id : "form"}
           initialValues={{ uretimAdedi: teraziOlcum.adet, uretimTarihi: getCurrentDateTime() }}
           onFinish={onFinish}
-          //   onFinishFailed={onFinishFailed}
-          autoComplete="off"
-          labelWrap
         >
           <Row gutter={32}>
             <Col span={12}>
               <Form.Item label="Üretim Sıra No">
-                <IdBadge value={record.id} />
+                <IdBadge value={localRecord.id} />
               </Form.Item>
               <Form.Item label="Referans Sıra No">
-                <div>{record.Referanslar.id}</div>
+                <IdBadge value={localRecord.Referanslar.id} />
               </Form.Item>
-              {record.Referanslar.siparisTipi === "Seri" ? (
+              <Form.Item label="Sipariş Tipi">
+                {localRecord.Referanslar.siparisTipi === "Seri" ? (
+                  <Tag color="volcano">{localRecord.Referanslar.siparisTipi}</Tag>
+                ) : (
+                  <Tag color="purple">{localRecord.Referanslar.siparisTipi}</Tag>
+                )}
+              </Form.Item>
+              {localRecord.Referanslar.siparisTipi === "Seri" ? (
                 <Form.Item label="Sipariş No">
-                  <div>{record.Referanslar.siparisNo}</div>
+                  <div>{localRecord.Referanslar.siparisNo}</div>
                 </Form.Item>
               ) : (
                 <Form.Item label="Talep No">
-                  <div>{record.talepNo}</div>
+                  <div>{localRecord.talepNo}</div>
                 </Form.Item>
               )}
               <Form.Item label="İrsaliye No">
-                <div>{record.irsaliyeNo}</div>
+                <div>{localRecord.irsaliyeNo}</div>
               </Form.Item>
               <Form.Item label="Referans No">
                 <div>
-                  <Tag color="blue">{record.referansNo}</Tag>
+                  <Tag color="orange">{localRecord.referansNo}</Tag>
                 </div>
               </Form.Item>
               <Form.Item label="Fason">
                 <div>
-                  {record.Referanslar.fason ? (
+                  {localRecord.Referanslar.fason ? (
                     <Tag color="green">Evet</Tag>
                   ) : (
-                    <Tag color="orange">Hayır</Tag>
+                    <Tag color="red">Hayır</Tag>
                   )}
                 </div>
               </Form.Item>
               <Form.Item label="İade">
                 <div>
-                  {record.iade === "Evet" ? (
-                    <Tag color="orange">{record.iade}</Tag>
+                  {localRecord.iade === "Evet" ? (
+                    <Tag color="green">{localRecord.iade}</Tag>
                   ) : (
-                    <Tag color="purple">{record.iade}</Tag>
+                    <Tag color="red">{localRecord.iade}</Tag>
                   )}
                 </div>
               </Form.Item>
@@ -268,7 +257,7 @@ export default function UretimGirisi({ record }) {
               <Form.Item label="Üretim Tarih" name="uretimTarihi">
                 <Input disabled />
               </Form.Item>
-              {record.Referanslar.fason && (
+              {localRecord.Referanslar.fason && (
                 <Form.Item
                   label="Fasondan Gelen İrsaliye No"
                   name="fasondanGelenIrsaliyeNo"
@@ -297,8 +286,6 @@ export default function UretimGirisi({ record }) {
                   style={{ width: "100%" }}
                   min={uretimAdediMinInput}
                   max={uretimAdediMaxInput}
-                  // min={!record.Referanslar.fason && teraziOlcum.adet - miktarSapmasi}
-                  // max={!record.Referanslar.fason && teraziOlcum.adet + miktarSapmasi}
                 />
               </Form.Item>
               <Form.Item
@@ -359,9 +346,7 @@ export default function UretimGirisi({ record }) {
                 onClick={() =>
                   showPanel({
                     title: "Sevkiyat Kartı",
-                    content: React.createElement(SevkiyatKarti, {
-                      record: sevkiyatKartiKayit,
-                    }),
+                    content: <SevkiyatKarti record={sevkiyatKartiKayit} />,
                     width: 800,
                   })
                 }
@@ -377,31 +362,58 @@ export default function UretimGirisi({ record }) {
           </div>
         </Form>
       </FormSection>
-      <BottomSection>
-        <BottomItem>
-          <BottomHeader>Referans Miktarı</BottomHeader>
-          <BottomContent>636</BottomContent>
-        </BottomItem>
-        <BottomItem>
-          <BottomHeader>Toplam Üretim Miktarı</BottomHeader>
-          <BottomContent>636</BottomContent>
-        </BottomItem>
-        <BottomItem>
-          <BottomHeader>Kalan Üretim Miktarı</BottomHeader>
-          <BottomContent>636</BottomContent>
-        </BottomItem>
-        <BottomItem>
-          <BottomHeader>Toplam Sevkiyat Miktarı</BottomHeader>
-          <BottomContent>0</BottomContent>
-        </BottomItem>
-        <BottomItem>
-          <BottomHeader>Kalan Sevkiyat Miktarı</BottomHeader>
-          <BottomContent>636</BottomContent>
-        </BottomItem>
-      </BottomSection>
+
+      <TabloSection>
+        <Table
+          dataSource={[
+            {
+              gelenMiktar: localRecord.gelenMiktar,
+              gidenMiktar: localRecord.gidenMiktar,
+              uretilenMiktar: localRecord.uretilenMiktar,
+              [localRecord.Referanslar.fason ? "sevkEdilenMiktar" : "kalanMiktar"]: localRecord
+                .Referanslar.fason
+                ? localRecord.sevkEdilenMiktar
+                : localRecord.kalanMiktar,
+            },
+          ]}
+          columns={[
+            {
+              title: "Gelen Miktar",
+              dataIndex: "gelenMiktar",
+              key: "gelenMiktar",
+              render: (value) => <div style={{ fontSize: "16px" }}>{value}</div>,
+              align: "center",
+            },
+            {
+              title: "Giden Miktar",
+              dataIndex: "gidenMiktar",
+              key: "gidenMiktar",
+              render: (value) => <div style={{ fontSize: "16px" }}>{value}</div>,
+
+              align: "center",
+            },
+            {
+              title: "Üretilen Miktar",
+              dataIndex: "uretilenMiktar",
+              key: "uretilenMiktar",
+              render: (value) => <div style={{ fontSize: "16px" }}>{value}</div>,
+              align: "center",
+            },
+            {
+              title: localRecord.Referanslar.fason ? "Sevk Edilen Miktar" : "Kalan Miktar",
+              dataIndex: localRecord.Referanslar.fason ? "sevkEdilenMiktar" : "kalanMiktar",
+              key: "kalan-sevk",
+              render: (value) => <div style={{ fontSize: "16px" }}>{value}</div>,
+              align: "center",
+            },
+          ]}
+          pagination={false}
+          bordered
+        />
+      </TabloSection>
       <div style={{ display: "none" }}>
         <SevkiyatKarti
-          record={record}
+          record={localRecord}
           printTrigger={printTrigger}
           setPrintTrigger={setPrintTrigger}
         />
