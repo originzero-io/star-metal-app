@@ -1,15 +1,14 @@
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { CarOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 
-import PlakaForm from "pages/Tanimlamalar/Plakalar/PlakaForm";
 import IdBadge from "components/shared/IdBadge";
 import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { TbSquareRoundedLetterP } from "react-icons/tb";
+import PlakaForm from "pages/Tanimlamalar/Plakalar/PlakaForm";
 import plakalarHttp from "services/plakalar.http";
 import TableGod from "../../../components/shared/TableGod";
 
@@ -92,7 +91,7 @@ function Plakalar() {
 
   return (
     <div>
-      <PageHeader label="Plakalar" icon={<TbSquareRoundedLetterP />} />
+      <PageHeader label="Plakalar" icon={<CarOutlined />} />
       <TableGod
         dataSource={plakalar}
         columns={columns}

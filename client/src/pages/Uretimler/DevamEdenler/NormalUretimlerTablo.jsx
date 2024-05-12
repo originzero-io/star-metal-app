@@ -4,6 +4,8 @@ import {
   ContainerOutlined,
   EditOutlined,
   PrinterOutlined,
+  TruckFilled,
+  TruckOutlined,
 } from "@ant-design/icons";
 import { Badge, Collapse, Modal, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
@@ -269,7 +271,7 @@ export default function NormalUretimlerTablo({ data }) {
                     }),
                 },
                 {
-                  icon: <CarOutlined />,
+                  icon: <TruckOutlined />,
                   title: "Üretim / Sevkiyat Hareketleri",
                   action: () =>
                     showPanel({

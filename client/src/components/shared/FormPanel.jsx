@@ -34,7 +34,7 @@ const FormPanel = () => {
       centered
       width={panel.width || 500}
       // footer={null}
-      mask={false}
+      // mask={false}
     >
       {panel.content}
     </Drawer>

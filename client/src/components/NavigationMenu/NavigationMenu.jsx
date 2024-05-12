@@ -7,8 +7,9 @@ import { GrHostMaintenance } from "react-icons/gr";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 import { PiUsersThreeBold } from "react-icons/pi";
 import { RiCustomerServiceLine } from "react-icons/ri";
-import { TbRulerMeasure, TbSquareRoundedLetterP } from "react-icons/tb";
+import { TbRulerMeasure } from "react-icons/tb";
 
+import { CarOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import useDetectUserInteraction from "utils/useDetectInteraction.hook";
@@ -199,7 +200,7 @@ const pages = {
     },
     {
       title: "Plakalar",
-      icon: <TbSquareRoundedLetterP />,
+      icon: <CarOutlined />,
       link: "/plakalar",
     },
   ],
