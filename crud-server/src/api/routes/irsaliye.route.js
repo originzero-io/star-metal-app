@@ -76,6 +76,18 @@ router.post("/fasona", async (req, res) => {
   }
 });
 
+router.post("/e-irsaliye-kes", async (req, res) => {
+  const selectedRows = req.body;
+
+  selectedRows.forEach(async (row) => {
+    await Irsaliye.destroy({
+      where: { id: row.id },
+    });
+  });
+
+  res.send("e-irsaliye'ye gönderildi");
+});
+
 router.delete("/", async (req, res) => {
   const { selectedRows } = req.body;
 

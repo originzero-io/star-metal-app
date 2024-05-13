@@ -340,8 +340,9 @@ function IrsaliyeKesButon({ type, kayitlar }) {
     console.log("Kayıtlar:", gonderilecekKayitlar);
     try {
       await uretimGirisleriHttp.sevkEt(gonderilecekKayitlar);
-      const newIrsaliyeler = await irsaliyeHttp.deleteData(irsaliyeler, gonderilecekKayitlar);
       const devamEdenler = await devamEdenUretimHttp.getData();
+      const newIrsaliyeler = await irsaliyeHttp.eIrsaliyeKes(irsaliyeler, gonderilecekKayitlar);
+
       setIrsaliyeler(newIrsaliyeler);
       setDevamEdenUretimler(devamEdenler);
       setIsModalVisible(false);

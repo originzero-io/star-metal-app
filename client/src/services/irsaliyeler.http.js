@@ -13,6 +13,16 @@ class Irsaliye extends CRUDServerHttp {
     const rawData = await axios.post(`${this.endPoint}/fasona`, irsaliyeKaydi);
     return rawData.data;
   }
+
+  async eIrsaliyeKes(dataArray, selectedRows) {
+    await axios.post(`${this.endPoint}/e-irsaliye-kes`, selectedRows);
+
+    const newDataArray = dataArray.filter(
+      (data) => !selectedRows.some((selectedRow) => selectedRow.id === data.id),
+    );
+
+    return newDataArray;
+  }
 }
 
 const irsaliyeHttp = new Irsaliye();
