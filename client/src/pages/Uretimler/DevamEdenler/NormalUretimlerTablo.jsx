@@ -251,6 +251,7 @@ export default function NormalUretimlerTablo({ data }) {
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
             hideDefaultTitleButtons
+            scroll={{ x: 1500 }}
             contextMenu={{
               // editForm: MiktarDuzenlemeForm,
               deleteAction: normalUretimSil,

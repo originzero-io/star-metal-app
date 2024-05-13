@@ -334,6 +334,7 @@ export default function FasonUretimlerTablo({ data }) {
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
             hideDefaultTitleButtons
+            scroll={{ x: 1500 }}
             contextMenu={{
               deleteAction: fasonUretimSil,
               extraItems: (record) => [

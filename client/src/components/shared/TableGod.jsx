@@ -22,6 +22,7 @@ export default function TableGod({
   columns,
   onChange,
   rowSelection,
+  scroll,
   expandable,
   pagination,
   hideDefaultTitleButtons,
@@ -170,7 +171,7 @@ export default function TableGod({
           // sticky={{
           //   offsetHeader: 64,
           // }}
-          // scroll={{ x: 1500 }}
+          scroll={scroll}
         />
       </div>
     </div>
@@ -182,6 +183,7 @@ TableGod.propTypes = {
   columns: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   rowSelection: PropTypes.object,
+  scroll: PropTypes.object,
   expandable: PropTypes.shape({
     key: PropTypes.array.isRequired,
   }),
