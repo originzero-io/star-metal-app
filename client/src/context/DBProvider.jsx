@@ -27,7 +27,10 @@ export const DBProvider = ({ children }) => {
   const [irsaliyeler, setIrsaliyeler] = useState([]);
   const [musteriler, setMusteriler] = useState([]);
   const [ambalajlar, setAmbalajlar] = useState([]);
-  const [devamEdenUretimler, setDevamEdenUretimler] = useState([]);
+  const [devamEdenUretimler, setDevamEdenUretimler] = useState({
+    normalUretimler: [],
+    fasonUretimler: [],
+  });
   // ? uretimler denip {devamEdenler, tamamlananlar} şeklinde verilebilir
   const [personeller, setPersoneller] = useState([]);
   const [soforler, setSoforler] = useState([]);
