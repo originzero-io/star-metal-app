@@ -3,7 +3,7 @@ import { useUIContext } from "context/UIProvider";
 import { useEffect } from "react";
 
 export default function useDetectUserInteraction() {
-  const { showAlert } = useUIContext();
+  const { showAlert, showModal, showPanel } = useUIContext();
   const { user, logout } = useAuth();
   useEffect(() => {
     let timeoutId;
@@ -16,6 +16,8 @@ export default function useDetectUserInteraction() {
       timeoutId = setTimeout(() => {
         showAlert("warning", "10 dakikadır işlem yapmıyorsunuz. Yeniden giriş yapın.");
         logout();
+        showModal(false); // açık modal varsa kapat
+        showPanel(false); // açık panel varsa kapat
       }, 600000); // 10 dakika = 600000 milisaniye
     };
 
