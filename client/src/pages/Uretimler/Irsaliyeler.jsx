@@ -341,7 +341,6 @@ function IrsaliyeKesButon({ type, kayitlar }) {
     try {
       await uretimGirisleriHttp.sevkEt(gonderilecekKayitlar);
       const newIrsaliyeler = await irsaliyeHttp.deleteData(irsaliyeler, gonderilecekKayitlar);
-      await uretimGirisleriHttp.deleteData(gonderilecekKayitlar);
       const devamEdenler = await devamEdenUretimHttp.getData();
       setIrsaliyeler(newIrsaliyeler);
       setDevamEdenUretimler(devamEdenler);
