@@ -14,7 +14,6 @@ import irsaliyeHttp from "services/irsaliyeler.http";
 import uretimGirisiHttp from "services/uretim-girisleri.http";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
-import styled from "styled-components";
 
 const alertMessage = (musteri, irsaliyeTipi, olan, limit) => (
   <div>
@@ -34,10 +33,6 @@ const alertMessage = (musteri, irsaliyeTipi, olan, limit) => (
     <br></br>Önce mevcut {irsaliyeTipi}ni kesin ve sonra tekrar deneyin.
   </div>
 );
-
-const CollapseStyled = styled(Collapse)`
-  background-color: red;
-`;
 
 export default function SevkEdilecekler() {
   const { user } = useAuth();

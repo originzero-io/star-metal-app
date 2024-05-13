@@ -1,12 +1,9 @@
-import { Tabs, Collapse, Tag, Badge } from "antd";
-import { CgMoreVertical } from "react-icons/cg";
+import { Badge, Collapse, Tag } from "antd";
+import PageHeader from "components/shared/PageHeader";
+import collapseStyle from "components/shared/StyledCollapse";
+import { FcOk } from "react-icons/fc";
 import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../../components/shared/TableGod";
-import MalzemeDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeForm";
-import { useState } from "react";
-import PageHeader from "components/shared/PageHeader";
-import { FcOk } from "react-icons/fc";
-import collapseStyle from "components/shared/StyledCollapse";
 
 const data = [];
 for (let i = 0; i < 4; i++) {

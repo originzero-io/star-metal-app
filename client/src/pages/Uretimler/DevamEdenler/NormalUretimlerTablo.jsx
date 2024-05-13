@@ -21,12 +21,6 @@ import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiy
 import { useEffect, useState } from "react";
 import { createTableFilterFromData } from "utils/table.helper";
 
-// const subCollapseItemStyle = {
-//   borderRadius: 6,
-//   marginTop: 4,
-//   background: "rgba(255, 255, 255, 0.4)",
-// };
-
 export default function NormalUretimlerTablo({ data }) {
   const { user } = useAuth();
 
