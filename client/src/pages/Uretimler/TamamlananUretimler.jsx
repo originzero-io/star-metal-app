@@ -6,6 +6,7 @@ import MalzemeDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeFo
 import { useState } from "react";
 import PageHeader from "components/shared/PageHeader";
 import { FcOk } from "react-icons/fc";
+import collapseStyle from "components/shared/StyledCollapse";
 
 const data = [];
 for (let i = 0; i < 4; i++) {
@@ -156,21 +157,13 @@ function TamamlananUretimler() {
               </Badge>
             ),
             children: <NormalUretimler />,
-            style: {
-              borderRadius: 10,
-              marginTop: 4,
-              background: "rgba(255, 255, 255, 0.5)",
-            },
+            style: collapseStyle.parentCollapseItem,
           },
           {
             key: "fason",
             label: "Fason Üretimler",
             children: <FasonUretimler />,
-            style: {
-              borderRadius: 10,
-              marginTop: 4,
-              background: "rgba(255, 255, 255, 0.4)",
-            },
+            style: collapseStyle.parentCollapseItem,
           },
         ]}
       />

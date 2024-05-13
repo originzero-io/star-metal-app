@@ -9,6 +9,7 @@ import {
 import { Badge, Collapse, Modal, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import IdBadge from "components/shared/IdBadge";
+import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
@@ -22,12 +23,6 @@ import irsaliyeHttp from "services/irsaliyeler.http";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 import { fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
-
-const subCollapseItemStyle = {
-  borderRadius: 10,
-  marginTop: 4,
-  background: "rgba(255, 255, 255, 0.4)",
-};
 
 export default function FasonUretimlerTablo({ data }) {
   const { user } = useAuth();
@@ -409,7 +404,7 @@ export default function FasonUretimlerTablo({ data }) {
             }}
           />
         ),
-        style: subCollapseItemStyle,
+        style: collapseStyle.subCollapseItem,
       }))}
     />
   );

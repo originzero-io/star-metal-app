@@ -2,6 +2,7 @@ import { CaretRightOutlined, CloudUploadOutlined } from "@ant-design/icons";
 import { Badge, Button, Collapse, Divider, Flex, Form, Modal, Select, Tag } from "antd";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
+import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
@@ -176,13 +177,7 @@ export default function Irsaliyeler() {
                 </Badge>
               </Flex>
             ),
-            style: {
-              borderRadius: 10,
-              marginBottom: 6,
-              background: "rgba(76, 144, 85, 0.072)",
-              // background: "rgba(229, 33, 46, 0.061)",
-              // background: "rgba(255, 255, 255, 0.5)",
-            },
+            style: collapseStyle.parentCollapseItem,
             children: (
               <Collapse
                 bordered={false}
@@ -219,12 +214,8 @@ export default function Irsaliyeler() {
                         deleteRecordsFunc={secilenKaydiSil}
                       />
                     ),
-                    style: {
-                      borderRadius: 10,
-                      marginTop: 6,
-                      // background: "red",
-                      background: "rgba(255, 255, 255, 0.4)",
-                    },
+                    style: collapseStyle.subCollapseItem,
+
                     extra: <IrsaliyeKesButon type="sevk" kayitlar={kayitlar} />,
                   }))
                 }
@@ -253,13 +244,9 @@ export default function Irsaliyeler() {
                 </Badge>
               </Flex>
             ),
-            style: {
-              borderRadius: 10,
-              marginBottom: 6,
-              background: "rgba(161, 46, 134, 0.061)",
-              // background: "rgba(161, 46, 134, 0.1)",
-              // background: "rgba(255, 255, 255, 0.5)",
-            },
+
+            style: collapseStyle.parentCollapseItem,
+
             children: (
               <Collapse
                 bordered={false}
@@ -301,12 +288,9 @@ export default function Irsaliyeler() {
                         deleteRecordsFunc={secilenKaydiSil}
                       />
                     ),
-                    style: {
-                      borderRadius: 10,
-                      marginTop: 6,
-                      // background: "red",
-                      background: "rgba(255, 255, 255, 0.4)",
-                    },
+
+                    style: collapseStyle.subCollapseItem,
+
                     extra: <IrsaliyeKesButon type="tasima" kayitlar={kayitlar} />,
                   }))
                 }

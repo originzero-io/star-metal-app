@@ -3,15 +3,9 @@ import { FcSynchronize } from "react-icons/fc";
 import { Badge, Collapse, Flex } from "antd";
 import PageHeader from "components/shared/PageHeader";
 import { useDBContext } from "context/DBProvider";
+import collapseStyle from "components/shared/StyledCollapse";
 import FasonUretimlerTablo from "./FasonUretimlerTablo";
 import NormalUretimlerTablo from "./NormalUretimlerTablo";
-
-const collapseItemStyle = {
-  borderRadius: 10,
-  marginBottom: 6,
-  background: "rgba(255, 255, 255, 0.4)",
-  // background: "rgba(161, 46, 134, 0.061)",
-};
 
 function DevamEdenUretimler() {
   const { devamEdenUretimler } = useDBContext();
@@ -28,7 +22,7 @@ function DevamEdenUretimler() {
         items={[
           {
             key: "normal",
-            style: collapseItemStyle,
+            style: collapseStyle.parentCollapseItem,
             label: (
               <Flex justify="center">
                 <Badge count={devamEdenUretimler.normalUretimler?.length} offset={[20, 9]}>
@@ -48,7 +42,7 @@ function DevamEdenUretimler() {
           },
           {
             key: "fason",
-            style: collapseItemStyle,
+            style: collapseStyle.parentCollapseItem,
             label: (
               <Flex justify="center">
                 <Badge

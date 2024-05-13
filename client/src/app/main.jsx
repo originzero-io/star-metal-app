@@ -83,11 +83,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             lineWidthBold: 3,
             colorBorderSecondary: "#cccccc",
           },
-          Collapse: {
-            // contentBg: "transparent",
-            // headerBg: "rgba(255, 255, 255, 0.5)",
-            headerBg: "transparent",
-          },
           Modal: {
             colorBgElevated: "#edf1fb",
           },
