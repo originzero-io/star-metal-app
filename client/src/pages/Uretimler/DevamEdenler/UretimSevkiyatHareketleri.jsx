@@ -19,7 +19,7 @@ const TopSectionItemName = styled.div`
 `;
 const TopSectionItemValue = styled.div`
   padding: 8px;
-  color: #016bcd;
+  color: rgb(106, 48, 208);
   border-radius: 6px;
   width: 120px;
   text-align: center;
@@ -27,12 +27,12 @@ const TopSectionItemValue = styled.div`
   font-weight: 600;
   background-color: rgba(255, 255, 255, 0.6);
   box-shadow: 2px 3px 8px -8px rgba(0, 0, 0, 0.75);
+  border: 1px solid rgb(128, 84, 206);
 `;
 
 export default function UretimSevkiyatHareketleri({ record }) {
   const { setLoading, loading } = useDBContext();
   const [uretimGirisleri, setUretimGirisleri] = useState({});
-  console.log("record", record);
 
   useEffect(() => {
     async function fetchData() {
@@ -209,6 +209,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
                 columns={columns}
                 pagination={false}
                 hideDefaultTitleButtons
+                scroll={{ x: 1200 }}
               />
             </div>
           ))
