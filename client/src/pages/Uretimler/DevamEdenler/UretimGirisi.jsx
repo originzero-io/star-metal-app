@@ -28,7 +28,6 @@ const TeraziItem = styled.div`
   border: 1px solid #c4c4c4;
   margin: 10px;
   width: 20%;
-  height: 85px;
   border-radius: 6px;
 `;
 const TeraziItemHeader = styled.div`
@@ -39,9 +38,10 @@ const TeraziItemHeader = styled.div`
   font-size: 16px;
 `;
 const TeraziItemContent = styled.div`
-  font-size: 3vmin;
+  font-size: 2.4vmin;
   font-weight: 700;
   text-align: center;
+  padding: 10px;
 `;
 
 const FormSection = styled(SectionBase)`
