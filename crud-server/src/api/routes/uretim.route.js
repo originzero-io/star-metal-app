@@ -2,6 +2,7 @@ import express from "express";
 import { NormalUretim, FasonUretim } from "../models/uretim.model.js";
 import Referans from "../models/referans.model.js";
 import Irsaliye from "../models/irsaliye.model.js";
+import UretimGirisi from "../models/uretim-girisi.model.js";
 
 const router = express.Router();
 
@@ -174,7 +175,27 @@ router.put("/devam-eden/fasonlara-irsaliye-kes", async (req, res) => {
   }
 });
 
-router.delete("/devam-eden", async (req, res) => {});
+router.delete("/devam-eden", async (req, res) => {
+  const { kayit } = req.body;
+  if (kayit.Referanslar.fason) {
+    await FasonUretim.destroy({
+      where: { id: kayit.id },
+    });
+  } else {
+    await NormalUretim.destroy({
+      where: { id: kayit.id },
+    });
+  }
+
+  await UretimGirisi.destroy({
+    where: { uretimSiraNo: kayit.id },
+  });
+  await Irsaliye.destroy({
+    where: { uretimSiraNo: kayit.id },
+  });
+
+  res.send("ok");
+});
 
 router.get("/tamamlanan", async (req, res) => {
   res.send("tamamlanan üretimler");

@@ -18,19 +18,16 @@ import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeFor
 import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
-import { useEffect, useState } from "react";
 import irsaliyeHttp from "services/irsaliyeler.http";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 import { fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
 
-export default function FasonUretimlerTablo({ data }) {
+export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFunc }) {
   const { user } = useAuth();
 
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
   const { showPanel, showNotification, showAlert, showModal } = useUIContext();
-
-  const [musteriBazliKayitlar, setMusteriBazliKayitlar] = useState([]);
 
   const createColumnsForCustomer = (musteriAdi) => [
     {
@@ -224,37 +221,6 @@ export default function FasonUretimlerTablo({ data }) {
     },
   ];
 
-  useEffect(() => {
-    const musteriBazli = data.reduce((acc, uretim) => {
-      const { musteriAdi } = uretim.Referanslar;
-
-      // Eğer bu müşteri adı ile bir grup zaten mevcut değilse, bu grup için boş bir dizi oluştur
-      if (!acc[musteriAdi]) {
-        acc[musteriAdi] = [];
-      }
-      acc[musteriAdi].push(uretim);
-
-      return acc; // Akümülatörü (gruplama objesini) döndür
-    }, {}); // İlk değer olarak boş bir obje kullanılır
-    setMusteriBazliKayitlar(musteriBazli);
-  }, [data]);
-
-  const fasonUretimSil = () => {
-    Modal.confirm({
-      title: "Emin misiniz?",
-      content:
-        "Bu fason üretimini silmek üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?",
-      okText: "Tamam",
-      cancelText: "İptal",
-      onOk() {
-        showAlert("info", "Bu özellik henüz geliştiriliyor...");
-      },
-      onCancel() {
-        console.log("Hayır, vazgeçtim");
-      },
-    });
-  };
-
   const fasonaIrsaliyeKes = async (record) => {
     const { fasonFirmasi: seciliFasonFirmasi } = record.Referanslar;
     Modal.confirm({
@@ -320,7 +286,6 @@ export default function FasonUretimlerTablo({ data }) {
           <Badge count={kayitlar.length} offset={[20, 6]} color="blue">
             <div
               style={{
-                // fontSize: "16px",
                 fontWeight: "600",
                 color: "#474747",
               }}
@@ -336,7 +301,7 @@ export default function FasonUretimlerTablo({ data }) {
             hideDefaultTitleButtons
             scroll={{ x: 1500 }}
             contextMenu={{
-              deleteAction: fasonUretimSil,
+              deleteAction: uretimiSilFunc,
               extraItems: (record) => [
                 record.gelenMiktar !== record.gidenMiktar && {
                   icon: <SnippetsOutlined />,

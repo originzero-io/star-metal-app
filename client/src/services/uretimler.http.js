@@ -25,6 +25,13 @@ class DevamEdenUretim extends CRUDServerHttp {
     });
     return data;
   }
+
+  async uretimiSil(kayit) {
+    const { data } = await axios.delete(`${this.endPoint}`, {
+      data: { kayit },
+    });
+    return data;
+  }
 }
 const devamEdenUretimHttp = new DevamEdenUretim();
 

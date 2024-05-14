@@ -1,13 +1,11 @@
 import {
-  CarOutlined,
   CaretRightOutlined,
   ContainerOutlined,
   EditOutlined,
   PrinterOutlined,
-  TruckFilled,
   TruckOutlined,
 } from "@ant-design/icons";
-import { Badge, Collapse, Modal, Tag } from "antd";
+import { Badge, Collapse, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
@@ -18,15 +16,12 @@ import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeFor
 import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
-import { useEffect, useState } from "react";
 import { createTableFilterFromData } from "utils/table.helper";
 
-export default function NormalUretimlerTablo({ data }) {
+export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilFunc }) {
   const { user } = useAuth();
 
-  const { showPanel, showAlert, showModal } = useUIContext();
-
-  const [musteriBazliKayitlar, setMusteriBazliKayitlar] = useState([]);
+  const { showPanel, showModal } = useUIContext();
 
   const createColumnsForCustomer = (musteriAdi) => [
     {
@@ -196,37 +191,6 @@ export default function NormalUretimlerTablo({ data }) {
     },
   ];
 
-  useEffect(() => {
-    const musteriBazli = data.reduce((acc, uretim) => {
-      const { musteriAdi } = uretim.Referanslar;
-
-      // Eğer bu müşteri adı ile bir grup zaten mevcut değilse, bu grup için boş bir dizi oluştur
-      if (!acc[musteriAdi]) {
-        acc[musteriAdi] = [];
-      }
-      acc[musteriAdi].push(uretim);
-
-      return acc; // Akümülatörü (gruplama objesini) döndür
-    }, {}); // İlk değer olarak boş bir obje kullanılır
-    setMusteriBazliKayitlar(musteriBazli);
-  }, [data]);
-
-  const normalUretimSil = () => {
-    Modal.confirm({
-      title: "Emin misiniz?",
-      content:
-        "Bu Star Metal üretimini silmek üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?",
-      okText: "Tamam",
-      cancelText: "İptal",
-      onOk() {
-        showAlert("info", "Bu özellik henüz geliştiriliyor...");
-      },
-      onCancel() {
-        console.log("Hayır, vazgeçtim");
-      },
-    });
-  };
-
   return (
     <Collapse
       bordered={false}
@@ -237,7 +201,6 @@ export default function NormalUretimlerTablo({ data }) {
           <Badge count={kayitlar.length} offset={[20, 6]}>
             <div
               style={{
-                // fontSize: "16px",
                 fontWeight: "600",
                 color: "#474747",
               }}
@@ -253,8 +216,7 @@ export default function NormalUretimlerTablo({ data }) {
             hideDefaultTitleButtons
             scroll={{ x: 1500 }}
             contextMenu={{
-              // editForm: MiktarDuzenlemeForm,
-              deleteAction: normalUretimSil,
+              deleteAction: uretimiSilFunc,
               extraItems: (record) => [
                 {
                   icon: <ContainerOutlined />,
