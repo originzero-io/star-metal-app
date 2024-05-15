@@ -11,7 +11,7 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import React, { useEffect, useMemo, useState } from "react";
 import irsaliyeHttp from "services/irsaliyeler.http";
-import uretimGirisiHttp from "services/uretim-girisleri.http";
+import uretimGirisleriHttp from "services/uretim-girisleri.http";
 import { devamEdenUretimHttp } from "services/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 
@@ -48,7 +48,7 @@ export default function SevkEdilecekler() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const uretimResponse = await uretimGirisiHttp.getData();
+      const uretimResponse = await uretimGirisleriHttp.getData();
       console.log("Müşteriye göre sevk edilmemiş üretim girişleri: ", uretimResponse);
       setUretimGirisleri(uretimResponse);
       setLoading(false);
@@ -235,11 +235,11 @@ export default function SevkEdilecekler() {
       async onOk() {
         try {
           const records = selectedRows[musteriAdi];
-          await uretimGirisiHttp.deleteData(records);
+          await uretimGirisleriHttp.deleteData(records);
           const devamEdenUretimler = await devamEdenUretimHttp.getData();
           setDevamEdenUretimler(devamEdenUretimler);
 
-          const uretimResponse = await uretimGirisiHttp.getData();
+          const uretimResponse = await uretimGirisleriHttp.getData();
           setUretimGirisleri(uretimResponse);
           showNotification(
             "success",
@@ -290,6 +290,7 @@ export default function SevkEdilecekler() {
                 dataSource={kayitlar}
                 columns={createColumnsForCustomer(musteriAdi)}
                 pagination={false}
+                scroll={{ x: 1500 }}
                 hideDefaultTitleButtons
                 rowSelection={createRowSelection(musteriAdi)}
                 rowStyle={(row) =>
@@ -468,8 +469,8 @@ function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUre
           if (sevkKayitlari.length > 0) {
             if (refBazliToplamSevkSayisi <= limit) {
               const butunIrsaliyeler = await irsaliyeHttp.addData(sevkKayitlari);
-              await uretimGirisiHttp.aktiflikDegistir(false, musteriKayitlari);
-              const uretimGirisleri = await uretimGirisiHttp.getData();
+              await uretimGirisleriHttp.aktiflikDegistir(false, musteriKayitlari);
+              const uretimGirisleri = await uretimGirisleriHttp.getData();
 
               setIrsaliyeler(butunIrsaliyeler);
               setUretimGirisleri(uretimGirisleri);
@@ -490,8 +491,8 @@ function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUre
           if (tasimaKayitlari.length > 0) {
             if (refBazliToplamTasimaSayisi <= limit) {
               const butunIrsaliyeler = await irsaliyeHttp.addData(tasimaKayitlari);
-              await uretimGirisiHttp.aktiflikDegistir(false, musteriKayitlari);
-              const uretimGirisleri = await uretimGirisiHttp.getData();
+              await uretimGirisleriHttp.aktiflikDegistir(false, musteriKayitlari);
+              const uretimGirisleri = await uretimGirisleriHttp.getData();
 
               setIrsaliyeler(butunIrsaliyeler);
               setUretimGirisleri(uretimGirisleri);

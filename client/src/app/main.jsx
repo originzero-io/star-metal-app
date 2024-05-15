@@ -20,7 +20,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
             borderColor: "#dddddd",
             cellFontSizeSM: 12,
-            headerColor: "rgba(0, 0, 0, 0.8)",
+
+            headerBg: "rgb(221, 231, 247)",
+            headerColor: "rgba(0, 0, 0, 0.9)",
+
             colorBgContainer: "rgba(255, 255, 255, 0.6)",
             filterDropdownBg: "#ffff",
           },

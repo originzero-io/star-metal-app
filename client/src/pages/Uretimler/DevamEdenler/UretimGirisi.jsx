@@ -4,7 +4,7 @@ import IdBadge from "components/shared/IdBadge";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useEffect, useState } from "react";
-import uretimGirisiHttp from "services/uretim-girisleri.http";
+import uretimGirisleriHttp from "services/uretim-girisleri.http";
 import styled from "styled-components";
 import { getCurrentDateTime } from "utils/time.helper";
 import SevkiyatKarti from "../../../components/cards/SevkiyatKarti";
@@ -116,7 +116,7 @@ export default function UretimGirisi({ record }) {
     };
 
     if (data.uretimAdedi + localRecord.uretilenMiktar <= localRecord.gelenMiktar) {
-      const updatedUretim = await uretimGirisiHttp.addData(data);
+      const updatedUretim = await uretimGirisleriHttp.addData(data);
       setLocalRecord(updatedUretim);
       let newDevamEdenUretimler = [];
       if (data.fason) {

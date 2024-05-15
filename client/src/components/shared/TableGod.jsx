@@ -114,33 +114,40 @@ export default function TableGod({
               ...rowSelection,
             }
           }
-          title={() => (
-            <TableTitleWrapperStyled>
-              <div style={{ display: "flex" }}>
-                {actionButtons}
-                {!hideDefaultTitleButtons && (
-                  <>
-                    <Divider
-                      style={{
-                        height: "35px",
-                        background: "#e7e5e5",
-                      }}
-                      type="vertical"
-                    />
+          title={
+            actionButtons || !hideDefaultTitleButtons
+              ? () => (
+                  <TableTitleWrapperStyled>
+                    <div style={{ display: "flex" }}>
+                      {actionButtons}
+                      {!hideDefaultTitleButtons && (
+                        <>
+                          <Divider
+                            style={{
+                              height: "35px",
+                              background: "#e7e5e5",
+                            }}
+                            type="vertical"
+                          />
 
-                    <PrintButton style={{ marginRight: "4px" }} handlePrintFunc={handlePrint} />
+                          <PrintButton
+                            style={{ marginRight: "4px" }}
+                            handlePrintFunc={handlePrint}
+                          />
 
-                    <Button onClick={downloadExcelHandler}>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <img src={ExcelIcon} width={20} />
-                        <div style={{ marginLeft: "10px" }}>Excel</div>
-                      </div>
-                    </Button>
-                  </>
-                )}
-              </div>
-            </TableTitleWrapperStyled>
-          )}
+                          <Button onClick={downloadExcelHandler}>
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                              <img src={ExcelIcon} width={20} />
+                              <div style={{ marginLeft: "10px" }}>Excel</div>
+                            </div>
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </TableTitleWrapperStyled>
+                )
+              : null
+          }
           onRow={(record, rowIndex) => ({
             style: rowStyle && rowStyle(record),
             onClick: (event) => {},
