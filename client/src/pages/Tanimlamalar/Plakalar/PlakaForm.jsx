@@ -40,18 +40,6 @@ export default function PlakaForm({ record, type }) {
       autoComplete="off"
     >
       <Form.Item
-        label="Plaka Logo Kodu"
-        name="plakaLogoKodu"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input placeholder="Plaka logo kodu girin" />
-      </Form.Item>
-      <Form.Item
         label="Plaka"
         name="plaka"
         rules={[

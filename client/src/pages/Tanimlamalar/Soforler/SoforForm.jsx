@@ -39,21 +39,12 @@ export default function SoforForm({ record, type }) {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Form.Item
-        label="Şoför Logo Kodu"
-        name="soforLogoKodu"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input placeholder="Şoför logo kodu girin" />
+      <Form.Item label="Logo Kodu" name="logicalref">
+        <Input placeholder="Şoför logo kodu girin" value={record.logicalref} disabled />
       </Form.Item>
       <Form.Item
-        label="Ad"
-        name="ad"
+        label="Adı"
+        name="adi"
         rules={[
           {
             required: true,
@@ -64,8 +55,8 @@ export default function SoforForm({ record, type }) {
         <Input placeholder="Şoför adı girin" />
       </Form.Item>
       <Form.Item
-        label="Soyad"
-        name="soyad"
+        label="Soyadı"
+        name="soyadi"
         rules={[
           {
             required: true,
@@ -77,7 +68,7 @@ export default function SoforForm({ record, type }) {
       </Form.Item>
       <Form.Item
         label="TC"
-        name="tc"
+        name="kimlikNo"
         rules={[
           {
             required: true,

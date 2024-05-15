@@ -26,26 +26,26 @@ function Soforler() {
   const columns = useMemo(
     () => [
       {
-        title: "Şoför Logo Kodu",
-        dataIndex: "soforLogoKodu",
-        key: "soforLogoKodu",
+        title: "Logo Kodu",
+        dataIndex: "logicalref",
+        key: "logicalref",
         render: (text) => <IdBadge value={text} />,
         width: 150,
       },
       {
         title: "Adı",
-        dataIndex: "ad",
+        dataIndex: "adi",
         key: "adi",
       },
       {
         title: "Soyadı",
-        dataIndex: "soyad",
+        dataIndex: "soyadi",
         key: "soyad",
       },
       {
-        title: "Kimlik No",
-        dataIndex: "tc",
-        key: "tc",
+        title: "TC Kimlik No",
+        dataIndex: "kimlikNo",
+        key: "kimlikNo",
       },
     ],
     [],
@@ -80,7 +80,7 @@ function Soforler() {
   const deleteSingleRecordHandler = (record) => {
     Modal.confirm({
       title: "Emin misiniz?",
-      content: `${record.ad} isimli şoförü üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
+      content: `${`${record.adi} ${record.soyadi}`} isimli şoförü üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
       okText: "Tamam",
       cancelText: "İptal",
       async onOk() {
@@ -95,8 +95,10 @@ function Soforler() {
     });
   };
 
-  const logoSync = () => {
-    console.log("soforler: ", soforler);
+  const logoSync = async () => {
+    const logoSoforler = await soforlerHttp.fetchLogoApi("GetSoforList");
+    setSoforler(logoSoforler);
+    console.log("logoSoforler: ", logoSoforler);
   };
 
   return (

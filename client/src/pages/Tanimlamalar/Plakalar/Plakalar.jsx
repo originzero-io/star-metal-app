@@ -2,7 +2,6 @@ import { CarOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 
-import IdBadge from "components/shared/IdBadge";
 import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
@@ -24,13 +23,6 @@ function Plakalar() {
 
   const columns = useMemo(
     () => [
-      {
-        title: "Plaka Logo Kodu",
-        dataIndex: "plakaLogoKodu",
-        key: "plakaLogoKodu",
-        render: (text) => <IdBadge value={text} />,
-        width: 120,
-      },
       {
         title: "Plaka",
         dataIndex: "plaka",
@@ -85,8 +77,10 @@ function Plakalar() {
     });
   };
 
-  const logoSync = () => {
-    console.log("plakalar: ", plakalar);
+  const logoSync = async () => {
+    const logoPlakalar = await plakalarHttp.fetchLogoApi("GetAracList");
+    setPlakalar(logoPlakalar);
+    console.log("logoPlakalar: ", logoPlakalar);
   };
 
   return (

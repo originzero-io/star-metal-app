@@ -4,19 +4,19 @@ import sequelize from "../../dbConnection.js";
 const Sofor = sequelize.define(
   "Soforler",
   {
-    soforLogoKodu: {
+    logicalref: {
       type: DataTypes.STRING(50),
       allowNull: false,
     },
-    ad: {
+    adi: {
       type: DataTypes.STRING(70),
       allowNull: false,
     },
-    soyad: {
+    soyadi: {
       type: DataTypes.STRING(120),
       allowNull: false,
     },
-    tc: {
+    kimlikNo: {
       type: DataTypes.STRING(11),
       allowNull: false,
     },
@@ -27,5 +27,5 @@ const Sofor = sequelize.define(
     timestamps: false,
   },
 );
-// Sofor.sync({ alter: true });
+// Sofor.sync({ force: true });
 export default Sofor;

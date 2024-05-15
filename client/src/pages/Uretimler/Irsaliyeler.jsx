@@ -413,8 +413,8 @@ function IrsaliyeKesButon({ type, kayitlar }) {
           >
             <Select placeholder="Şoför seçiniz">
               {soforler.map((sofor) => (
-                <Select.Option key={sofor.id} value={`${sofor.ad} ${sofor.soyad}`}>
-                  {`${sofor.ad} ${sofor.soyad}`}
+                <Select.Option key={sofor.id} value={`${sofor.adi} ${sofor.soyadi}`}>
+                  {`${sofor.adi} ${sofor.soyadi}`}
                 </Select.Option>
               ))}
             </Select>
