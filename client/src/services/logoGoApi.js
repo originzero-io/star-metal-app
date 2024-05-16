@@ -1,10 +1,13 @@
-import axios from "axios";
+import BaseHttp from "./base.http";
 
-class LogoGoApi {
-  logoApiUrl = "http://192.168.1.254:6311";
+class LogoGoApi extends BaseHttp {
+  constructor() {
+    super();
+    this.service = this.createService("http://192.168.1.254:6311");
+  }
 
   async getData(path) {
-    const rawData = await axios.get(`${this.logoApiUrl}/${path}`);
+    const rawData = await this.service.get(`/${path}`);
     return rawData.data;
   }
 }
