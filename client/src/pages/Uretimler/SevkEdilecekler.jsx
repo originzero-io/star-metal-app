@@ -14,6 +14,7 @@ import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
+import collapseStyle from "components/shared/StyledCollapse";
 
 const alertMessage = (musteri, irsaliyeTipi, olan, limit) => (
   <div>
@@ -279,12 +280,7 @@ export default function SevkEdilecekler() {
                 </div>
               </Badge>
             ),
-            style: {
-              borderRadius: 6,
-              marginBottom: 4,
-              background: "rgba(255, 255, 255, 0.5)",
-              // background: "rgba(161, 46, 134, 0.061)",
-            },
+            style: collapseStyle.parentCollapseItem,
             children: (
               <TableGod
                 dataSource={kayitlar}
