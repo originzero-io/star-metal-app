@@ -392,7 +392,7 @@ function IrsaliyeKesButon({ type, kayitlar }) {
               },
             ]}
           >
-            <Select placeholder="Personel seçiniz">
+            <Select placeholder="Personel seçiniz" showSearch>
               {personeller.map((personel) => (
                 <Select.Option key={personel.id} value={`${personel.ad} ${personel.soyad}`}>
                   {`${personel.ad} ${personel.soyad}`}
@@ -411,7 +411,7 @@ function IrsaliyeKesButon({ type, kayitlar }) {
               },
             ]}
           >
-            <Select placeholder="Şoför seçiniz">
+            <Select placeholder="Şoför seçiniz" showSearch>
               {soforler.map((sofor) => (
                 <Select.Option key={sofor.id} value={`${sofor.adi} ${sofor.soyadi}`}>
                   {`${sofor.adi} ${sofor.soyadi}`}
@@ -429,7 +429,7 @@ function IrsaliyeKesButon({ type, kayitlar }) {
               },
             ]}
           >
-            <Select placeholder="Plaka seçiniz">
+            <Select placeholder="Plaka seçiniz" showSearch>
               {plakalar.map((plaka) => (
                 <Select.Option key={plaka.id} value={plaka.plaka}>
                   {plaka.plaka}
