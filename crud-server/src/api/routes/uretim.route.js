@@ -155,6 +155,20 @@ router.put(
 );
 
 router.put(
+  "/devam-eden/oncelikAyarla",
+  asyncHandler(async (req, res) => {
+    const { currentRecord, newOncelikDurumu } = req.body;
+
+    const uretim = await NormalUretim.findByPk(currentRecord.id);
+    await uretim.update({
+      acil: newOncelikDurumu,
+    });
+
+    res.json(uretim);
+  }),
+);
+
+router.put(
   "/devam-eden/fasonlara-irsaliye-kes",
   asyncHandler(async (req, res) => {
     const irsaliyeKaydi = req.body;

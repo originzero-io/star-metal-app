@@ -2,6 +2,7 @@ import {
   CaretRightOutlined,
   ContainerOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   PrinterOutlined,
   TruckOutlined,
 } from "@ant-design/icons";
@@ -11,19 +12,39 @@ import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
 import { useAuth } from "context/AuthProvider";
+import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeForm";
 import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 
 export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilFunc }) {
   const { user } = useAuth();
 
   const { showPanel, showModal } = useUIContext();
+  const { setDevamEdenUretimler } = useDBContext();
 
   const createColumnsForCustomer = (musteriAdi) => [
+    {
+      title: "Öncelik",
+      dataIndex: "acil",
+      key: "acil",
+      render: (text) => (
+        <Tag color={text && "red-inverse"} style={{ width: "80px", textAlign: "center" }}>
+          {text ? "ACİL" : "NORMAL"}
+        </Tag>
+      ),
+      filters: [
+        { text: "ACİL", value: true },
+        { text: "NORMAL", value: false },
+      ],
+      onFilter: (value, record) => record.acil === value,
+      width: 100,
+      fixed: "left",
+    },
     {
       title: "Sıra No",
       dataIndex: "id",
@@ -191,6 +212,20 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
     },
   ];
 
+  const oncelikDurumunuDegistir = async (record) => {
+    const yeniOncelikDurumu = record.acil ? 0 : 1;
+    const updatedUretim = await devamEdenUretimHttp.oncelikAyarla(record, yeniOncelikDurumu);
+    setDevamEdenUretimler((prevState) => ({
+      ...prevState,
+      normalUretimler: prevState.normalUretimler.map((normal) => {
+        if (normal.id === updatedUretim.id) {
+          return { ...updatedUretim };
+        }
+        return normal;
+      }),
+    }));
+  };
+
   return (
     <Collapse
       bordered={false}
@@ -218,6 +253,11 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
             contextMenu={{
               deleteAction: uretimiSilFunc,
               extraItems: (record) => [
+                user.yetki === "admin" && {
+                  icon: <ExclamationCircleOutlined style={{ color: "red" }} />,
+                  title: record.acil ? "Acilliği Kaldır" : "Acil Olarak İşaretle",
+                  action: () => oncelikDurumunuDegistir(record),
+                },
                 {
                   icon: <ContainerOutlined />,
                   title: "Üretim Girişi Yap",
