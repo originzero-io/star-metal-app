@@ -79,9 +79,25 @@ function Plakalar() {
   };
 
   const logoSync = async () => {
-    const logoPlakalar = await logoGoApi.getData("GetAracList");
-    setPlakalar(logoPlakalar);
-    console.log("logoPlakalar: ", logoPlakalar);
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content: "Plakalar logo programından çekilip bu programa aktarılacak. Onaylıyor musunuz?",
+      okText: "Tamam",
+      cancelText: "İptal",
+      async onOk() {
+        try {
+          const logoPlakalar = await logoGoApi.getData("GetAracList");
+          const newPlakalar = await plakalarHttp.logoIleEsle(logoPlakalar);
+          setPlakalar(newPlakalar);
+          showNotification("success", "Plakalar logo ile eşlendi.");
+        } catch (error) {
+          showNotification("error", "Hata oluştu", error.message);
+        }
+      },
+      onCancel() {
+        showNotification("warning", "İşlem iptal edildi");
+      },
+    });
   };
 
   return (

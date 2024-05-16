@@ -5,8 +5,8 @@ const Sofor = sequelize.define(
   "Soforler",
   {
     logicalref: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
+      type: DataTypes.STRING(10),
+      allowNull: true,
     },
     adi: {
       type: DataTypes.STRING(70),

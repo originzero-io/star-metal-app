@@ -39,9 +39,11 @@ export default function SoforForm({ record, type }) {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Form.Item label="Logo Kodu" name="logicalref">
-        <Input placeholder="Şoför logo kodu girin" value={record.logicalref} disabled />
-      </Form.Item>
+      {type === "update" && (
+        <Form.Item label="Logo Kodu" name="logicalref">
+          <Input placeholder="Şoför logo kodu girin" value={record.logicalref} disabled />
+        </Form.Item>
+      )}
       <Form.Item
         label="Adı"
         name="adi"

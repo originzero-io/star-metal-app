@@ -20,6 +20,25 @@ router.post("/", async (req, res) => {
     });
   }
 });
+
+router.post("/logo-ile-esle", async (req, res) => {
+  // mevcut tüm kayıtları sil yeni gelen listeyle doldur
+  const logodanGelenKayitlar = req.body;
+  try {
+    await Plaka.destroy({
+      truncate: true,
+    });
+    const newPlakalar = await Plaka.bulkCreate(logodanGelenKayitlar);
+    res.json(newPlakalar);
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({
+      name: error.name,
+      fields: error.fields,
+    });
+  }
+});
+
 router.put("/", async (req, res) => {
   try {
     const plaka = await Plaka.findByPk(req.body.id);

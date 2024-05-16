@@ -56,6 +56,21 @@ class CRUDServerHttp {
 
     return newDataArray;
   }
+
+  async logoIleEsle(dataArray) {
+    try {
+      const { data } = await axios.post(`${this.endPoint}/logo-ile-esle`, dataArray);
+      return data;
+    } catch (error) {
+      const message = error.response.data;
+      notification.error({
+        message: "Kayıtta hata oluştu",
+        description: `${message.name} - ${Object.values(message.fields)}`,
+        duration: 5,
+      });
+      return null;
+    }
+  }
 }
 
 export default CRUDServerHttp;

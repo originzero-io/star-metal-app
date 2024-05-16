@@ -97,9 +97,25 @@ function Soforler() {
   };
 
   const logoSync = async () => {
-    const logoSoforler = await logoGoApi.getData("GetSoforList");
-    setSoforler(logoSoforler);
-    console.log("logoSoforler: ", logoSoforler);
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content: "Şoförler logo programından çekilip bu programa aktarılacak. Onaylıyor musunuz?",
+      okText: "Tamam",
+      cancelText: "İptal",
+      async onOk() {
+        try {
+          const logoSoforler = await logoGoApi.getData("GetSoforList");
+          const newSoforler = await soforlerHttp.logoIleEsle(logoSoforler);
+          setSoforler(newSoforler);
+          showNotification("success", "Şoförler logo ile eşlendi.");
+        } catch (error) {
+          showNotification("error", "Hata oluştu", error.message);
+        }
+      },
+      onCancel() {
+        showNotification("warning", "İşlem iptal edildi");
+      },
+    });
   };
 
   return (
