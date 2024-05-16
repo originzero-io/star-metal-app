@@ -112,7 +112,7 @@ function Personeller() {
 
   return (
     <div>
-      <PageHeader label="Personeller" icon={<PiUsersThreeBold />} />
+      <PageHeader label="Personeller" icon={<PiUsersThreeBold />} dataLength={personeller.length} />
       <TableGod
         dataSource={personeller}
         columns={columns}

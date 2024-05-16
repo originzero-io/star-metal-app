@@ -85,7 +85,7 @@ function Plakalar() {
 
   return (
     <div>
-      <PageHeader label="Plakalar" icon={<CarOutlined />} />
+      <PageHeader label="Plakalar" icon={<CarOutlined />} dataLength={plakalar.length} />
       <TableGod
         dataSource={plakalar}
         columns={columns}

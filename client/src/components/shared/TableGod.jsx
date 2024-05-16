@@ -99,6 +99,7 @@ export default function TableGod({
           dataSource={dataSource}
           columns={columns}
           rowKey={(record) => record.id}
+          // rowKey={(record) => record.id}
           size="small"
           onChange={onChange && onChange}
           // bordered

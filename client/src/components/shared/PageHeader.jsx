@@ -1,4 +1,6 @@
-export default function PageHeader({ label, icon }) {
+import { Badge } from "antd";
+
+export default function PageHeader({ label, icon, dataLength }) {
   return (
     <div
       style={{
@@ -28,7 +30,9 @@ export default function PageHeader({ label, icon }) {
       >
         {icon}
       </div>
-      <span>{label}</span>
+      <span>
+        {label} <Badge count={dataLength} color="#214472" overflowCount={99999999} />
+      </span>
     </div>
   );
 }

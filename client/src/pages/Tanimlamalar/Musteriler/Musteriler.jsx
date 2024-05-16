@@ -1,5 +1,5 @@
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Modal } from "antd";
+import { Badge, Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 
 import MusteriForm from "pages/Tanimlamalar/Musteriler/MusteriForm";
@@ -27,23 +27,30 @@ function Musteriler() {
   const columns = useMemo(
     () => [
       {
-        title: "Müşteri Logo Kodu",
-        dataIndex: "musteriLogoKodu",
-        key: "musteriLogoKodu",
+        title: "Logo Kodu",
+        dataIndex: "logicalref",
+        key: "logicalref",
         render: (text) => <IdBadge value={text} />,
-        filters: createTableFilterFromData(musteriler, "musteriLogoKodu"),
-        onFilter: (value, record) => record.musteriLogoKodu.indexOf(value) === 0,
-        filterSearch: true,
+
         width: 150,
       },
       {
-        title: "Müşteri Adı",
-        dataIndex: "musteriAdi",
-        key: "musteriAdi",
-        filters: createTableFilterFromData(musteriler, "musteriAdi"),
-        onFilter: (value, record) => record.musteriAdi.indexOf(value) === 0,
+        title: "Kodu",
+        dataIndex: "kodu",
+        key: "kodu",
+        filters: createTableFilterFromData(musteriler, "kodu"),
+        onFilter: (value, record) => record.kodu.indexOf(value) === 0,
         filterSearch: true,
         // width: 200,
+      },
+      {
+        title: "Müşteri Adı",
+        dataIndex: "unvani",
+        key: "unvani",
+        filters: createTableFilterFromData(musteriler, "unvani"),
+        onFilter: (value, record) => record.unvani.indexOf(value) === 0,
+        filterSearch: true,
+        width: 350,
       },
       {
         title: "Adres",
@@ -64,6 +71,9 @@ function Musteriler() {
         title: "Vergi No",
         dataIndex: "vergiNo",
         key: "vergiNo",
+        filters: createTableFilterFromData(musteriler, "vergiNo"),
+        onFilter: (value, record) => record.vergiNo.indexOf(value) === 0,
+        filterSearch: true,
         // width: 150,
       },
       {
@@ -93,6 +103,75 @@ function Musteriler() {
     ],
     [musteriler],
   );
+  // const columns = useMemo(
+  //   () => [
+  //     {
+  //       title: "Müşteri Logo Kodu",
+  //       dataIndex: "musteriLogoKodu",
+  //       key: "musteriLogoKodu",
+  //       render: (text) => <IdBadge value={text} />,
+  //       filters: createTableFilterFromData(musteriler, "musteriLogoKodu"),
+  //       onFilter: (value, record) => record.musteriLogoKodu.indexOf(value) === 0,
+  //       filterSearch: true,
+  //       width: 150,
+  //     },
+  //     {
+  //       title: "Müşteri Adı",
+  //       dataIndex: "musteriAdi",
+  //       key: "musteriAdi",
+  //       filters: createTableFilterFromData(musteriler, "musteriAdi"),
+  //       onFilter: (value, record) => record.musteriAdi.indexOf(value) === 0,
+  //       filterSearch: true,
+  //       // width: 200,
+  //     },
+  //     {
+  //       title: "Adres",
+  //       dataIndex: "adres",
+  //       key: "adres1",
+  //       filters: createTableFilterFromData(musteriler, "adres"),
+  //       onFilter: (value, record) => record.adres.indexOf(value) === 0,
+  //       filterSearch: true,
+  //       // width: 200,
+  //     },
+  //     {
+  //       title: "Vergi Dairesi",
+  //       dataIndex: "vergiDairesi",
+  //       key: "vergiDairesi",
+  //       width: 100,
+  //     },
+  //     {
+  //       title: "Vergi No",
+  //       dataIndex: "vergiNo",
+  //       key: "vergiNo",
+  //       // width: 150,
+  //     },
+  //     {
+  //       title: "Telefon",
+  //       dataIndex: "telefon",
+  //       key: "telefon",
+  //       width: 120,
+  //     },
+  //     {
+  //       title: "E-Mail",
+  //       dataIndex: "mail",
+  //       key: "mail",
+  //       // width: 160,
+  //     },
+  //     {
+  //       title: "Yetkili Kişi",
+  //       dataIndex: "yetkili",
+  //       key: "yetkili",
+  //       // width: 150,
+  //     },
+  //     {
+  //       title: "Kep Adresi",
+  //       dataIndex: "kepAdresi",
+  //       key: "kepAdresi",
+  //       // width: 150,
+  //     },
+  //   ],
+  //   [musteriler],
+  // );
 
   const rowSelection = {
     onChange: (_selectedRowKeys, _selectedRows) => {
@@ -123,7 +202,7 @@ function Musteriler() {
   const deleteSingleRecordHandler = (record) => {
     Modal.confirm({
       title: "Emin misiniz?",
-      content: `${record.musteriAdi} isimli müşteriyi üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
+      content: `${record.unvani} isimli müşteriyi üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
       okText: "Tamam",
       cancelText: "İptal",
       async onOk() {
@@ -138,13 +217,28 @@ function Musteriler() {
     });
   };
 
-  const logoSync = () => {
-    console.log("müşteriler: ", musteriler);
+  const logoSync = async () => {
+    try {
+      const logoMusteriler = await musterilerHttp.fetchLogoApi("GetCariList");
+      setMusteriler(logoMusteriler);
+      console.log("logoMusteriler", logoMusteriler);
+    } catch (error) {
+      console.log("error", error);
+      showNotification("error", error.message);
+    }
+    // console.log("müşteriler: ", musteriler);
   };
 
   return (
     <div>
-      <PageHeader label="Müşteriler" icon={<RiCustomerServiceLine />} />
+      <PageHeader
+        label="Müşteriler"
+        icon={<RiCustomerServiceLine />}
+        dataLength={musteriler.length}
+      >
+        <Badge count={musteriler.length} overflowCount={9999999} offset={[50, 0]}></Badge>
+      </PageHeader>
+
       <TableGod
         dataSource={musteriler}
         columns={columns}

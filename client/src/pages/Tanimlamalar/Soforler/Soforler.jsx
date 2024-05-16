@@ -40,7 +40,7 @@ function Soforler() {
       {
         title: "Soyadı",
         dataIndex: "soyadi",
-        key: "soyad",
+        key: "soyadi",
       },
       {
         title: "TC Kimlik No",
@@ -48,7 +48,7 @@ function Soforler() {
         key: "kimlikNo",
       },
     ],
-    [],
+    [soforler],
   );
 
   const rowSelection = {
@@ -103,7 +103,7 @@ function Soforler() {
 
   return (
     <div>
-      <PageHeader label="Şoförler" icon={<GiSteeringWheel />} />
+      <PageHeader label="Şoförler" icon={<GiSteeringWheel />} dataLength={soforler.length} />
       <TableGod
         dataSource={soforler}
         columns={columns}

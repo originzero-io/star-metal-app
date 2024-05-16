@@ -38,7 +38,7 @@ function Ambalajlar() {
 
   return (
     <Container>
-      <PageHeader label="Ambalajlar" icon={<FaDropbox />} />
+      <PageHeader label="Ambalajlar" icon={<FaDropbox />} dataLength={ambalajlar.length} />
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {user.yetki === "admin" && (
           <Card

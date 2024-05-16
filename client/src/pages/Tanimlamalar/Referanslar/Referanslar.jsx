@@ -204,7 +204,11 @@ function Referanslar() {
 
   return (
     <div>
-      <PageHeader label="Referanslar" icon={<MdOutlineDocumentScanner />} />
+      <PageHeader
+        label="Referanslar"
+        icon={<MdOutlineDocumentScanner />}
+        dataLength={referanslar.length}
+      />
       <TableGod
         dataSource={referanslar}
         columns={columns}
