@@ -1,8 +1,4 @@
-import { notification } from "antd";
-import axios from "axios";
 import BaseHttp from "../base.http";
-
-// axios.defaults.baseURL = "http://localhost:6333";
 
 class CRUDServerHttp extends BaseHttp {
   constructor(path) {

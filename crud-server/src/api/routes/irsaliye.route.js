@@ -2,28 +2,14 @@ import express from "express";
 import Irsaliye from "../models/irsaliye.model.js";
 import Referans from "../models/referans.model.js";
 import { FasonUretim } from "../models/uretim.model.js";
+import asyncHandler from "express-async-handler";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const irsaliyeler = await Irsaliye.findAll({
-    include: [
-      {
-        model: Referans,
-        required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
-        attributes: ["irsaliyeAciklamasi", "musteriAdi", "fasonFirmasi"], // Sadece bu alanlar
-      },
-    ],
-  });
-  res.send(irsaliyeler);
-});
-
-router.post("/", async (req, res) => {
-  try {
-    const idsizIrsaliyeler = req.body.map(({ id, ...kayit }) => kayit);
-    await Irsaliye.bulkCreate(idsizIrsaliyeler);
-
-    const butunIrsaliyeler = await Irsaliye.findAll({
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    const irsaliyeler = await Irsaliye.findAll({
       include: [
         {
           model: Referans,
@@ -32,76 +18,106 @@ router.post("/", async (req, res) => {
         },
       ],
     });
-    res.json(butunIrsaliyeler);
-  } catch (error) {
-    console.log("error", error);
-    res.status(500).json({
-      name: error.name,
-      fields: error.fields,
-    });
-  }
-});
+    res.send(irsaliyeler);
+  }),
+);
 
-router.post("/fasona", async (req, res) => {
-  const irsaliyeKaydi = req.body;
+router.post(
+  "/",
+  asyncHandler(async (req, res) => {
+    try {
+      const idsizIrsaliyeler = req.body.map(({ id, ...kayit }) => kayit);
+      await Irsaliye.bulkCreate(idsizIrsaliyeler);
 
-  const idsizIrsaliyeKaydi = { ...irsaliyeKaydi };
-  delete idsizIrsaliyeKaydi.id;
-
-  try {
-    await Irsaliye.create(idsizIrsaliyeKaydi);
-
-    const butunIrsaliyeler = await Irsaliye.findAll({
-      include: [
-        {
-          model: Referans,
-          required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
-          attributes: ["irsaliyeAciklamasi", "musteriAdi", "fasonFirmasi"], // Sadece bu alanlar
-        },
-      ],
-    });
-
-    const fasonUretim = await FasonUretim.findOne({ where: { id: irsaliyeKaydi.id } });
-
-    if (fasonUretim) {
-      await fasonUretim.update({ gidenMiktar: irsaliyeKaydi.gelenMiktar });
-    } else {
-      console.log(`ReferansNo ${irsaliyeKaydi.referansNo} için kayıt bulunamadı.`);
+      const butunIrsaliyeler = await Irsaliye.findAll({
+        include: [
+          {
+            model: Referans,
+            required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
+            attributes: ["irsaliyeAciklamasi", "musteriAdi", "fasonFirmasi"], // Sadece bu alanlar
+          },
+        ],
+      });
+      res.json(butunIrsaliyeler);
+    } catch (error) {
+      console.log("error", error);
+      res.status(500).json({
+        name: error.name,
+        fields: error.fields,
+      });
     }
+  }),
+);
 
-    res.json(butunIrsaliyeler);
-  } catch (error) {
-    console.error("Fason üretim kayıtlarını güncellerken bir hata oluştu:", error);
-    res.status(500).send("Bir hata oluştu.");
-  }
-});
+router.post(
+  "/fasona",
+  asyncHandler(async (req, res) => {
+    const irsaliyeKaydi = req.body;
 
-router.post("/e-irsaliye-kes", async (req, res) => {
-  const selectedRows = req.body;
+    const idsizIrsaliyeKaydi = { ...irsaliyeKaydi };
+    delete idsizIrsaliyeKaydi.id;
 
-  selectedRows.forEach(async (row) => {
-    await Irsaliye.destroy({
-      where: { id: row.id },
-    });
-  });
+    try {
+      await Irsaliye.create(idsizIrsaliyeKaydi);
 
-  res.send("e-irsaliye'ye gönderildi");
-});
+      const butunIrsaliyeler = await Irsaliye.findAll({
+        include: [
+          {
+            model: Referans,
+            required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
+            attributes: ["irsaliyeAciklamasi", "musteriAdi", "fasonFirmasi"], // Sadece bu alanlar
+          },
+        ],
+      });
 
-router.delete("/", async (req, res) => {
-  const { selectedRows } = req.body;
+      const fasonUretim = await FasonUretim.findOne({ where: { id: irsaliyeKaydi.id } });
 
-  selectedRows.forEach(async (row) => {
-    await Irsaliye.destroy({
-      where: { id: row.id },
-    });
-    if (row.fasona) {
-      await fasonKaydiniSifirla(row);
+      if (fasonUretim) {
+        await fasonUretim.update({ gidenMiktar: irsaliyeKaydi.gelenMiktar });
+      } else {
+        console.log(`ReferansNo ${irsaliyeKaydi.referansNo} için kayıt bulunamadı.`);
+      }
+
+      res.json(butunIrsaliyeler);
+    } catch (error) {
+      console.error("Fason üretim kayıtlarını güncellerken bir hata oluştu:", error);
+      res.status(500).send("Bir hata oluştu.");
     }
-  });
+  }),
+);
 
-  res.send("silme isteği alındı");
-});
+router.post(
+  "/e-irsaliye-kes",
+  asyncHandler(async (req, res) => {
+    const selectedRows = req.body;
+
+    selectedRows.forEach(async (row) => {
+      await Irsaliye.destroy({
+        where: { id: row.id },
+      });
+    });
+
+    res.send("e-irsaliye'ye gönderildi");
+  }),
+);
+
+router.delete(
+  "/",
+  asyncHandler(async (req, res) => {
+    const { selectedRows } = req.body;
+
+    selectedRows.forEach(async (row) => {
+      await Irsaliye.destroy({
+        where: { id: row.id },
+      });
+      if (row.fasona) {
+        await fasonKaydiniSifirla(row);
+      }
+    });
+
+    res.send("silme isteği alındı");
+  }),
+);
 
 const fasonKaydiniSifirla = async (row) => {
   const uretim = await FasonUretim.findByPk(Number(row.uretimGirisiIdleri));

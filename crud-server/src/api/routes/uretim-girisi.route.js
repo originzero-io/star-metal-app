@@ -2,164 +2,178 @@ import express from "express";
 import { NormalUretim, FasonUretim } from "../models/uretim.model.js";
 import Referans from "../models/referans.model.js";
 import UretimGirisi from "../models/uretim-girisi.model.js";
+import asyncHandler from "express-async-handler";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const uretimGirisleri = await UretimGirisi.findAll({
-    include: [
-      {
-        model: Referans,
-        required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
-        as: "Referanslar",
-      },
-    ],
-    where: {
-      sevkTarihi: null, // sevk edilmemiş kayıtları filtrele (sevk edilmişse sevk tarihi doludur)
-    },
-    order: [["referansNo", "ASC"]],
-  });
-
-  const musteriBazliUretimGirisleri = uretimGirisleri.reduce((acc, uretim) => {
-    const musteriAdi = uretim.Referanslar.musteriAdi;
-
-    // Eğer bu müşteri adı ile bir grup zaten mevcut değilse, bu grup için boş bir dizi oluştur
-    if (!acc[musteriAdi]) {
-      acc[musteriAdi] = [];
-    }
-    acc[musteriAdi].push(uretim);
-
-    return acc; // Akümülatörü (gruplama objesini) döndür
-  }, {}); // İlk değer olarak boş bir obje kullanılır
-
-  res.json(musteriBazliUretimGirisleri);
-});
-
-router.get("/:id", async (req, res) => {
-  const uretimGirisleri = await UretimGirisi.findAll({
-    include: [
-      {
-        model: Referans,
-        required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
-        as: "Referanslar", // Sadece bu alanlar
-      },
-    ],
-    where: {
-      uretimSiraNo: req.params.id,
-    },
-    order: [["id", "ASC"]],
-  });
-
-  const uretimIdsiBazliUretimGirisleri = uretimGirisleri.reduce((acc, item) => {
-    if (!acc[item.uretimSiraNo]) {
-      acc[item.uretimSiraNo] = [];
-    }
-    acc[item.uretimSiraNo].push(item);
-    return acc;
-  }, {});
-
-  res.json(uretimIdsiBazliUretimGirisleri);
-});
-
-router.post("/", async (req, res) => {
-  const { fason } = req.body;
-
-  await UretimGirisi.create(req.body);
-
-  if (fason) {
-    const uretim = await FasonUretim.findByPk(req.body.uretimSiraNo);
-    if (uretim) {
-      const updatedUretim = await uretim.update({
-        uretilenMiktar: uretim.uretilenMiktar + req.body.uretimAdedi,
-      });
-
-      res.json(updatedUretim);
-    } else {
-      res.status(400).send("üretim girişi bulunamadı");
-    }
-  } else {
-    const uretim = await NormalUretim.findByPk(req.body.uretimSiraNo);
-
-    if (uretim) {
-      const updatedUretim = await uretim.update({
-        uretilenMiktar: uretim.uretilenMiktar + req.body.uretimAdedi,
-        uretilmeyenMiktar: uretim.uretilmeyenMiktar - req.body.uretimAdedi,
-      });
-
-      res.json(updatedUretim);
-    } else {
-      res.status(400).send("üretim girişi bulunamadı");
-    }
-  }
-});
-
-router.put("/aktiflik-degistir", async (req, res) => {
-  const { istenenAktiflik, kayitlar } = req.body;
-
-  if (istenenAktiflik === false) {
-    const uretimGirisiIds = kayitlar.map((kayit) => kayit.id); // Gelen diziden id'leri al
-
-    console.log("uretimGirisiIds", uretimGirisiIds);
-    await UretimGirisi.update(
-      { aktif: istenenAktiflik },
-      {
-        where: {
-          id: uretimGirisiIds,
-        },
-      },
-    );
-  } else {
-    // "1,2,3" şeklinde gönderilmiş id leri parçala ve sayıya çevir.
-    const uretimGirisiIds = kayitlar.flatMap((kayit) =>
-      kayit.uretimGirisiIdleri.split(",").map(Number),
-    );
-
-    await UretimGirisi.update(
-      { aktif: istenenAktiflik },
-      {
-        where: {
-          id: uretimGirisiIds,
-        },
-      },
-    );
-  }
-
-  res.send("aktiflik değişti");
-});
-
-router.put("/sevk-et", async (req, res) => {
-  const { kayitlar } = req.body;
-  try {
-    kayitlar.forEach(async (kayit) => {
-      const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
-
-      const sonuc = await UretimGirisi.update(
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    const uretimGirisleri = await UretimGirisi.findAll({
+      include: [
         {
-          sevkTarihi: kayit.sevkTarihi,
-          personel: kayit.personel,
-          sofor: kayit.sofor,
-          plaka: kayit.plaka,
-          irsaliyeNo: kayit.irsaliyeNo,
+          model: Referans,
+          required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
+          as: "Referanslar",
         },
+      ],
+      where: {
+        sevkTarihi: null, // sevk edilmemiş kayıtları filtrele (sevk edilmişse sevk tarihi doludur)
+      },
+      order: [["referansNo", "ASC"]],
+    });
+
+    const musteriBazliUretimGirisleri = uretimGirisleri.reduce((acc, uretim) => {
+      const musteriAdi = uretim.Referanslar.musteriAdi;
+
+      // Eğer bu müşteri adı ile bir grup zaten mevcut değilse, bu grup için boş bir dizi oluştur
+      if (!acc[musteriAdi]) {
+        acc[musteriAdi] = [];
+      }
+      acc[musteriAdi].push(uretim);
+
+      return acc; // Akümülatörü (gruplama objesini) döndür
+    }, {}); // İlk değer olarak boş bir obje kullanılır
+
+    res.json(musteriBazliUretimGirisleri);
+  }),
+);
+
+router.get(
+  "/:id",
+  asyncHandler(async (req, res) => {
+    const uretimGirisleri = await UretimGirisi.findAll({
+      include: [
+        {
+          model: Referans,
+          required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
+          as: "Referanslar", // Sadece bu alanlar
+        },
+      ],
+      where: {
+        uretimSiraNo: req.params.id,
+      },
+      order: [["id", "ASC"]],
+    });
+
+    const uretimIdsiBazliUretimGirisleri = uretimGirisleri.reduce((acc, item) => {
+      if (!acc[item.uretimSiraNo]) {
+        acc[item.uretimSiraNo] = [];
+      }
+      acc[item.uretimSiraNo].push(item);
+      return acc;
+    }, {});
+
+    res.json(uretimIdsiBazliUretimGirisleri);
+  }),
+);
+
+router.post(
+  "/",
+  asyncHandler(async (req, res) => {
+    const { fason } = req.body;
+
+    await UretimGirisi.create(req.body);
+
+    if (fason) {
+      const uretim = await FasonUretim.findByPk(req.body.uretimSiraNo);
+      if (uretim) {
+        const updatedUretim = await uretim.update({
+          uretilenMiktar: uretim.uretilenMiktar + req.body.uretimAdedi,
+        });
+
+        res.json(updatedUretim);
+      } else {
+        res.status(400).send("üretim girişi bulunamadı");
+      }
+    } else {
+      const uretim = await NormalUretim.findByPk(req.body.uretimSiraNo);
+
+      if (uretim) {
+        const updatedUretim = await uretim.update({
+          uretilenMiktar: uretim.uretilenMiktar + req.body.uretimAdedi,
+          uretilmeyenMiktar: uretim.uretilmeyenMiktar - req.body.uretimAdedi,
+        });
+
+        res.json(updatedUretim);
+      } else {
+        res.status(400).send("üretim girişi bulunamadı");
+      }
+    }
+  }),
+);
+
+router.put(
+  "/aktiflik-degistir",
+  asyncHandler(async (req, res) => {
+    const { istenenAktiflik, kayitlar } = req.body;
+
+    if (istenenAktiflik === false) {
+      const uretimGirisiIds = kayitlar.map((kayit) => kayit.id); // Gelen diziden id'leri al
+
+      console.log("uretimGirisiIds", uretimGirisiIds);
+      await UretimGirisi.update(
+        { aktif: istenenAktiflik },
         {
           where: {
-            id: uretimGirisiIdleri,
+            id: uretimGirisiIds,
           },
         },
       );
+    } else {
+      // "1,2,3" şeklinde gönderilmiş id leri parçala ve sayıya çevir.
+      const uretimGirisiIds = kayitlar.flatMap((kayit) => kayit.uretimGirisiIdleri.split(",").map(Number));
 
-      // üretim giden kalan kayıtlarını güncelle;
-      const updatedUretim = await uretimGidenVeKalanMiktarlariGuncelle(kayit);
+      await UretimGirisi.update(
+        { aktif: istenenAktiflik },
+        {
+          where: {
+            id: uretimGirisiIds,
+          },
+        },
+      );
+    }
 
-      console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}, üretim kayıtları: ${updatedUretim}`);
-    });
+    res.send("aktiflik değişti");
+  }),
+);
 
-    res.send("Tüm kayıtlar başarıyla sevk edildi.");
-  } catch (error) {
-    console.error("Güncelleme işlemi sırasında bir hata oluştu:", error);
-    res.status(500).send("Güncelleme işlemi sırasında bir hata oluştu.");
-  }
-});
+router.put(
+  "/sevk-et",
+  asyncHandler(async (req, res) => {
+    const { kayitlar } = req.body;
+    try {
+      kayitlar.forEach(async (kayit) => {
+        const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
+
+        const sonuc = await UretimGirisi.update(
+          {
+            sevkTarihi: kayit.sevkTarihi,
+            personel: kayit.personel,
+            sofor: kayit.sofor,
+            plaka: kayit.plaka,
+            irsaliyeNo: kayit.irsaliyeNo,
+          },
+          {
+            where: {
+              id: uretimGirisiIdleri,
+            },
+          },
+        );
+
+        // üretim giden kalan kayıtlarını güncelle;
+        const updatedUretim = await uretimGidenVeKalanMiktarlariGuncelle(kayit);
+
+        console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}, üretim kayıtları: ${updatedUretim}`);
+      });
+
+      res.send("Tüm kayıtlar başarıyla sevk edildi.");
+    } catch (error) {
+      console.error("Güncelleme işlemi sırasında bir hata oluştu:", error);
+      res.status(500).send("Güncelleme işlemi sırasında bir hata oluştu.");
+    }
+  }),
+);
 
 const uretimGidenVeKalanMiktarlariGuncelle = async (kayit) => {
   if (kayit.Referanslar.fasonFirmasi) {
@@ -190,22 +204,25 @@ const uretimGidenVeKalanMiktarlariGuncelle = async (kayit) => {
   }
 };
 
-router.delete("/", async (req, res) => {
-  const { selectedRows } = req.body;
+router.delete(
+  "/",
+  asyncHandler(async (req, res) => {
+    const { selectedRows } = req.body;
 
-  try {
-    for (const row of selectedRows) {
-      await UretimGirisi.destroy({
-        where: { id: row.id },
-      });
-      await uretimKaydiniDuzenle(row);
+    try {
+      for (const row of selectedRows) {
+        await UretimGirisi.destroy({
+          where: { id: row.id },
+        });
+        await uretimKaydiniDuzenle(row);
+      }
+      res.send("işlem başarılı");
+    } catch (error) {
+      res.status(500).send("Bir hata oluştu");
+      console.error("Hata: ", error);
     }
-    res.send("işlem başarılı");
-  } catch (error) {
-    res.status(500).send("Bir hata oluştu");
-    console.error("Hata: ", error);
-  }
-});
+  }),
+);
 
 const uretimKaydiniDuzenle = async (row) => {
   if (row.Referanslar.fason) {

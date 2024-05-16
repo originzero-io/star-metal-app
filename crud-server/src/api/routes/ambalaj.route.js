@@ -3,6 +3,7 @@ import multer from "multer";
 import fs from "fs";
 import Ambalaj from "../models/ambalaj.model.js";
 import { findDirname } from "../../utils/file.js";
+import asyncHandler from "express-async-handler";
 
 const ambalajResimMiddleware = multer({
   limits: {
@@ -24,62 +25,77 @@ const ambalajResimMiddleware = multer({
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const ambalajlar = await Ambalaj.findAll();
-  res.send(ambalajlar);
-});
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    const ambalajlar = await Ambalaj.findAll();
+    res.send(ambalajlar);
+  }),
+);
 
-router.post("/", ambalajResimMiddleware.single("photo"), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ success: false, message: "Fotoğraf yok" });
-  }
-
-  const { kasaAdi } = req.body;
-
-  const resimUrl = `${kasaAdi}.${req.file.mimetype.split("/")[1]}`;
-
-  try {
-    const newAmbalaj = await Ambalaj.create({ ...req.body, resimUrl });
-    res.status(201).json(newAmbalaj);
-  } catch (error) {
-    res.status(500).json({
-      name: error.name,
-      fields: error.fields,
-    });
-  }
-});
-router.put("/", async (req, res) => {
-  try {
-    const ambalaj = await Ambalaj.findByPk(req.body.id);
-    if (ambalaj) {
-      const updatedAmbalaj = await ambalaj.update(req.body);
-      res.json(updatedAmbalaj);
-    } else {
-      res.status(400).send("ambalaj bulunamadı");
+router.post(
+  "/",
+  ambalajResimMiddleware.single("photo"),
+  asyncHandler(async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "Fotoğraf yok" });
     }
-  } catch (error) {
-    console.log("error: ", error);
-    res.status(500).json({
-      name: error.name,
-      fields: error.fields,
-    });
-  }
-});
-router.delete("/", async (req, res) => {
-  const { selectedRows } = req.body;
 
-  try {
-    selectedRows.forEach(async (row) => {
-      const filePath = `${findDirname(import.meta.url)}/../uploads/ambalajlar/${row.resimUrl}`;
-      await Ambalaj.destroy({
-        where: { id: row.id },
+    const { kasaAdi } = req.body;
+
+    const resimUrl = `${kasaAdi}.${req.file.mimetype.split("/")[1]}`;
+
+    try {
+      const newAmbalaj = await Ambalaj.create({ ...req.body, resimUrl });
+      res.status(201).json(newAmbalaj);
+    } catch (error) {
+      res.status(500).json({
+        name: error.name,
+        fields: error.fields,
       });
-      fs.unlinkSync(filePath);
-    });
-    res.status(200).send("Kayıtlar silindi");
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-});
+    }
+  }),
+);
+
+router.put(
+  "/",
+  asyncHandler(async (req, res) => {
+    try {
+      const ambalaj = await Ambalaj.findByPk(req.body.id);
+      if (ambalaj) {
+        const updatedAmbalaj = await ambalaj.update(req.body);
+        res.json(updatedAmbalaj);
+      } else {
+        res.status(400).send("ambalaj bulunamadı");
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      res.status(500).json({
+        name: error.name,
+        fields: error.fields,
+      });
+    }
+  }),
+);
+
+router.delete(
+  "/",
+  asyncHandler(async (req, res) => {
+    const { selectedRows } = req.body;
+
+    try {
+      selectedRows.forEach(async (row) => {
+        const filePath = `${findDirname(import.meta.url)}/../uploads/ambalajlar/${row.resimUrl}`;
+        await Ambalaj.destroy({
+          where: { id: row.id },
+        });
+        fs.unlinkSync(filePath);
+      });
+      res.status(200).send("Kayıtlar silindi");
+    } catch (error) {
+      res.status(400).send(error.message);
+    }
+  }),
+);
 
 export default router;
