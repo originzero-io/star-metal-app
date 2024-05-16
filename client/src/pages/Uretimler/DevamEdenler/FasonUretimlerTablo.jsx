@@ -299,7 +299,7 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
             hideDefaultTitleButtons
-            scroll={{ x: 1500 }}
+            scroll={{ x: 1800 }}
             contextMenu={{
               deleteAction: uretimiSilFunc,
               extraItems: (record) => [

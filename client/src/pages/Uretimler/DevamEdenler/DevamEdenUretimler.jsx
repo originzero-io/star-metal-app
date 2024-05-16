@@ -18,8 +18,7 @@ function DevamEdenUretimler() {
   const uretimiSil = (record) => {
     Modal.confirm({
       title: "Emin misiniz?",
-      content:
-        "Bu Star Metal üretimini silmek üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?",
+      content: `${record.id} numaralı üretim kaydını silmek üzeresiniz. Bu kaydı sildiğinizde üretime ait veriler Sevk Edilecekler ve İrsaliye Sayfasından da silinecek. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
       okText: "Tamam",
       cancelText: "İptal",
       async onOk() {
