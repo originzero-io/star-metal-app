@@ -2,7 +2,7 @@
 import { Button, Form, Input } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { devamEdenUretimHttp } from "services/uretimler.http";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 
 export default function TalepNoGiris({ record }) {
   const { setDevamEdenUretimler } = useDBContext();

@@ -19,7 +19,7 @@ import { IoPulseOutline } from "react-icons/io5";
 import referanslarHttp, {
   referansIslemAdlariHttp,
   referansIslemTipleriHttp,
-} from "services/referanslar.http";
+} from "services/crud-server/referanslar.http";
 
 export default function ReferansForm({ record, type }) {
   const {

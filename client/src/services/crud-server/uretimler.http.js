@@ -3,15 +3,13 @@
 import axios from "axios";
 import CRUDServerHttp from "./crud-server.http";
 
-// export const devamEdenUretimHttp = new CRUDServerHttp("/uretim/devam-eden", "id");
-
 class DevamEdenUretim extends CRUDServerHttp {
   constructor() {
-    super("/uretim/devam-eden", "id");
+    super("/uretim/devam-eden");
   }
 
   async gelenMalzemeMiktariGuncelle(currentRecord, newData) {
-    const { data } = await axios.put(`${this.endPoint}/gelen-malzeme-miktari`, {
+    const { data } = await axios.put(`${this.path}/gelen-malzeme-miktari`, {
       currentRecord,
       newData,
     });
@@ -19,7 +17,7 @@ class DevamEdenUretim extends CRUDServerHttp {
   }
 
   async talepNoGir(currentRecord, newData) {
-    const { data } = await axios.put(`${this.endPoint}/talepNo`, {
+    const { data } = await axios.put(`${this.path}/talepNo`, {
       currentRecord,
       newData,
     });
@@ -27,7 +25,7 @@ class DevamEdenUretim extends CRUDServerHttp {
   }
 
   async uretimiSil(kayit) {
-    const { data } = await axios.delete(`${this.endPoint}`, {
+    const { data } = await axios.delete(`${this.path}`, {
       data: { kayit },
     });
     return data;

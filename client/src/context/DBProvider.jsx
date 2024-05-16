@@ -4,14 +4,14 @@ import axios from "axios";
 import referanslarHttp, {
   referansIslemTipleriHttp,
   referansIslemAdlariHttp,
-} from "services/referanslar.http";
-import musterilerHttp from "services/musteriler.http";
-import ambalajlarHttp from "services/ambalajlar.http";
-import { devamEdenUretimHttp } from "services/uretimler.http";
-import personellerHttp from "services/personeller.http";
-import soforlerHttp from "services/soforler.http";
-import plakalarHttp from "services/plakalar.http";
-import irsaliyeHttp from "services/irsaliyeler.http";
+} from "services/crud-server/referanslar.http";
+import musterilerHttp from "services/crud-server/musteriler.http";
+import ambalajlarHttp from "services/crud-server/ambalajlar.http";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
+import personellerHttp from "services/crud-server/personeller.http";
+import soforlerHttp from "services/crud-server/soforler.http";
+import plakalarHttp from "services/crud-server/plakalar.http";
+import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import { useUIContext } from "./UIProvider";
 
 const DBContext = createContext();

@@ -11,7 +11,7 @@ import { useUIContext } from "context/UIProvider";
 import SoforForm from "pages/Tanimlamalar/Soforler/SoforForm";
 import { GiSteeringWheel } from "react-icons/gi";
 import logoGoApi from "services/logoGoApi";
-import soforlerHttp from "services/soforler.http";
+import soforlerHttp from "services/crud-server/soforler.http";
 import TableGod from "../../../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {

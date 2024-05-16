@@ -8,9 +8,9 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useEffect, useMemo, useState } from "react";
 import { FcRules } from "react-icons/fc";
-import irsaliyeHttp from "services/irsaliyeler.http";
-import uretimGirisleriHttp from "services/uretim-girisleri.http";
-import { devamEdenUretimHttp } from "services/uretimler.http";
+import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
+import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { getCurrentDateTime } from "utils/time.helper";
 
 export default function Irsaliyeler() {

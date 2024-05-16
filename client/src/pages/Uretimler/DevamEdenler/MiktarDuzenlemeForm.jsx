@@ -2,7 +2,7 @@
 import { Button, Form, InputNumber } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { devamEdenUretimHttp } from "services/uretimler.http";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 
 export default function AdetDuzenlemeForm({ record }) {
   const { setDevamEdenUretimler } = useDBContext();
@@ -68,7 +68,7 @@ export default function AdetDuzenlemeForm({ record }) {
       }
     } catch (error) {
       console.log("error", error);
-      showNotification("error", error.response.data.message);
+      showNotification("error", error.response.data);
     }
   };
 

@@ -19,10 +19,8 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use("/", router);
-
 app.use("/uploads", express.static(`${findDirname(import.meta.url)}/api/uploads`));
-
-// app.use(apiErrorHandler);
+app.use(apiErrorHandler);
 
 db.sync().then(() => {
   app.listen(PORT, () => {

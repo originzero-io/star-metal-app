@@ -1,7 +1,7 @@
 import { Button, Divider, Form, Input } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import musterilerHttp from "services/musteriler.http";
+import musterilerHttp from "services/crud-server/musteriler.http";
 
 export default function MusteriForm({ record, type }) {
   const { showPanel, showNotification } = useUIContext();

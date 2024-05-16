@@ -1,13 +1,7 @@
 {
   "root": true,
   "env": { "browser": true, "es2020": true },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react/jsx-runtime",
-    "plugin:react-hooks/recommended",
-    "airbnb-base"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react/jsx-runtime", "plugin:react-hooks/recommended", "airbnb-base"],
   "ignorePatterns": ["dist", ".eslintrc.cjs"],
   "parserOptions": { "ecmaVersion": "latest", "sourceType": "module" },
   "settings": { "react": { "version": "18.2" } },
@@ -30,8 +24,8 @@
     "max-len": [
       "error",
       {
-        "code": 200, // Maksimum satır karakter sayısı
-        "comments": 200, // Yorumlar için ayrı maksimum karakter sayısı
+        "code": 400, // Maksimum satır karakter sayısı
+        "comments": 400, // Yorumlar için ayrı maksimum karakter sayısı
         "ignoreUrls": true, // URL'leri kuralın dışında tut
         "ignoreStrings": true, // Stringleri kuralın dışında tut
         "ignoreTemplateLiterals": true // Template literal ifadelerini kuralın dışında tut

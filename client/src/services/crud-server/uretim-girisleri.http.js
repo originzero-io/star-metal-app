@@ -3,16 +3,16 @@ import CRUDServerHttp from "./crud-server.http";
 
 class UretimGirisi extends CRUDServerHttp {
   constructor() {
-    super("/uretim-girisleri", "id");
+    super("/uretim-girisleri");
   }
 
   async getDataById(recordId) {
-    const rawData = await axios.get(`${this.endPoint}/${recordId}`);
+    const rawData = await axios.get(`${this.path}/${recordId}`);
     return rawData.data;
   }
 
   async aktiflikDegistir(istenenAktiflik, kayitlar = []) {
-    const rawData = await axios.put(`${this.endPoint}/aktiflik-degistir`, {
+    const rawData = await axios.put(`${this.path}/aktiflik-degistir`, {
       kayitlar,
       istenenAktiflik,
     });
@@ -20,14 +20,14 @@ class UretimGirisi extends CRUDServerHttp {
   }
 
   async sevkEt(kayitlar = []) {
-    const rawData = await axios.put(`${this.endPoint}/sevk-et`, {
+    const rawData = await axios.put(`${this.path}/sevk-et`, {
       kayitlar,
     });
     return rawData.data;
   }
 
   async deleteData(selectedRows) {
-    await axios.delete(this.endPoint, {
+    await axios.delete(this.path, {
       data: { selectedRows },
     });
   }

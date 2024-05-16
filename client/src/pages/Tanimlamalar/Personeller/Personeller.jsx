@@ -3,7 +3,7 @@ import { Button, Modal, Tag } from "antd";
 import { useMemo, useState } from "react";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import personellerHttp from "services/personeller.http";
+import personellerHttp from "services/crud-server/personeller.http";
 import PersonelForm from "pages/Tanimlamalar/Personeller/PersonelForm";
 import PageHeader from "components/shared/PageHeader";
 import { PiUsersThreeBold } from "react-icons/pi";

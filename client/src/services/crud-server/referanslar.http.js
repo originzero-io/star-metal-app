@@ -5,14 +5,14 @@ export default new CRUDServerHttp("/referanslar", "referansNo");
 
 class ReferansIslemTipi extends CRUDServerHttp {
   constructor() {
-    super("/referanslar/islem-tipi", "id");
+    super("/referanslar/islem-tipi");
   }
 }
 const referansIslemTipleriHttp = new ReferansIslemTipi();
 
 class ReferansParcaAdi extends CRUDServerHttp {
   constructor() {
-    super("/referanslar/parca-adi", "id");
+    super("/referanslar/parca-adi");
   }
 }
 const referansIslemAdlariHttp = new ReferansParcaAdi();

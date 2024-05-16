@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Alert, Col, Row, Tag } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useEffect, useState } from "react";
-import uretimGirisleriHttp from "services/uretim-girisleri.http";
+import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import styled from "styled-components";
 import TableGod from "../../../components/shared/TableGod";
 

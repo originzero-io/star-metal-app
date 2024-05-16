@@ -1,7 +1,7 @@
 import { Button, Divider, Form, Input, Upload } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import ambalajlarHttp from "services/ambalajlar.http";
+import ambalajlarHttp from "services/crud-server/ambalajlar.http";
 import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
 

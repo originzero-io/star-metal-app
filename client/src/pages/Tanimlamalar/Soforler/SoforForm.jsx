@@ -1,7 +1,7 @@
 import { Button, Divider, Form, Input } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import soforlerHttp from "services/soforler.http";
+import soforlerHttp from "services/crud-server/soforler.http";
 
 export default function SoforForm({ record, type }) {
   const { showPanel, showNotification } = useUIContext();

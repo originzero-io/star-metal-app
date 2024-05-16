@@ -8,7 +8,7 @@ import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import PlakaForm from "pages/Tanimlamalar/Plakalar/PlakaForm";
-import plakalarHttp from "services/plakalar.http";
+import plakalarHttp from "services/crud-server/plakalar.http";
 import TableGod from "../../../components/shared/TableGod";
 import logoGoApi from "services/logoGoApi";
 
@@ -85,14 +85,15 @@ function Plakalar() {
       okText: "Tamam",
       cancelText: "İptal",
       async onOk() {
-        try {
-          const logoPlakalar = await logoGoApi.getData("GetAracList");
-          const newPlakalar = await plakalarHttp.logoIleEsle(logoPlakalar);
-          setPlakalar(newPlakalar);
-          showNotification("success", "Plakalar logo ile eşlendi.");
-        } catch (error) {
-          showNotification("error", "Hata oluştu", error.message);
-        }
+        const logoPlakalar = await logoGoApi.getData("GetAracList");
+        const newPlakalar = await plakalarHttp.logoIleEsle(logoPlakalar);
+        console.log("newPlakalar", newPlakalar);
+        setPlakalar(newPlakalar);
+        showNotification("success", "Plakalar logo ile eşlendi.");
+        // try {
+        // } catch (error) {
+        //   showNotification("error", "Hata oluştu", error.message);
+        // }
       },
       onCancel() {
         showNotification("warning", "İşlem iptal edildi");

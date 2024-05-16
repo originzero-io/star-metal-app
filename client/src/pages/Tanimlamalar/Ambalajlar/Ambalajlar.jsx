@@ -4,7 +4,7 @@ import { useUIContext } from "context/UIProvider";
 
 import AmbalajForm from "pages/Tanimlamalar/Ambalajlar/AmbalajForm";
 import { useDBContext } from "context/DBProvider";
-import ambalajlarHttp from "services/ambalajlar.http";
+import ambalajlarHttp from "services/crud-server/ambalajlar.http";
 import styled from "styled-components";
 import PageHeader from "components/shared/PageHeader";
 import { FaDropbox } from "react-icons/fa";

@@ -5,17 +5,17 @@ import CRUDServerHttp from "./crud-server.http";
 
 class Irsaliye extends CRUDServerHttp {
   constructor() {
-    super("/irsaliyeler", "id");
+    super("/irsaliyeler");
   }
 
   // devam eden üretimler üzerinden
   async fasonlaraIrsaliyeKes(irsaliyeKaydi = []) {
-    const rawData = await axios.post(`${this.endPoint}/fasona`, irsaliyeKaydi);
+    const rawData = await axios.post(`${this.path}/fasona`, irsaliyeKaydi);
     return rawData.data;
   }
 
   async eIrsaliyeKes(dataArray, selectedRows) {
-    await axios.post(`${this.endPoint}/e-irsaliye-kes`, selectedRows);
+    await axios.post(`${this.path}/e-irsaliye-kes`, selectedRows);
 
     const newDataArray = dataArray.filter(
       (data) => !selectedRows.some((selectedRow) => selectedRow.id === data.id),

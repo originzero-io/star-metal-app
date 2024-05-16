@@ -8,7 +8,7 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useMemo, useState } from "react";
 import { MdOutlineDocumentScanner } from "react-icons/md";
-import referanslarHttp from "services/referanslar.http";
+import referanslarHttp from "services/crud-server/referanslar.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../../../components/shared/TableGod";
 

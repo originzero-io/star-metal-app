@@ -1,7 +1,7 @@
 import { Button, Divider, Form, Input, Select, Switch } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import personelHttp from "services/personeller.http";
+import personelHttp from "services/crud-server/personeller.http";
 
 export default function PersonelForm({ record, type }) {
   const { showPanel, showNotification } = useUIContext();

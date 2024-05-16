@@ -11,7 +11,7 @@ import { useUIContext } from "context/UIProvider";
 import MusteriForm from "pages/Tanimlamalar/Musteriler/MusteriForm";
 import { RiCustomerServiceLine } from "react-icons/ri";
 import logoGoApi from "services/logoGoApi";
-import musterilerHttp from "services/musteriler.http";
+import musterilerHttp from "services/crud-server/musteriler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../../../components/shared/TableGod";
 
@@ -243,7 +243,7 @@ function Musteriler() {
         columns={columns}
         onChange={onChange}
         rowSelection={user.yetki === "admin" && rowSelection}
-        pagination={false}
+        pagination={true}
         contextMenu={{
           editForm: MusteriForm,
           deleteAction: deleteSingleRecordHandler,

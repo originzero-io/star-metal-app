@@ -3,11 +3,11 @@ import CRUDServerHttp from "./crud-server.http";
 
 class Personel extends CRUDServerHttp {
   constructor() {
-    super("/personeller", "id");
+    super("/personeller");
   }
 
   async login(user) {
-    const rawData = await axios.post(`${this.endPoint}/giris`, user);
+    const rawData = await axios.post(`${this.path}/giris`, user);
     return rawData.data;
   }
 }

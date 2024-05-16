@@ -1,4 +1,4 @@
-const apiErrorHandler = (err, req, res) => {
+const apiErrorHandler = (err, req, res, next) => {
   let customError = err;
   console.log("ERROR HANDLER => Error Name: ", err.name);
 
@@ -8,10 +8,7 @@ const apiErrorHandler = (err, req, res) => {
 
   console.log("Custom error handle: ", customError.message, customError.status);
 
-  res.status(customError.status || 500).json({
-    success: false,
-    message: customError.message || "Internal server error",
-  });
+  res.status(customError.status || 500).send(customError.message);
 };
 
 export default apiErrorHandler;

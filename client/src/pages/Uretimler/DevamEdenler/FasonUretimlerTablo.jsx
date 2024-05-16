@@ -18,8 +18,8 @@ import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeFor
 import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
-import irsaliyeHttp from "services/irsaliyeler.http";
-import { devamEdenUretimHttp } from "services/uretimler.http";
+import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
 

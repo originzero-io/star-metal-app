@@ -1,46 +1,41 @@
 import express from "express";
 import Plaka from "../models/plaka.model.js";
+import asyncHandler from "express-async-handler";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const plakalar = await Plaka.findAll();
-  res.send(plakalar);
-});
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    const plakalar = await Plaka.findAll();
+    res.send(plakalar);
+  }),
+);
 
-router.post("/", async (req, res) => {
-  try {
+router.post(
+  "/",
+  asyncHandler(async (req, res) => {
     const newPlaka = await Plaka.create(req.body);
     res.json(newPlaka);
-  } catch (error) {
-    console.log("error", error);
-    res.status(500).json({
-      name: error.name,
-      fields: error.fields,
-    });
-  }
-});
+  }),
+);
 
-router.post("/logo-ile-esle", async (req, res) => {
-  // mevcut tüm kayıtları sil yeni gelen listeyle doldur
-  const logodanGelenKayitlar = req.body;
-  try {
+router.post(
+  "/logo-ile-esle",
+  asyncHandler(async (req, res) => {
+    // mevcut tüm kayıtları sil yeni gelen listeyle doldur
+    const logodanGelenKayitlar = req.body;
     await Plaka.destroy({
       truncate: true,
     });
     const newPlakalar = await Plaka.bulkCreate(logodanGelenKayitlar);
     res.json(newPlakalar);
-  } catch (error) {
-    console.log("error", error);
-    res.status(500).json({
-      name: error.name,
-      fields: error.fields,
-    });
-  }
-});
+  }),
+);
 
-router.put("/", async (req, res) => {
-  try {
+router.put(
+  "/",
+  asyncHandler(async (req, res) => {
     const plaka = await Plaka.findByPk(req.body.id);
     if (plaka) {
       const updatedPlaka = await plaka.update(req.body);
@@ -48,24 +43,21 @@ router.put("/", async (req, res) => {
     } else {
       res.status(400).send("plaka bulunamadı");
     }
-  } catch (error) {
-    console.log("error: ", error);
-    res.status(400).json({
-      name: error.name,
-      fields: error.fields,
-    });
-  }
-});
-router.delete("/", async (req, res) => {
-  const { selectedRows } = req.body;
+  }),
+);
+router.delete(
+  "/",
+  asyncHandler(async (req, res) => {
+    const { selectedRows } = req.body;
 
-  selectedRows.forEach(async (row) => {
-    await Plaka.destroy({
-      where: { id: row.id },
+    selectedRows.forEach(async (row) => {
+      await Plaka.destroy({
+        where: { id: row.id },
+      });
     });
-  });
 
-  res.send("silme isteği alındı");
-});
+    res.send("silme isteği alındı");
+  }),
+);
 
 export default router;

@@ -10,9 +10,9 @@ import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import React, { useEffect, useMemo, useState } from "react";
-import irsaliyeHttp from "services/irsaliyeler.http";
-import uretimGirisleriHttp from "services/uretim-girisleri.http";
-import { devamEdenUretimHttp } from "services/uretimler.http";
+import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
+import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 
 const alertMessage = (musteri, irsaliyeTipi, olan, limit) => (

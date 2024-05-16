@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import personelHttp from "services/personeller.http";
+import personelHttp from "services/crud-server/personeller.http";
 import { useUIContext } from "./UIProvider";
 
 const AuthContext = createContext();

@@ -18,7 +18,7 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
 import { FaMinusCircle } from "react-icons/fa";
-import { devamEdenUretimHttp } from "services/uretimler.http";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import styled from "styled-components";
 import { getCurrentDateTime } from "utils/time.helper";
 

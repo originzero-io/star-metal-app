@@ -1,7 +1,7 @@
 import { Button, Divider, Form, Input } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import plakalarHttp from "services/plakalar.http";
+import plakalarHttp from "services/crud-server/plakalar.http";
 
 export default function PlakaForm({ record, type }) {
   const { showPanel, showNotification } = useUIContext();
