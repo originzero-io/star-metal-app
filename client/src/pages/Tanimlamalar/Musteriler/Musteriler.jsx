@@ -2,16 +2,17 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Badge, Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 
-import MusteriForm from "pages/Tanimlamalar/Musteriler/MusteriForm";
 import IdBadge from "components/shared/IdBadge";
+import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
+import MusteriForm from "pages/Tanimlamalar/Musteriler/MusteriForm";
 import { RiCustomerServiceLine } from "react-icons/ri";
+import logoGoApi from "services/logoGoApi";
 import musterilerHttp from "services/musteriler.http";
 import { createTableFilterFromData } from "utils/table.helper";
-import LogoSyncButton from "components/shared/LogoSyncButton";
 import TableGod from "../../../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -31,8 +32,7 @@ function Musteriler() {
         dataIndex: "logicalref",
         key: "logicalref",
         render: (text) => <IdBadge value={text} />,
-
-        width: 150,
+        width: 100,
       },
       {
         title: "Kodu",
@@ -219,14 +219,13 @@ function Musteriler() {
 
   const logoSync = async () => {
     try {
-      const logoMusteriler = await musterilerHttp.fetchLogoApi("GetCariList");
+      const logoMusteriler = await logoGoApi.getData("GetCariList");
       setMusteriler(logoMusteriler);
       console.log("logoMusteriler", logoMusteriler);
     } catch (error) {
       console.log("error", error);
       showNotification("error", error.message);
     }
-    // console.log("müşteriler: ", musteriler);
   };
 
   return (

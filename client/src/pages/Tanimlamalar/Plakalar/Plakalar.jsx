@@ -10,6 +10,7 @@ import { useUIContext } from "context/UIProvider";
 import PlakaForm from "pages/Tanimlamalar/Plakalar/PlakaForm";
 import plakalarHttp from "services/plakalar.http";
 import TableGod from "../../../components/shared/TableGod";
+import logoGoApi from "services/logoGoApi";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
@@ -78,7 +79,7 @@ function Plakalar() {
   };
 
   const logoSync = async () => {
-    const logoPlakalar = await plakalarHttp.fetchLogoApi("GetAracList");
+    const logoPlakalar = await logoGoApi.getData("GetAracList");
     setPlakalar(logoPlakalar);
     console.log("logoPlakalar: ", logoPlakalar);
   };

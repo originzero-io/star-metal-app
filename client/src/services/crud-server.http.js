@@ -7,7 +7,6 @@ class CRUDServerHttp {
   constructor(endPoint, rowKey) {
     this.endPoint = endPoint;
     this.rowKey = rowKey;
-    this.logoApiUrl = "http://192.168.1.254:6311";
   }
 
   async getData() {
@@ -56,11 +55,6 @@ class CRUDServerHttp {
     );
 
     return newDataArray;
-  }
-
-  async fetchLogoApi(path) {
-    const rawData = await axios.get(`${this.logoApiUrl}/${path}`);
-    return rawData.data;
   }
 }
 

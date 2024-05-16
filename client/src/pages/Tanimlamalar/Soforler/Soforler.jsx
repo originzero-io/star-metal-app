@@ -2,14 +2,15 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 
-import SoforForm from "pages/Tanimlamalar/Soforler/SoforForm";
 import IdBadge from "components/shared/IdBadge";
 import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
+import SoforForm from "pages/Tanimlamalar/Soforler/SoforForm";
 import { GiSteeringWheel } from "react-icons/gi";
+import logoGoApi from "services/logoGoApi";
 import soforlerHttp from "services/soforler.http";
 import TableGod from "../../../components/shared/TableGod";
 
@@ -96,7 +97,7 @@ function Soforler() {
   };
 
   const logoSync = async () => {
-    const logoSoforler = await soforlerHttp.fetchLogoApi("GetSoforList");
+    const logoSoforler = await logoGoApi.getData("GetSoforList");
     setSoforler(logoSoforler);
     console.log("logoSoforler: ", logoSoforler);
   };
