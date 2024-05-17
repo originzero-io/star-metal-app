@@ -1,6 +1,6 @@
 import express from "express";
-import Sofor from "../models/sofor.model.js";
 import asyncHandler from "express-async-handler";
+import Sofor from "../models/sofor.model.js";
 
 const router = express.Router();
 
@@ -15,16 +15,8 @@ router.get(
 router.post(
   "/",
   asyncHandler(async (req, res) => {
-    try {
-      const newSofor = await Sofor.create(req.body);
-      res.json(newSofor);
-    } catch (error) {
-      console.log("error", error);
-      res.status(500).json({
-        name: error.name,
-        fields: error.fields,
-      });
-    }
+    const newSofor = await Sofor.create(req.body);
+    res.json(newSofor);
   }),
 );
 
@@ -33,39 +25,23 @@ router.post(
   asyncHandler(async (req, res) => {
     // mevcut tüm kayıtları sil yeni gelen listeyle doldur
     const logodanGelenKayitlar = req.body;
-    try {
-      await Sofor.destroy({
-        truncate: true,
-      });
-      const newSoforler = await Sofor.bulkCreate(logodanGelenKayitlar);
-      res.json(newSoforler);
-    } catch (error) {
-      console.log("error", error);
-      res.status(500).json({
-        name: error.name,
-        fields: error.fields,
-      });
-    }
+    await Sofor.destroy({
+      truncate: true,
+    });
+    const newSoforler = await Sofor.bulkCreate(logodanGelenKayitlar);
+    res.json(newSoforler);
   }),
 );
 
 router.put(
   "/",
   asyncHandler(async (req, res) => {
-    try {
-      const sofor = await Sofor.findByPk(req.body.id);
-      if (sofor) {
-        const updatedSofor = await sofor.update(req.body);
-        res.json(updatedSofor);
-      } else {
-        res.status(400).send("şoför bulunamadı");
-      }
-    } catch (error) {
-      console.log("error: ", error);
-      res.status(400).json({
-        name: error.name,
-        fields: error.fields,
-      });
+    const sofor = await Sofor.findByPk(req.body.id);
+    if (sofor) {
+      const updatedSofor = await sofor.update(req.body);
+      res.json(updatedSofor);
+    } else {
+      res.status(400).send("şoför bulunamadı");
     }
   }),
 );

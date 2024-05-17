@@ -1,8 +1,8 @@
 import express from "express";
-import { NormalUretim, FasonUretim } from "../models/uretim.model.js";
+import asyncHandler from "express-async-handler";
 import Referans from "../models/referans.model.js";
 import UretimGirisi from "../models/uretim-girisi.model.js";
-import asyncHandler from "express-async-handler";
+import { FasonUretim, NormalUretim } from "../models/uretim.model.js";
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ router.get(
     });
 
     const musteriBazliUretimGirisleri = uretimGirisleri.reduce((acc, uretim) => {
-      const musteriAdi = uretim.Referanslar.musteriAdi;
+      const { musteriAdi } = uretim.Referanslar;
 
       // Eğer bu müşteri adı ile bir grup zaten mevcut değilse, bu grup için boş bir dizi oluştur
       if (!acc[musteriAdi]) {
@@ -142,36 +142,31 @@ router.put(
   "/sevk-et",
   asyncHandler(async (req, res) => {
     const { kayitlar } = req.body;
-    try {
-      kayitlar.forEach(async (kayit) => {
-        const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
+    kayitlar.forEach(async (kayit) => {
+      const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
 
-        const sonuc = await UretimGirisi.update(
-          {
-            sevkTarihi: kayit.sevkTarihi,
-            personel: kayit.personel,
-            sofor: kayit.sofor,
-            plaka: kayit.plaka,
-            irsaliyeNo: kayit.irsaliyeNo,
+      const sonuc = await UretimGirisi.update(
+        {
+          sevkTarihi: kayit.sevkTarihi,
+          personel: kayit.personel,
+          sofor: kayit.sofor,
+          plaka: kayit.plaka,
+          irsaliyeNo: kayit.irsaliyeNo,
+        },
+        {
+          where: {
+            id: uretimGirisiIdleri,
           },
-          {
-            where: {
-              id: uretimGirisiIdleri,
-            },
-          },
-        );
+        },
+      );
 
-        // üretim giden kalan kayıtlarını güncelle;
-        const updatedUretim = await uretimGidenVeKalanMiktarlariGuncelle(kayit);
+      // üretim giden kalan kayıtlarını güncelle;
+      const updatedUretim = await uretimGidenVeKalanMiktarlariGuncelle(kayit);
 
-        console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}, üretim kayıtları: ${updatedUretim}`);
-      });
+      console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}, üretim kayıtları: ${updatedUretim}`);
+    });
 
-      res.send("Tüm kayıtlar başarıyla sevk edildi.");
-    } catch (error) {
-      console.error("Güncelleme işlemi sırasında bir hata oluştu:", error);
-      res.status(500).send("Güncelleme işlemi sırasında bir hata oluştu.");
-    }
+    res.send("Tüm kayıtlar başarıyla sevk edildi.");
   }),
 );
 
@@ -209,18 +204,13 @@ router.delete(
   asyncHandler(async (req, res) => {
     const { selectedRows } = req.body;
 
-    try {
-      for (const row of selectedRows) {
-        await UretimGirisi.destroy({
-          where: { id: row.id },
-        });
-        await uretimKaydiniDuzenle(row);
-      }
-      res.send("işlem başarılı");
-    } catch (error) {
-      res.status(500).send("Bir hata oluştu");
-      console.error("Hata: ", error);
+    for (const row of selectedRows) {
+      await UretimGirisi.destroy({
+        where: { id: row.id },
+      });
+      await uretimKaydiniDuzenle(row);
     }
+    res.send("işlem başarılı");
   }),
 );
 

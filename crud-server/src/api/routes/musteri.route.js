@@ -15,36 +15,20 @@ router.get(
 router.post(
   "/",
   asyncHandler(async (req, res) => {
-    try {
-      const newMusteri = await Musteri.create(req.body);
-      res.json(newMusteri);
-    } catch (error) {
-      console.log("error", error);
-      res.status(500).json({
-        name: error.name,
-        fields: error.fields,
-      });
-    }
+    const newMusteri = await Musteri.create(req.body);
+    res.json(newMusteri);
   }),
 );
 
 router.put(
   "/",
   asyncHandler(async (req, res) => {
-    try {
-      const musteri = await Musteri.findByPk(req.body.id);
-      if (musteri) {
-        const updatedMusteri = await musteri.update(req.body);
-        res.json(updatedMusteri);
-      } else {
-        res.status(400).send("müşteri bulunamadı");
-      }
-    } catch (error) {
-      console.log("error: ", error);
-      res.status(400).json({
-        name: error.name,
-        fields: error.fields,
-      });
+    const musteri = await Musteri.findByPk(req.body.id);
+    if (musteri) {
+      const updatedMusteri = await musteri.update(req.body);
+      res.json(updatedMusteri);
+    } else {
+      res.status(400).send("müşteri bulunamadı");
     }
   }),
 );

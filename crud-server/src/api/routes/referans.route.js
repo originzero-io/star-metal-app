@@ -1,10 +1,10 @@
 import express from "express";
+import asyncHandler from "express-async-handler";
+import fs from "fs";
 import multer from "multer";
+import { findDirname } from "../../utils/file.js";
 import Referans, { ReferansIslemTipi, ReferansParcaAdi } from "../models/referans.model.js";
 import { NormalUretim } from "../models/uretim.model.js";
-import fs from "fs";
-import { findDirname } from "../../utils/file.js";
-import asyncHandler from "express-async-handler";
 
 const referansResimMiddleware = multer({
   limits: {
@@ -43,48 +43,33 @@ router.post(
 
     const resimUrl = `${referansNo}.${req.file.mimetype.split("/")[1]}`;
 
-    try {
-      console.log("ref:", { ...req.body, resimUrl });
-      const newReferans = await Referans.create({ ...req.body, resimUrl });
-      res.json(newReferans);
-    } catch (error) {
-      res.status(500).json({
-        name: error.name,
-        fields: error.fields,
-      });
-    }
+    console.log("ref:", { ...req.body, resimUrl });
+    const newReferans = await Referans.create({ ...req.body, resimUrl });
+    res.json(newReferans);
   }),
 );
 
 router.put(
   "/",
   asyncHandler(async (req, res) => {
-    try {
-      const referans = await Referans.findByPk(req.body.id);
-      const currentReferansNo = referans.referansNo;
-      if (referans) {
-        const updatedReferans = await referans.update(req.body);
+    const referans = await Referans.findByPk(req.body.id);
+    const currentReferansNo = referans.referansNo;
+    if (referans) {
+      const updatedReferans = await referans.update(req.body);
 
-        if (updatedReferans) {
-          await NormalUretim.update(
-            {
-              referansNo: updatedReferans.referansNo,
-              islemAciklama: updatedReferans.islemAciklama,
-              siparisNo: updatedReferans.siparisNo,
-            }, // Güncellenecek yeni değerler
-            { where: { referansNo: currentReferansNo } }, // eski değer
-          );
-        }
-        res.status(200).json(updatedReferans);
-      } else {
-        res.status(400).send("referans bulunamadı");
+      if (updatedReferans) {
+        await NormalUretim.update(
+          {
+            referansNo: updatedReferans.referansNo,
+            islemAciklama: updatedReferans.islemAciklama,
+            siparisNo: updatedReferans.siparisNo,
+          }, // Güncellenecek yeni değerler
+          { where: { referansNo: currentReferansNo } }, // eski değer
+        );
       }
-    } catch (error) {
-      console.log("error: ", error.errors[0].path);
-      res.status(500).json({
-        name: error.name,
-        fields: error.fields,
-      });
+      res.status(200).json(updatedReferans);
+    } else {
+      res.status(400).send("referans bulunamadı");
     }
   }),
 );
@@ -94,18 +79,13 @@ router.delete(
   asyncHandler(async (req, res) => {
     const { selectedRows } = req.body;
 
-    try {
-      selectedRows.forEach(async (row) => {
-        const filePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${row.resimUrl}`;
-        await Referans.destroy({
-          where: { id: row.id },
-        });
-        fs.unlinkSync(filePath);
+    selectedRows.forEach(async (row) => {
+      const filePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${row.resimUrl}`;
+      await Referans.destroy({
+        where: { id: row.id },
       });
-      res.send("Kayıtlar silindi");
-    } catch (error) {
-      res.status(400).send(error.message);
-    }
+      fs.unlinkSync(filePath);
+    });
   }),
 );
 
@@ -121,15 +101,8 @@ router.post(
   "/islem-tipi",
   asyncHandler(async (req, res) => {
     const { islemTipi } = req.body;
-    try {
-      const newIslemTipi = await ReferansIslemTipi.create({ islemTipi: islemTipi });
-      res.json(newIslemTipi);
-    } catch (error) {
-      res.status(500).json({
-        name: error.name,
-        fields: error.fields,
-      });
-    }
+    const newIslemTipi = await ReferansIslemTipi.create({ islemTipi });
+    res.json(newIslemTipi);
   }),
 );
 
@@ -145,15 +118,8 @@ router.post(
   "/parca-adi",
   asyncHandler(async (req, res) => {
     const { parcaAdi } = req.body;
-    try {
-      const newParcaAdi = await ReferansParcaAdi.create({ parcaAdi: parcaAdi });
-      res.json(newParcaAdi);
-    } catch (error) {
-      res.status(500).json({
-        name: error.name,
-        fields: error.fields,
-      });
-    }
+    const newParcaAdi = await ReferansParcaAdi.create({ parcaAdi });
+    res.json(newParcaAdi);
   }),
 );
 

@@ -42,38 +42,22 @@ router.post(
     }
 
     const { kasaAdi } = req.body;
-
     const resimUrl = `${kasaAdi}.${req.file.mimetype.split("/")[1]}`;
 
-    try {
-      const newAmbalaj = await Ambalaj.create({ ...req.body, resimUrl });
-      res.status(201).json(newAmbalaj);
-    } catch (error) {
-      res.status(500).json({
-        name: error.name,
-        fields: error.fields,
-      });
-    }
+    const newAmbalaj = await Ambalaj.create({ ...req.body, resimUrl });
+    res.status(201).json(newAmbalaj);
   }),
 );
 
 router.put(
   "/",
   asyncHandler(async (req, res) => {
-    try {
-      const ambalaj = await Ambalaj.findByPk(req.body.id);
-      if (ambalaj) {
-        const updatedAmbalaj = await ambalaj.update(req.body);
-        res.json(updatedAmbalaj);
-      } else {
-        res.status(400).send("ambalaj bulunamadı");
-      }
-    } catch (error) {
-      console.log("error: ", error);
-      res.status(500).json({
-        name: error.name,
-        fields: error.fields,
-      });
+    const ambalaj = await Ambalaj.findByPk(req.body.id);
+    if (ambalaj) {
+      const updatedAmbalaj = await ambalaj.update(req.body);
+      res.json(updatedAmbalaj);
+    } else {
+      res.status(400).send("ambalaj bulunamadı");
     }
   }),
 );
@@ -83,18 +67,14 @@ router.delete(
   asyncHandler(async (req, res) => {
     const { selectedRows } = req.body;
 
-    try {
-      selectedRows.forEach(async (row) => {
-        const filePath = `${findDirname(import.meta.url)}/../uploads/ambalajlar/${row.resimUrl}`;
-        await Ambalaj.destroy({
-          where: { id: row.id },
-        });
-        fs.unlinkSync(filePath);
+    selectedRows.forEach(async (row) => {
+      const filePath = `${findDirname(import.meta.url)}/../uploads/ambalajlar/${row.resimUrl}`;
+      await Ambalaj.destroy({
+        where: { id: row.id },
       });
-      res.status(200).send("Kayıtlar silindi");
-    } catch (error) {
-      res.status(400).send(error.message);
-    }
+      fs.unlinkSync(filePath);
+    });
+    res.status(200).send("Kayıtlar silindi");
   }),
 );
 

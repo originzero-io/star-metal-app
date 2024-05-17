@@ -1,28 +1,70 @@
+// {
+//   "root": true,
+//   "env": { "browser": true, "es2020": true },
+//   "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react/jsx-runtime", "plugin:react-hooks/recommended", "plugin:prettier/recommended", "airbnb-base"],
+//   "ignorePatterns": ["dist", ".eslintrc.cjs"],
+//   "parserOptions": { "ecmaVersion": "latest", "sourceType": "module" },
+//   "settings": { "react": { "version": "18.2" } },
+//   "plugins": ["react-refresh", "prettier", "only-warn"],
+//   "rules": {
+//     // "prettier/prettier": [
+//     //   "error",
+//     //   {
+//     //     printWidth: 100,
+//     //     endOfLine: "auto",
+//     //     tabWidth: 2,
+//     //     useTabs: false,
+//     //     trailingComma: "all",
+//     //     semi: true,
+//     //     singleQuote: false,
+//     //   },
+//     // ],
+//     "quotes": "off",
+//     "max-len": [
+//       "error",
+//       {
+//         "code": 400, // Maksimum satır karakter sayısı
+//         "comments": 400, // Yorumlar için ayrı maksimum karakter sayısı
+//         "ignoreUrls": true, // URL'leri kuralın dışında tut
+//         "ignoreStrings": true, // Stringleri kuralın dışında tut
+//         "ignoreTemplateLiterals": true // Template literal ifadelerini kuralın dışında tut
+//       }
+//     ],
+//     "import/no-unresolved": "off",
+//     "react/function-component-definition": "off",
+//     "no-confusing-arrow": "off",
+//     "import/extensions": "off"
+//   }
+// }
+
 {
-  "root": true,
-  "env": { "browser": true, "es2020": true },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react/jsx-runtime", "plugin:react-hooks/recommended", "airbnb-base"],
-  "ignorePatterns": ["dist", ".eslintrc.cjs"],
-  "parserOptions": { "ecmaVersion": "latest", "sourceType": "module" },
-  "settings": { "react": { "version": "18.2" } },
-  "plugins": ["react-refresh", "prettier", "only-warn"],
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["eslint:recommended", "plugin:prettier/recommended", "airbnb-base"],
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module"
+  },
+  "plugins": ["only-warn", "prettier"],
   "rules": {
-    "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }],
-    // "prettier/prettier": [
-    //   "error",
-    //   {
-    //     printWidth: 100,
-    //     endOfLine: "auto",
-    //     tabWidth: 2,
-    //     useTabs: false,
-    //     trailingComma: "all",
-    //     semi: true,
-    //     singleQuote: false,
-    //   },
-    // ],
+    "no-unused-vars": "warn",
+    "no-undef": "warn",
+    "no-var": "warn",
+    "array-callback-return": "warn",
+    "class-methods-use-this": "off",
+    "eqeqeq": "warn",
+    "no-case-declarations": "warn",
+    "no-empty-pattern": "warn",
+    "no-new-wrappers": "warn",
+    "no-console": "off",
+    "import/no-import-module-exports": "off",
     "quotes": "off",
+    "linebreak-style": "off",
+    "object-curly-newline": "off",
     "max-len": [
-      "error",
+      "warn",
       {
         "code": 400, // Maksimum satır karakter sayısı
         "comments": 400, // Yorumlar için ayrı maksimum karakter sayısı
@@ -31,9 +73,8 @@
         "ignoreTemplateLiterals": true // Template literal ifadelerini kuralın dışında tut
       }
     ],
-    "import/no-unresolved": "off",
-    "react/function-component-definition": "off",
-    "no-confusing-arrow": "off",
-    "import/extensions": "off"
+    "no-underscore-dangle": "off",
+    "no-param-reassign": ["error", { "props": false }],
+    "camelcase": "off"
   }
 }
