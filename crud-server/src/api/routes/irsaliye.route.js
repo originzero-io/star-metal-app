@@ -51,16 +51,6 @@ router.post(
 
     await Irsaliye.create(idsizIrsaliyeKaydi);
 
-    const butunIrsaliyeler = await Irsaliye.findAll({
-      include: [
-        {
-          model: Referans,
-          required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
-          attributes: ["irsaliyeAciklamasi", "musteriAdi", "fasonFirmasi"], // Sadece bu alanlar
-        },
-      ],
-    });
-
     const fasonUretim = await FasonUretim.findOne({ where: { id: irsaliyeKaydi.id } });
 
     if (fasonUretim) {
@@ -69,7 +59,7 @@ router.post(
       console.log(`ReferansNo ${irsaliyeKaydi.referansNo} için kayıt bulunamadı.`);
     }
 
-    res.json(butunIrsaliyeler);
+    res.send("ok");
   }),
 );
 

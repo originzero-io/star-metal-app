@@ -252,7 +252,8 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
           ).size;
 
           if (refBazliFirmaToplamIrsaliyeSayisi <= limit) {
-            const butunIrsaliyeler = await irsaliyeHttp.fasonlaraIrsaliyeKes(irsaliyeKaydi);
+            await irsaliyeHttp.fasonaIrsaliyeKes(irsaliyeKaydi);
+            const butunIrsaliyeler = await irsaliyeHttp.getData();
             const devamEdenUretimler = await devamEdenUretimHttp.getData();
             showNotification(
               "success",

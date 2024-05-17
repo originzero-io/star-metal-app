@@ -8,8 +8,7 @@ class Irsaliye extends CRUDServerHttp {
     super("/irsaliyeler");
   }
 
-  // devam eden üretimler üzerinden
-  async fasonlaraIrsaliyeKes(irsaliyeKaydi = []) {
+  async fasonaIrsaliyeKes(irsaliyeKaydi = []) {
     const rawData = await axios.post(`${this.path}/fasona`, irsaliyeKaydi);
     return rawData.data;
   }
