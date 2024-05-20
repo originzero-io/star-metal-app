@@ -1,4 +1,4 @@
-import { UploadOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import {
   Button,
   Checkbox,
@@ -6,7 +6,7 @@ import {
   Form,
   Input,
   InputNumber,
-  Menu,
+  Modal,
   Radio,
   Select,
   Space,
@@ -14,12 +14,12 @@ import {
 } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { useRef, useState } from "react";
-import { IoPulseOutline } from "react-icons/io5";
+import { useState } from "react";
 import referanslarHttp, {
-  referansIslemAdlariHttp,
+  referansParcaAdlariHttp,
   referansIslemTipleriHttp,
 } from "services/crud-server/referanslar.http";
+import { ParcaAdiDuzenlemeForm, ParcaAdiEklemeForm } from "./ParcaAdiForm";
 
 export default function ReferansForm({ record, type }) {
   const {
@@ -31,7 +31,7 @@ export default function ReferansForm({ record, type }) {
     setReferansParcaAdlari,
     musteriler,
   } = useDBContext();
-  const { showPanel, showNotification } = useUIContext();
+  const { showModal, showNotification } = useUIContext();
 
   const [fileList, setFileList] = useState([]);
 
@@ -88,29 +88,52 @@ export default function ReferansForm({ record, type }) {
       showNotification("success", `${newReference} işlem tipi olarak eklendi.`);
     }
   };
+
+  const [seciliParcaAdi, setSeciliParcaAdi] = useState(record?.parcaAdi);
+
+  const parcaAdiSec = (selected) => {
+    setSeciliParcaAdi(selected);
+  };
+
   const parcaAdiEkle = async () => {
-    const newParcaAdi = prompt("Yeni parça adı girin: ");
-
-    if (newParcaAdi.trim() === "") {
-      showNotification("error", "Alan boş olamaz");
-    } else if (newParcaAdi !== null) {
-      const data = await referansIslemAdlariHttp.addData({ parcaAdi: newParcaAdi });
-      // setReferansParcaAdlari([...referansParcaAdlari, { ...data }]);
-      setReferansParcaAdlari((prevState) => [...prevState, { ...data }]);
-      showNotification("success", `${newParcaAdi} parça adı olarak eklendi.`);
-    }
+    showModal({
+      title: "Parça ekle",
+      content: <ParcaAdiEklemeForm setReferansParcaAdlari={setReferansParcaAdlari} />,
+      width: 400,
+    });
   };
 
-  const [selectedItems, setSelectedItems] = useState([]);
-
-  const [name, setName] = useState("");
-  const inputRef = useRef(null);
-  const onNameChange = (event) => {
-    setName(event.target.value);
+  const parcaAdiDuzenle = () => {
+    showModal({
+      title: "Parça Adını Değiştir",
+      content: (
+        <ParcaAdiDuzenlemeForm
+          parcaAdi={seciliParcaAdi}
+          setSeciliParcaAdi={setSeciliParcaAdi}
+          setReferansParcaAdlari={setReferansParcaAdlari}
+          form={form}
+        />
+      ),
+      width: 400,
+    });
   };
-
-  const handleSelectChange = (selected) => {
-    setSelectedItems(selected);
+  const parcaAdiSil = () => {
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content: `${seciliParcaAdi} isimli parça silinecek. Emin misiniz?`,
+      okText: "Eminim",
+      cancelText: "İptal",
+      async onOk() {
+        await referansParcaAdlariHttp.deleteData(referansParcaAdlari, [seciliParcaAdi]);
+        const newParcaAdlari = referansParcaAdlari.filter((p) => p.parcaAdi !== seciliParcaAdi);
+        setReferansParcaAdlari(newParcaAdlari);
+        form.setFieldsValue({ parcaAdi: null });
+        setSeciliParcaAdi(null);
+      },
+      onCancel() {
+        showNotification("warning", "İşlem iptal edildi");
+      },
+    });
   };
 
   return (
@@ -150,7 +173,12 @@ export default function ReferansForm({ record, type }) {
       >
         <Space.Compact block>
           <Form.Item name="parcaAdi" noStyle>
-            <Select placeholder="Parça Adı Seçiniz" onChange={handleSelectChange}>
+            <Select
+              placeholder="Parça Adı Seçiniz"
+              onChange={parcaAdiSec}
+              value={seciliParcaAdi}
+              showSearch
+            >
               {referansParcaAdlari.map((parcaAdi) => (
                 <Select.Option key={parcaAdi.id} value={parcaAdi.parcaAdi}>
                   {parcaAdi.parcaAdi}
@@ -158,9 +186,18 @@ export default function ReferansForm({ record, type }) {
               ))}
             </Select>
           </Form.Item>
-          <Button type="primary" onClick={parcaAdiEkle} style={{ width: "100px" }}>
-            Ekle
-          </Button>
+          <Button type="primary" onClick={parcaAdiEkle} icon={<PlusOutlined />} title="Ekle" />
+          {seciliParcaAdi && (
+            <>
+              <Button
+                type="primary"
+                onClick={parcaAdiDuzenle}
+                icon={<EditOutlined />}
+                title="Düzenle"
+              />
+              <Button type="primary" onClick={parcaAdiSil} icon={<DeleteOutlined />} title="Sil" />
+            </>
+          )}
         </Space.Compact>
       </Form.Item>
       <Form.Item

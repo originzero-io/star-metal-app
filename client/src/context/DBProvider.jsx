@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import referanslarHttp, {
   referansIslemTipleriHttp,
-  referansIslemAdlariHttp,
+  referansParcaAdlariHttp,
 } from "services/crud-server/referanslar.http";
 import musterilerHttp from "services/crud-server/musteriler.http";
 import ambalajlarHttp from "services/crud-server/ambalajlar.http";
@@ -47,7 +47,7 @@ export const DBProvider = ({ children }) => {
       setReferanslar(referansData);
       const referansIslemTipiData = await referansIslemTipleriHttp.getData();
       setReferansIslemTipleri(referansIslemTipiData);
-      const referansParcaAdiData = await referansIslemAdlariHttp.getData();
+      const referansParcaAdiData = await referansParcaAdlariHttp.getData();
       setReferansParcaAdlari(referansParcaAdiData);
       setLoading(false);
     } catch (error) {

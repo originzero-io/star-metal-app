@@ -14,7 +14,12 @@ class ReferansParcaAdi extends CRUDServerHttp {
   constructor() {
     super("/referanslar/parca-adi");
   }
-}
-const referansIslemAdlariHttp = new ReferansParcaAdi();
 
-export { referansIslemTipleriHttp, referansIslemAdlariHttp };
+  async updateData(mevcutParcaAdi, yeniParcaAdi) {
+    const { data } = await this.service.put(this.path, { mevcutParcaAdi, yeniParcaAdi });
+    return data;
+  }
+}
+const referansParcaAdlariHttp = new ReferansParcaAdi();
+
+export { referansIslemTipleriHttp, referansParcaAdlariHttp };

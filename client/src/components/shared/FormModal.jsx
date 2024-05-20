@@ -56,6 +56,7 @@ const FormModal = () => {
       centered
       width={modal.width}
       footer={null}
+      destroyOnClose
       closeIcon={
         <CloseCircleFilled
           style={{

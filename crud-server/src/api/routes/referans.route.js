@@ -123,4 +123,33 @@ router.post(
   }),
 );
 
+router.put(
+  "/parca-adi",
+  asyncHandler(async (req, res) => {
+    const { mevcutParcaAdi, yeniParcaAdi } = req.body;
+
+    const [affectedRows] = await ReferansParcaAdi.update(
+      { parcaAdi: yeniParcaAdi },
+      {
+        where: {
+          parcaAdi: mevcutParcaAdi,
+        },
+      },
+    );
+    res.json(affectedRows);
+  }),
+);
+
+router.delete(
+  "/parca-adi",
+  asyncHandler(async (req, res) => {
+    const { selectedRows } = req.body;
+
+    await ReferansParcaAdi.destroy({
+      where: { parcaAdi: selectedRows[0] },
+    });
+    res.send("ok");
+  }),
+);
+
 export default router;
