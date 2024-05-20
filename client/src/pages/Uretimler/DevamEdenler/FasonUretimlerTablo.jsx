@@ -349,7 +349,7 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
                 user.yetki === "admin" &&
                   record.Referanslar.siparisTipi === "Talepli" && {
                     icon: <EditOutlined />,
-                    title: "Talep No Gir",
+                    title: record.talepNo ? "Talep No Değiştir" : "Talep No Gir",
                     action: () =>
                       showModal({
                         title: "Talep No Girişi",
