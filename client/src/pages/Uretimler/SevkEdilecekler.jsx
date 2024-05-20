@@ -415,7 +415,7 @@ function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUre
       okText: "Tamam",
       cancelText: "İptal",
       async onOk() {
-        const limit = 4;
+        const limit = 10;
         setSelectedRowKeys({}); // seçilmiş bütün alanları temizle
         try {
           const irsaliyeVerisi = irsaliyeVerisiOlustur(musteriKayitlari);

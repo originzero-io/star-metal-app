@@ -230,7 +230,7 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
       cancelText: "İptal",
       async onOk() {
         try {
-          const limit = 4;
+          const limit = 10;
 
           const irsaliyeKaydi = fasonaIrsaliyeKaydiOlustur(record);
 
