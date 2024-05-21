@@ -38,7 +38,7 @@ const Referans = sequelize.define(
       allowNull: false,
     },
     fasonFirmasi: {
-      type: DataTypes.STRING(40),
+      type: DataTypes.STRING(70),
       allowNull: true,
     },
     miktarSapmasi: {

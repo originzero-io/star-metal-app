@@ -358,9 +358,15 @@ export default function ReferansForm({ record, type }) {
           <Form.Item
             name="fasonFirmasi"
             rules={[{ required: fason, message: "Fason firması giriniz" }]}
-            style={{ marginLeft: "2%", width: 200 }}
+            style={{ marginLeft: "2%", width: 300 }}
           >
-            <Input title="Fason Firması" placeholder="Fason Firması" />
+            <Select placeholder="Fason Firması Seçiniz" showSearch>
+              {musteriler.map((musteri) => (
+                <Select.Option key={musteri.id} value={musteri.adi}>
+                  {musteri.adi}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
         )}
       </div>
@@ -472,7 +478,11 @@ export default function ReferansForm({ record, type }) {
       </Form.Item>
 
       {type !== "update" && (
-        <Form.Item label="Resim" name="resim">
+        <Form.Item
+          label="Resim"
+          name="resim"
+          rules={[{ required: true, message: "Bu alanı doldurun" }]}
+        >
           <Upload
             name="photo"
             listType="picture"

@@ -40,6 +40,9 @@ router.post(
   referansResimMiddleware.single("photo"),
   asyncHandler(async (req, res) => {
     const { referansNo } = req.body;
+    if (!req.file) {
+      throw new Error("Referans resmi yüklemek zorunludur");
+    }
 
     const resimUrl = `${referansNo}.${req.file.mimetype.split("/")[1]}`;
 
