@@ -86,6 +86,8 @@ router.delete(
       });
       fs.unlinkSync(filePath);
     });
+
+    res.send("ok");
   }),
 );
 
