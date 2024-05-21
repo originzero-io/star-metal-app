@@ -73,6 +73,7 @@ export default function GelenMalzemeKayit() {
     ambalajlar,
     referanslar,
     personeller,
+    soforler,
   } = useDBContext();
   const { showNotification, showAlert } = useUIContext();
 
@@ -223,7 +224,13 @@ export default function GelenMalzemeKayit() {
           </Col>
           <Col span={6}>
             <Form.Item label="Şoför" name="getirenSofor" rules={rules}>
-              <Input placeholder="Şoför" />
+              <Select placeholder="Şoför seçiniz" showSearch>
+                {soforler.map((sofor) => (
+                  <Select.Option key={sofor.id} value={`${sofor.adi} ${sofor.soyadi}`}>
+                    {`${sofor.adi} ${sofor.soyadi}`}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </Col>
           <Col span={6}>
