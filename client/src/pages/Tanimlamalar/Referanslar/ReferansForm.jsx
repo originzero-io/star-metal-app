@@ -471,9 +471,9 @@ export default function ReferansForm({ record, type }) {
         ]}
       >
         <Select placeholder="Birim seçin">
-          <Select.Option value="kg">kg</Select.Option>
-          <Select.Option value="lt">gram</Select.Option>
-          <Select.Option value="adet">adet</Select.Option>
+          <Select.Option value="kg">Kilogram</Select.Option>
+          <Select.Option value="set">Set</Select.Option>
+          <Select.Option value="adet">Adet</Select.Option>
         </Select>
       </Form.Item>
 
