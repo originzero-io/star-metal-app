@@ -2,6 +2,7 @@ import { Button, Divider, Form, Input } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import plakalarHttp from "services/crud-server/plakalar.http";
+import logoGoApi from "services/logoGoApi";
 
 export default function PlakaForm({ record, type }) {
   const { showPanel, showNotification } = useUIContext();
@@ -20,6 +21,7 @@ export default function PlakaForm({ record, type }) {
       // showPanel(false);
       showNotification("success", "Plaka güncellendi");
     } else {
+      await logoGoApi.postData("PostArac", values);
       const newPlaka = await plakalarHttp.addData(values);
       setPlakalar([...plakalar, { ...newPlaka }]);
       showNotification("success", "Plaka eklendi");
