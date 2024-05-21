@@ -1,6 +1,6 @@
 import express from "express";
-import Musteri from "../models/musteri.model.js";
 import asyncHandler from "express-async-handler";
+import Musteri from "../models/musteri.model.js";
 
 const router = express.Router();
 
@@ -17,6 +17,20 @@ router.post(
   asyncHandler(async (req, res) => {
     const newMusteri = await Musteri.create(req.body);
     res.json(newMusteri);
+  }),
+);
+
+router.post(
+  "/logo-ile-esle",
+  asyncHandler(async (req, res) => {
+    // mevcut tüm kayıtları sil yeni gelen listeyle doldur
+    const logodanGelenKayitlar = req.body;
+
+    await Musteri.destroy({
+      truncate: true,
+    });
+    const newMusteriler = await Musteri.bulkCreate(logodanGelenKayitlar);
+    res.json(newMusteriler);
   }),
 );
 

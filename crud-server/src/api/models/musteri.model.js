@@ -4,17 +4,49 @@ import sequelize from "../../dbConnection.js";
 const Musteri = sequelize.define(
   "Musteriler",
   {
-    musteriLogoKodu: {
-      type: DataTypes.STRING(50),
+    logoRef: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    musteriAdi: {
+    kodu: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
+    sahisFirmasi: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    adi: {
       type: DataTypes.STRING(70),
       allowNull: false,
+    },
+    soyadi: {
+      type: DataTypes.STRING(70),
+      allowNull: true,
+    },
+    unvani: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
     },
     adres: {
       type: DataTypes.STRING(120),
       allowNull: false,
+    },
+    il: {
+      type: DataTypes.STRING(13),
+      allowNull: false,
+    },
+    ilce: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
+    ulke: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
+    postaKodu: {
+      type: DataTypes.STRING(5),
+      allowNull: true,
     },
     vergiDairesi: {
       type: DataTypes.STRING(30),
@@ -22,10 +54,14 @@ const Musteri = sequelize.define(
     },
     vergiNo: {
       type: DataTypes.STRING(20),
-      allowNull: false,
+      allowNull: true,
+    },
+    kimlikNo: {
+      type: DataTypes.STRING(11),
+      allowNull: true,
     },
     telefon: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(25),
       allowNull: true,
     },
     mail: {
@@ -33,11 +69,7 @@ const Musteri = sequelize.define(
       allowNull: true,
     },
     yetkili: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-    },
-    kepAdresi: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(25),
       allowNull: true,
     },
   },
@@ -47,5 +79,5 @@ const Musteri = sequelize.define(
     timestamps: false,
   },
 );
-// Musteri.sync({ alter: true });
+// Musteri.sync({ force: true });
 export default Musteri;

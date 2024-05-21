@@ -207,10 +207,10 @@ export default function GelenMalzemeKayit() {
         >
           <Col span={6}>
             <Form.Item label="Müşteri" name="musteriAdi" rules={rules}>
-              <Select placeholder="Müşteri Seçin" onChange={musteriSecimiYap}>
+              <Select placeholder="Müşteri Seçin" onChange={musteriSecimiYap} showSearch>
                 {musteriler.map((musteri) => (
-                  <Select.Option key={musteri.id} value={musteri.musteriAdi}>
-                    {musteri.musteriAdi}
+                  <Select.Option key={musteri.id} value={musteri.adi}>
+                    {musteri.adi}
                   </Select.Option>
                 ))}
               </Select>

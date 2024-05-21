@@ -1,11 +1,17 @@
-import { Button, Divider, Form, Input } from "antd";
+import { Button, Checkbox, Divider, Form, Input, Select } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
+import { useState } from "react";
 import musterilerHttp from "services/crud-server/musteriler.http";
+import iller from "utils/iller.json";
 
 export default function MusteriForm({ record, type }) {
   const { showPanel, showNotification } = useUIContext();
   const { musteriler, setMusteriler } = useDBContext();
+
+  const [form] = Form.useForm();
+
+  const [sahisFirmasi, setSahisFirmasi] = useState(record?.sahisFirmasi);
 
   const onFinish = async (values) => {
     if (type === "update") {
@@ -28,20 +34,62 @@ export default function MusteriForm({ record, type }) {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
   return (
     <Form
       name="basic"
       labelCol={{ flex: "130px" }}
       labelAlign="left"
       key={record ? record.id : "form"}
-      initialValues={record || {}}
+      initialValues={record || { ulke: "Türkiye" }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
+      {type === "update" && (
+        <>
+          <Form.Item
+            label="Logo Kodu"
+            name="logoRef"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Input value={record.logoRef} disabled />
+          </Form.Item>
+          <Form.Item
+            label="Kodu"
+            name="kodu"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Input value={record.kodu} disabled />
+          </Form.Item>
+        </>
+      )}
+
+      <Form.Item name="sahisFirmasi" valuePropName="checked">
+        <Checkbox
+          onChange={(e) => {
+            setSahisFirmasi(e.target.checked);
+            form.setFieldsValue({ sahisFirmasi: e.target.checked });
+          }}
+          checked={sahisFirmasi}
+        >
+          Şahıs Firması
+        </Checkbox>
+      </Form.Item>
+
       <Form.Item
-        label="Logo Kodu"
-        name="logicalref"
+        label="Adı"
+        name="adi"
         rules={[
           {
             required: true,
@@ -49,32 +97,57 @@ export default function MusteriForm({ record, type }) {
           },
         ]}
       >
-        <Input value={record.logicalref} disabled />
+        <Input placeholder="Adı girin" />
       </Form.Item>
-      <Form.Item
-        label="Kodu"
-        name="kodu"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input value={record.kodu} disabled />
+      {sahisFirmasi ? (
+        <>
+          <Form.Item
+            label="Soyadı"
+            name="soyadi"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Input placeholder="Soyadı girin" />
+          </Form.Item>
+
+          <Form.Item
+            label="Kimlik No"
+            name="kimlikNo"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Input placeholder="Kimlik no girin" maxLength={11} />
+          </Form.Item>
+        </>
+      ) : (
+        <Form.Item
+          label="Vergi No"
+          name="vergiNo"
+          rules={[
+            {
+              required: true,
+              message: "Bu alanı doldurun",
+            },
+          ]}
+        >
+          <Input placeholder="Vergi no girin" />
+        </Form.Item>
+      )}
+
+      <Divider />
+
+      <Form.Item label="Ünvanı" name="unvani">
+        <Input placeholder="Ünvan girin" />
       </Form.Item>
-      <Form.Item
-        label="Müşteri Adı"
-        name="unvani"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input placeholder="Müşteri adı girin" />
-      </Form.Item>
+
       <Form.Item
         label="Adres"
         name="adres"
@@ -88,6 +161,49 @@ export default function MusteriForm({ record, type }) {
         <Input.TextArea placeholder="Adresi girin" />
       </Form.Item>
       <Form.Item
+        label="İl"
+        name="il"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Select placeholder="İl seçin" showSearch>
+          {iller.map((il) => (
+            <Select.Option key={il.id} value={il.name}>
+              {il.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+      <Form.Item
+        label="İlçe"
+        name="ilce"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Input placeholder="İlçe girin" />
+      </Form.Item>
+      <Form.Item
+        label="Ülke"
+        name="ulke"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Input placeholder="Ülke girin" />
+      </Form.Item>
+
+      <Form.Item
         label="Vergi Dairesi"
         name="vergiDairesi"
         rules={[
@@ -99,20 +215,13 @@ export default function MusteriForm({ record, type }) {
       >
         <Input placeholder="Vergi dairesi girin" />
       </Form.Item>
-      <Form.Item
-        label="Vergi No"
-        name="vergiNo"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input placeholder="Vergi no girin" />
+
+      <Form.Item label="Posta Kodu" name="postaKodu">
+        <Input placeholder="Posta kodu girin" maxLength={5} />
       </Form.Item>
+
       <Form.Item label="Telefon" name="telefon">
-        <Input placeholder="Telefon girin" />
+        <Input placeholder="Telefon girin" maxLength={25} />
       </Form.Item>
       <Form.Item label="E-Mail" name="mail">
         <Input placeholder="E-mail girin" />
@@ -120,137 +229,12 @@ export default function MusteriForm({ record, type }) {
       <Form.Item label="Yetkili Kişi" name="yetkili">
         <Input placeholder="Yetkili girin" />
       </Form.Item>
-      <Form.Item label="Kep Adresi" name="kepAdresi">
-        <Input placeholder="Kep adresi girin" />
-      </Form.Item>
 
       <Divider />
 
-      <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+      <Button type="primary" htmlType="submit" block>
         Kaydet
       </Button>
     </Form>
   );
 }
-// import { Button, Divider, Form, Input } from "antd";
-// import { useDBContext } from "context/DBProvider";
-// import { useUIContext } from "context/UIProvider";
-// import musterilerHttp from "services/musteriler.http";
-
-// export default function MusteriForm({ record, type }) {
-//   const { showPanel, showNotification } = useUIContext();
-//   const { musteriler, setMusteriler } = useDBContext();
-
-//   const onFinish = async (values) => {
-//     if (type === "update") {
-//       const updatedMusteri = await musterilerHttp.updateData(record.id, values);
-//       const updatedMusterilerArray = musteriler.map((musteri) => {
-//         if (musteri.id === updatedMusteri.id) {
-//           return { ...updatedMusteri };
-//         }
-//         return musteri;
-//       });
-//       setMusteriler(updatedMusterilerArray);
-//       // showPanel(false);
-//       showNotification("success", "Müşteri güncellendi");
-//     } else {
-//       const newMusteri = await musterilerHttp.addData(values);
-//       setMusteriler([...musteriler, { ...newMusteri }]);
-//       showNotification("success", "Müşteri eklendi");
-//     }
-//   };
-//   const onFinishFailed = (errorInfo) => {
-//     console.log("Failed:", errorInfo);
-//   };
-//   return (
-//     <Form
-//       name="basic"
-//       labelCol={{ flex: "130px" }}
-//       labelAlign="left"
-//       key={record ? record.id : "form"}
-//       initialValues={record || {}}
-//       onFinish={onFinish}
-//       onFinishFailed={onFinishFailed}
-//       autoComplete="off"
-//     >
-//       <Form.Item
-//         label="Müşteri Logo Kodu"
-//         name="musteriLogoKodu"
-//         rules={[
-//           {
-//             required: true,
-//             message: "Bu alanı doldurun",
-//           },
-//         ]}
-//       >
-//         <Input placeholder="Müşteri logo kodu girin" />
-//       </Form.Item>
-//       <Form.Item
-//         label="Müşteri Adı"
-//         name="musteriAdi"
-//         rules={[
-//           {
-//             required: true,
-//             message: "Bu alanı doldurun",
-//           },
-//         ]}
-//       >
-//         <Input placeholder="Müşteri adı girin" />
-//       </Form.Item>
-//       <Form.Item
-//         label="Adres"
-//         name="adres"
-//         rules={[
-//           {
-//             required: true,
-//             message: "Bu alanı doldurun",
-//           },
-//         ]}
-//       >
-//         <Input.TextArea placeholder="Adresi girin" />
-//       </Form.Item>
-//       <Form.Item
-//         label="Vergi Dairesi"
-//         name="vergiDairesi"
-//         rules={[
-//           {
-//             required: true,
-//             message: "Bu alanı doldurun",
-//           },
-//         ]}
-//       >
-//         <Input placeholder="Vergi dairesi girin" />
-//       </Form.Item>
-//       <Form.Item
-//         label="Vergi No"
-//         name="vergiNo"
-//         rules={[
-//           {
-//             required: true,
-//             message: "Bu alanı doldurun",
-//           },
-//         ]}
-//       >
-//         <Input placeholder="Vergi no girin" />
-//       </Form.Item>
-//       <Form.Item label="Telefon" name="telefon">
-//         <Input placeholder="Telefon girin" />
-//       </Form.Item>
-//       <Form.Item label="E-Mail" name="mail">
-//         <Input placeholder="E-mail girin" />
-//       </Form.Item>
-//       <Form.Item label="Yetkili Kişi" name="yetkili">
-//         <Input placeholder="Yetkili girin" />
-//       </Form.Item>
-//       <Form.Item label="Kep Adresi" name="kepAdresi">
-//         <Input placeholder="Kep adresi girin" />
-//       </Form.Item>
-
-//       <Divider />
-
-//       <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-//         Kaydet
-//       </Button>
-//     </Form>
-//   );
-// }

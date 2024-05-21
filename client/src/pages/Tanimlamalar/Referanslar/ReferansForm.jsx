@@ -155,6 +155,7 @@ export default function ReferansForm({ record, type }) {
       width: 400,
     });
   };
+
   const islemTipiSil = () => {
     Modal.confirm({
       title: "Emin misiniz?",
@@ -261,10 +262,10 @@ export default function ReferansForm({ record, type }) {
           },
         ]}
       >
-        <Select placeholder="Müşteri Adı Seçiniz">
+        <Select placeholder="Müşteri Adı Seçiniz" showSearch>
           {musteriler.map((musteri) => (
-            <Select.Option key={musteri.id} value={musteri.musteriAdi}>
-              {musteri.musteriAdi}
+            <Select.Option key={musteri.id} value={musteri.adi}>
+              {musteri.adi}
             </Select.Option>
           ))}
         </Select>
