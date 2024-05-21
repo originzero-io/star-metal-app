@@ -20,6 +20,7 @@ import referanslarHttp, {
   referansIslemTipleriHttp,
 } from "services/crud-server/referanslar.http";
 import { ParcaAdiDuzenlemeForm, ParcaAdiEklemeForm } from "./ParcaAdiForm";
+import { IslemTipiDuzenlemeForm, IslemTipiEklemeForm } from "./IslemTipiForm";
 
 export default function ReferansForm({ record, type }) {
   const {
@@ -77,17 +78,6 @@ export default function ReferansForm({ record, type }) {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const referansTipiEkle = async () => {
-    const newReference = prompt("Yeni tip girin: ");
-
-    if (newReference.trim() === "") {
-      showNotification("error", "Alan boş olamaz");
-    } else if (newReference !== null) {
-      const data = await referansIslemTipleriHttp.addData({ islemTipi: newReference });
-      setReferansIslemTipleri([...referansIslemTipleri, { ...data }]);
-      showNotification("success", `${newReference} işlem tipi olarak eklendi.`);
-    }
-  };
 
   const [seciliParcaAdi, setSeciliParcaAdi] = useState(record?.parcaAdi);
 
@@ -105,7 +95,7 @@ export default function ReferansForm({ record, type }) {
 
   const parcaAdiDuzenle = () => {
     showModal({
-      title: "Parça Adını Değiştir",
+      title: "Parça Adını Düzenle",
       content: (
         <ParcaAdiDuzenlemeForm
           parcaAdi={seciliParcaAdi}
@@ -117,6 +107,7 @@ export default function ReferansForm({ record, type }) {
       width: 400,
     });
   };
+
   const parcaAdiSil = () => {
     Modal.confirm({
       title: "Emin misiniz?",
@@ -129,6 +120,54 @@ export default function ReferansForm({ record, type }) {
         setReferansParcaAdlari(newParcaAdlari);
         form.setFieldsValue({ parcaAdi: null });
         setSeciliParcaAdi(null);
+        showNotification("success", `${seciliParcaAdi} silindi`);
+      },
+      onCancel() {
+        showNotification("warning", "İşlem iptal edildi");
+      },
+    });
+  };
+
+  const [seciliIslemTipi, setSeciliIslemTipi] = useState(record?.islemTipi);
+
+  const islemTipiSec = (selected) => {
+    setSeciliIslemTipi(selected);
+  };
+  const islemTipiEkle = async () => {
+    showModal({
+      title: "İşlem Tipi Ekle",
+      content: <IslemTipiEklemeForm setReferansIslemTipleri={setReferansIslemTipleri} />,
+      width: 400,
+    });
+  };
+
+  const islemTipiDuzenle = () => {
+    showModal({
+      title: "İşlem Tipini Düzenle",
+      content: (
+        <IslemTipiDuzenlemeForm
+          islemTipi={seciliIslemTipi}
+          setSeciliIslemTipi={setSeciliIslemTipi}
+          setReferansIslemTipleri={setReferansIslemTipleri}
+          form={form}
+        />
+      ),
+      width: 400,
+    });
+  };
+  const islemTipiSil = () => {
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content: `${seciliIslemTipi} isimli işlem tipi silinecek. Emin misiniz?`,
+      okText: "Eminim",
+      cancelText: "İptal",
+      async onOk() {
+        await referansIslemTipleriHttp.deleteData(referansIslemTipleri, [seciliIslemTipi]);
+        const newIslemTipleri = referansIslemTipleri.filter((i) => i.islemTipi !== seciliIslemTipi);
+        setReferansIslemTipleri(newIslemTipleri);
+        form.setFieldsValue({ islemTipi: null });
+        setSeciliIslemTipi(null);
+        showNotification("success", `${seciliIslemTipi} silindi`);
       },
       onCancel() {
         showNotification("warning", "İşlem iptal edildi");
@@ -378,14 +417,19 @@ export default function ReferansForm({ record, type }) {
 
       <Divider />
 
-      <Form.Item label="İşlem Tipi">
+      <Form.Item
+        label="İşlem Tipi"
+        name="islemTipi"
+        rules={[{ required: true, message: "Bu alanı doldurun" }]}
+      >
         <Space.Compact block>
-          <Form.Item
-            name="islemTipi"
-            noStyle
-            rules={[{ required: true, message: "Bu alanı doldurun" }]}
-          >
-            <Select placeholder="Tipi Seçin">
+          <Form.Item name="islemTipi" noStyle>
+            <Select
+              placeholder="Tipi Seçin"
+              onChange={islemTipiSec}
+              value={seciliIslemTipi}
+              showSearch
+            >
               {referansIslemTipleri.map((islemTipi) => (
                 <Select.Option key={islemTipi.id} value={islemTipi.islemTipi}>
                   {islemTipi.islemTipi}
@@ -393,9 +437,19 @@ export default function ReferansForm({ record, type }) {
               ))}
             </Select>
           </Form.Item>
-          <Button type="primary" onClick={referansTipiEkle} style={{ width: "100px" }}>
-            Ekle
-          </Button>
+
+          <Button type="primary" onClick={islemTipiEkle} icon={<PlusOutlined />} title="Ekle" />
+          {seciliIslemTipi && (
+            <>
+              <Button
+                type="primary"
+                onClick={islemTipiDuzenle}
+                icon={<EditOutlined />}
+                title="Düzenle"
+              />
+              <Button type="primary" onClick={islemTipiSil} icon={<DeleteOutlined />} title="Sil" />
+            </>
+          )}
         </Space.Compact>
       </Form.Item>
 

@@ -106,6 +106,35 @@ router.post(
   }),
 );
 
+router.put(
+  "/islem-tipi",
+  asyncHandler(async (req, res) => {
+    const { mevcutIslemTipi, yeniIslemTipi } = req.body;
+
+    const [affectedRows] = await ReferansIslemTipi.update(
+      { islemTipi: yeniIslemTipi },
+      {
+        where: {
+          islemTipi: mevcutIslemTipi,
+        },
+      },
+    );
+    res.json(affectedRows);
+  }),
+);
+
+router.delete(
+  "/islem-tipi",
+  asyncHandler(async (req, res) => {
+    const { selectedRows } = req.body;
+
+    await ReferansIslemTipi.destroy({
+      where: { islemTipi: selectedRows[0] },
+    });
+    res.send("ok");
+  }),
+);
+
 router.get(
   "/parca-adi",
   asyncHandler(async (req, res) => {

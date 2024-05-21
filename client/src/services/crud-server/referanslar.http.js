@@ -7,6 +7,11 @@ class ReferansIslemTipi extends CRUDServerHttp {
   constructor() {
     super("/referanslar/islem-tipi");
   }
+
+  async updateData(mevcutIslemTipi, yeniIslemTipi) {
+    const { data } = await this.service.put(this.path, { mevcutIslemTipi, yeniIslemTipi });
+    return data;
+  }
 }
 const referansIslemTipleriHttp = new ReferansIslemTipi();
 
