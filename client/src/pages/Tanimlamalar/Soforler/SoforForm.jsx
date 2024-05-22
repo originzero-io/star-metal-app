@@ -2,6 +2,7 @@ import { Button, Divider, Form, Input } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import soforlerHttp from "services/crud-server/soforler.http";
+import logoGoApi from "services/logoGoApi";
 
 export default function SoforForm({ record, type }) {
   const { showPanel, showNotification } = useUIContext();
@@ -20,6 +21,7 @@ export default function SoforForm({ record, type }) {
       // showPanel(false);
       showNotification("success", "Şoför güncellendi");
     } else {
+      await logoGoApi.postData("PostSofor", values);
       const newSofor = await soforlerHttp.addData(values);
       setSoforler([...soforler, { ...newSofor }]);
       showNotification("success", "Şoför eklendi");

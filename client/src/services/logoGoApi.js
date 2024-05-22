@@ -25,6 +25,7 @@ class LogoGoApi extends BaseHttp {
 
     const rawData = await this.service.post(url);
     return rawData.data;
+    // eklenen kayıdın logicalref değeri dönüyor
   }
 }
 
