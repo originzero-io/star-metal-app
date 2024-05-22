@@ -75,6 +75,8 @@ export default function MusteriForm({ record, type }) {
         </>
       )}
 
+      {type === "update" && <Divider />}
+
       <Form.Item name="sahisFirmasi" valuePropName="checked">
         <Checkbox
           onChange={(e) => {
@@ -99,6 +101,7 @@ export default function MusteriForm({ record, type }) {
       >
         <Input placeholder="Adı girin" />
       </Form.Item>
+
       {sahisFirmasi ? (
         <>
           <Form.Item
