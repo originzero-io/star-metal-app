@@ -23,7 +23,7 @@ class LogoGoApi extends BaseHttp {
     const queryParams = new URLSearchParams(capitalizedData).toString();
     const url = `/${path}?${queryParams}`;
 
-    const rawData = await this.service.get(url);
+    const rawData = await this.service.post(url);
     return rawData.data;
   }
 }
