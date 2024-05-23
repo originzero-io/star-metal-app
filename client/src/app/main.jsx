@@ -70,10 +70,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             borderRadius: 12,
           },
           Button: {
-            colorPrimary: "rgb(107,67,175)",
-            // colorPrimary: "linear-gradient(72deg, rgba(107,67,175,1) 36%, rgba(225,101,193,1) 87%)",
-            colorPrimaryHover: "rgb(128, 84, 206)",
-            // colorPrimaryHover: "linear-gradient(72deg, #5d30aa 36%, rgba(224, 75, 187, 0.9) 87%)",
+            colorPrimary: "rgb(128, 84, 206)",
+            colorPrimaryHover: "rgb(147, 105, 220)",
             colorPrimaryActive: "rgb(107,67,175)",
             motionDurationMid: "0s",
             colorLink: "purple",

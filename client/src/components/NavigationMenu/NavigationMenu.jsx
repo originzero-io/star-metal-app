@@ -62,24 +62,17 @@ const MenuListGroupItemStyled = styled.div`
   cursor: pointer;
   padding: 8px;
   padding-left: 10px;
-  // font-weight: ${(props) => props.selected && 800};
-
   display: flex;
   align-items: center;
-  color: #5a5a5a;
 
-  // background-color: ${(props) => (props.selected ? "rgb(137, 78, 238)" : "transparent")};
-  background-color: ${(props) => (props.selected ? "#6a4c93" : "transparent")};
-  color: ${(props) => (props.selected ? "whitesmoke" : "")};
-  border-radius: 4px;
-  /* background-color: ${(props) => (props.selected ? "rgb(206, 215, 237)" : "transparent")};
-  color: ${(props) => (props.selected ? "#4b00ff" : "")}; */
+  background: ${(props) =>
+    props.selected ? "linear-gradient(to right, #4535aa, #ed639e)" : "transparent"};
+  color: ${(props) => (props.selected ? "whitesmoke" : "#5a5a5a")};
+  box-shadow: ${(props) => props.selected && "0 10px 20px -5px rgba(0, 0, 0, 0.25)"};
+  border-radius: 6px;
 
-  // border-right: ${(props) => (props.selected ? "3px solid #4b00ff" : "")};
   &:hover {
-    // background: rgb(206, 215, 237);
     background: ${(props) => !props.selected && "rgb(206, 215, 237)"};
-    //color: #4b00ff;
     color: ${(props) => !props.selected && "#4b00ff"};
   }
 `;
@@ -93,13 +86,13 @@ const RegisterButtonItemStyled = styled.div`
   border-radius: 12px;
 
   margin-bottom: 12px;
-  background: #6a4c93;
-  // background: rgba(107, 67, 175, 1);
+  background: rgb(128, 84, 206);
   color: #e8e8e8;
   padding: 8px;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.25);
 
   &:hover {
-    background: rgb(128, 84, 206);
+    background: linear-gradient(to right, #4535aa, #ed639e);
   }
 `;
 

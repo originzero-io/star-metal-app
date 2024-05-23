@@ -4,7 +4,7 @@ export default function PageHeader({ label, icon, dataLength }) {
   return (
     <div
       style={{
-        fontSize: "20px",
+        fontSize: "24px",
         fontWeight: "bold",
         display: "flex",
         alignItems: "center",
@@ -23,7 +23,7 @@ export default function PageHeader({ label, icon, dataLength }) {
     >
       <div
         style={{
-          fontSize: "24px",
+          fontSize: "26px",
           marginRight: "10px",
           display: "flex",
         }}
