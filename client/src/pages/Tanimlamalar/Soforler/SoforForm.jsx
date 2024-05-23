@@ -21,8 +21,8 @@ export default function SoforForm({ record, type }) {
       // showPanel(false);
       showNotification("success", "Şoför güncellendi");
     } else {
-      await logoGoApi.postData("PostSofor", values);
-      const newSofor = await soforlerHttp.addData(values);
+      const logicalref = await logoGoApi.postData("PostSofor", values);
+      const newSofor = await soforlerHttp.addData({ ...values, logicalref });
       setSoforler([...soforler, { ...newSofor }]);
       showNotification("success", "Şoför eklendi");
     }

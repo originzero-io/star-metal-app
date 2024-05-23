@@ -3,6 +3,7 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
 import musterilerHttp from "services/crud-server/musteriler.http";
+import logoGoApi from "services/logoGoApi";
 import iller from "utils/iller.json";
 
 export default function MusteriForm({ record, type }) {
@@ -14,6 +15,16 @@ export default function MusteriForm({ record, type }) {
   const [sahisFirmasi, setSahisFirmasi] = useState(record?.sahisFirmasi);
 
   const onFinish = async (values) => {
+    let logoPostData = {};
+
+    if (!sahisFirmasi) {
+      logoPostData = {
+        ...values,
+        unvani: values.adi,
+        soyadi: "",
+        kimlikNo: "",
+      };
+    } else logoPostData = { ...values, vergiNo: "", unvani: `${values.adi} ${values.soyadi}` };
     if (type === "update") {
       const updatedMusteri = await musterilerHttp.updateData(record.id, values);
       const updatedMusterilerArray = musteriler.map((musteri) => {
@@ -26,7 +37,8 @@ export default function MusteriForm({ record, type }) {
       // showPanel(false);
       showNotification("success", "Müşteri güncellendi");
     } else {
-      const newMusteri = await musterilerHttp.addData(values);
+      const logoRef = await logoGoApi.postData("PostCari", logoPostData);
+      const newMusteri = await musterilerHttp.addData({ ...values, logoRef });
       setMusteriler([...musteriler, { ...newMusteri }]);
       showNotification("success", "Müşteri eklendi");
     }
@@ -41,7 +53,7 @@ export default function MusteriForm({ record, type }) {
       labelCol={{ flex: "130px" }}
       labelAlign="left"
       key={record ? record.id : "form"}
-      initialValues={record || { ulke: "Türkiye" }}
+      initialValues={record || { ulke: "Türkiye", sahisFirmasi: 0 }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -60,20 +72,20 @@ export default function MusteriForm({ record, type }) {
           >
             <Input value={record.logoRef} disabled />
           </Form.Item>
-          <Form.Item
-            label="Kodu"
-            name="kodu"
-            rules={[
-              {
-                required: true,
-                message: "Bu alanı doldurun",
-              },
-            ]}
-          >
-            <Input value={record.kodu} disabled />
-          </Form.Item>
         </>
       )}
+      <Form.Item
+        label="Kodu"
+        name="kodu"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Input placeholder="Kodu girin" disabled={type === "update"} />
+      </Form.Item>
 
       {type === "update" && <Divider />}
 
