@@ -162,7 +162,7 @@ export default function Irsaliyeler() {
               <Flex justify="center">
                 <Badge
                   count={sevkIrsaliyeleri.length}
-                  offset={[20, 6]}
+                  offset={[20, 9]}
                   title="Toplam sevk irsaliyesi sayısı"
                 >
                   <div
@@ -228,7 +228,7 @@ export default function Irsaliyeler() {
               <Flex justify="center">
                 <Badge
                   count={tasimaIrsaliyeleri.length}
-                  offset={[20, 6]}
+                  offset={[20, 9]}
                   color="purple"
                   title="Toplam taşıma irsaliyesi sayısı"
                 >

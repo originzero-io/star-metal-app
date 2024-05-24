@@ -76,6 +76,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             motionDurationMid: "0s",
             colorLink: "purple",
             colorLinkHover: "#e570f7",
+            defaultShadow: "0 5px 10px -5px rgba(0, 0, 0, 0.25)",
+            primaryShadow: "0 10px 10px -5px rgba(0, 0, 0, 0.25)",
           },
           Tabs: {
             inkBarColor: "#4b00ff",
