@@ -10,7 +10,7 @@ const collapseStyle = {
     marginTop: 8,
     background: "linear-gradient(180deg, rgba(255,255,255,0.6) 20%, rgba(255,255,255,0.4) 100%)",
     boxShadow: "0 5px 5px -5px rgba(0, 0, 0, 0.20)",
-    border: "1px solid #dee2e6",
+    border: "1px solid #ced4da",
   },
 };
 
