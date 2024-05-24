@@ -111,6 +111,19 @@ router.post(
   }),
 );
 
+router.post(
+  "/islem-tipi/logo-ile-esle",
+  asyncHandler(async (req, res) => {
+    // mevcut tüm kayıtları sil yeni gelen listeyle doldur
+    const logodanGelenKayitlar = req.body;
+    await ReferansIslemTipi.destroy({
+      truncate: true,
+    });
+    const newIslemTipleri = await ReferansIslemTipi.bulkCreate(logodanGelenKayitlar);
+    res.json(newIslemTipleri);
+  }),
+);
+
 router.put(
   "/islem-tipi",
   asyncHandler(async (req, res) => {
@@ -154,6 +167,19 @@ router.post(
     const { parcaAdi } = req.body;
     const newParcaAdi = await ReferansParcaAdi.create({ parcaAdi });
     res.json(newParcaAdi);
+  }),
+);
+
+router.post(
+  "/parca-adi/logo-ile-esle",
+  asyncHandler(async (req, res) => {
+    // mevcut tüm kayıtları sil yeni gelen listeyle doldur
+    const logodanGelenKayitlar = req.body;
+    await ReferansParcaAdi.destroy({
+      truncate: true,
+    });
+    const newParcaAdlari = await ReferansParcaAdi.bulkCreate(logodanGelenKayitlar);
+    res.json(newParcaAdlari);
   }),
 );
 

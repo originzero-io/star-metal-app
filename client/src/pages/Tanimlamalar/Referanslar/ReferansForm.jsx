@@ -219,9 +219,9 @@ export default function ReferansForm({ record, type }) {
               value={seciliParcaAdi}
               showSearch
             >
-              {referansParcaAdlari.map((parcaAdi) => (
-                <Select.Option key={parcaAdi.id} value={parcaAdi.parcaAdi}>
-                  {parcaAdi.parcaAdi}
+              {referansParcaAdlari.map((parca) => (
+                <Select.Option key={parca.id} value={parca.adi}>
+                  {parca.adi}
                 </Select.Option>
               ))}
             </Select>
@@ -438,8 +438,8 @@ export default function ReferansForm({ record, type }) {
               showSearch
             >
               {referansIslemTipleri.map((islemTipi) => (
-                <Select.Option key={islemTipi.id} value={islemTipi.islemTipi}>
-                  {islemTipi.islemTipi}
+                <Select.Option key={islemTipi.id} value={islemTipi.adi}>
+                  {islemTipi.adi}
                 </Select.Option>
               ))}
             </Select>

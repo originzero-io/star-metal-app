@@ -79,12 +79,14 @@ const Referans = sequelize.define(
 
 export default Referans;
 
-// Referans.sync({ alter: true });
-
 export const ReferansIslemTipi = sequelize.define(
   "ReferansIslemTipleri",
   {
-    islemTipi: {
+    logicalref: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+    },
+    adi: {
       type: DataTypes.STRING(50),
       allowNull: false,
       unique: true,
@@ -100,7 +102,11 @@ export const ReferansIslemTipi = sequelize.define(
 export const ReferansParcaAdi = sequelize.define(
   "ReferansParcaAdlari",
   {
-    parcaAdi: {
+    logicalref: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+    },
+    adi: {
       type: DataTypes.STRING(50),
       allowNull: false,
       unique: true,

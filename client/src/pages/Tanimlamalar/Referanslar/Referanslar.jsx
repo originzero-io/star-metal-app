@@ -1,14 +1,18 @@
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal, Tag } from "antd";
-import ReferansForm from "pages/Tanimlamalar/Referanslar/ReferansForm";
 import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
+import ReferansForm from "pages/Tanimlamalar/Referanslar/ReferansForm";
 import { useMemo, useState } from "react";
 import { MdOutlineDocumentScanner } from "react-icons/md";
-import referanslarHttp from "services/crud-server/referanslar.http";
+import referanslarHttp, {
+  referansIslemTipleriHttp,
+  referansParcaAdlariHttp,
+} from "services/crud-server/referanslar.http";
+import logoGoApi from "services/logoGoApi";
 import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../../../components/shared/TableGod";
 
@@ -21,7 +25,8 @@ function Referanslar() {
 
   const [selectedRows, setSelectedRows] = useState([]);
   const { showPanel, showNotification } = useUIContext();
-  const { referanslar, setReferanslar } = useDBContext();
+  const { referanslar, setReferanslar, setReferansIslemTipleri, setReferansParcaAdlari } =
+    useDBContext();
 
   const columns = useMemo(
     () => [
@@ -198,8 +203,28 @@ function Referanslar() {
     });
   };
 
-  const logoSync = () => {
-    console.log("referanslar: ", referanslar);
+  const logoSync = async () => {
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content:
+        "Referanslar, Referans Parça İsimleri ve Kaplama Cinsi bilgileri logo programından çekilip bu programa aktarılacak. Onaylıyor musunuz?",
+      okText: "Tamam",
+      cancelText: "İptal",
+      async onOk() {
+        const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
+        const newParcaAdlari = await referansParcaAdlariHttp.logoIleEsle(logoParcaAdlari);
+        setReferansParcaAdlari(newParcaAdlari);
+        showNotification("success", "Referans parça adları logo ile eşlendi.");
+
+        const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
+        const newIslemTipleri = await referansIslemTipleriHttp.logoIleEsle(logoIslemTipleri);
+        setReferansIslemTipleri(newIslemTipleri);
+        showNotification("success", "Referans işlem tipleri logo ile eşlendi.");
+      },
+      onCancel() {
+        showNotification("warning", "İşlem iptal edildi");
+      },
+    });
   };
 
   return (
