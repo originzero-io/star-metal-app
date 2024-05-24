@@ -176,9 +176,14 @@ function Musteriler() {
       cancelText: "İptal",
       async onOk() {
         try {
+          await Promise.all(
+            selectedRows.map((row) => logoGoApi.deleteData("DeleteCari", row.logoRef)),
+          );
+          showNotification("success", `${selectedRows.length} adet müşteri logodan silindi`);
+
           const newMusteriler = await musterilerHttp.deleteData(musteriler, selectedRows);
           setMusteriler(newMusteriler);
-          showNotification("success", "Seçili müşteriler silindi");
+          showNotification("success", `${selectedRows.length} adet müşteri silindi`);
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
@@ -194,9 +199,12 @@ function Musteriler() {
       cancelText: "İptal",
       async onOk() {
         try {
+          await logoGoApi.deleteData("DeleteCari", record.logoRef);
+          showNotification("success", `${record.adi} isimli müşteri logodan silindi`);
+
           const newMusteriler = await musterilerHttp.deleteData(musteriler, [record]);
           setMusteriler(newMusteriler);
-          showNotification("success", `${record.musteriAdi} müşterisi silindi`);
+          showNotification("success", `${record.adi} müşterisi silindi`);
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
