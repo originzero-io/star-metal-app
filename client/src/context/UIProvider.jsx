@@ -34,7 +34,7 @@ export const UIProvider = ({ children }) => {
     api[type]({
       message: title,
       description,
-      placement: "topRight",
+      placement: "top",
     });
   };
 
