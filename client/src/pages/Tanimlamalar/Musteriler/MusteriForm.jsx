@@ -23,8 +23,15 @@ export default function MusteriForm({ record, type }) {
         unvani: values.adi,
         soyadi: "",
         kimlikNo: "",
+        sahisFirmasi: 0,
       };
-    } else logoPostData = { ...values, vergiNo: "", unvani: `${values.adi} ${values.soyadi}` };
+    } else
+      logoPostData = {
+        ...values,
+        vergiNo: "",
+        unvani: `${values.adi} ${values.soyadi}`,
+        sahisFirmasi: 1,
+      };
     if (type === "update") {
       const updatedMusteri = await musterilerHttp.updateData(record.id, values);
       const updatedMusterilerArray = musteriler.map((musteri) => {
