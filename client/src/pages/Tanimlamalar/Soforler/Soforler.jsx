@@ -68,6 +68,10 @@ function Soforler() {
       cancelText: "İptal",
       async onOk() {
         try {
+          await Promise.all(
+            selectedRows.map((row) => logoGoApi.deleteData("DeleteSofor", row.logicalref)),
+          );
+          showNotification("success", "Seçili şoförler logodan silindi");
           const newSoforler = await soforlerHttp.deleteData(soforler, selectedRows);
           setSoforler(newSoforler);
           showNotification("success", "Seçili şoförler silindi");
@@ -86,9 +90,12 @@ function Soforler() {
       cancelText: "İptal",
       async onOk() {
         try {
+          await logoGoApi.deleteData("DeleteSofor", record.logicalref);
+          showNotification("success", `${record.adi} isimli şoför logodan silindi`);
+
           const newSoforler = await soforlerHttp.deleteData(soforler, [record]);
           setSoforler(newSoforler);
-          showNotification("success", `${record.ad} isimli şoför silindi`);
+          showNotification("success", `${record.adi} isimli şoför silindi`);
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }

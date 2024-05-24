@@ -25,6 +25,11 @@ class LogoGoApi extends BaseHttp {
     const rawData = await this.service.post(`/${path}`, capitalizedData);
     return rawData.data;
   }
+
+  async deleteData(path, logicalref) {
+    const rawData = await this.service.delete(`/${path}/${logicalref}`);
+    return rawData.data;
+  }
 }
 
 export default new LogoGoApi();
