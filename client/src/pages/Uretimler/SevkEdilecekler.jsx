@@ -269,15 +269,7 @@ export default function SevkEdilecekler() {
             key: index.toString(),
             label: (
               <Badge count={kayitlar.length} offset={[20, 6]}>
-                <div
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 600,
-                    color: "#474747",
-                  }}
-                >
-                  {musteriAdi}
-                </div>
+                <div style={collapseStyle.parentCollapseHeader}>{musteriAdi}</div>
               </Badge>
             ),
             style: collapseStyle.parentCollapseItem,

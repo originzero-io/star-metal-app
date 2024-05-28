@@ -142,15 +142,7 @@ function TamamlananUretimler() {
             // key: index.toString(),
             label: (
               <Badge count={data.length} offset={[20, 6]}>
-                <div
-                  style={{
-                    // fontSize: "16px",
-                    fontWeight: "600",
-                    color: "#474747",
-                  }}
-                >
-                  Star Metal Üretimler
-                </div>
+                <div style={collapseStyle.parentCollapseHeader}>Star Metal Üretimleri</div>
               </Badge>
             ),
             children: <NormalUretimler />,
@@ -158,7 +150,11 @@ function TamamlananUretimler() {
           },
           {
             key: "fason",
-            label: "Fason Üretimler",
+            label: (
+              <Badge count={data.length} offset={[20, 6]}>
+                <div style={collapseStyle.parentCollapseHeader}>Fason Üretimler</div>
+              </Badge>
+            ),
             children: <FasonUretimler />,
             style: collapseStyle.parentCollapseItem,
           },

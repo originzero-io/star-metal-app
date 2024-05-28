@@ -285,14 +285,7 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
         key: index.toString(),
         label: (
           <Badge count={kayitlar.length} offset={[20, 6]} color="blue">
-            <div
-              style={{
-                fontWeight: "600",
-                color: "#474747",
-              }}
-            >
-              {musteriAdi}
-            </div>
+            <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
           </Badge>
         ),
         children: (

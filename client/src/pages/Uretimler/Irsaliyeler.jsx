@@ -159,21 +159,13 @@ export default function Irsaliyeler() {
           {
             key: "sevk",
             label: (
-              <Flex justify="center">
+              <Flex>
                 <Badge
                   count={sevkIrsaliyeleri.length}
                   offset={[20, 9]}
                   title="Toplam sevk irsaliyesi sayısı"
                 >
-                  <div
-                    style={{
-                      fontSize: "18px",
-                      fontWeight: "bold",
-                      color: "#474747",
-                    }}
-                  >
-                    Sevk İrsaliyesi
-                  </div>
+                  <div style={collapseStyle.parentCollapseHeader}>Sevk İrsaliyesi</div>
                 </Badge>
               </Flex>
             ),
@@ -195,15 +187,7 @@ export default function Irsaliyeler() {
                         title="Farklı referans sayısı"
                       >
                         <Badge count={kayitlar.length} offset={[20, 6]} title="Kayıt sayısı">
-                          <div
-                            style={{
-                              // fontSize: "16px",
-                              fontWeight: "600",
-                              color: "#474747",
-                            }}
-                          >
-                            {musteriAdi}
-                          </div>
+                          <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
                         </Badge>
                       </Badge>
                     ),
@@ -225,22 +209,14 @@ export default function Irsaliyeler() {
           {
             key: "tasima",
             label: (
-              <Flex justify="center">
+              <Flex>
                 <Badge
                   count={tasimaIrsaliyeleri.length}
                   offset={[20, 9]}
                   color="purple"
                   title="Toplam taşıma irsaliyesi sayısı"
                 >
-                  <div
-                    style={{
-                      fontSize: "18px",
-                      fontWeight: "bold",
-                      color: "#474747",
-                    }}
-                  >
-                    Taşıma İrsaliyesi
-                  </div>
+                  <div style={collapseStyle.parentCollapseHeader}>Taşıma İrsaliyesi</div>
                 </Badge>
               </Flex>
             ),
@@ -269,15 +245,7 @@ export default function Irsaliyeler() {
                           color="purple"
                           title="Kayıt sayısı"
                         >
-                          <div
-                            style={{
-                              // fontSize: "16px",
-                              fontWeight: "600",
-                              color: "#474747",
-                            }}
-                          >
-                            {musteriAdi}
-                          </div>
+                          <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
                         </Badge>
                       </Badge>
                     ),

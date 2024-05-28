@@ -10,18 +10,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       theme={{
         components: {
           Table: {
-            // rowHoverBg: "#d7ecfd",
-            // rowSelectedBg: "#bae0ff",
-            // rowSelectedHoverBg: "#bae0ff",
+            rowHoverBg: "rgb(220, 217, 236)",
+            rowSelectedBg: "rgb(189, 185, 233)",
+            rowSelectedHoverBg: "rgb(189, 185, 233)",
+            rowSelectedColor: "red",
 
-            rowHoverBg: "rgb(229, 222, 243)",
-            rowSelectedBg: "rgb(204, 185, 242)",
-            rowSelectedHoverBg: "rgb(204, 185, 242)",
-
-            borderColor: "#dddddd",
+            borderColor: "#cfcfcf",
             cellFontSizeSM: 12,
 
-            headerBg: "rgb(221, 231, 247)",
+            // headerBg: "rgb(221, 231, 247)",
+            headerBg: "#eceff1",
             headerColor: "rgba(0, 0, 0, 0.9)",
 
             colorBgContainer: "rgba(255, 255, 255, 0.6)",

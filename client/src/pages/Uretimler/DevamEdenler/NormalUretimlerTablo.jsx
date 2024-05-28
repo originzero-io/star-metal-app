@@ -234,14 +234,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
         key: index.toString(),
         label: (
           <Badge count={kayitlar.length} offset={[20, 6]}>
-            <div
-              style={{
-                fontWeight: "600",
-                color: "#474747",
-              }}
-            >
-              {musteriAdi}
-            </div>
+            <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
           </Badge>
         ),
         children: (
@@ -254,7 +247,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
               deleteAction: uretimiSilFunc,
               extraItems: (record) => [
                 user.yetki === "admin" && {
-                  icon: <ExclamationCircleOutlined style={{ color: "red" }} />,
+                  icon: <ExclamationCircleOutlined />,
                   title: record.acil ? "Acilliği Kaldır" : "Acil Olarak İşaretle",
                   action: () => oncelikDurumunuDegistir(record),
                 },

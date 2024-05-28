@@ -1,9 +1,8 @@
 import { useUIContext } from "context/UIProvider";
-import { FaTemperatureLow, FaWpforms } from "react-icons/fa";
+import { FaTemperatureLow } from "react-icons/fa";
 import { FaDropbox } from "react-icons/fa6";
 import { FcInTransit, FcOk, FcRules, FcSynchronize } from "react-icons/fc";
 import { GiSteeringWheel } from "react-icons/gi";
-import { GrHostMaintenance } from "react-icons/gr";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 import { PiUsersThreeBold } from "react-icons/pi";
 import { RiCustomerServiceLine } from "react-icons/ri";
@@ -18,16 +17,9 @@ import UserCard from "./UserCard";
 
 const ContainerStyled = styled.div`
   height: 100%;
-  width: 13%;
+  width: 10%;
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border-top-right-radius: 20px;
   padding-top: 10px;
   justify-content: space-between;
   overflow-y: auto;
@@ -36,63 +28,69 @@ const MenuListStyled = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 4px;
+  padding: 3px;
   margin-top: 20px;
 `;
 const MenuListGroupStyled = styled.div`
   margin-bottom: 10px;
 `;
-const MenuListGroupContentStyled = styled.div``;
+const MenuListGroupContentStyled = styled.div`
+  background-color: #cbdbf9;
+  border-radius: 8px;
+  margin-left: 2px;
+  box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
+`;
 const MenuListGroupHeaderStyled = styled.div`
-  color: #2f2f2f;
-  font-size: 1.5vmin;
+  color: #4535aa;
+  font-size: 1.3vmin;
   font-weight: 700;
-  padding-left: 8px;
   display: flex;
   align-items: center;
-  margin-bottom: 6px;
-
-  box-shadow: 0 2px 4px 0 rgba(106, 113, 210, 0.3);
-  backdrop-filter: blur(2.5px);
-  -webkit-backdrop-filter: blur(2.5px);
+  margin-bottom: 4px;
   padding: 6px;
   border-radius: 6px;
 `;
 const MenuListGroupItemStyled = styled.div`
   cursor: pointer;
   padding: 8px;
-  padding-left: 10px;
+  padding-left: 12px;
   display: flex;
   align-items: center;
+  margin-bottom: 3px;
+  font-weight: 500;
 
   background: ${(props) =>
-    props.selected ? "linear-gradient(to right, #4535aa, #ed639e)" : "transparent"};
-  color: ${(props) => (props.selected ? "whitesmoke" : "#5a5a5a")};
+    props.selected ? "linear-gradient(to right, #4535aa, #8e82df)" : "transparent"};
+  color: ${(props) => (props.selected ? "whitesmoke" : "#4e4e4e")};
   box-shadow: ${(props) => props.selected && "0 10px 20px -5px rgba(0, 0, 0, 0.25)"};
   border-radius: 6px;
 
   &:hover {
-    background: ${(props) => !props.selected && "rgb(206, 215, 237)"};
-    color: ${(props) => !props.selected && "#4b00ff"};
+    background: ${(props) => !props.selected && "rgb(185, 200, 239)"};
+    color: ${(props) => !props.selected && "#622ce0"};
   }
 `;
 
 const RegisterButtonItemStyled = styled.div`
   font-weight: 600;
+  font-size: 1.5vmin;
+
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
 
   border-radius: 12px;
 
-  margin-bottom: 12px;
-  background: rgb(128, 84, 206);
+  margin-bottom: 20px;
+  // background: rgb(128, 84, 206);
+  background: linear-gradient(to right, #4535aa, #8e82df);
   color: #e8e8e8;
   padding: 8px;
   box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.25);
 
   &:hover {
-    background: linear-gradient(to right, #4535aa, #ed639e);
+    background: linear-gradient(to right, #4535aa, #a198e0);
   }
 `;
 
@@ -104,7 +102,7 @@ const MenuListGroupItemTitle = styled.div`
   align-items: center;
 `;
 const MenuListGroupTitleStyled = styled.div`
-  margin-left: 10px;
+  margin-left: 2px;
 `;
 const MenuListGroupIcon = styled.div`
   font-size: 20px;
@@ -118,19 +116,16 @@ const LinkStyled = styled(Link)`
 const pages = {
   categories: [
     {
-      title: "Üretim Takibi",
+      title: "ÜRETİM TAKİBİ",
       key: "uretim",
-      icon: <GrHostMaintenance />,
     },
     {
-      title: "Tanımlamalar",
+      title: "TANIMLAMALAR",
       key: "tanimlamalar",
-      icon: <FaWpforms />,
     },
     // {
     //   title: "Veriler",
     //   key: "veriler",
-    //   icon: <GoDatabase />,
     // },
   ],
   uretim: [
@@ -233,7 +228,7 @@ function NavigationMenu() {
                 setSelectedPage("");
               }}
             >
-              <MenuListGroupItemTitle>Gelen Malzeme Kaydı</MenuListGroupItemTitle>
+              Gelen Malzeme Kaydı
             </RegisterButtonItemStyled>
           </LinkStyled>
           {pages.categories.map((category, i) => (

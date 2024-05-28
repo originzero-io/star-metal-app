@@ -25,14 +25,19 @@ import ProtectedRoute from "pages/ProtectedRoute";
 const AppWrapperStyled = styled.div`
   height: 100vh;
   display: flex;
-  background: linear-gradient(180deg, #d4e0fa 52%, #bacdf7 100%);
+  // background: linear-gradient(180deg, #d4e0fa 52%, #bacdf7 100%);
+  background: #c5d5f8;
 `;
 
 const PageWrapperStyled = styled.div`
-  width: 87%;
-  // padding: 0px;
+  width: 90%;
   padding: 10px;
   overflow: auto;
+  background-color: #dbe4f9;
+  margin: 7px;
+  margin-left: 4px;
+  border-top-left-radius: 24px;
+  border-radius: 24px;
 `;
 
 function App() {
