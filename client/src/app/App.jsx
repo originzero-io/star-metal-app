@@ -32,10 +32,11 @@ const AppWrapperStyled = styled.div`
 const PageWrapperStyled = styled.div`
   width: 90%;
   padding: 10px;
+  padding-left: 14px;
   overflow: auto;
   background-color: #dbe4f9;
   margin: 7px;
-  margin-left: 4px;
+  margin-left: 12px;
   border-top-left-radius: 24px;
   border-radius: 24px;
 `;
