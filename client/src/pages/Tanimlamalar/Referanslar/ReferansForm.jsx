@@ -271,19 +271,6 @@ export default function ReferansForm({ record, type }) {
         </Select>
       </Form.Item>
 
-      <Form.Item
-        label="Çıkış Referans No"
-        name="cikisReferansNo"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input placeholder="Çıkış Referans No" />
-      </Form.Item>
-
       <Divider />
 
       <Form.Item

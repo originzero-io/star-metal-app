@@ -76,14 +76,10 @@ function Referanslar() {
         title: "İrsaliye Açıklaması",
         dataIndex: "irsaliyeAciklamasi",
         key: "irsaliyeAciklamasi",
-      },
-      {
-        title: "Çıkış Referans No",
-        dataIndex: "cikisReferansNo",
-        key: "cikisReferansNo",
-        filters: createTableFilterFromData(referanslar, "cikisReferansNo"),
-        onFilter: (value, record) => record.cikisReferansNo.indexOf(value) === 0,
+        filters: createTableFilterFromData(referanslar, "irsaliyeAciklamasi"),
+        onFilter: (value, record) => record.irsaliyeAciklamasi.indexOf(value) === 0,
         filterSearch: true,
+        width: 300,
       },
       {
         title: "Sipariş Tipi",
@@ -260,6 +256,7 @@ function Referanslar() {
         onChange={onChange}
         rowSelection={user.yetki === "admin" && rowSelection}
         pagination={true}
+        scroll={{ x: 1800 }}
         contextMenu={{
           editForm: ReferansForm,
           deleteAction: deleteSingleRecordHandler,

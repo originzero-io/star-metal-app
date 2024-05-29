@@ -21,10 +21,6 @@ const Referans = sequelize.define(
       type: DataTypes.STRING(70),
       allowNull: false,
     },
-    cikisReferansNo: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
     siparisTipi: {
       type: DataTypes.STRING(10),
       allowNull: false,
