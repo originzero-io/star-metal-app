@@ -15,6 +15,7 @@ import referanslarHttp, {
 import logoGoApi from "services/logoGoApi";
 import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../../../components/shared/TableGod";
+import IdBadge from "components/shared/IdBadge";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
@@ -30,6 +31,18 @@ function Referanslar() {
 
   const columns = useMemo(
     () => [
+      {
+        title: "Logo Ana Birim Ref",
+        dataIndex: "logoAnaBirimRef",
+        key: "logoAnaBirimRef",
+        render: (text) => <IdBadge value={text} />,
+      },
+      {
+        title: "Logo Malzeme Ref",
+        dataIndex: "logoMalzemeRef",
+        key: "logoMalzemeRef",
+        render: (text) => <IdBadge value={text} />,
+      },
       {
         title: "Referans No",
         dataIndex: "referansNo",
@@ -100,12 +113,12 @@ function Referanslar() {
         render: (text, record) =>
           record.fason ? <Tag color="green">Evet</Tag> : <Tag color="red">Hayır</Tag>,
         filters: [
-          { text: "Evet", value: "true" },
-          { text: "Hayır", value: "false" },
+          { text: "Evet", value: 1 },
+          { text: "Hayır", value: 0 },
         ],
         onFilter: (value, record) => {
           // value değeri string olarak geliyor, bu yüzden boolean'a çevirmemiz gerekiyor.
-          const filterValue = value === "true";
+          const filterValue = value === 1;
           return record.fason === filterValue;
         },
         filterSearch: true,
@@ -211,14 +224,21 @@ function Referanslar() {
       okText: "Tamam",
       cancelText: "İptal",
       async onOk() {
-        const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
-        const newParcaAdlari = await referansParcaAdlariHttp.logoIleEsle(logoParcaAdlari);
-        setReferansParcaAdlari(newParcaAdlari);
-        showNotification("success", "Referans parça adları logo ile eşlendi.");
+        // const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
+        // const newParcaAdlari = await referansParcaAdlariHttp.logoIleEsle(logoParcaAdlari);
+        // setReferansParcaAdlari(newParcaAdlari);
+        // showNotification("success", "Referans parça adları logo ile eşlendi.");
 
-        const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
-        const newIslemTipleri = await referansIslemTipleriHttp.logoIleEsle(logoIslemTipleri);
-        setReferansIslemTipleri(newIslemTipleri);
+        // const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
+        // const newIslemTipleri = await referansIslemTipleriHttp.logoIleEsle(logoIslemTipleri);
+        // setReferansIslemTipleri(newIslemTipleri);
+
+        const logoReferanslar = await logoGoApi.getData("GetReferansList");
+
+        console.log("logoReferanslar", logoReferanslar);
+
+        setReferanslar(logoReferanslar);
+
         showNotification("success", "Referans işlem tipleri logo ile eşlendi.");
       },
       onCancel() {
@@ -239,7 +259,7 @@ function Referanslar() {
         columns={columns}
         onChange={onChange}
         rowSelection={user.yetki === "admin" && rowSelection}
-        pagination={false}
+        pagination={true}
         contextMenu={{
           editForm: ReferansForm,
           deleteAction: deleteSingleRecordHandler,
