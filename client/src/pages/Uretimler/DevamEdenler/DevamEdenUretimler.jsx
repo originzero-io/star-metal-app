@@ -39,7 +39,7 @@ function DevamEdenUretimler() {
   };
 
   const [musteriBazliNormalUretimler, setMusteriBazliNormalUretimler] = useState({});
-  const [musteriBazliFasonUretimler, setMusteriBazliFasonUretimler] = useState({});
+  const [fasonFirmasiBazliFasonUretimler, setFasonFirmasiBazliFasonUretimler] = useState({});
 
   useEffect(() => {
     const musteriBazliNormal = devamEdenUretimler.normalUretimler.reduce((acc, uretim) => {
@@ -55,17 +55,17 @@ function DevamEdenUretimler() {
     }, {}); // İlk değer olarak boş bir obje kullanılır
     setMusteriBazliNormalUretimler(musteriBazliNormal);
 
-    const musteriBazliFason = devamEdenUretimler.fasonUretimler.reduce((acc, uretim) => {
-      const { musteriAdi } = uretim.Referanslar;
+    const fasonFirmasiBazliFason = devamEdenUretimler.fasonUretimler.reduce((acc, uretim) => {
+      const { fasonFirmasi } = uretim.Referanslar;
 
-      if (!acc[musteriAdi]) {
-        acc[musteriAdi] = [];
+      if (!acc[fasonFirmasi]) {
+        acc[fasonFirmasi] = [];
       }
-      acc[musteriAdi].push(uretim);
+      acc[fasonFirmasi].push(uretim);
 
       return acc;
     }, {});
-    setMusteriBazliFasonUretimler(musteriBazliFason);
+    setFasonFirmasiBazliFasonUretimler(fasonFirmasiBazliFason);
   }, [devamEdenUretimler]);
 
   return (
@@ -110,7 +110,7 @@ function DevamEdenUretimler() {
             ),
             children: (
               <FasonUretimlerTablo
-                musteriBazliKayitlar={musteriBazliFasonUretimler}
+                fasonFirmasiBazliKayitlar={fasonFirmasiBazliFasonUretimler}
                 uretimiSilFunc={uretimiSil}
               />
             ),

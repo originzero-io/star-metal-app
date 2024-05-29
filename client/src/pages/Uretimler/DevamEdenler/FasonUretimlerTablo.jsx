@@ -6,7 +6,7 @@ import {
   PrinterOutlined,
   SnippetsOutlined,
 } from "@ant-design/icons";
-import { Badge, Collapse, Modal, Tag } from "antd";
+import { Badge, Collapse, Modal, Tag, Tooltip } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
@@ -23,13 +23,13 @@ import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
 
-export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFunc }) {
+export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimiSilFunc }) {
   const { user } = useAuth();
 
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
   const { showPanel, showNotification, showAlert, showModal } = useUIContext();
 
-  const createColumnsForCustomer = (musteriAdi) => [
+  const createColumnsForCustomer = (fasonFirmasi) => [
     {
       title: "Sıra No",
       dataIndex: "id",
@@ -38,29 +38,32 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
       width: 70,
     },
     {
-      title: "Fason Firması",
-      dataIndex: "fasonFirmasi",
+      title: "Müşteri",
+      dataIndex: "Referanslar.musteriAdi",
       key: "fasonFirmasi",
       render: (text, record) => (
-        <Tag color="blue" style={{ fontSize: "14px" }}>
-          {record.Referanslar?.fasonFirmasi}
-        </Tag>
+        <Tooltip title={record.Referanslar?.musteriAdi}>
+          <Tag
+            color="blue"
+            style={{
+              // fontSize: "10px",
+              width: "120px",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {record.Referanslar?.musteriAdi}
+          </Tag>
+        </Tooltip>
       ),
-      filters: [
-        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.fasonFirmasi)),
-      ].map((fasonFirmasi) => ({
-        text: fasonFirmasi,
-        value: fasonFirmasi,
-      })),
-      onFilter: (value, record) => record.Referanslar?.fasonFirmasi.indexOf(value) === 0,
-      filterSearch: true,
       width: 120,
     },
     {
       title: "Referans",
       dataIndex: "referansNo",
       key: "referansNo",
-      filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "referansNo"),
+      filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "referansNo"),
       onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
       filterSearch: true,
       render: (text) => (
@@ -76,7 +79,7 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
       key: "cikisReferansNo",
       filters: [
         ...new Set(
-          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.cikisReferansNo),
+          fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.cikisReferansNo),
         ),
       ].map((cikisReferansNo) => ({
         text: cikisReferansNo,
@@ -93,7 +96,7 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
       key: "iade",
       render: (text) =>
         text === "Evet" ? <Tag color="green">{text}</Tag> : <Tag color="red">{text}</Tag>,
-      filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "iade"),
+      filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "iade"),
       onFilter: (value, record) => record.iade.indexOf(value) === 0,
       filterSearch: true,
     },
@@ -108,7 +111,9 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
           <Tag color="purple">{record.Referanslar.siparisTipi}</Tag>
         ),
       filters: [
-        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisTipi)),
+        ...new Set(
+          fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.siparisTipi),
+        ),
       ].map((siparisTipi) => ({
         text: siparisTipi,
         value: siparisTipi,
@@ -123,7 +128,9 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
       render: (text, record) => record.Referanslar?.siparisNo,
       filters: [
         ...new Set(
-          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisNo || "Boş"),
+          fasonFirmasiBazliKayitlar[fasonFirmasi]?.map(
+            (item) => item.Referanslar?.siparisNo || "Boş",
+          ),
         ),
       ].map((siparisNo) => ({
         text: siparisNo,
@@ -140,7 +147,7 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
       dataIndex: "talepNo",
       key: "talepNo",
       filters: [
-        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.talepNo || "Boş")),
+        ...new Set(fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.talepNo || "Boş")),
       ].map((talepNo) => ({
         text: talepNo,
         value: talepNo,
@@ -211,7 +218,9 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
       render: (text, record) => <Tag color="blue">{record.Referanslar?.islemTipi}</Tag>,
       key: "islemTipi",
       filters: [
-        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.islemTipi)),
+        ...new Set(
+          fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.islemTipi),
+        ),
       ].map((islemTipi) => ({
         text: islemTipi,
         value: islemTipi,
@@ -281,17 +290,17 @@ export default function FasonUretimlerTablo({ musteriBazliKayitlar, uretimiSilFu
     <Collapse
       bordered={false}
       expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-      items={Object.entries(musteriBazliKayitlar).map(([musteriAdi, kayitlar], index) => ({
+      items={Object.entries(fasonFirmasiBazliKayitlar).map(([fasonFirmasi, kayitlar], index) => ({
         key: index.toString(),
         label: (
           <Badge count={kayitlar.length} offset={[20, 6]} color="blue">
-            <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
+            <div style={collapseStyle.subCollapseHeader}>{fasonFirmasi}</div>
           </Badge>
         ),
         children: (
           <TableGod
             dataSource={kayitlar}
-            columns={createColumnsForCustomer(musteriAdi)}
+            columns={createColumnsForCustomer(fasonFirmasi)}
             hideDefaultTitleButtons
             scroll={{ x: 1800 }}
             contextMenu={{
