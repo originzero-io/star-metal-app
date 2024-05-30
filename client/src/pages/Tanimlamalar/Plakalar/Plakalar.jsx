@@ -2,6 +2,7 @@ import { CarOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 
+import IdBadge from "components/shared/IdBadge";
 import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
@@ -9,8 +10,8 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import PlakaForm from "pages/Tanimlamalar/Plakalar/PlakaForm";
 import plakalarHttp from "services/crud-server/plakalar.http";
-import TableGod from "../../../components/shared/TableGod";
 import logoGoApi from "services/logoGoApi";
+import TableGod from "../../../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
@@ -24,6 +25,12 @@ function Plakalar() {
 
   const columns = useMemo(
     () => [
+      {
+        title: "Logo Kodu",
+        dataIndex: "id",
+        key: "id",
+        render: (text) => <IdBadge value={text} />,
+      },
       {
         title: "Plaka",
         dataIndex: "plaka",
@@ -50,6 +57,9 @@ function Plakalar() {
       cancelText: "İptal",
       async onOk() {
         try {
+          await Promise.all(selectedRows.map((row) => logoGoApi.deleteData("DeleteArac", row.id)));
+          showNotification("success", "Seçili plakalar logodan silindi");
+
           const newPlakalar = await plakalarHttp.deleteData(plakalar, selectedRows);
           setPlakalar(newPlakalar);
           showNotification("success", "Seçili plakalar silindi");
@@ -68,6 +78,9 @@ function Plakalar() {
       cancelText: "İptal",
       async onOk() {
         try {
+          await logoGoApi.deleteData("DeleteArac", record.id);
+          showNotification("success", `${record.plaka} plakası logodan silindi`);
+
           const newPlakalar = await plakalarHttp.deleteData(plakalar, [record]);
           setPlakalar(newPlakalar);
           showNotification("success", `${record.plaka} plakası silindi`);
@@ -90,10 +103,6 @@ function Plakalar() {
         console.log("newPlakalar", newPlakalar);
         setPlakalar(newPlakalar);
         showNotification("success", "Plakalar logo ile eşlendi.");
-        // try {
-        // } catch (error) {
-        //   showNotification("error", "Hata oluştu", error.message);
-        // }
       },
       onCancel() {
         showNotification("warning", "İşlem iptal edildi");
