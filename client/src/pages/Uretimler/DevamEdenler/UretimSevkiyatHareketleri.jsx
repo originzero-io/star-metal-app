@@ -1,10 +1,11 @@
 /* eslint-disable no-nested-ternary */
-import PropTypes from "prop-types";
 import { Alert, Col, Row, Tag } from "antd";
 import { useDBContext } from "context/DBProvider";
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import styled from "styled-components";
+import getUrlByEnvVariables from "utils/getServerUrl";
 import TableGod from "../../../components/shared/TableGod";
 
 const TopSectionItem = styled.div`
@@ -151,7 +152,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
           <Col span={4}>
             <img
               alt="referansResim"
-              src={`http://localhost:6333/uploads/referanslar/${record?.Referanslar?.resimUrl}`}
+              src={`${getUrlByEnvVariables()}/uploads/referanslar/${record?.Referanslar?.resimUrl}`}
               style={{ marginTop: "5%" }}
               height={100}
             />

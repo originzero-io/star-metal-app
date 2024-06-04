@@ -2,10 +2,10 @@ module.exports = {
   apps: [
     {
       name: "db-server",
-      script: "./crud-server/src/index.js", // Backend sunucu dosyanızın yolu
+      script: "./crud-server/src/index.js",
       // instances: 1,
       autorestart: true,
-      watch: true,
+      // watch: true,
       ignore_watch: ["node_modules"],
       max_memory_restart: "1G",
       env: {
@@ -15,14 +15,5 @@ module.exports = {
         DB_PASS: "OriginZero2024",
       },
     },
-    // {
-    //   name: "application",
-    //   script: "npm",
-    //   args: "run dev",
-    //   cwd: "./client/", // client klasörünün yolu
-    //   autorestart: true,
-    //   watch: true,
-    //   ignore_watch: ["node_modules"],
-    // },
   ],
 };

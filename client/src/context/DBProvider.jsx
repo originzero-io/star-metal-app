@@ -1,22 +1,23 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import axios from "axios";
+import PropTypes from "prop-types";
+import { createContext, useContext, useEffect, useState } from "react";
+import ambalajlarHttp from "services/crud-server/ambalajlar.http";
+import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
+import musterilerHttp from "services/crud-server/musteriler.http";
+import personellerHttp from "services/crud-server/personeller.http";
+import plakalarHttp from "services/crud-server/plakalar.http";
 import referanslarHttp, {
   referansIslemTipleriHttp,
   referansParcaAdlariHttp,
 } from "services/crud-server/referanslar.http";
-import musterilerHttp from "services/crud-server/musteriler.http";
-import ambalajlarHttp from "services/crud-server/ambalajlar.http";
-import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
-import personellerHttp from "services/crud-server/personeller.http";
 import soforlerHttp from "services/crud-server/soforler.http";
-import plakalarHttp from "services/crud-server/plakalar.http";
-import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
+import getUrlByEnvVariables from "utils/getServerUrl";
 import { useUIContext } from "./UIProvider";
 
 const DBContext = createContext();
 
-axios.defaults.baseURL = "http://localhost:6333";
+axios.defaults.baseURL = getUrlByEnvVariables();
 
 export const useDBContext = () => useContext(DBContext);
 

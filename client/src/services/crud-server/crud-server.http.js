@@ -1,10 +1,11 @@
+import getUrlByEnvVariables from "utils/getServerUrl";
 import BaseHttp from "../base.http";
 
 class CRUDServerHttp extends BaseHttp {
   constructor(path) {
     super();
     this.path = path;
-    this.service = this.createService("http://localhost:6333");
+    this.service = this.createService(getUrlByEnvVariables());
   }
 
   async getData() {

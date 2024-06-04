@@ -1,10 +1,10 @@
-import { Button, Col, Row } from "antd";
-import React, { useEffect, useRef } from "react";
-import styled from "styled-components";
-import { useReactToPrint } from "react-to-print";
-import { IoPrintOutline } from "react-icons/io5";
-import { getCurrentDateTime } from "utils/time.helper";
+import { Col, Row } from "antd";
 import PrintButton from "components/shared/PrintButton";
+import { useEffect, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
+import styled from "styled-components";
+import getUrlByEnvVariables from "utils/getServerUrl";
+import { getCurrentDateTime } from "utils/time.helper";
 
 const ContainerStyled = styled.div`
   margin-top: 8px;
@@ -90,7 +90,7 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           <ColStyled span={6}>
             <img
               alt="referansResim"
-              src={`http://localhost:6333/uploads/referanslar/${record?.Referanslar?.resimUrl}`}
+              src={`${getUrlByEnvVariables()}/uploads/referanslar/${record?.Referanslar?.resimUrl}`}
               style={{ maxWidth: "100%" }}
             />
           </ColStyled>

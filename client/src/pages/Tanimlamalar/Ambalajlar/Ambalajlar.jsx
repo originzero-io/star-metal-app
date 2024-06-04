@@ -1,14 +1,15 @@
-import { Button, Card, Modal, Tooltip } from "antd";
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Card, Modal, Tooltip } from "antd";
 import { useUIContext } from "context/UIProvider";
 
-import AmbalajForm from "pages/Tanimlamalar/Ambalajlar/AmbalajForm";
+import PageHeader from "components/shared/PageHeader";
+import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
+import AmbalajForm from "pages/Tanimlamalar/Ambalajlar/AmbalajForm";
+import { FaDropbox } from "react-icons/fa";
 import ambalajlarHttp from "services/crud-server/ambalajlar.http";
 import styled from "styled-components";
-import PageHeader from "components/shared/PageHeader";
-import { FaDropbox } from "react-icons/fa";
-import { useAuth } from "context/AuthProvider";
+import getUrlByEnvVariables from "utils/getServerUrl";
 
 const Container = styled.div``;
 
@@ -77,7 +78,7 @@ function Ambalajlar() {
             cover={
               <img
                 alt="example"
-                src={`http://localhost:6333/uploads/ambalajlar/${ambalaj.resimUrl}`}
+                src={`${getUrlByEnvVariables()}/uploads/ambalajlar/${ambalaj.resimUrl}`}
                 height={200}
               />
             }
