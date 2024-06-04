@@ -6,8 +6,10 @@ import {
   PrinterOutlined,
   TruckOutlined,
 } from "@ant-design/icons";
+
 import { Badge, Collapse, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
+import ColumnBadge from "components/shared/ColumnBadge";
 import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
@@ -18,6 +20,7 @@ import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeFor
 import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
+import { useState } from "react";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 
@@ -59,37 +62,13 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "referansNo"),
       onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
       filterSearch: true,
-      render: (text) => (
-        <Tag color="orange" style={{ fontSize: "14px" }}>
-          {text}
-        </Tag>
-      ),
-      width: 120,
-    },
-    {
-      title: "Çıkış Referansı",
-      dataIndex: "cikisReferansNo",
-      key: "cikisReferansNo",
-      filters: [
-        ...new Set(
-          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.cikisReferansNo),
-        ),
-      ].map((cikisReferansNo) => ({
-        text: cikisReferansNo,
-        value: cikisReferansNo,
-      })),
-      onFilter: (value, record) => record.Referanslar?.cikisReferansNo.indexOf(value) === 0,
-      filterSearch: true,
-      render: (text, record) => record.Referanslar.cikisReferansNo,
-
+      render: (text) => <ColumnBadge color="#fb8500" value={text} />,
       width: 120,
     },
     {
       title: "İade",
       dataIndex: "iade",
       key: "iade",
-      render: (text) =>
-        text === "Evet" ? <Tag color="green">{text}</Tag> : <Tag color="red">{text}</Tag>,
       filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "iade"),
       onFilter: (value, record) => record.iade.indexOf(value) === 0,
       filterSearch: true,
@@ -98,12 +77,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       title: "Sipariş Tipi",
       dataIndex: "siparisTipi",
       key: "siparisTipi",
-      render: (text, record) =>
-        record.Referanslar.siparisTipi === "Seri" ? (
-          <Tag color="volcano">{record.Referanslar.siparisTipi}</Tag>
-        ) : (
-          <Tag color="purple">{record.Referanslar.siparisTipi}</Tag>
-        ),
+      render: (text, record) => record?.Referanslar?.siparisTipi,
       filters: [
         ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisTipi)),
       ].map((siparisTipi) => ({
@@ -112,6 +86,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       })),
       onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
       filterSearch: true,
+      width: 110,
     },
     {
       title: "Sipariş No",
@@ -131,6 +106,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
         return siparisNo.indexOf(value) === 0;
       },
       filterSearch: true,
+      width: 100,
     },
     {
       title: "Talep No",
@@ -146,6 +122,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
         const talepNo = record.talepNo || "Boş";
         return talepNo.indexOf(value) === 0;
       },
+      width: 100,
     },
     {
       title: "İrsaliye No",
@@ -195,6 +172,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       // dataIndex: ["Referanslar", "referansYuzeyAlani"],
       key: "referansYuzeyAlanı",
       render: (text, record) => record.Referanslar?.referansYuzeyAlani,
+      width: 110,
     },
     {
       title: "İşlem Tipi",
@@ -209,6 +187,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       })),
       onFilter: (value, record) => record.Referanslar?.islemTipi.indexOf(value) === 0,
       filterSearch: true,
+      width: 90,
     },
   ];
 

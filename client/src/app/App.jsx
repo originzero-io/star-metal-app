@@ -38,7 +38,7 @@ const PageWrapperStyled = styled.div`
   margin: 7px;
   margin-left: 12px;
   border-top-left-radius: 24px;
-  border-radius: 24px;
+  border-radius: 18px;
 `;
 
 function App() {

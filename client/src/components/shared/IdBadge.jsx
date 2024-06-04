@@ -1,6 +1,5 @@
-import { Badge, Tag } from "antd";
+import { Tag } from "antd";
 
 export default function IdBadge({ value }) {
-  return <Tag style={{ fontSize: "14px", borderRadius: "50%" }}>{value}</Tag>;
-  // return <Badge count={value} overflowCount={9999999999} color="rgb(45, 115, 245)" />;
+  return <Tag style={{ fontSize: "12px" }}>{value}</Tag>;
 }

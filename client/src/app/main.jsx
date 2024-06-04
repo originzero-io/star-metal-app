@@ -13,14 +13,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             rowHoverBg: "rgb(220, 217, 236)",
             rowSelectedBg: "rgb(189, 185, 233)",
             rowSelectedHoverBg: "rgb(189, 185, 233)",
-            rowSelectedColor: "red",
 
             borderColor: "#cfcfcf",
             cellFontSizeSM: 12,
 
             // headerBg: "rgb(221, 231, 247)",
             headerBg: "#eceff1",
-            headerColor: "rgba(0, 0, 0, 0.9)",
+            headerFilterHoverBg: "rgb(196, 208, 237)",
+            headerColor: "rgba(0, 0, 0, 0.8)",
 
             colorBgContainer: "rgba(255, 255, 255, 0.6)",
             filterDropdownBg: "#ffff",
@@ -74,8 +74,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             motionDurationMid: "0s",
             colorLink: "purple",
             colorLinkHover: "#e570f7",
-            defaultShadow: "0 5px 10px -5px rgba(0, 0, 0, 0.25)",
-            primaryShadow: "0 10px 10px -5px rgba(0, 0, 0, 0.25)",
           },
           Tabs: {
             inkBarColor: "#4b00ff",

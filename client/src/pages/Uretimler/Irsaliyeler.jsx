@@ -1,5 +1,6 @@
 import { CaretRightOutlined, CloudUploadOutlined } from "@ant-design/icons";
-import { Badge, Button, Collapse, Divider, Flex, Form, Modal, Select, Tag } from "antd";
+import { Badge, Button, Collapse, Divider, Flex, Form, Modal, Select } from "antd";
+import ColumnBadge from "components/shared/ColumnBadge";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
 import collapseStyle from "components/shared/StyledCollapse";
@@ -11,7 +12,8 @@ import { FcRules } from "react-icons/fc";
 import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
-import { getCurrentDateTime } from "utils/time.helper";
+import logoGoApi from "services/logoGoApi";
+import { getCurrentDateTime, getCurrentTimeWithLogoFormat } from "utils/time.helper";
 
 export default function Irsaliyeler() {
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
@@ -57,19 +59,12 @@ export default function Irsaliyeler() {
         title: "Referans No",
         dataIndex: "referansNo",
         key: "referansNo",
-        render: (text) => (
-          <Tag color="orange" style={{ fontSize: "14px" }}>
-            {text}
-          </Tag>
-        ),
-        // width: 120,
+        render: (text) => <ColumnBadge color="#fb8500" value={text} />,
       },
       {
         title: "İade",
         dataIndex: "iade",
         key: "iade",
-        render: (text) =>
-          text === "Evet" ? <Tag color="green">{text}</Tag> : <Tag color="red">{text}</Tag>,
       },
       {
         title: "Sipariş No",
@@ -165,7 +160,7 @@ export default function Irsaliyeler() {
                   offset={[20, 9]}
                   title="Toplam sevk irsaliyesi sayısı"
                 >
-                  <div style={collapseStyle.parentCollapseHeader}>Sevk İrsaliyesi</div>
+                  <div style={collapseStyle.parentCollapseHeader}>Sevk İrsaliyeleri</div>
                 </Badge>
               </Flex>
             ),
@@ -180,15 +175,8 @@ export default function Irsaliyeler() {
                   Object.entries(tipBazliIrsaliye.sevk).map(([musteriAdi, kayitlar], index) => ({
                     key: index.toString(),
                     label: (
-                      <Badge
-                        count={new Set(kayitlar?.map((item) => item.referansNo)).size}
-                        offset={[50, 7]}
-                        color="cyan"
-                        title="Farklı referans sayısı"
-                      >
-                        <Badge count={kayitlar.length} offset={[20, 6]} title="Kayıt sayısı">
-                          <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-                        </Badge>
+                      <Badge count={kayitlar.length} offset={[20, 5]} title="Kayıt sayısı">
+                        <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
                       </Badge>
                     ),
                     children: (
@@ -200,7 +188,7 @@ export default function Irsaliyeler() {
                     ),
                     style: collapseStyle.subCollapseItem,
 
-                    extra: <IrsaliyeKesButon type="sevk" kayitlar={kayitlar} />,
+                    extra: <LogoyaGonderButon kayitlar={kayitlar} />,
                   }))
                 }
               />
@@ -216,7 +204,7 @@ export default function Irsaliyeler() {
                   color="purple"
                   title="Toplam taşıma irsaliyesi sayısı"
                 >
-                  <div style={collapseStyle.parentCollapseHeader}>Taşıma İrsaliyesi</div>
+                  <div style={collapseStyle.parentCollapseHeader}>Taşıma İrsaliyeleri</div>
                 </Badge>
               </Flex>
             ),
@@ -234,19 +222,12 @@ export default function Irsaliyeler() {
                     key: index.toString(),
                     label: (
                       <Badge
-                        count={new Set(kayitlar?.map((item) => item.referansNo)).size}
-                        offset={[50, 7]}
-                        color="cyan"
-                        title="Farklı referans sayısı"
+                        count={kayitlar.length}
+                        offset={[20, 5]}
+                        color="purple"
+                        title="Kayıt sayısı"
                       >
-                        <Badge
-                          count={kayitlar.length}
-                          offset={[20, 6]}
-                          color="purple"
-                          title="Kayıt sayısı"
-                        >
-                          <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-                        </Badge>
+                        <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
                       </Badge>
                     ),
                     children: (
@@ -259,7 +240,7 @@ export default function Irsaliyeler() {
 
                     style: collapseStyle.subCollapseItem,
 
-                    extra: <IrsaliyeKesButon type="tasima" kayitlar={kayitlar} />,
+                    extra: <LogoyaGonderButon kayitlar={kayitlar} />,
                   }))
                 }
               />
@@ -285,40 +266,94 @@ function IrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
   );
 }
 
-function IrsaliyeKesButon({ type, kayitlar }) {
-  const { personeller, soforler, plakalar, irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } =
+function LogoyaGonderButon({ kayitlar }) {
+  const { soforler, plakalar, irsaliyeler, setIrsaliyeler, setDevamEdenUretimler, musteriler } =
     useDBContext();
   const { showNotification } = useUIContext();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [secilenSofor, setSecilenSofor] = useState({});
 
   const showModal = (e) => {
     e.stopPropagation();
     setIsModalVisible(true);
   };
 
+  const logoIrsaliyeObjesiOlustur = (irsaliyeKaydi) => {
+    const firmaAdi = irsaliyeKaydi[0].Referanslar.fasonFirmasi
+      ? irsaliyeKaydi[0].Referanslar.fasonFirmasi
+      : irsaliyeKaydi[0].Referanslar.musteriAdi;
+
+    const musteri = musteriler.find((m) => m.adi === firmaAdi);
+
+    const irsaliyeMaster = {
+      genelAciklama: "BURASI GENEL AÇIKLAMA ALANIDIR. AKIN GÖNDERDİ",
+      logicalref: 0,
+      turu: 8, // 1: alış , 8: satış irsaliyesi
+      tarih: getCurrentTimeWithLogoFormat(),
+      cariRef: musteri.logoRef,
+      cariHesapKoduUnvani: irsaliyeKaydi[0].Referanslar.fasonFirmasi
+        ? irsaliyeKaydi[0].Referanslar.fasonFirmasi
+        : irsaliyeKaydi[0].Referanslar.musteriAdi,
+      plaka: irsaliyeKaydi[0].plaka,
+      soforAdi: secilenSofor.adi,
+      soforSoyadi: secilenSofor.soyadi,
+      soforKimlikNo: secilenSofor.kimlikNo,
+    };
+
+    // ! burası gerçek referanslar ile doldurulacak
+    const irsaliyeDetails = irsaliyeKaydi.map((kayit, index) => ({
+      logicalref: 0,
+      irsaliyeRef: 0,
+      satirNo: index + 1,
+      malzemeRef: 4792, // 153700290005 ÇANAK YAY FOSFAT
+      miktar: kayit.uretimAdedi,
+      birimRef: 5, // 153700290005 ÇANAK YAY FOSFAT
+      satirAciklamasi: "**AKIN TARAFINDAN GÖNDERİLMİŞ DENEME KAYDI - GEÇERSİZ VE SİLİNECEK**",
+    }));
+
+    const logoIrsaliye = {
+      irsaliyeMaster,
+      irsaliyeDetails,
+    };
+
+    return logoIrsaliye;
+  };
+
   const handleOk = async (values) => {
     const gonderilecekKayitlar = kayitlar.map((kayit) => ({
       ...kayit,
-      sofor: values.soforAdi,
+      sofor: secilenSofor,
       plaka: values.plaka,
-      personel: values.personelAdi,
       irsaliyeNo: "14-ABCDE",
       sevkTarihi: getCurrentDateTime(),
     }));
-    console.log("Kayıtlar:", gonderilecekKayitlar);
-    try {
-      await uretimGirisleriHttp.sevkEt(gonderilecekKayitlar);
-      const devamEdenler = await devamEdenUretimHttp.getData();
-      const newIrsaliyeler = await irsaliyeHttp.eIrsaliyeKes(irsaliyeler, gonderilecekKayitlar);
 
+    try {
+      const logoIrsaliye = logoIrsaliyeObjesiOlustur(gonderilecekKayitlar);
+      console.log("logoIrsaliye", logoIrsaliye);
+
+      const logoResponse = await logoGoApi.postData("PostIrsaliye", logoIrsaliye);
+      console.log("PostIrsaliyeResponse", logoResponse);
+
+      await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(gonderilecekKayitlar);
+      const devamEdenler = await devamEdenUretimHttp.getData();
+      const newIrsaliyeler = await irsaliyeHttp.listeyiTemizle(irsaliyeler, gonderilecekKayitlar);
       setIrsaliyeler(newIrsaliyeler);
       setDevamEdenUretimler(devamEdenler);
       setIsModalVisible(false);
       const { musteriAdi } = kayitlar[0].Referanslar;
-      showNotification("success", `${musteriAdi} müşterisine irsaliye kesildi.`);
+      showNotification(
+        "success",
+        `${musteriAdi} müşterisine ait irsaliye kaydı logoya gönderildi.`,
+      );
     } catch (err) {
       showNotification("error", err.message);
     }
+  };
+
+  const soforSec = (value) => {
+    const selectedSofor = soforler.find((sofor) => sofor.id === value);
+    setSecilenSofor(selectedSofor);
   };
 
   const handleCancel = (e) => {
@@ -328,13 +363,12 @@ function IrsaliyeKesButon({ type, kayitlar }) {
 
   return (
     <Button
-      style={{ marginRight: "4px", background: "#08bf8e", color: "white" }}
+      style={{ marginRight: "4px", background: "#18a680", color: "white" }}
       type="primary"
-      danger={type === "sevk"}
       icon={<CloudUploadOutlined />}
       onClick={showModal}
     >
-      e-İrsaliye Kes
+      Logoya Gönder
       <Modal
         title="Bilgileri Doldurun"
         open={isModalVisible}
@@ -351,25 +385,6 @@ function IrsaliyeKesButon({ type, kayitlar }) {
           style={{ marginTop: "20px" }}
         >
           <Form.Item
-            label="Personel"
-            name="personelAdi"
-            rules={[
-              {
-                required: true,
-                message: "Bu alanı doldurun",
-              },
-            ]}
-          >
-            <Select placeholder="Personel seçiniz" showSearch>
-              {personeller.map((personel) => (
-                <Select.Option key={personel.id} value={`${personel.ad} ${personel.soyad}`}>
-                  {`${personel.ad} ${personel.soyad}`}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item
             label="Şoför"
             name="soforAdi"
             rules={[
@@ -379,9 +394,9 @@ function IrsaliyeKesButon({ type, kayitlar }) {
               },
             ]}
           >
-            <Select placeholder="Şoför seçiniz" showSearch>
+            <Select placeholder="Şoför seçiniz" showSearch onChange={soforSec}>
               {soforler.map((sofor) => (
-                <Select.Option key={sofor.id} value={`${sofor.adi} ${sofor.soyadi}`}>
+                <Select.Option key={sofor.id} value={sofor.id}>
                   {`${sofor.adi} ${sofor.soyadi}`}
                 </Select.Option>
               ))}
@@ -413,9 +428,9 @@ function IrsaliyeKesButon({ type, kayitlar }) {
             htmlType="submit"
             block
             icon={<CloudUploadOutlined />}
-            style={{ background: "#08bf8e", color: "white" }}
+            style={{ background: "#18a680", color: "white" }}
           >
-            e-İrsaliye Kes
+            Logoya Gönder
           </Button>
         </Form>
       </Modal>

@@ -139,7 +139,7 @@ router.put(
 );
 
 router.put(
-  "/sevk-et",
+  "/sevkiyat-bilgilerini-doldur",
   asyncHandler(async (req, res) => {
     const { kayitlar } = req.body;
     kayitlar.forEach(async (kayit) => {

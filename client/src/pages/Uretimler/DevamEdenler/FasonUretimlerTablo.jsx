@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { Badge, Collapse, Modal, Tag, Tooltip } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
+import ColumnBadge from "components/shared/ColumnBadge";
 import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
@@ -46,7 +47,6 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
           <Tag
             color="blue"
             style={{
-              // fontSize: "10px",
               width: "120px",
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -66,36 +66,13 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "referansNo"),
       onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
       filterSearch: true,
-      render: (text) => (
-        <Tag color="orange" style={{ fontSize: "14px" }}>
-          {text}
-        </Tag>
-      ),
-      width: 120,
-    },
-    {
-      title: "Çıkış Referansı",
-      dataIndex: "cikisReferansNo",
-      key: "cikisReferansNo",
-      filters: [
-        ...new Set(
-          fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.cikisReferansNo),
-        ),
-      ].map((cikisReferansNo) => ({
-        text: cikisReferansNo,
-        value: cikisReferansNo,
-      })),
-      onFilter: (value, record) => record.Referanslar?.cikisReferansNo.indexOf(value) === 0,
-      filterSearch: true,
-      render: (text, record) => record.Referanslar.cikisReferansNo,
+      render: (text) => <ColumnBadge color="#fb8500" value={text} />,
       width: 120,
     },
     {
       title: "İade",
       dataIndex: "iade",
       key: "iade",
-      render: (text) =>
-        text === "Evet" ? <Tag color="green">{text}</Tag> : <Tag color="red">{text}</Tag>,
       filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "iade"),
       onFilter: (value, record) => record.iade.indexOf(value) === 0,
       filterSearch: true,
@@ -104,12 +81,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       title: "Sipariş Tipi",
       dataIndex: "siparisTipi",
       key: "siparisTipi",
-      render: (text, record) =>
-        record.Referanslar.siparisTipi === "Seri" ? (
-          <Tag color="volcano">{record.Referanslar.siparisTipi}</Tag>
-        ) : (
-          <Tag color="purple">{record.Referanslar.siparisTipi}</Tag>
-        ),
+      render: (text, record) => record?.Referanslar?.siparisTipi,
       filters: [
         ...new Set(
           fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.siparisTipi),

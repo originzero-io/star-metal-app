@@ -64,7 +64,7 @@ router.post(
 );
 
 router.post(
-  "/e-irsaliye-kes",
+  "/temizle",
   asyncHandler(async (req, res) => {
     const selectedRows = req.body;
 
@@ -74,7 +74,7 @@ router.post(
       });
     });
 
-    res.send("e-irsaliye'ye gönderildi");
+    res.send("liste temizlendi");
   }),
 );
 

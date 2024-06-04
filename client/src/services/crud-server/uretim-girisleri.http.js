@@ -19,8 +19,8 @@ class UretimGirisi extends CRUDServerHttp {
     return rawData.data;
   }
 
-  async sevkEt(kayitlar = []) {
-    const rawData = await axios.put(`${this.path}/sevk-et`, {
+  async sevkiyatBilgileriniDoldur(kayitlar = []) {
+    const rawData = await axios.put(`${this.path}/sevkiyat-bilgilerini-doldur`, {
       kayitlar,
     });
     return rawData.data;

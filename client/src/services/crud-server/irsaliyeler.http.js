@@ -13,8 +13,8 @@ class Irsaliye extends CRUDServerHttp {
     return rawData.data;
   }
 
-  async eIrsaliyeKes(dataArray, selectedRows) {
-    await axios.post(`${this.path}/e-irsaliye-kes`, selectedRows);
+  async listeyiTemizle(dataArray, selectedRows) {
+    await axios.post(`${this.path}/temizle`, selectedRows);
 
     const newDataArray = dataArray.filter(
       (data) => !selectedRows.some((selectedRow) => selectedRow.id === data.id),

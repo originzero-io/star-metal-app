@@ -15,6 +15,7 @@ import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import collapseStyle from "components/shared/StyledCollapse";
+import ColumnBadge from "components/shared/ColumnBadge";
 
 const alertMessage = (musteri, irsaliyeTipi, olan, limit) => (
   <div>
@@ -107,7 +108,7 @@ export default function SevkEdilecekler() {
       title: "Referans No",
       dataIndex: "referansNo",
       key: "referansNo",
-      render: (text) => <Tag color="orange">{text}</Tag>,
+      render: (text) => <ColumnBadge color="#fb8500" value={text} />,
       filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "referansNo"),
       onFilter: (value, _record) => _record.referansNo.indexOf(value) === 0,
       filterSearch: true,
@@ -124,8 +125,6 @@ export default function SevkEdilecekler() {
       title: "İade",
       dataIndex: "iade",
       key: "iade",
-      render: (text) =>
-        text === "Evet" ? <Tag color="green">{text}</Tag> : <Tag color="red">{text}</Tag>,
       width: 100,
     },
 
@@ -152,7 +151,6 @@ export default function SevkEdilecekler() {
       title: "Sipariş No",
       dataIndex: "siparisNo",
       key: "siparisNo",
-      // render: (_record) => _record.Referanslar.siparisNo,
       filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "siparisNo"),
       onFilter: (value, _record) => {
         const siparisNo = _record.siparisNo || "Boş";
@@ -269,10 +267,10 @@ export default function SevkEdilecekler() {
             key: index.toString(),
             label: (
               <Badge count={kayitlar.length} offset={[20, 6]}>
-                <div style={collapseStyle.parentCollapseHeader}>{musteriAdi}</div>
+                <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
               </Badge>
             ),
-            style: collapseStyle.parentCollapseItem,
+            style: collapseStyle.subCollapseItem,
             children: (
               <TableGod
                 dataSource={kayitlar}

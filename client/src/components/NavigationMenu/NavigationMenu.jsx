@@ -33,6 +33,9 @@ const MenuListStyled = styled.div`
 `;
 const MenuListGroupStyled = styled.div`
   margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 const MenuListGroupContentStyled = styled.div`
   background-color: #cbdbf9;
@@ -96,7 +99,7 @@ const RegisterButtonItemStyled = styled.div`
 
 const MenuListGroupItemTitle = styled.div`
   margin-left: 6px;
-  font-size: 1.6vmin;
+  font-size: 0.8vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -105,7 +108,7 @@ const MenuListGroupTitleStyled = styled.div`
   margin-left: 2px;
 `;
 const MenuListGroupIcon = styled.div`
-  font-size: 20px;
+  font-size: 18px;
   display: flex;
 `;
 
