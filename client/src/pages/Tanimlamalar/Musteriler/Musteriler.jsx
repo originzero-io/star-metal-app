@@ -48,7 +48,7 @@ function Musteriler() {
         dataIndex: "sahisFirmasi",
         key: "sahisFirmasi",
         render: (value) => (
-          <Tag color={value ? "orange-inverse" : "cyan-inverse"}>{value ? "Şahıs" : "Tüzel"}</Tag>
+          <Tag color={value ? "volcano" : "blue"}>{value ? "Şahıs" : "Tüzel"}</Tag>
         ),
         filters: [
           { text: "Şahıs", value: true },

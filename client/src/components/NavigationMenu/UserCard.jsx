@@ -1,5 +1,5 @@
 import { PoweroffOutlined } from "@ant-design/icons";
-import { Button, Modal, Tooltip } from "antd";
+import { Modal, Tooltip } from "antd";
 import { useAuth } from "context/AuthProvider";
 import { useUIContext } from "context/UIProvider";
 import styled from "styled-components";
@@ -23,12 +23,12 @@ const ContainerStyled = styled.div`
 `;
 const UserNameStyled = styled.div`
   font-weight: 700;
-  font-size: 1.8vmin;
+  font-size: 1.6vmin;
   color: black;
 `;
 const UserRoleStyled = styled.div`
   font-size: 1.1vmin;
-  color: #909090;
+  color: #585858;
 `;
 
 export default function UserCard() {
@@ -59,15 +59,10 @@ export default function UserCard() {
             <UserRoleStyled>{user.yetki}</UserRoleStyled>
           </div>
           <Tooltip title="Çıkış yap">
-            <Button
-              shape="circle"
-              style={{ marginBottom: "6px" }}
-              type="primary"
-              danger
+            <PoweroffOutlined
+              style={{ fontSize: "18px", marginBottom: "6px", color: "red" }}
               onClick={logoutUser}
-            >
-              <PoweroffOutlined style={{ fontSize: "22px", marginBottom: "6px" }} />
-            </Button>
+            />
           </Tooltip>
         </ContainerStyled>
       )}
