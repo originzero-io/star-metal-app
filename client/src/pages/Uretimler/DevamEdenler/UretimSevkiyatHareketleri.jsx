@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { Alert, Col, Row, Tag } from "antd";
+import IdBadge from "components/shared/IdBadge";
 import { useDBContext } from "context/DBProvider";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
@@ -16,16 +17,17 @@ const TopSectionItem = styled.div`
 `;
 
 const TopSectionItemName = styled.div`
-  width: 20%;
+  width: 40%;
 `;
 const TopSectionItemValue = styled.div`
-  padding: 8px;
+  padding: 5px;
   color: rgb(106, 48, 208);
   border-radius: 6px;
-  width: 120px;
+  width: 100%;
   text-align: center;
   margin-left: 8px;
   font-weight: 600;
+  font-size: 1.35vmin;
   background-color: rgba(255, 255, 255, 0.6);
   box-shadow: 2px 3px 8px -8px rgba(0, 0, 0, 0.75);
   border: 1px solid rgb(128, 84, 206);
@@ -57,11 +59,17 @@ export default function UretimSevkiyatHareketleri({ record }) {
       key: "durum",
       render: (text, record) =>
         record.sevkTarihi ? (
-          <Tag color="green-inverse" style={{ width: "110px", textAlign: "center" }}>
+          <Tag
+            color="green-inverse"
+            style={{ width: "110px", textAlign: "center", fontSize: "11px" }}
+          >
             SEVK EDİLDİ
           </Tag>
         ) : (
-          <Tag color="red-inverse" style={{ width: "110px", textAlign: "center" }}>
+          <Tag
+            color="red-inverse"
+            style={{ width: "110px", textAlign: "center", fontSize: "11px" }}
+          >
             SEVK EDİLMEDİ
           </Tag>
         ),
@@ -77,6 +85,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
       title: "Üretim No",
       dataIndex: "uretimSiraNo",
       key: "uretimSiraNo",
+      render: (text, record) => <IdBadge value={text} />,
       width: 80,
     },
     {
@@ -147,7 +156,9 @@ export default function UretimSevkiyatHareketleri({ record }) {
             padding: 12,
             borderRadius: 8,
             display: "flex",
+            marginBottom: 10,
           }}
+          gutter={16}
         >
           <Col span={4}>
             <img
@@ -157,7 +168,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
               height={100}
             />
           </Col>
-          <Col span={10}>
+          <Col span={9}>
             <TopSectionItem>
               <TopSectionItemName>Müşteri: </TopSectionItemName>
               <TopSectionItemValue>{record.Referanslar.musteriAdi}</TopSectionItemValue>
@@ -183,7 +194,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
               </TopSectionItem>
             )}
           </Col>
-          <Col span={10}>
+          <Col span={9}>
             <TopSectionItem>
               <TopSectionItemName>Parça Adı:</TopSectionItemName>
               <TopSectionItemValue>{record.Referanslar.parcaAdi}</TopSectionItemValue>
