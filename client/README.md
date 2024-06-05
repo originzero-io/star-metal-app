@@ -1,5 +1,13 @@
+## User Application
+
+Frontend side of this application.
+
 **.env file**
 
-`VITE_SERVER_URL = http://XXXXX:YYYY`
+`DB_HOST = XXXX`
 
-`VITE_HOST_ENV = (development OR production)`
+`DB_NAME = XXXX`
+
+`DB_USER = XXXX`
+
+`DB_PASS = XXXX`

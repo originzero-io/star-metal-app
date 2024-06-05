@@ -1,6 +1,6 @@
-# Node.js + Express + MSSQL
+## Main Service
 
-Uygulamanın veritabanıyla iletişimini yöneten servis.
+This service manages bussiness logic and communicating with database.
 
 **.env file**
 
