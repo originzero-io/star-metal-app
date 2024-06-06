@@ -52,7 +52,7 @@ function Referanslar() {
         onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
         filterSearch: true,
         render: (text) => (
-          <Tag color="orange" style={{ fontSize: "14px", width: "100%", fontSize: "12px" }}>
+          <Tag color="orange" style={{ width: "100%", fontSize: "12px" }}>
             {text}
           </Tag>
         ),
