@@ -168,6 +168,7 @@ export default function Irsaliyeler() {
             children: (
               <Collapse
                 bordered={false}
+                size="small"
                 expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                 defaultActiveKey={Object.keys(tipBazliIrsaliye).map((_, index) => index.toString())}
                 items={
@@ -214,6 +215,7 @@ export default function Irsaliyeler() {
             children: (
               <Collapse
                 bordered={false}
+                size="small"
                 defaultActiveKey={Object.keys(tipBazliIrsaliye).map((_, index) => index.toString())}
                 expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                 items={
@@ -328,6 +330,8 @@ function LogoyaGonderButon({ kayitlar }) {
       sevkTarihi: getCurrentDateTime(),
     }));
 
+    const { musteriAdi } = kayitlar[0].Referanslar;
+
     try {
       const logoIrsaliye = logoIrsaliyeObjesiOlustur(gonderilecekKayitlar);
       console.log("logoIrsaliye", logoIrsaliye);
@@ -335,17 +339,20 @@ function LogoyaGonderButon({ kayitlar }) {
       const logoResponse = await logoGoApi.postData("PostIrsaliye", logoIrsaliye);
       console.log("PostIrsaliyeResponse", logoResponse);
 
-      await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(gonderilecekKayitlar);
-      const devamEdenler = await devamEdenUretimHttp.getData();
-      const newIrsaliyeler = await irsaliyeHttp.listeyiTemizle(irsaliyeler, gonderilecekKayitlar);
-      setIrsaliyeler(newIrsaliyeler);
-      setDevamEdenUretimler(devamEdenler);
-      setIsModalVisible(false);
-      const { musteriAdi } = kayitlar[0].Referanslar;
       showNotification(
         "success",
         `${musteriAdi} müşterisine ait irsaliye kaydı logoya gönderildi.`,
       );
+      // await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(gonderilecekKayitlar);
+      // const devamEdenler = await devamEdenUretimHttp.getData();
+      // const newIrsaliyeler = await irsaliyeHttp.listeyiTemizle(irsaliyeler, gonderilecekKayitlar);
+      // setIrsaliyeler(newIrsaliyeler);
+      // setDevamEdenUretimler(devamEdenler);
+      // setIsModalVisible(false);
+      // showNotification(
+      //   "success",
+      //   `${musteriAdi} müşterisine ait irsaliye kaydı logoya gönderildi.`,
+      // );
     } catch (err) {
       showNotification("error", err.message);
     }
@@ -363,10 +370,11 @@ function LogoyaGonderButon({ kayitlar }) {
 
   return (
     <Button
-      style={{ marginRight: "4px", background: "#18a680", color: "white" }}
+      style={{ marginRight: "4px", background: "#18a680", color: "white", fontSize: "12px" }}
       type="primary"
       icon={<CloudUploadOutlined />}
       onClick={showModal}
+      size="small"
     >
       Logoya Gönder
       <Modal

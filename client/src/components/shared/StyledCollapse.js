@@ -5,20 +5,20 @@ const collapseStyle = {
     color: "#4535aa",
   },
   parentCollapseItem: {
-    borderRadius: 10,
+    borderRadius: 6,
     marginBottom: 10,
-    background: "linear-gradient(180deg, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.3) 100%)",
+    background: "rgba(255,255,255,0.4)",
     boxShadow: "0 2px 7px -5px rgba(0, 0, 0, 0.20)",
   },
   subCollapseHeader: {
     fontSize: "13px",
     fontWeight: "500",
-    color: "#373737",
+    color: "#4d4d4d",
   },
   subCollapseItem: {
-    borderRadius: 10,
+    borderRadius: 6,
     marginBottom: 6,
-    background: "linear-gradient(180deg, rgba(255,255,255,0.7) 20%, rgba(255,255,255,0.5) 100%)",
+    background: "rgba(255,255,255,0.5)",
     border: "1px solid #dee2e6",
   },
 };

@@ -14,8 +14,9 @@ import referanslarHttp, {
 } from "services/crud-server/referanslar.http";
 import logoGoApi from "services/logoGoApi";
 import { createTableFilterFromData } from "utils/table.helper";
-import TableGod from "../../../components/shared/TableGod";
 import IdBadge from "components/shared/IdBadge";
+import ColumnBadge from "components/shared/ColumnBadge";
+import TableGod from "../../../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
@@ -51,7 +52,7 @@ function Referanslar() {
         onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
         filterSearch: true,
         render: (text) => (
-          <Tag color="orange" style={{ fontSize: "14px" }}>
+          <Tag color="orange" style={{ fontSize: "14px", width: "100%", fontSize: "12px" }}>
             {text}
           </Tag>
         ),
@@ -114,7 +115,7 @@ function Referanslar() {
         ],
         onFilter: (value, record) => {
           // value değeri string olarak geliyor, bu yüzden boolean'a çevirmemiz gerekiyor.
-          const filterValue = value === 1;
+          const filterValue = value;
           return record.fason === filterValue;
         },
         filterSearch: true,

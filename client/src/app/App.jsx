@@ -25,20 +25,20 @@ import ProtectedRoute from "pages/ProtectedRoute";
 const AppWrapperStyled = styled.div`
   height: 100vh;
   display: flex;
-  // background: linear-gradient(180deg, #d4e0fa 52%, #bacdf7 100%);
-  background: #c5d5f8;
+  background: linear-gradient(180deg, #d4e0fa 52%, #bacdf7 100%);
 `;
 
 const PageWrapperStyled = styled.div`
-  width: 90%;
+  width: 89%;
   padding: 10px;
   padding-left: 14px;
   overflow: auto;
   background-color: #dbe4f9;
-  margin: 7px;
-  margin-left: 12px;
-  border-top-left-radius: 24px;
-  border-radius: 18px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin-top: 7px;
+  margin-left: 9px;
+  border-top-left-radius: 8px;
+  border: 1px solid #c3d1f2;
 `;
 
 function App() {

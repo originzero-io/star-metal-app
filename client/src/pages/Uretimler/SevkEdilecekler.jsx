@@ -260,8 +260,8 @@ export default function SevkEdilecekler() {
         <Collapse
           // ghost
           bordered={false}
+          size="small"
           expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-          // size="large"
           defaultActiveKey={Object.keys(uretimGirisleri).map((_, index) => index.toString())} // Tüm panelleri başlangıçta aç
           items={Object.entries(uretimGirisleri).map(([musteriAdi, kayitlar], index) => ({
             key: index.toString(),

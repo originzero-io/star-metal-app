@@ -10,7 +10,7 @@ export default function PageHeader({ label, icon, dataLength }) {
         alignItems: "center",
         justifyContent: "center",
         marginTop: 5,
-        marginBottom: 20,
+        marginBottom: 10,
         color: "#003049",
         letterSpacing: 1,
         padding: 8,

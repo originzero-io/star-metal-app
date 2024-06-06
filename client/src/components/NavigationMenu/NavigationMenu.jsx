@@ -9,6 +9,7 @@ import { RiCustomerServiceLine } from "react-icons/ri";
 import { TbRulerMeasure } from "react-icons/tb";
 
 import { CarOutlined } from "@ant-design/icons";
+import { Divider } from "antd";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import useDetectUserInteraction from "utils/useDetectInteraction.hook";
@@ -17,12 +18,20 @@ import UserCard from "./UserCard";
 
 const ContainerStyled = styled.div`
   height: 100%;
-  width: 10%;
+  width: 11%;
   display: flex;
   flex-direction: column;
   padding-top: 10px;
   justify-content: space-between;
   overflow-y: auto;
+
+  background-color: rgba(255, 255, 255, 0.2);
+
+  border: 1px solid #c3d1f2;
+  border-radius: 8px;
+
+  margin-top: 7px;
+  margin-left: 5px;
 `;
 const MenuListStyled = styled.div`
   display: flex;
@@ -32,16 +41,13 @@ const MenuListStyled = styled.div`
   margin-top: 20px;
 `;
 const MenuListGroupStyled = styled.div`
-  margin-bottom: 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 const MenuListGroupContentStyled = styled.div`
-  background-color: #cbdbf9;
-  border-radius: 8px;
-  margin-left: 2px;
-  box-shadow: 0 0px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  margin-left: 4px;
 `;
 const MenuListGroupHeaderStyled = styled.div`
   color: #4535aa;
@@ -49,17 +55,15 @@ const MenuListGroupHeaderStyled = styled.div`
   font-weight: 700;
   display: flex;
   align-items: center;
-  margin-bottom: 4px;
   padding: 6px;
   border-radius: 6px;
 `;
 const MenuListGroupItemStyled = styled.div`
   cursor: pointer;
   padding: 8px;
-  padding-left: 12px;
+  padding-left: 8px;
   display: flex;
   align-items: center;
-  margin-bottom: 3px;
   font-weight: 500;
 
   background: ${(props) =>
@@ -86,7 +90,6 @@ const RegisterButtonItemStyled = styled.div`
   border-radius: 12px;
 
   margin-bottom: 20px;
-  // background: rgb(128, 84, 206);
   background: linear-gradient(to right, #4535aa, #8e82df);
   color: #e8e8e8;
   padding: 8px;
@@ -235,33 +238,36 @@ function NavigationMenu() {
             </RegisterButtonItemStyled>
           </LinkStyled>
           {pages.categories.map((category, i) => (
-            <MenuListGroupStyled key={i}>
-              <MenuListGroupHeaderStyled>
-                <div style={{ display: "flex", alignItems: "center", fontSize: "1.7vmin" }}>
-                  {category.icon}
-                </div>
-                <MenuListGroupTitleStyled>{category.title}</MenuListGroupTitleStyled>
-              </MenuListGroupHeaderStyled>
-              <MenuListGroupContentStyled>
-                {pages[category.key].map((content, i) => (
-                  <LinkStyled
-                    key={i}
-                    to={content.link}
-                    onClick={() => setSelectedPage(content.link)}
-                  >
-                    <MenuListGroupItemStyled
-                      selected={selectedPage === content.link}
-                      onClick={() => {
-                        showPanel(false);
-                      }}
+            <>
+              <Divider style={{ marginTop: "4px", marginBottom: "4px", background: "#c3d1f2" }} />
+              <MenuListGroupStyled key={i}>
+                <MenuListGroupHeaderStyled>
+                  <div style={{ display: "flex", alignItems: "center", fontSize: "1.7vmin" }}>
+                    {category.icon}
+                  </div>
+                  <MenuListGroupTitleStyled>{category.title}</MenuListGroupTitleStyled>
+                </MenuListGroupHeaderStyled>
+                <MenuListGroupContentStyled>
+                  {pages[category.key].map((content, i) => (
+                    <LinkStyled
+                      key={i}
+                      to={content.link}
+                      onClick={() => setSelectedPage(content.link)}
                     >
-                      <MenuListGroupIcon>{content.icon}</MenuListGroupIcon>
-                      <MenuListGroupItemTitle>{content.title}</MenuListGroupItemTitle>
-                    </MenuListGroupItemStyled>
-                  </LinkStyled>
-                ))}
-              </MenuListGroupContentStyled>
-            </MenuListGroupStyled>
+                      <MenuListGroupItemStyled
+                        selected={selectedPage === content.link}
+                        onClick={() => {
+                          showPanel(false);
+                        }}
+                      >
+                        <MenuListGroupIcon>{content.icon}</MenuListGroupIcon>
+                        <MenuListGroupItemTitle>{content.title}</MenuListGroupItemTitle>
+                      </MenuListGroupItemStyled>
+                    </LinkStyled>
+                  ))}
+                </MenuListGroupContentStyled>
+              </MenuListGroupStyled>
+            </>
           ))}
         </MenuListStyled>
       </div>

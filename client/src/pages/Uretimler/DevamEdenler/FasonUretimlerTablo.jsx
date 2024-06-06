@@ -261,6 +261,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
   return (
     <Collapse
       bordered={false}
+      size="small"
       expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
       items={Object.entries(fasonFirmasiBazliKayitlar).map(([fasonFirmasi, kayitlar], index) => ({
         key: index.toString(),
