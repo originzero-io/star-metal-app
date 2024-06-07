@@ -27,8 +27,13 @@ function Referanslar() {
 
   const [selectedRows, setSelectedRows] = useState([]);
   const { showPanel, showNotification } = useUIContext();
-  const { referanslar, setReferanslar, setReferansIslemTipleri, setReferansParcaAdlari } =
-    useDBContext();
+  const {
+    referanslar,
+    setReferanslar,
+    setReferansIslemTipleri,
+    setReferansParcaAdlari,
+    setReferansAnaBirimleri,
+  } = useDBContext();
 
   const columns = useMemo(
     () => [
@@ -217,10 +222,11 @@ function Referanslar() {
     Modal.confirm({
       title: "Emin misiniz?",
       content:
-        "Referanslar, Referans Parça İsimleri ve Kaplama Cinsi bilgileri logo programından çekilip bu programa aktarılacak. Onaylıyor musunuz?",
+        "Referanslar, Referans Parça İsimleri ve Kaplama Cinsi ve Ana Birim bilgileri logo programından çekilip bu programa aktarılacak. Onaylıyor musunuz?",
       okText: "Tamam",
       cancelText: "İptal",
       async onOk() {
+        //! buralar logodan 500 dönüyor
         // const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
         // const newParcaAdlari = await referansParcaAdlariHttp.logoIleEsle(logoParcaAdlari);
         // setReferansParcaAdlari(newParcaAdlari);
@@ -229,14 +235,17 @@ function Referanslar() {
         // const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
         // const newIslemTipleri = await referansIslemTipleriHttp.logoIleEsle(logoIslemTipleri);
         // setReferansIslemTipleri(newIslemTipleri);
+        // showNotification("success", "Referans işlem tipleri logo ile eşlendi.");
+
+        const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
+        console.log("logoAnaBirimler", logoAnaBirimler);
+        setReferansAnaBirimleri(logoAnaBirimler);
+        showNotification("success", "Referans ana birimleri logo ile eşlendi.");
 
         const logoReferanslar = await logoGoApi.getData("GetReferansList");
-
         console.log("logoReferanslar", logoReferanslar);
-
         setReferanslar(logoReferanslar);
-
-        showNotification("success", "Referans işlem tipleri logo ile eşlendi.");
+        showNotification("success", "Referanslar logo ile eşlendi.");
       },
       onCancel() {
         showNotification("warning", "İşlem iptal edildi");

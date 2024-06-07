@@ -31,6 +31,7 @@ export default function ReferansForm({ record, type }) {
     setReferansIslemTipleri,
     referansParcaAdlari,
     setReferansParcaAdlari,
+    referansAnaBirimleri,
     musteriler,
   } = useDBContext();
   const { showModal, showNotification } = useUIContext();
@@ -362,9 +363,11 @@ export default function ReferansForm({ record, type }) {
             ]}
           >
             <Select placeholder="Birim seçin">
-              <Select.Option value="kg">Kilogram</Select.Option>
-              <Select.Option value="set">Set</Select.Option>
-              <Select.Option value="adet">Adet</Select.Option>
+              {referansAnaBirimleri.map((birim) => (
+                <Select.Option key={birim.logicalref} value={birim.kodu}>
+                  {birim.adi}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
 

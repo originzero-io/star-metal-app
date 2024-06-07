@@ -25,6 +25,8 @@ export const DBProvider = ({ children }) => {
   const [referanslar, setReferanslar] = useState([]);
   const [referansIslemTipleri, setReferansIslemTipleri] = useState([]);
   const [referansParcaAdlari, setReferansParcaAdlari] = useState([]);
+  const [referansAnaBirimleri, setReferansAnaBirimleri] = useState([]);
+
   const [irsaliyeler, setIrsaliyeler] = useState([]);
   const [musteriler, setMusteriler] = useState([]);
   const [ambalajlar, setAmbalajlar] = useState([]);
@@ -149,6 +151,8 @@ export const DBProvider = ({ children }) => {
     setReferansIslemTipleri,
     referansParcaAdlari,
     setReferansParcaAdlari,
+    referansAnaBirimleri,
+    setReferansAnaBirimleri,
     irsaliyeler,
     setIrsaliyeler,
     musteriler,
