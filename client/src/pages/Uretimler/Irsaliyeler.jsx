@@ -1,5 +1,5 @@
-import { CaretRightOutlined, CloudUploadOutlined } from "@ant-design/icons";
-import { Badge, Button, Collapse, Divider, Flex, Form, Modal, Select } from "antd";
+import { CaretRightOutlined } from "@ant-design/icons";
+import { Badge, Button, Collapse, Divider, Flex, Form, Input, Modal, Select } from "antd";
 import ColumnBadge from "components/shared/ColumnBadge";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
@@ -281,15 +281,22 @@ function LogoyaGonderButon({ kayitlar }) {
     setIsModalVisible(true);
   };
 
-  const logoIrsaliyeObjesiOlustur = (irsaliyeKaydi) => {
+  const logoIrsaliyeObjesiOlustur = (genelAciklama, irsaliyeKaydi) => {
     const firmaAdi = irsaliyeKaydi[0].Referanslar.fasonFirmasi
       ? irsaliyeKaydi[0].Referanslar.fasonFirmasi
       : irsaliyeKaydi[0].Referanslar.musteriAdi;
 
     const musteri = musteriler.find((m) => m.adi === firmaAdi);
 
+    const irsaliyeTipi = irsaliyeKaydi[0].tip;
+
+    const gonderilecekGenelAciklama =
+      irsaliyeTipi === "tasima"
+        ? `FASON İŞLEM İÇİN GÖNDERİLİYOR.FATURA EDİLMEYECEKTİR.\r\n${genelAciklama}`
+        : genelAciklama;
+
     const irsaliyeMaster = {
-      genelAciklama: "BURASI GENEL AÇIKLAMA ALANIDIR. AKIN GÖNDERDİ",
+      genelAciklama: gonderilecekGenelAciklama,
       logicalref: 0,
       turu: 8, // 1: alış , 8: satış irsaliyesi
       tarih: getCurrentTimeWithLogoFormat(),
@@ -334,7 +341,7 @@ function LogoyaGonderButon({ kayitlar }) {
     const { musteriAdi } = kayitlar[0].Referanslar;
 
     try {
-      const logoIrsaliye = logoIrsaliyeObjesiOlustur(gonderilecekKayitlar);
+      const logoIrsaliye = logoIrsaliyeObjesiOlustur(values.genelAciklama, gonderilecekKayitlar);
       console.log("logoIrsaliye", logoIrsaliye);
 
       const logoResponse = await logoGoApi.postData("PostIrsaliye", logoIrsaliye);
@@ -344,6 +351,7 @@ function LogoyaGonderButon({ kayitlar }) {
         "success",
         `${musteriAdi} müşterisine ait irsaliye kaydı logoya gönderildi.`,
       );
+
       // await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(gonderilecekKayitlar);
       // const devamEdenler = await devamEdenUretimHttp.getData();
       // const newIrsaliyeler = await irsaliyeHttp.listeyiTemizle(irsaliyeler, gonderilecekKayitlar);
@@ -440,6 +448,19 @@ function LogoyaGonderButon({ kayitlar }) {
                 </Select.Option>
               ))}
             </Select>
+          </Form.Item>
+
+          <Form.Item
+            label="Açıklama"
+            name="genelAciklama"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Input placeholder="Açıklama girin" />
           </Form.Item>
 
           <Divider />
