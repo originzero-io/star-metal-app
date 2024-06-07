@@ -14,6 +14,7 @@ import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import logoGoApi from "services/logoGoApi";
 import { getCurrentDateTime, getCurrentTimeWithLogoFormat } from "utils/time.helper";
+import LogoIcon from "../../../public/logo.png";
 
 export default function Irsaliyeler() {
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
@@ -370,13 +371,25 @@ function LogoyaGonderButon({ kayitlar }) {
 
   return (
     <Button
-      style={{ marginRight: "4px", background: "#18a680", color: "white", fontSize: "12px" }}
-      type="primary"
-      icon={<CloudUploadOutlined />}
+      style={{
+        marginRight: "4px",
+        fontSize: "12px",
+        justifyContent: "center",
+        alignItems: "center",
+        alignContent: "center",
+        background: "#f7ebed",
+        color: "#555555",
+      }}
+      danger
+      icon={
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img src={LogoIcon} width={35} />
+          <span>'ya Gönder</span>
+        </div>
+      }
       onClick={showModal}
       size="small"
     >
-      Logoya Gönder
       <Modal
         title="Bilgileri Doldurun"
         open={isModalVisible}
@@ -432,14 +445,17 @@ function LogoyaGonderButon({ kayitlar }) {
           <Divider />
 
           <Button
-            type="primary"
             htmlType="submit"
             block
-            icon={<CloudUploadOutlined />}
-            style={{ background: "#18a680", color: "white" }}
-          >
-            Logoya Gönder
-          </Button>
+            danger
+            icon={
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <img src={LogoIcon} width={40} />
+                <div>'ya Gönder</div>
+              </div>
+            }
+            style={{ background: "#f5e3e6", color: "#555555" }}
+          />
         </Form>
       </Modal>
     </Button>

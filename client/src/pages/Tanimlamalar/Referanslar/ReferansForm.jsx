@@ -15,6 +15,7 @@ import {
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
+import logoGoApi from "services/logoGoApi";
 import referanslarHttp, {
   referansParcaAdlariHttp,
   referansIslemTipleriHttp,
@@ -46,7 +47,7 @@ export default function ReferansForm({ record, type }) {
   };
 
   const onFinish = async (values) => {
-    console.log("values:", values);
+    console.log("referans-values:", values);
     if (type === "update") {
       const updatedReferans = await referanslarHttp.updateData(record.id, values);
 
@@ -69,9 +70,33 @@ export default function ReferansForm({ record, type }) {
       if (fileList.length > 0) {
         formData.append("photo", fileList[0].originFileObj);
       }
-      const newReferans = await referanslarHttp.addData(formData);
-      setReferanslar([...referanslar, { ...newReferans }]);
-      showNotification("success", "Referans eklendi");
+
+      console.log("referas-formData", formData);
+
+      const anaBirim = await logoGoApi.getData("GetAnaBirimList");
+
+      console.log("anaBirim", anaBirim);
+
+      const birim = anaBirim[4].logicalref;
+      console.log("birim", birim);
+
+      const logoyaGonderilecek = {
+        ...values,
+        fason: values.fason === true ? 1 : 0,
+        fasonFirmasi: values.fason === true ? values.fasonFirmasi : "",
+        logoAnaBirimRef: birim,
+        logoMalzemeRef: 0,
+        resimUrl: "",
+      };
+
+      console.log("logoyaGonderilecek", logoyaGonderilecek);
+
+      const r = await logoGoApi.postData("PostReferans", logoyaGonderilecek);
+      console.log("r", r);
+
+      // const newReferans = await referanslarHttp.addData(formData);
+      // setReferanslar([...referanslar, { ...newReferans }]);
+      // showNotification("success", "Referans eklendi");
     }
   };
 
@@ -188,58 +213,110 @@ export default function ReferansForm({ record, type }) {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Form.Item
-        label="Referans No"
-        name="referansNo"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input placeholder="Referans No" />
-      </Form.Item>
-
-      <Form.Item
-        label="Parça Adı"
-        name="parcaAdi"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Space.Compact block>
-          <Form.Item name="parcaAdi" noStyle>
-            <Select
-              placeholder="Parça Adı Seçiniz"
-              onChange={parcaAdiSec}
-              value={seciliParcaAdi}
-              showSearch
-            >
-              {referansParcaAdlari.map((parca) => (
-                <Select.Option key={parca.id} value={parca.adi}>
-                  {parca.adi}
-                </Select.Option>
-              ))}
-            </Select>
+      <Divider style={{ color: "#4535aa", marginTop: 0 }} orientation="left">
+        Logo Verileri
+      </Divider>
+      {type !== "update" && (
+        <>
+          <Form.Item
+            label="Referans No"
+            name="referansNo"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Input placeholder="Referans No" />
           </Form.Item>
-          <Button type="primary" onClick={parcaAdiEkle} icon={<PlusOutlined />} title="Ekle" />
-          {seciliParcaAdi && (
-            <>
-              <Button
-                type="primary"
-                onClick={parcaAdiDuzenle}
-                icon={<EditOutlined />}
-                title="Düzenle"
-              />
-              <Button type="primary" onClick={parcaAdiSil} icon={<DeleteOutlined />} title="Sil" />
-            </>
-          )}
-        </Space.Compact>
-      </Form.Item>
+
+          <Form.Item
+            label="Parça Adı"
+            name="parcaAdi"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Space.Compact block>
+              <Form.Item name="parcaAdi" noStyle>
+                <Select
+                  placeholder="Parça Adı Seçiniz"
+                  onChange={parcaAdiSec}
+                  value={seciliParcaAdi}
+                  showSearch
+                >
+                  {referansParcaAdlari.map((parca) => (
+                    <Select.Option key={parca.id} value={parca.adi}>
+                      {parca.adi}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Button type="primary" onClick={parcaAdiEkle} icon={<PlusOutlined />} title="Ekle" />
+              {seciliParcaAdi && (
+                <>
+                  <Button
+                    type="primary"
+                    onClick={parcaAdiDuzenle}
+                    icon={<EditOutlined />}
+                    title="Düzenle"
+                  />
+                  <Button
+                    type="primary"
+                    onClick={parcaAdiSil}
+                    icon={<DeleteOutlined />}
+                    title="Sil"
+                  />
+                </>
+              )}
+            </Space.Compact>
+          </Form.Item>
+          <Form.Item
+            label="İşlem Tipi"
+            name="islemTipi"
+            rules={[{ required: true, message: "Bu alanı doldurun" }]}
+          >
+            <Space.Compact block>
+              <Form.Item name="islemTipi" noStyle>
+                <Select
+                  placeholder="Tipi Seçin"
+                  onChange={islemTipiSec}
+                  value={seciliIslemTipi}
+                  showSearch
+                >
+                  {referansIslemTipleri.map((islemTipi) => (
+                    <Select.Option key={islemTipi.id} value={islemTipi.adi}>
+                      {islemTipi.adi}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Button type="primary" onClick={islemTipiEkle} icon={<PlusOutlined />} title="Ekle" />
+              {seciliIslemTipi && (
+                <>
+                  <Button
+                    type="primary"
+                    onClick={islemTipiDuzenle}
+                    icon={<EditOutlined />}
+                    title="Düzenle"
+                  />
+                  <Button
+                    type="primary"
+                    onClick={islemTipiSil}
+                    icon={<DeleteOutlined />}
+                    title="Sil"
+                  />
+                </>
+              )}
+            </Space.Compact>
+          </Form.Item>
+        </>
+      )}
       <Form.Item
         label="İrsaliye Açıklaması"
         name="irsaliyeAciklamasi"
@@ -252,83 +329,105 @@ export default function ReferansForm({ record, type }) {
       >
         <Input placeholder="İrsaliye için açıklama girin" />
       </Form.Item>
-      <Form.Item
-        label="Müşteri"
-        name="musteriAdi"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Select placeholder="Müşteri Adı Seçiniz" showSearch>
-          {musteriler.map((musteri) => (
-            <Select.Option key={musteri.id} value={musteri.adi}>
-              {musteri.adi}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
 
-      <Divider />
+      {type !== "update" && (
+        <>
+          <Form.Item
+            label="Müşteri"
+            name="musteriAdi"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Select placeholder="Müşteri Adı Seçiniz" showSearch>
+              {musteriler.map((musteri) => (
+                <Select.Option key={musteri.id} value={musteri.adi}>
+                  {musteri.adi}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-      <Form.Item
-        name="siparisTipi"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Radio.Group value={"Seri"} onChange={(e) => setSiparisTipi(e.target.value)}>
-          <Space direction="vertical">
-            <Radio value="Seri">
-              <div
-                style={{
-                  width: "500px",
-                  height: "30px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <div>Seri</div>
-                {siparisTipi === "Seri" && (
-                  <Form.Item
-                    name="siparisNo"
-                    style={{ width: 200, marginLeft: "7%" }}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Bu alanı doldurun",
-                      },
-                    ]}
+          <Form.Item
+            label="Birim"
+            name="birim"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Select placeholder="Birim seçin">
+              <Select.Option value="kg">Kilogram</Select.Option>
+              <Select.Option value="set">Set</Select.Option>
+              <Select.Option value="adet">Adet</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Divider />
+
+          <Form.Item
+            name="siparisTipi"
+            rules={[
+              {
+                required: true,
+                message: "Bu alanı doldurun",
+              },
+            ]}
+          >
+            <Radio.Group value={"Seri"} onChange={(e) => setSiparisTipi(e.target.value)}>
+              <Space direction="vertical">
+                <Radio value="Seri">
+                  <div
+                    style={{
+                      width: "500px",
+                      height: "30px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
                   >
-                    <Input title="Sipariş No" placeholder="Sipariş No Girin" />
-                  </Form.Item>
-                )}
-              </div>
-            </Radio>
-            <Radio value="Talepli">
-              <div
-                style={{
-                  width: "500px",
-                  height: "30px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <div>Talepli</div>
-              </div>
-            </Radio>
-          </Space>
-        </Radio.Group>
-      </Form.Item>
+                    <div>Seri</div>
+                    {siparisTipi === "Seri" && (
+                      <Form.Item
+                        name="siparisNo"
+                        style={{ width: 200, marginLeft: "7%" }}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Bu alanı doldurun",
+                          },
+                        ]}
+                      >
+                        <Input title="Sipariş No" placeholder="Sipariş No Girin" />
+                      </Form.Item>
+                    )}
+                  </div>
+                </Radio>
+                <Radio value="Talepli">
+                  <div
+                    style={{
+                      width: "500px",
+                      height: "30px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div>Talepli</div>
+                  </div>
+                </Radio>
+              </Space>
+            </Radio.Group>
+          </Form.Item>
 
-      <Divider />
+          <Divider />
+        </>
+      )}
 
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Form.Item name="fason" valuePropName="checked">
           <Checkbox
             onChange={(e) => {
@@ -336,6 +435,7 @@ export default function ReferansForm({ record, type }) {
               form.setFieldsValue({ fason: e.target.checked });
             }}
             checked={fason}
+            disabled={type === "update"}
           >
             Fason
           </Checkbox>
@@ -345,7 +445,7 @@ export default function ReferansForm({ record, type }) {
           <Form.Item
             name="fasonFirmasi"
             rules={[{ required: fason, message: "Fason firması giriniz" }]}
-            style={{ marginLeft: "2%", width: 300 }}
+            style={{ width: "61%" }}
           >
             <Select placeholder="Fason Firması Seçiniz" showSearch>
               {musteriler.map((musteri) => (
@@ -358,8 +458,9 @@ export default function ReferansForm({ record, type }) {
         )}
       </div>
 
-      <Divider />
-
+      <Divider style={{ color: "#4535aa", marginTop: 8 }} orientation="left">
+        Üretim Takip Verileri
+      </Divider>
       <Form.Item
         label="Miktar Sapması"
         name="miktarSapmasi"
@@ -409,65 +510,10 @@ export default function ReferansForm({ record, type }) {
         />
       </Form.Item>
 
-      <Divider />
-
-      <Form.Item
-        label="İşlem Tipi"
-        name="islemTipi"
-        rules={[{ required: true, message: "Bu alanı doldurun" }]}
-      >
-        <Space.Compact block>
-          <Form.Item name="islemTipi" noStyle>
-            <Select
-              placeholder="Tipi Seçin"
-              onChange={islemTipiSec}
-              value={seciliIslemTipi}
-              showSearch
-            >
-              {referansIslemTipleri.map((islemTipi) => (
-                <Select.Option key={islemTipi.id} value={islemTipi.adi}>
-                  {islemTipi.adi}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Button type="primary" onClick={islemTipiEkle} icon={<PlusOutlined />} title="Ekle" />
-          {seciliIslemTipi && (
-            <>
-              <Button
-                type="primary"
-                onClick={islemTipiDuzenle}
-                icon={<EditOutlined />}
-                title="Düzenle"
-              />
-              <Button type="primary" onClick={islemTipiSil} icon={<DeleteOutlined />} title="Sil" />
-            </>
-          )}
-        </Space.Compact>
-      </Form.Item>
-
-      <Form.Item
-        label="Birim"
-        name="birim"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Select placeholder="Birim seçin">
-          <Select.Option value="kg">Kilogram</Select.Option>
-          <Select.Option value="set">Set</Select.Option>
-          <Select.Option value="adet">Adet</Select.Option>
-        </Select>
-      </Form.Item>
-
       {type !== "update" && (
         <Form.Item
           label="Resim"
-          name="resim"
+          name="resimUrl"
           rules={[{ required: true, message: "Bu alanı doldurun" }]}
         >
           <Upload

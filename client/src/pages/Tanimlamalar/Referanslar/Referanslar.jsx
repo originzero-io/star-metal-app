@@ -259,6 +259,7 @@ function Referanslar() {
         pagination={true}
         scroll={{ x: 1800 }}
         contextMenu={{
+          editForm: ReferansForm,
           deleteAction: deleteSingleRecordHandler,
         }}
         actionButtons={
