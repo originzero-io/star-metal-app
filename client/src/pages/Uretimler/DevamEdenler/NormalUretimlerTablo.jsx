@@ -1,5 +1,6 @@
 import {
   CaretRightOutlined,
+  CheckCircleOutlined,
   ContainerOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
@@ -7,9 +8,10 @@ import {
   TruckOutlined,
 } from "@ant-design/icons";
 
-import { Badge, Collapse, Tag } from "antd";
+import { Collapse, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import ColumnBadge from "components/shared/ColumnBadge";
+import CountBadge from "components/shared/CounBadge";
 import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
@@ -35,7 +37,11 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       dataIndex: "acil",
       key: "acil",
       render: (text) => (
-        <Tag color={text && "red-inverse"} style={{ width: "80px", textAlign: "center" }}>
+        <Tag
+          color={text && "#c1121f"}
+          icon={text ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />}
+          style={{ width: "100%", textAlign: "center" }}
+        >
           {text ? "ACİL" : "NORMAL"}
         </Tag>
       ),
@@ -61,7 +67,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "referansNo"),
       onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
       filterSearch: true,
-      render: (text) => <ColumnBadge color="#fb8500" value={text} />,
+      render: (text) => <ColumnBadge color="orange" value={text} />,
       width: 120,
     },
     {
@@ -105,7 +111,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
         return siparisNo.indexOf(value) === 0;
       },
       filterSearch: true,
-      width: 100,
+      width: 150,
     },
     {
       title: "Talep No",
@@ -127,6 +133,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       title: "İrsaliye No",
       dataIndex: "irsaliyeNo",
       key: "irsaliyeNo",
+      width: 120,
     },
     {
       title: "Gelen Tarih",
@@ -165,6 +172,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       dataIndex: "uretilmeyenMiktar",
       key: "uretilmeyenMiktar",
       sorter: (a, b) => a.uretilmeyenMiktar - b.uretilmeyenMiktar,
+      width: 120,
     },
     {
       title: "Yüzey Alanı",
@@ -212,16 +220,16 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       items={Object.entries(musteriBazliKayitlar).map(([musteriAdi, kayitlar], index) => ({
         key: index.toString(),
         label: (
-          <Badge count={kayitlar.length} offset={[20, 6]}>
+          <CountBadge count={kayitlar.length} offset={[20, 6]}>
             <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-          </Badge>
+          </CountBadge>
         ),
         children: (
           <TableGod
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
             hideDefaultTitleButtons
-            scroll={{ x: 1500 }}
+            scroll={{ x: 1700 }}
             contextMenu={{
               deleteAction: uretimiSilFunc,
               extraItems: (record) => [

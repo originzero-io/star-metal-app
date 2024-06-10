@@ -6,9 +6,10 @@ import {
   PrinterOutlined,
   SnippetsOutlined,
 } from "@ant-design/icons";
-import { Badge, Collapse, Modal, Tag, Tooltip } from "antd";
+import { Collapse, Modal, Tag, Tooltip } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import ColumnBadge from "components/shared/ColumnBadge";
+import CountBadge from "components/shared/CounBadge";
 import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
@@ -266,9 +267,9 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       items={Object.entries(fasonFirmasiBazliKayitlar).map(([fasonFirmasi, kayitlar], index) => ({
         key: index.toString(),
         label: (
-          <Badge count={kayitlar.length} offset={[20, 6]} color="blue">
+          <CountBadge count={kayitlar.length} offset={[20, 6]}>
             <div style={collapseStyle.subCollapseHeader}>{fasonFirmasi}</div>
-          </Badge>
+          </CountBadge>
         ),
         children: (
           <TableGod

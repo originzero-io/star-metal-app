@@ -3,8 +3,11 @@ import { Alert, Badge, Button, Collapse, Modal, Tag } from "antd";
 import { FcInTransit } from "react-icons/fc";
 
 import SevkiyatKarti from "components/cards/SevkiyatKarti";
+import ColumnBadge from "components/shared/ColumnBadge";
+import CountBadge from "components/shared/CounBadge";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
+import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
@@ -14,8 +17,6 @@ import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
-import collapseStyle from "components/shared/StyledCollapse";
-import ColumnBadge from "components/shared/ColumnBadge";
 
 const alertMessage = (musteri, irsaliyeTipi, olan, limit) => (
   <div>
@@ -108,7 +109,7 @@ export default function SevkEdilecekler() {
       title: "Referans No",
       dataIndex: "referansNo",
       key: "referansNo",
-      render: (text) => <ColumnBadge color="#fb8500" value={text} />,
+      render: (text) => <ColumnBadge color="orange" value={text} />,
       filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "referansNo"),
       onFilter: (value, _record) => _record.referansNo.indexOf(value) === 0,
       filterSearch: true,
@@ -266,9 +267,9 @@ export default function SevkEdilecekler() {
           items={Object.entries(uretimGirisleri).map(([musteriAdi, kayitlar], index) => ({
             key: index.toString(),
             label: (
-              <Badge count={kayitlar.length} offset={[20, 6]}>
+              <CountBadge count={kayitlar.length} offset={[20, 6]}>
                 <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-              </Badge>
+              </CountBadge>
             ),
             style: collapseStyle.subCollapseItem,
             children: (

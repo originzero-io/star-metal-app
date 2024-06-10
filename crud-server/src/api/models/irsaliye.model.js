@@ -64,8 +64,6 @@ const Irsaliye = sequelize.define(
   },
 );
 
-// Irsaliye.sync({ force: true });
-
 Irsaliye.belongsTo(Referans, { foreignKey: "referansNo", targetKey: "referansNo" });
 Referans.hasMany(Irsaliye, { foreignKey: "referansNo", sourceKey: "referansNo" });
 

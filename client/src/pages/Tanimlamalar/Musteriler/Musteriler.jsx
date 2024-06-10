@@ -1,4 +1,4 @@
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { BankOutlined, DeleteOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
 import { Badge, Button, Modal, Tag } from "antd";
 import { useMemo, useState } from "react";
 
@@ -48,7 +48,12 @@ function Musteriler() {
         dataIndex: "sahisFirmasi",
         key: "sahisFirmasi",
         render: (value) => (
-          <Tag color={value ? "volcano" : "blue"}>{value ? "Şahıs" : "Tüzel"}</Tag>
+          <Tag
+            color={value ? "volcano" : "blue"}
+            icon={value ? <UserOutlined /> : <BankOutlined />}
+          >
+            {value ? "Şahıs" : "Tüzel"}
+          </Tag>
         ),
         filters: [
           { text: "Şahıs", value: true },
@@ -64,6 +69,15 @@ function Musteriler() {
         filters: createTableFilterFromData(musteriler, "adi"),
         onFilter: (value, record) => record.adi.indexOf(value) === 0,
         filterSearch: true,
+        render: (text, record) => (
+          <Tag
+            color={record.sahisFirmasi ? "volcano" : "geekblue"}
+            icon={record.sahisFirmasi ? <UserOutlined /> : <BankOutlined />}
+            style={{ width: "100%" }}
+          >
+            {text}
+          </Tag>
+        ),
         width: 350,
       },
       {

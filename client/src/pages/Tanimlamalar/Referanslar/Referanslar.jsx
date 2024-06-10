@@ -1,5 +1,6 @@
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { BankOutlined, DeleteOutlined, FileDoneOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal, Tag } from "antd";
+import IdBadge from "components/shared/IdBadge";
 import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
@@ -14,8 +15,6 @@ import referanslarHttp, {
 } from "services/crud-server/referanslar.http";
 import logoGoApi from "services/logoGoApi";
 import { createTableFilterFromData } from "utils/table.helper";
-import IdBadge from "components/shared/IdBadge";
-import ColumnBadge from "components/shared/ColumnBadge";
 import TableGod from "../../../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -57,18 +56,14 @@ function Referanslar() {
         onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
         filterSearch: true,
         render: (text) => (
-          <Tag color="orange" style={{ width: "100%", fontSize: "12px" }}>
+          <Tag
+            color="orange"
+            icon={<FileDoneOutlined />}
+            style={{ width: "100%", fontSize: "12px" }}
+          >
             {text}
           </Tag>
         ),
-      },
-      {
-        title: "Parça Adı",
-        dataIndex: "parcaAdi",
-        key: "parcaAdi",
-        filters: createTableFilterFromData(referanslar, "parcaAdi"),
-        onFilter: (value, record) => record.parcaAdi.indexOf(value) === 0,
-        filterSearch: true,
       },
       {
         title: "Müşteri",
@@ -76,6 +71,20 @@ function Referanslar() {
         key: "musteriAdi",
         filters: createTableFilterFromData(referanslar, "musteriAdi"),
         onFilter: (value, record) => record.musteriAdi.indexOf(value) === 0,
+        filterSearch: true,
+        render: (text) => (
+          <Tag icon={<BankOutlined />} color="geekblue" style={{ width: "100%", fontSize: "12px" }}>
+            {text}
+          </Tag>
+        ),
+        width: 170,
+      },
+      {
+        title: "Parça Adı",
+        dataIndex: "parcaAdi",
+        key: "parcaAdi",
+        filters: createTableFilterFromData(referanslar, "parcaAdi"),
+        onFilter: (value, record) => record.parcaAdi.indexOf(value) === 0,
         filterSearch: true,
       },
       {
@@ -92,7 +101,7 @@ function Referanslar() {
         dataIndex: "siparisTipi",
         key: "siparisTipi",
         filters: createTableFilterFromData(referanslar, "siparisTipi"),
-        render: (text, record) =>
+        render: (text) =>
           text === "Seri" ? <Tag color="volcano">{text}</Tag> : <Tag color="purple">{text}</Tag>,
         onFilter: (value, record) => record.siparisTipi.indexOf(value) === 0,
         filterSearch: true,
@@ -134,6 +143,16 @@ function Referanslar() {
           const fasonFirmasi = record.fasonFirmasi ?? "Boş";
           return fasonFirmasi.indexOf(value) === 0;
         },
+        render: (value) =>
+          value && (
+            <Tag
+              icon={<BankOutlined />}
+              color="volcano"
+              style={{ width: "100%", fontSize: "12px" }}
+            >
+              {value}
+            </Tag>
+          ),
         filterSearch: true,
       },
       {
@@ -226,25 +245,23 @@ function Referanslar() {
       okText: "Tamam",
       cancelText: "İptal",
       async onOk() {
-        //! buralar logodan 500 dönüyor
-        // const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
-        // const newParcaAdlari = await referansParcaAdlariHttp.logoIleEsle(logoParcaAdlari);
-        // setReferansParcaAdlari(newParcaAdlari);
-        // showNotification("success", "Referans parça adları logo ile eşlendi.");
+        const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
+        const newParcaAdlari = await referansParcaAdlariHttp.logoIleEsle(logoParcaAdlari);
+        setReferansParcaAdlari(newParcaAdlari);
+        showNotification("success", "Referans parça adları logo ile eşlendi.");
 
-        // const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
-        // const newIslemTipleri = await referansIslemTipleriHttp.logoIleEsle(logoIslemTipleri);
-        // setReferansIslemTipleri(newIslemTipleri);
-        // showNotification("success", "Referans işlem tipleri logo ile eşlendi.");
+        const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
+        const newIslemTipleri = await referansIslemTipleriHttp.logoIleEsle(logoIslemTipleri);
+        setReferansIslemTipleri(newIslemTipleri);
+        showNotification("success", "Referans işlem tipleri logo ile eşlendi.");
 
         const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
-        console.log("logoAnaBirimler", logoAnaBirimler);
         setReferansAnaBirimleri(logoAnaBirimler);
         showNotification("success", "Referans ana birimleri logo ile eşlendi.");
 
         const logoReferanslar = await logoGoApi.getData("GetReferansList");
-        console.log("logoReferanslar", logoReferanslar);
-        setReferanslar(logoReferanslar);
+        const newReferanslar = await referanslarHttp.logoIleEsle(logoReferanslar);
+        setReferanslar(newReferanslar);
         showNotification("success", "Referanslar logo ile eşlendi.");
       },
       onCancel() {

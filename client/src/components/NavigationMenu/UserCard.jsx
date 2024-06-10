@@ -22,9 +22,9 @@ const ContainerStyled = styled.div`
   cursor: pointer;
 `;
 const UserNameStyled = styled.div`
-  font-weight: 700;
+  font-weight: 500;
   font-size: 1.6vmin;
-  color: black;
+  color: #1f1f1f;
 `;
 const UserRoleStyled = styled.div`
   font-size: 1.1vmin;

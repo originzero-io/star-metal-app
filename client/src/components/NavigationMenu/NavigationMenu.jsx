@@ -10,6 +10,8 @@ import { TbRulerMeasure } from "react-icons/tb";
 
 import { CarOutlined } from "@ant-design/icons";
 import { Divider } from "antd";
+import { useDBContext } from "context/DBProvider";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import useDetectUserInteraction from "utils/useDetectInteraction.hook";
@@ -61,7 +63,7 @@ const MenuListGroupHeaderStyled = styled.div`
 const MenuListGroupItemStyled = styled.div`
   cursor: pointer;
   padding: 8px;
-  padding-left: 8px;
+  padding-left: 4px;
   display: flex;
   align-items: center;
   font-weight: 500;
@@ -106,6 +108,19 @@ const MenuListGroupItemTitle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 90px;
+`;
+
+const MenuListGroupItemBadge = styled.div`
+  margin-left: 6px;
+  background: #002f49bf;
+  padding: 3px 4px;
+  color: white;
+  border-radius: 12px;
+  font-size: 10px;
+  width: 47px;
+  text-align: center;
+  border: 1px solid white;
 `;
 const MenuListGroupTitleStyled = styled.div`
   margin-left: 2px;
@@ -119,109 +134,118 @@ const LinkStyled = styled(Link)`
   text-decoration: none;
 `;
 
-const pages = {
-  categories: [
-    {
-      title: "ÜRETİM TAKİBİ",
-      key: "uretim",
-    },
-    {
-      title: "TANIMLAMALAR",
-      key: "tanimlamalar",
-    },
-    // {
-    //   title: "Veriler",
-    //   key: "veriler",
-    // },
-  ],
-  uretim: [
-    // {
-    //   title: "Gelen Malzeme Kaydı",
-    //   icon: <FolderAddTwoTone twoToneColor="#5c0099" />,
-    //   link: "/gelen-malzeme-kayit",
-    // },
-    {
-      title: "Devam Edenler",
-      icon: <FcSynchronize />,
-      link: "/uretim/devam-eden",
-    },
-    {
-      title: "Sevk Edilecekler",
-      icon: <FcInTransit />,
-      link: "/uretim/sevk-edilecekler",
-    },
-    {
-      title: "İrsaliye Sayfası",
-      icon: <FcRules />,
-      link: "/uretim/irsaliye-sayfasi",
-    },
-    {
-      title: "Tamamlananlar",
-      icon: <FcOk />,
-      link: "/uretim/tamamlanan",
-    },
-    // {
-    //   title: "Üretim Raporu",
-    //   icon: <FcPieChart />,
-    //   link: "/uretim/rapor",
-    // },
-  ],
-  tanimlamalar: [
-    {
-      title: "Müşteriler",
-      icon: <RiCustomerServiceLine />,
-      link: "/musteriler",
-    },
-    {
-      title: "Referanslar",
-      icon: <MdOutlineDocumentScanner />,
-      link: "/referanslar",
-    },
-    {
-      title: "Ambalajlar",
-      icon: <FaDropbox />,
-      link: "/ambalajlar",
-    },
-    {
-      title: "Personeller",
-      icon: <PiUsersThreeBold />,
-      link: "/personeller",
-    },
-    {
-      title: "Şoförler",
-      icon: <GiSteeringWheel />,
-      link: "/soforler",
-    },
-    {
-      title: "Plakalar",
-      icon: <CarOutlined />,
-      link: "/plakalar",
-    },
-  ],
-  veriler: [
-    {
-      title: "Sıcaklık",
-      icon: <FaTemperatureLow />,
-      link: "/sicakliklar",
-    },
-    {
-      title: "Banyolar",
-      icon: <TbRulerMeasure />,
-      link: "/banyo-degerleri",
-    },
-    {
-      title: "Butonlar",
-      icon: <TbRulerMeasure />,
-      link: "/butonlar",
-    },
-  ],
-};
-
 function NavigationMenu() {
   useDetectUserInteraction();
 
-  const { showPanel } = useUIContext();
-  const { selectedPage, setSelectedPage } = useUIContext();
+  const { showPanel, selectedPage, setSelectedPage } = useUIContext();
+  const { musteriler, referanslar, ambalajlar, soforler, plakalar, personeller } = useDBContext();
+
+  const pages = useMemo(
+    () => ({
+      categories: [
+        {
+          title: "ÜRETİM TAKİBİ",
+          key: "uretim",
+        },
+        {
+          title: "TANIMLAMALAR",
+          key: "tanimlamalar",
+        },
+        // {
+        //   title: "Veriler",
+        //   key: "veriler",
+        // },
+      ],
+      uretim: [
+        // {
+        //   title: "Gelen Malzeme Kaydı",
+        //   icon: <FolderAddTwoTone twoToneColor="#5c0099" />,
+        //   link: "/gelen-malzeme-kayit",
+        // },
+        {
+          title: "Devam Edenler",
+          icon: <FcSynchronize />,
+          link: "/uretim/devam-eden",
+        },
+        {
+          title: "Sevk Edilecekler",
+          icon: <FcInTransit />,
+          link: "/uretim/sevk-edilecekler",
+        },
+        {
+          title: "İrsaliye Sayfası",
+          icon: <FcRules />,
+          link: "/uretim/irsaliye-sayfasi",
+        },
+        {
+          title: "Tamamlananlar",
+          icon: <FcOk />,
+          link: "/uretim/tamamlanan",
+        },
+        // {
+        //   title: "Üretim Raporu",
+        //   icon: <FcPieChart />,
+        //   link: "/uretim/rapor",
+        // },
+      ],
+      tanimlamalar: [
+        {
+          title: "Müşteriler",
+          icon: <RiCustomerServiceLine />,
+          link: "/musteriler",
+          dataLength: musteriler.length,
+        },
+        {
+          title: "Referanslar",
+          icon: <MdOutlineDocumentScanner />,
+          link: "/referanslar",
+          dataLength: referanslar.length,
+        },
+        {
+          title: "Ambalajlar",
+          icon: <FaDropbox />,
+          link: "/ambalajlar",
+          dataLength: ambalajlar.length,
+        },
+        {
+          title: "Personeller",
+          icon: <PiUsersThreeBold />,
+          link: "/personeller",
+          dataLength: personeller.length,
+        },
+        {
+          title: "Şoförler",
+          icon: <GiSteeringWheel />,
+          link: "/soforler",
+          dataLength: soforler.length,
+        },
+        {
+          title: "Plakalar",
+          icon: <CarOutlined />,
+          link: "/plakalar",
+          dataLength: plakalar.length,
+        },
+      ],
+      veriler: [
+        {
+          title: "Sıcaklık",
+          icon: <FaTemperatureLow />,
+          link: "/sicakliklar",
+        },
+        {
+          title: "Banyolar",
+          icon: <TbRulerMeasure />,
+          link: "/banyo-degerleri",
+        },
+        {
+          title: "Butonlar",
+          icon: <TbRulerMeasure />,
+          link: "/butonlar",
+        },
+      ],
+    }),
+    [musteriler],
+  );
 
   return (
     <ContainerStyled>
@@ -261,7 +285,10 @@ function NavigationMenu() {
                         }}
                       >
                         <MenuListGroupIcon>{content.icon}</MenuListGroupIcon>
-                        <MenuListGroupItemTitle>{content.title}</MenuListGroupItemTitle>
+                        <MenuListGroupItemTitle>{content.title} </MenuListGroupItemTitle>
+                        {content.dataLength && (
+                          <MenuListGroupItemBadge>{content.dataLength}</MenuListGroupItemBadge>
+                        )}
                       </MenuListGroupItemStyled>
                     </LinkStyled>
                   ))}

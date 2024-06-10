@@ -1,4 +1,5 @@
 import { Badge, Collapse, Tag } from "antd";
+import CountBadge from "components/shared/CounBadge";
 import PageHeader from "components/shared/PageHeader";
 import collapseStyle from "components/shared/StyledCollapse";
 import { FcOk } from "react-icons/fc";
@@ -141,9 +142,9 @@ function TamamlananUretimler() {
             // label: "Star Metal Üretimler",
             // key: index.toString(),
             label: (
-              <Badge count={data.length} offset={[20, 6]}>
+              <CountBadge count={data.length} offset={[20, 6]}>
                 <div style={collapseStyle.parentCollapseHeader}>Star Metal Üretimleri</div>
-              </Badge>
+              </CountBadge>
             ),
             children: <NormalUretimler />,
             style: collapseStyle.parentCollapseItem,
@@ -151,9 +152,9 @@ function TamamlananUretimler() {
           {
             key: "fason",
             label: (
-              <Badge count={data.length} offset={[20, 6]}>
+              <CountBadge count={data.length} offset={[20, 6]}>
                 <div style={collapseStyle.parentCollapseHeader}>Fason Üretimler</div>
-              </Badge>
+              </CountBadge>
             ),
             children: <FasonUretimler />,
             style: collapseStyle.parentCollapseItem,

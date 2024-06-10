@@ -4,14 +4,22 @@ import sequelize from "../../dbConnection.js";
 const Referans = sequelize.define(
   "Referanslar",
   {
+    logoMalzemeRef: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    logoAnaBirimRef: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     referansNo: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      unique: true,
+      // unique: true,
     },
     parcaAdi: {
       type: DataTypes.STRING(50),
-      allowNull: false,
+      allowNull: true,
     },
     irsaliyeAciklamasi: {
       type: DataTypes.STRING(70),
@@ -26,11 +34,11 @@ const Referans = sequelize.define(
       allowNull: false,
     },
     siparisNo: {
-      type: DataTypes.STRING(10),
+      type: DataTypes.STRING(40),
       allowNull: true,
     },
     fason: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     fasonFirmasi: {
@@ -39,19 +47,19 @@ const Referans = sequelize.define(
     },
     miktarSapmasi: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     lotAdedi: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     referansYuzeyAlani: {
       type: DataTypes.DECIMAL(5, 2),
-      allowNull: false,
+      allowNull: true,
     },
     islemTipi: {
       type: DataTypes.STRING(30),
-      allowNull: false,
+      allowNull: true,
     },
     birim: {
       type: DataTypes.STRING(10),

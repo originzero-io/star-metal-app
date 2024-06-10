@@ -1,6 +1,7 @@
 import { CaretRightOutlined } from "@ant-design/icons";
 import { Badge, Button, Collapse, Divider, Flex, Form, Input, Modal, Select } from "antd";
 import ColumnBadge from "components/shared/ColumnBadge";
+import CountBadge from "components/shared/CounBadge";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
 import collapseStyle from "components/shared/StyledCollapse";
@@ -60,7 +61,7 @@ export default function Irsaliyeler() {
         title: "Referans No",
         dataIndex: "referansNo",
         key: "referansNo",
-        render: (text) => <ColumnBadge color="#fb8500" value={text} />,
+        render: (text) => <ColumnBadge color="orange" value={text} />,
       },
       {
         title: "İade",
@@ -156,13 +157,13 @@ export default function Irsaliyeler() {
             key: "sevk",
             label: (
               <Flex>
-                <Badge
+                <CountBadge
                   count={sevkIrsaliyeleri.length}
                   offset={[20, 9]}
                   title="Toplam sevk irsaliyesi sayısı"
                 >
                   <div style={collapseStyle.parentCollapseHeader}>Sevk İrsaliyeleri</div>
-                </Badge>
+                </CountBadge>
               </Flex>
             ),
             style: collapseStyle.parentCollapseItem,
@@ -177,9 +178,9 @@ export default function Irsaliyeler() {
                   Object.entries(tipBazliIrsaliye.sevk).map(([musteriAdi, kayitlar], index) => ({
                     key: index.toString(),
                     label: (
-                      <Badge count={kayitlar.length} offset={[20, 5]} title="Kayıt sayısı">
+                      <CountBadge count={kayitlar.length} offset={[20, 5]} title="Kayıt sayısı">
                         <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-                      </Badge>
+                      </CountBadge>
                     ),
                     children: (
                       <IrsaliyeTablo
@@ -270,8 +271,15 @@ function IrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
 }
 
 function LogoyaGonderButon({ kayitlar }) {
-  const { soforler, plakalar, irsaliyeler, setIrsaliyeler, setDevamEdenUretimler, musteriler } =
-    useDBContext();
+  const {
+    soforler,
+    plakalar,
+    irsaliyeler,
+    setIrsaliyeler,
+    setDevamEdenUretimler,
+    referanslar,
+    musteriler,
+  } = useDBContext();
   const { showNotification } = useUIContext();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [secilenSofor, setSecilenSofor] = useState({});
@@ -310,15 +318,21 @@ function LogoyaGonderButon({ kayitlar }) {
       soforKimlikNo: secilenSofor.kimlikNo,
     };
 
+    console.log("irsaliyeKaydi", irsaliyeKaydi);
+
     // ! burası gerçek referanslar ile doldurulacak
     const irsaliyeDetails = irsaliyeKaydi.map((kayit, index) => ({
       logicalref: 0,
       irsaliyeRef: 0,
       satirNo: index + 1,
-      malzemeRef: 4792, // 153700290005 ÇANAK YAY FOSFAT
+      malzemeRef: referanslar.find((r) => r.referansNo === kayit.referansNo).logoMalzemeRef, // 153700290005 ÇANAK YAY FOSFAT
+      // malzemeRef: 4792, // 153700290005 ÇANAK YAY FOSFAT
       miktar: kayit.uretimAdedi,
-      birimRef: 5, // 153700290005 ÇANAK YAY FOSFAT
-      satirAciklamasi: "**AKIN TARAFINDAN GÖNDERİLMİŞ DENEME KAYDI - GEÇERSİZ VE SİLİNECEK**",
+      birimRef: referanslar.find((r) => r.referansNo === kayit.referansNo).logoAnaBirimRef, // 153700290005 ÇANAK YAY FOSFAT
+      // birimRef: 5, // 153700290005 ÇANAK YAY FOSFAT
+      satirAciklamasi: referanslar.find((r) => r.referansNo === kayit.referansNo)
+        .irsaliyeAciklamasi,
+      // satirAciklamasi: "**AKIN TARAFINDAN GÖNDERİLMİŞ DENEME KAYDI - GEÇERSİZ VE SİLİNECEK**",
     }));
 
     const logoIrsaliye = {
@@ -384,11 +398,10 @@ function LogoyaGonderButon({ kayitlar }) {
         fontSize: "12px",
         justifyContent: "center",
         alignItems: "center",
-        alignContent: "center",
-        background: "#f7ebed",
-        color: "#555555",
+        background: "#ddd9f4",
+        color: "#484646",
+        border: "1px solid #786cc9",
       }}
-      danger
       icon={
         <div style={{ display: "flex", alignItems: "center" }}>
           <img src={LogoIcon} width={35} />
@@ -468,14 +481,13 @@ function LogoyaGonderButon({ kayitlar }) {
           <Button
             htmlType="submit"
             block
-            danger
             icon={
               <div style={{ display: "flex", alignItems: "center" }}>
                 <img src={LogoIcon} width={40} />
                 <div>'ya Gönder</div>
               </div>
             }
-            style={{ background: "#f5e3e6", color: "#555555" }}
+            style={{ background: "#ddd9f4", color: "#484646", border: "1px solid #786cc9" }}
           />
         </Form>
       </Modal>

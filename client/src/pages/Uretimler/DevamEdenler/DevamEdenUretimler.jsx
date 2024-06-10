@@ -1,13 +1,14 @@
 import { CaretRightOutlined } from "@ant-design/icons";
-import { Badge, Collapse, Flex, Modal } from "antd";
+import { Collapse, Flex, Modal } from "antd";
+import CountBadge from "components/shared/CounBadge";
 import PageHeader from "components/shared/PageHeader";
 import collapseStyle from "components/shared/StyledCollapse";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
+import { useEffect, useState } from "react";
 import { FcSynchronize } from "react-icons/fc";
 import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
-import { useEffect, useState } from "react";
 import FasonUretimlerTablo from "./FasonUretimlerTablo";
 import NormalUretimlerTablo from "./NormalUretimlerTablo";
 
@@ -82,9 +83,9 @@ function DevamEdenUretimler() {
             style: collapseStyle.parentCollapseItem,
             label: (
               <Flex>
-                <Badge count={devamEdenUretimler.normalUretimler?.length} offset={[20, 9]}>
+                <CountBadge count={devamEdenUretimler.normalUretimler?.length} offset={[20, 9]}>
                   <div style={collapseStyle.parentCollapseHeader}>Star Metal Üretimleri</div>
-                </Badge>
+                </CountBadge>
               </Flex>
             ),
             children: (
@@ -99,13 +100,9 @@ function DevamEdenUretimler() {
             style: collapseStyle.parentCollapseItem,
             label: (
               <Flex>
-                <Badge
-                  count={devamEdenUretimler.fasonUretimler?.length}
-                  offset={[20, 9]}
-                  color="blue"
-                >
+                <CountBadge count={devamEdenUretimler.fasonUretimler?.length} offset={[20, 9]}>
                   <div style={collapseStyle.parentCollapseHeader}>Fason Üretimler</div>
-                </Badge>
+                </CountBadge>
               </Flex>
             ),
             children: (

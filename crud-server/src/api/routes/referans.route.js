@@ -52,6 +52,26 @@ router.post(
   }),
 );
 
+router.post(
+  "/logo-ile-esle",
+  asyncHandler(async (req, res) => {
+    // mevcut tüm kayıtları sil yeni gelen listeyle doldur
+    const logodanGelenKayitlar = req.body;
+    console.log("logodanGelenKayitlar", logodanGelenKayitlar);
+
+    try {
+      await Referans.destroy({
+        truncate: true,
+      });
+      const newIslemTipleri = await Referans.bulkCreate(logodanGelenKayitlar);
+
+      res.json(newIslemTipleri);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }),
+);
+
 router.put(
   "/",
   asyncHandler(async (req, res) => {
