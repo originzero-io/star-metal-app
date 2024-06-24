@@ -1,7 +1,7 @@
 import { Button, Input } from "antd";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
-import { referansParcaAdlariHttp } from "services/crud-server/referanslar.http";
+import logoGoApi from "services/logoGoApi";
 
 export function ParcaAdiDuzenlemeForm({
   parcaAdi,
@@ -14,23 +14,28 @@ export function ParcaAdiDuzenlemeForm({
 
   return (
     <div>
-      <Input placeholder={parcaAdi} onChange={(e) => setYeniParcaAdi(e.target.value)} />
+      <Input defaultValue={parcaAdi.adi} onChange={(e) => setYeniParcaAdi(e.target.value)} />
       {yeniParcaAdi && (
         <Button
           type="primary"
           block
           style={{ marginTop: "10px" }}
           onClick={async () => {
-            await referansParcaAdlariHttp.updateData(parcaAdi, yeniParcaAdi);
-            const parcaAdlari = await referansParcaAdlariHttp.getData();
-            setReferansParcaAdlari(parcaAdlari);
-            form.setFieldsValue({ parcaAdi: null });
-            setSeciliParcaAdi(null);
-            showModal(false);
-            showNotification(
-              "success",
-              `${parcaAdi} parçasının ismi ${yeniParcaAdi} olarak değiştirildi.`,
-            );
+            const data = { logicalref: parcaAdi.logicalref, adi: yeniParcaAdi };
+            const response = await logoGoApi.putData("PutParcaAdi", data);
+
+            if (response.statusCode === 200) {
+              const parcaAdiList = await logoGoApi.getData("GetParcaAdiList");
+
+              setReferansParcaAdlari(parcaAdiList);
+              form.setFieldsValue({ parcaAdi: null });
+              setSeciliParcaAdi(null);
+              showModal(false);
+              showNotification(
+                "success",
+                `${parcaAdi.adi} parçasının ismi ${yeniParcaAdi} olarak değiştirildi.`,
+              );
+            } else showNotification("error", response.message);
           }}
         >
           {yeniParcaAdi} olarak değiştir
@@ -53,10 +58,19 @@ export function ParcaAdiEklemeForm({ setReferansParcaAdlari }) {
           block
           style={{ marginTop: "10px" }}
           onClick={async () => {
-            const data = await referansParcaAdlariHttp.addData({ parcaAdi: yeniParcaAdi });
-            setReferansParcaAdlari((prevState) => [...prevState, { ...data }]);
-            showModal(false);
-            showNotification("success", `${yeniParcaAdi} parça adı olarak eklendi.`);
+            const data = { adi: yeniParcaAdi };
+            const response = await logoGoApi.postData("PostParcaAdi", data);
+
+            if (response.statusCode === 200) {
+              setReferansParcaAdlari((prevState) => [
+                ...prevState,
+                { logicalref: response.newId, ...data },
+              ]);
+              showModal(false);
+              showNotification("success", `${yeniParcaAdi} parça adı olarak eklendi.`);
+            } else {
+              showNotification("error", response.message);
+            }
           }}
         >
           Parçayı Ekle

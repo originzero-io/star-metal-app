@@ -18,6 +18,7 @@ router.get(
           as: "Referanslar",
         },
       ],
+      where: { tamamlandi: false },
     });
     const fasonUretimler = await FasonUretim.findAll({
       include: [
@@ -27,6 +28,7 @@ router.get(
           as: "Referanslar",
         },
       ],
+      where: { tamamlandi: false },
     });
 
     res.send({ normalUretimler, fasonUretimler });
@@ -174,7 +176,28 @@ router.delete(
 router.get(
   "/tamamlanan",
   asyncHandler(async (req, res) => {
-    res.send("tamamlanan üretimler");
+    const normalUretimler = await NormalUretim.findAll({
+      include: [
+        {
+          model: Referans,
+          required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
+          as: "Referanslar",
+        },
+      ],
+      where: { tamamlandi: true },
+    });
+    const fasonUretimler = await FasonUretim.findAll({
+      include: [
+        {
+          model: Referans,
+          required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
+          as: "Referanslar",
+        },
+      ],
+      where: { tamamlandi: true },
+    });
+
+    res.send({ normalUretimler, fasonUretimler });
   }),
 );
 

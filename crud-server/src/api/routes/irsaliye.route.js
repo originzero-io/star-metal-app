@@ -14,7 +14,7 @@ router.get(
         {
           model: Referans,
           required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
-          attributes: ["irsaliyeAciklamasi", "musteriAdi", "fasonFirmasi"], // Sadece bu alanlar
+          as: "Referanslar",
         },
       ],
     });
@@ -33,7 +33,7 @@ router.post(
         {
           model: Referans,
           required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
-          attributes: ["irsaliyeAciklamasi", "musteriAdi", "fasonFirmasi"], // Sadece bu alanlar
+          as: "Referanslar",
         },
       ],
     });
@@ -73,6 +73,7 @@ router.post(
         where: { id: row.id },
       });
     });
+    //! gidenMiktar güncellenecek
 
     res.send("liste temizlendi");
   }),

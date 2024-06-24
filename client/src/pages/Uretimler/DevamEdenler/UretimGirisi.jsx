@@ -98,11 +98,13 @@ export default function UretimGirisi({ record }) {
     // console.log("localRecord: ", localRecord);
     // console.log("values: ", values);
     const data = {
+      alici: localRecord.Referanslar.fason
+        ? localRecord.Referanslar.fasonFirmasi
+        : localRecord.Referanslar.musteriAdi,
       fason: localRecord.Referanslar.fason,
       referansNo: localRecord.referansNo,
       uretimSiraNo: localRecord.id,
-      siparisNo: localRecord.Referanslar.siparisNo,
-      talepNo: localRecord.talepNo,
+      kodu: localRecord.Referanslar.kodu,
       iade: localRecord.iade,
       uretimTarihi: getCurrentDateTime(),
       uretimAdedi: values.uretimAdedi,
@@ -257,8 +259,9 @@ export default function UretimGirisi({ record }) {
               <Form.Item label="Üretim Tarih" name="uretimTarihi">
                 <Input disabled />
               </Form.Item>
-              {localRecord.Referanslar.fason && (
+              {localRecord.Referanslar.fason === 1 && (
                 <Form.Item
+                  labelCol={{ span: 30 }}
                   label="Fasondan Gelen İrsaliye No"
                   name="fasondanGelenIrsaliyeNo"
                   rules={[

@@ -1,18 +1,16 @@
 import express from "express";
-import uretimler from "./routes/uretim.route.js";
-import uretimGirisleri from "./routes/uretim-girisi.route.js";
-import irsaliyeler from "./routes/irsaliye.route.js";
-import musteriler from "./routes/musteri.route.js";
-import referanslar from "./routes/referans.route.js";
-import ambalajlar from "./routes/ambalaj.route.js";
-import personeller from "./routes/personel.route.js";
-import soforler from "./routes/sofor.route.js";
-import plakalar from "./routes/plaka.route.js";
-import sicakliklar from "./routes/sicaklik.route.js";
-import banyolar from "./routes/banyo.route.js";
-import butonlar from "./routes/buton.route.js";
 
 import db from "../dbConnection.js";
+
+import ambalajlar from "./routes/ambalaj.route.js";
+import banyolar from "./routes/banyo.route.js";
+import butonlar from "./routes/buton.route.js";
+import irsaliyeler from "./routes/irsaliye.route.js";
+import personeller from "./routes/personel.route.js";
+import referanslar from "./routes/referans.route.js";
+import sicakliklar from "./routes/sicaklik.route.js";
+import uretimGirisleri from "./routes/uretim-girisi.route.js";
+import uretimler from "./routes/uretim.route.js";
 
 const router = express.Router();
 
@@ -28,12 +26,9 @@ router.use("/", async (req, res, next) => {
 router.use("/uretim", uretimler); // devam-eden / tamamlanan
 router.use("/uretim-girisleri", uretimGirisleri);
 router.use("/irsaliyeler", irsaliyeler);
-router.use("/musteriler", musteriler);
 router.use("/referanslar", referanslar);
 router.use("/ambalajlar", ambalajlar);
 router.use("/personeller", personeller);
-router.use("/soforler", soforler);
-router.use("/plakalar", plakalar);
 
 router.use("/sicaklik", sicakliklar); // sadece get
 router.use("/banyo", banyolar); // sadece get

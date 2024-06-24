@@ -1,17 +1,12 @@
 import axios from "axios";
 import PropTypes from "prop-types";
 import { createContext, useContext, useEffect, useState } from "react";
+import logoGoApi from "services/logoGoApi";
 import ambalajlarHttp from "services/crud-server/ambalajlar.http";
 import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
-import musterilerHttp from "services/crud-server/musteriler.http";
 import personellerHttp from "services/crud-server/personeller.http";
-import plakalarHttp from "services/crud-server/plakalar.http";
-import referanslarHttp, {
-  referansIslemTipleriHttp,
-  referansParcaAdlariHttp,
-} from "services/crud-server/referanslar.http";
-import soforlerHttp from "services/crud-server/soforler.http";
-import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
+import referanslarHttp from "services/crud-server/referanslar.http";
+import { devamEdenUretimHttp, tamamlananUretimHttp } from "services/crud-server/uretimler.http";
 import getUrlByEnvVariables from "utils/getServerUrl";
 import { useUIContext } from "./UIProvider";
 
@@ -34,6 +29,10 @@ export const DBProvider = ({ children }) => {
     normalUretimler: [],
     fasonUretimler: [],
   });
+  const [tamamlananUretimler, setTamamlananUretimler] = useState({
+    normalUretimler: [],
+    fasonUretimler: [],
+  });
   // ? uretimler denip {devamEdenler, tamamlananlar} şeklinde verilebilir
   const [personeller, setPersoneller] = useState([]);
   const [soforler, setSoforler] = useState([]);
@@ -46,12 +45,23 @@ export const DBProvider = ({ children }) => {
   const fetchReferanslar = async () => {
     try {
       setLoading(true);
-      const referansData = await referanslarHttp.getData();
-      setReferanslar(referansData);
-      const referansIslemTipiData = await referansIslemTipleriHttp.getData();
-      setReferansIslemTipleri(referansIslemTipiData);
-      const referansParcaAdiData = await referansParcaAdlariHttp.getData();
-      setReferansParcaAdlari(referansParcaAdiData);
+      const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
+      setReferansParcaAdlari(logoParcaAdlari);
+      showNotification("success", "Referans parça adları logo ile eşlendi.");
+
+      const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
+      setReferansIslemTipleri(logoIslemTipleri);
+      showNotification("success", "Referans işlem tipleri logo ile eşlendi.");
+
+      const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
+      setReferansAnaBirimleri(logoAnaBirimler);
+      showNotification("success", "Referans ana birimleri logo ile eşlendi.");
+
+      // const logoReferanslar = await logoGoApi.getData("GetReferansList");
+      // await referanslarHttp.logoIleEsle(logoReferanslar);
+      const logoReferanslar = await referanslarHttp.getData();
+      setReferanslar(logoReferanslar);
+      showNotification("success", "Referanslar logo ile eşlendi.");
       setLoading(false);
     } catch (error) {
       showNotification("error", "Referans verisi alınamadı", error.message);
@@ -71,8 +81,10 @@ export const DBProvider = ({ children }) => {
   const fetchMusteriler = async () => {
     try {
       setLoading(true);
-      const musteriData = await musterilerHttp.getData();
-      setMusteriler(musteriData);
+      const logoMusteriler = await logoGoApi.getData("GetCariList");
+      setMusteriler(logoMusteriler);
+      showNotification("success", "Müşteriler logo ile eşlendi.");
+
       setLoading(false);
     } catch (error) {
       showNotification("error", "Müşteri verisi alınamadı", error.message);
@@ -93,7 +105,22 @@ export const DBProvider = ({ children }) => {
     try {
       setLoading(true);
       const devamEdenUretimData = await devamEdenUretimHttp.getData();
+      console.log("devamEdenUretimData", devamEdenUretimData);
+
       setDevamEdenUretimler(devamEdenUretimData);
+      setLoading(false);
+    } catch (error) {
+      showNotification("error", "Üretim verisi alınamadı", error.message);
+    }
+  };
+
+  const fetchTamamlananUretimler = async () => {
+    try {
+      setLoading(true);
+      const tamamlananUretimData = await tamamlananUretimHttp.getData();
+      console.log("tamamlananUretimData", tamamlananUretimData);
+
+      setTamamlananUretimler(tamamlananUretimData);
       setLoading(false);
     } catch (error) {
       showNotification("error", "Üretim verisi alınamadı", error.message);
@@ -114,8 +141,10 @@ export const DBProvider = ({ children }) => {
   const fetchSoforler = async () => {
     try {
       setLoading(true);
-      const soforData = await soforlerHttp.getData();
-      setSoforler(soforData);
+      const logoSoforler = await logoGoApi.getData("GetSoforList");
+      setSoforler(logoSoforler);
+      showNotification("success", "Şoförler logo ile eşlendi.");
+
       setLoading(false);
     } catch (error) {
       showNotification("error", "Şoför verisi alınamadı", error.message);
@@ -125,8 +154,8 @@ export const DBProvider = ({ children }) => {
   const fetchPlakalar = async () => {
     try {
       setLoading(true);
-      const plakaData = await plakalarHttp.getData();
-      setPlakalar(plakaData);
+      const logoPlakalar = await logoGoApi.getData("GetAracList");
+      setPlakalar(logoPlakalar);
       setLoading(false);
     } catch (error) {
       showNotification("error", "Plaka verisi alınamadı", error.message);
@@ -134,14 +163,28 @@ export const DBProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchDevamEdenUretimler();
-    fetchReferanslar();
-    fetchIrsaliyeler();
-    fetchMusteriler();
-    fetchAmbalajlar();
-    fetchPersoneller();
-    fetchSoforler();
-    fetchPlakalar();
+    // fetchDevamEdenUretimler();
+    // fetchReferanslar();
+    // fetchIrsaliyeler();
+    // fetchMusteriler();
+    // fetchAmbalajlar();
+    // fetchPersoneller();
+    // fetchSoforler();
+    // fetchPlakalar();
+    async function fetchAllState() {
+      await Promise.all([
+        fetchDevamEdenUretimler(),
+        fetchTamamlananUretimler(),
+        fetchReferanslar(),
+        fetchIrsaliyeler(),
+        fetchMusteriler(),
+        fetchAmbalajlar(),
+        fetchPersoneller(),
+        fetchSoforler(),
+        fetchPlakalar(),
+      ]);
+    }
+    fetchAllState();
   }, []);
 
   const value = {
@@ -161,6 +204,8 @@ export const DBProvider = ({ children }) => {
     setAmbalajlar,
     devamEdenUretimler,
     setDevamEdenUretimler,
+    tamamlananUretimler,
+    setTamamlananUretimler,
     personeller,
     setPersoneller,
     soforler,

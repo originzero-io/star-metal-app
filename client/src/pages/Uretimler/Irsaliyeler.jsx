@@ -1,7 +1,7 @@
-import { CaretRightOutlined } from "@ant-design/icons";
-import { Badge, Button, Collapse, Divider, Flex, Form, Input, Modal, Select } from "antd";
+import { CaretRightOutlined, FileDoneOutlined } from "@ant-design/icons";
+import { Badge, Button, Collapse, Divider, Flex, Form, Input, Modal, Select, Tag } from "antd";
 import ColumnBadge from "components/shared/ColumnBadge";
-import CountBadge from "components/shared/CounBadge";
+import CountBadge from "components/shared/CountBadge";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
 import collapseStyle from "components/shared/StyledCollapse";
@@ -58,27 +58,40 @@ export default function Irsaliyeler() {
         width: 70,
       },
       {
+        title: "Sipariş Tipi",
+        dataIndex: "siparisTipi",
+        key: "siparisTipi",
+        render: (text, record) => (
+          <ColumnBadge
+            color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
+            value={record.Referanslar.siparisTipi}
+          />
+        ),
+        width: 100,
+      },
+      {
+        title: "Kodu",
+        dataIndex: "kodu",
+        key: "kodu",
+        render: (text, record) => (
+          <ColumnBadge
+            color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
+            value={record.Referanslar.kodu}
+          />
+        ),
+        width: 170,
+      },
+      {
         title: "Referans No",
         dataIndex: "referansNo",
         key: "referansNo",
         render: (text) => <ColumnBadge color="orange" value={text} />,
+        width: 160,
       },
       {
         title: "İade",
         dataIndex: "iade",
         key: "iade",
-      },
-      {
-        title: "Sipariş No",
-        dataIndex: "siparisNo",
-        key: "siparisNo",
-        // width: 100,
-      },
-      {
-        title: "Talep No",
-        dataIndex: "talepNo",
-        key: "talepNo",
-        // width: 100,
       },
       {
         title: "İrsaliye Açıklaması",
@@ -201,14 +214,13 @@ export default function Irsaliyeler() {
             key: "tasima",
             label: (
               <Flex>
-                <Badge
+                <CountBadge
                   count={tasimaIrsaliyeleri.length}
-                  offset={[20, 9]}
-                  color="purple"
+                  offset={[20, 7]}
                   title="Toplam taşıma irsaliyesi sayısı"
                 >
                   <div style={collapseStyle.parentCollapseHeader}>Taşıma İrsaliyeleri</div>
-                </Badge>
+                </CountBadge>
               </Flex>
             ),
 
@@ -225,14 +237,9 @@ export default function Irsaliyeler() {
                   Object.entries(tipBazliIrsaliye.tasima).map(([musteriAdi, kayitlar], index) => ({
                     key: index.toString(),
                     label: (
-                      <Badge
-                        count={kayitlar.length}
-                        offset={[20, 5]}
-                        color="purple"
-                        title="Kayıt sayısı"
-                      >
+                      <CountBadge count={kayitlar.length} offset={[20, 5]} title="Kayıt sayısı">
                         <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-                      </Badge>
+                      </CountBadge>
                     ),
                     children: (
                       <IrsaliyeTablo
@@ -294,17 +301,29 @@ function LogoyaGonderButon({ kayitlar }) {
       ? irsaliyeKaydi[0].Referanslar.fasonFirmasi
       : irsaliyeKaydi[0].Referanslar.musteriAdi;
 
-    const musteri = musteriler.find((m) => m.adi === firmaAdi);
+    const musteri = musteriler.find((m) => m.unvani === firmaAdi);
 
     const irsaliyeTipi = irsaliyeKaydi[0].tip;
+    const fason = irsaliyeKaydi[0].fasona;
 
-    const gonderilecekGenelAciklama =
-      irsaliyeTipi === "tasima"
-        ? `FASON İŞLEM İÇİN GÖNDERİLİYOR.FATURA EDİLMEYECEKTİR.\r\n${genelAciklama}`
-        : genelAciklama;
+    let gonderilecekGenelAciklama = "";
+
+    if (irsaliyeTipi === "tasima") {
+      // tipi tasima ise iadedir veya fasondur
+      if (fason) {
+        gonderilecekGenelAciklama = "FASON İŞLEM İÇİN GÖNDERİLİYOR.FATURA EDİLMEYECEK";
+      } else {
+        gonderilecekGenelAciklama = "TEKRAR İŞLEM YAPILMIŞTIR. FATURA EDİLMEYECEK";
+      }
+    }
+
+    console.log("genelAciklama", genelAciklama);
+    console.log("gonderilecekGenelAciklama", gonderilecekGenelAciklama);
+    console.log("irsaliyeKaydi", irsaliyeKaydi);
 
     const irsaliyeMaster = {
-      genelAciklama: gonderilecekGenelAciklama,
+      genelAciklama1: gonderilecekGenelAciklama,
+      genelAciklama2: genelAciklama,
       logicalref: 0,
       turu: 8, // 1: alış , 8: satış irsaliyesi
       tarih: getCurrentTimeWithLogoFormat(),
@@ -318,21 +337,15 @@ function LogoyaGonderButon({ kayitlar }) {
       soforKimlikNo: secilenSofor.kimlikNo,
     };
 
-    console.log("irsaliyeKaydi", irsaliyeKaydi);
-
-    // ! burası gerçek referanslar ile doldurulacak
     const irsaliyeDetails = irsaliyeKaydi.map((kayit, index) => ({
       logicalref: 0,
       irsaliyeRef: 0,
       satirNo: index + 1,
       malzemeRef: referanslar.find((r) => r.referansNo === kayit.referansNo).logoMalzemeRef, // 153700290005 ÇANAK YAY FOSFAT
-      // malzemeRef: 4792, // 153700290005 ÇANAK YAY FOSFAT
       miktar: kayit.uretimAdedi,
       birimRef: referanslar.find((r) => r.referansNo === kayit.referansNo).logoAnaBirimRef, // 153700290005 ÇANAK YAY FOSFAT
-      // birimRef: 5, // 153700290005 ÇANAK YAY FOSFAT
       satirAciklamasi: referanslar.find((r) => r.referansNo === kayit.referansNo)
         .irsaliyeAciklamasi,
-      // satirAciklamasi: "**AKIN TARAFINDAN GÖNDERİLMİŞ DENEME KAYDI - GEÇERSİZ VE SİLİNECEK**",
     }));
 
     const logoIrsaliye = {
@@ -359,30 +372,29 @@ function LogoyaGonderButon({ kayitlar }) {
       console.log("logoIrsaliye", logoIrsaliye);
 
       const logoResponse = await logoGoApi.postData("PostIrsaliye", logoIrsaliye);
-      console.log("PostIrsaliyeResponse", logoResponse);
 
-      showNotification(
-        "success",
-        `${musteriAdi} müşterisine ait irsaliye kaydı logoya gönderildi.`,
-      );
-
-      // await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(gonderilecekKayitlar);
-      // const devamEdenler = await devamEdenUretimHttp.getData();
-      // const newIrsaliyeler = await irsaliyeHttp.listeyiTemizle(irsaliyeler, gonderilecekKayitlar);
-      // setIrsaliyeler(newIrsaliyeler);
-      // setDevamEdenUretimler(devamEdenler);
-      // setIsModalVisible(false);
-      // showNotification(
-      //   "success",
-      //   `${musteriAdi} müşterisine ait irsaliye kaydı logoya gönderildi.`,
-      // );
+      if (logoResponse.statusCode === 200) {
+        // await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(gonderilecekKayitlar);
+        // const devamEdenler = await devamEdenUretimHttp.getData();
+        // const newIrsaliyeler = await irsaliyeHttp.listeyiTemizle(irsaliyeler, gonderilecekKayitlar);
+        // //! gelen miktarla giden miktar eşitse ve "kodu" kısmı doluysa üretimi tamamlanan üretimlere taşı
+        // setIrsaliyeler(newIrsaliyeler);
+        // setDevamEdenUretimler(devamEdenler);
+        // setIsModalVisible(false);
+        showNotification(
+          "success",
+          `${musteriAdi} müşterisine ait irsaliye kaydı logoya gönderildi.`,
+        );
+      } else {
+        showNotification("error", logoResponse.message);
+      }
     } catch (err) {
       showNotification("error", err.message);
     }
   };
 
   const soforSec = (value) => {
-    const selectedSofor = soforler.find((sofor) => sofor.id === value);
+    const selectedSofor = soforler.find((sofor) => sofor.logicalref === value);
     setSecilenSofor(selectedSofor);
   };
 
@@ -438,7 +450,7 @@ function LogoyaGonderButon({ kayitlar }) {
           >
             <Select placeholder="Şoför seçiniz" showSearch onChange={soforSec}>
               {soforler.map((sofor) => (
-                <Select.Option key={sofor.id} value={sofor.id}>
+                <Select.Option key={sofor.logicalref} value={sofor.logicalref}>
                   {`${sofor.adi} ${sofor.soyadi}`}
                 </Select.Option>
               ))}
@@ -456,7 +468,7 @@ function LogoyaGonderButon({ kayitlar }) {
           >
             <Select placeholder="Plaka seçiniz" showSearch>
               {plakalar.map((plaka) => (
-                <Select.Option key={plaka.id} value={plaka.plaka}>
+                <Select.Option key={plaka.logicalref} value={plaka.plaka}>
                   {plaka.plaka}
                 </Select.Option>
               ))}

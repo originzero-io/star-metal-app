@@ -1,8 +1,6 @@
 import axios from "axios";
 import CRUDServerHttp from "./crud-server.http";
 
-// export default new CRUDServerHttp("/irsaliyeler", "id");
-
 class Irsaliye extends CRUDServerHttp {
   constructor() {
     super("/irsaliyeler");

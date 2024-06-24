@@ -142,6 +142,7 @@ router.put(
   "/sevkiyat-bilgilerini-doldur",
   asyncHandler(async (req, res) => {
     const { kayitlar } = req.body;
+
     kayitlar.forEach(async (kayit) => {
       const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
 
@@ -149,7 +150,7 @@ router.put(
         {
           sevkTarihi: kayit.sevkTarihi,
           personel: kayit.personel,
-          sofor: kayit.sofor,
+          sofor: `${kayit.sofor.adi} ${kayit.sofor.soyadi}`,
           plaka: kayit.plaka,
           irsaliyeNo: kayit.irsaliyeNo,
         },

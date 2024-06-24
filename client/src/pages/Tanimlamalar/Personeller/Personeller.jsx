@@ -134,7 +134,7 @@ function Personeller() {
                 icon={<DeleteOutlined />}
                 onClick={deleteSelectedRecordsHandler}
               >
-                Sil ({selectedRows.length})
+                Toplu Sil ({selectedRows.length})
               </Button>
             )}
             {user.yetki === "admin" && (

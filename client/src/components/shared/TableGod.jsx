@@ -31,6 +31,7 @@ export default function TableGod({
   contextMenu,
   wrapperStyle,
   rowStyle,
+  rowKey,
 }) {
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
@@ -98,8 +99,10 @@ export default function TableGod({
         <Table
           dataSource={dataSource}
           columns={columns}
-          rowKey={(record) => record.id}
-          // rowKey={(record) => record.id}
+          rowKey={
+            rowKey ||
+            ((record) => record.logicalref || record.logoRef || record.logoMalzemeRef || record.id)
+          }
           size="small"
           onChange={onChange && onChange}
           // bordered
@@ -206,4 +209,5 @@ TableGod.propTypes = {
   }),
   wrapperStyle: PropTypes.object,
   rowStyle: PropTypes.func,
+  rowKey: PropTypes.number,
 };

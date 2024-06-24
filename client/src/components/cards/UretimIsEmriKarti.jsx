@@ -36,9 +36,6 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
 
   return (
     <div style={{ height: "10%" }}>
-      {/* <Button type="primary" icon={<IoPrintOutline />} onClick={handlePrint}>
-        Yazdır
-      </Button> */}
       <PrintButton colorful handlePrintFunc={handlePrint} />
       <ContainerStyled ref={componentRef}>
         <Row>
@@ -59,7 +56,7 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           </ColStyled>
           <ColStyled span={6}>Sipariş No</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.Referanslar?.siparisNo}</BoldTextStyled>
+            <BoldTextStyled>{record?.kodu}</BoldTextStyled>
           </ColStyled>
         </Row>
         <Row>
@@ -74,12 +71,8 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
         </Row>
         <Row>
           <ColStyled span={6}>İrsaliye No</ColStyled>
-          <ColStyled span={6}>
+          <ColStyled span={18}>
             <BoldTextStyled>{record?.irsaliyeNo}</BoldTextStyled>
-          </ColStyled>
-          <ColStyled span={6}>Kayıt No</ColStyled>
-          <ColStyled span={6}>
-            <BoldTextStyled>{record?.id}</BoldTextStyled>
           </ColStyled>
         </Row>
         <Row style={{ height: "150px" }}>
@@ -96,7 +89,7 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           </ColStyled>
           <ColStyled span={6}>
             <BoldTextStyled>ÜRETİME VEREN</BoldTextStyled>
-            <BoldTextStyled>{record?.kontrolEden}</BoldTextStyled>
+            <BoldTextStyled>{record?.personel}</BoldTextStyled>
           </ColStyled>
         </Row>
       </ContainerStyled>

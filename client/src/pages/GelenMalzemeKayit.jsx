@@ -93,10 +93,15 @@ export default function GelenMalzemeKayit() {
     try {
       const data = form.getFieldsValue();
 
+      const { kodu } = referanslar.filter(
+        (referans) => referans.referansNo === data.malzemeler[name].referansNo,
+      )[0];
+
       const cardRecord = {
         key: name,
         irsaliyeNo: data.irsaliyeNo,
         personel: data.personel,
+        kodu,
         ...data.malzemeler[name],
       };
 
@@ -112,7 +117,10 @@ export default function GelenMalzemeKayit() {
     const selectedReference = referanslar.filter((referans) => referans.referansNo === value)[0];
 
     // bu referans no'lu kayıdın fasonluk bilgisini tut (true/false)
-    setSeciliReferansFasonluk({ ...seciliReferansFasonluk, [name]: selectedReference.fason });
+    setSeciliReferansFasonluk({
+      ...seciliReferansFasonluk,
+      [name]: selectedReference.fason === 1 ? true : false,
+    });
 
     // bu referans no'lu kayıdın sipariş tipi bilgisini tut (Seri/Talepli)
     setSeciliReferansSiparisTipi({
@@ -135,9 +143,10 @@ export default function GelenMalzemeKayit() {
   };
 
   const musteriSecimiYap = (value) => {
-    const musteriRef = referanslar.filter((referans) => referans.musteriAdi === value);
+    const musteriRef = referanslar.filter((referans) => referans.musteriRef === value);
     setMusteriReferanslari(musteriRef);
     form.setFieldsValue({ malzemeler: null }); // müşteri seçimi değiştirildiğinde tüm satırlar temizlensin
+    setKayitDurumu(false);
   };
 
   const satirEkle = (addRowFunc) => {
@@ -181,7 +190,7 @@ export default function GelenMalzemeKayit() {
       uretilmeyenMiktar: malzeme.gelenMiktar,
     }));
 
-    console.log("records to db: ", yeniMalzemeler);
+    console.log("Gelen Malzeme Kayıtları: ", yeniMalzemeler);
 
     const { normalUretimler, fasonUretimler } = await devamEdenUretimHttp.addData(yeniMalzemeler);
 
@@ -208,10 +217,17 @@ export default function GelenMalzemeKayit() {
         >
           <Col span={6}>
             <Form.Item label="Müşteri" name="musteriAdi" rules={rules}>
-              <Select placeholder="Müşteri Seçin" onChange={musteriSecimiYap} showSearch>
+              <Select
+                placeholder="Müşteri Seçin"
+                onChange={musteriSecimiYap}
+                showSearch
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().includes(input.toLowerCase())
+                }
+              >
                 {musteriler.map((musteri) => (
-                  <Select.Option key={musteri.id} value={musteri.adi}>
-                    {musteri.adi}
+                  <Select.Option key={musteri.id} value={musteri.logoRef}>
+                    {musteri.unvani}
                   </Select.Option>
                 ))}
               </Select>

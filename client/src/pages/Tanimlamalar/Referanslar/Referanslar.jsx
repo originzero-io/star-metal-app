@@ -1,7 +1,6 @@
 import { BankOutlined, DeleteOutlined, FileDoneOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Modal, Tag } from "antd";
 import IdBadge from "components/shared/IdBadge";
-import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
@@ -9,11 +8,8 @@ import { useUIContext } from "context/UIProvider";
 import ReferansForm from "pages/Tanimlamalar/Referanslar/ReferansForm";
 import { useMemo, useState } from "react";
 import { MdOutlineDocumentScanner } from "react-icons/md";
-import referanslarHttp, {
-  referansIslemTipleriHttp,
-  referansParcaAdlariHttp,
-} from "services/crud-server/referanslar.http";
 import logoGoApi from "services/logoGoApi";
+import referanslarHttp from "services/crud-server/referanslar.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../../../components/shared/TableGod";
 
@@ -26,13 +22,7 @@ function Referanslar() {
 
   const [selectedRows, setSelectedRows] = useState([]);
   const { showPanel, showNotification } = useUIContext();
-  const {
-    referanslar,
-    setReferanslar,
-    setReferansIslemTipleri,
-    setReferansParcaAdlari,
-    setReferansAnaBirimleri,
-  } = useDBContext();
+  const { referanslar, setReferanslar } = useDBContext();
 
   const columns = useMemo(
     () => [
@@ -47,6 +37,36 @@ function Referanslar() {
         dataIndex: "logoMalzemeRef",
         key: "logoMalzemeRef",
         render: (text) => <IdBadge value={text} />,
+      },
+      {
+        title: "Kodu",
+        dataIndex: "kodu",
+        key: "kodu",
+        render: (text, record) => (
+          <Tag
+            color={record.siparisTipi === "SERİ" ? "volcano" : "purple"}
+            icon={<FileDoneOutlined />}
+            style={{ width: "100%", fontSize: "12px" }}
+          >
+            {text}
+          </Tag>
+        ),
+        filters: createTableFilterFromData(referanslar, "kodu"),
+        onFilter: (value, record) => {
+          const kodu = record.kodu ?? "Boş";
+          return kodu.indexOf(value) === 0;
+        },
+        filterSearch: true,
+      },
+      {
+        title: "Sipariş Tipi",
+        dataIndex: "siparisTipi",
+        key: "siparisTipi",
+        filters: createTableFilterFromData(referanslar, "siparisTipi"),
+        render: (text) =>
+          text === "SERİ" ? <Tag color="volcano">{text}</Tag> : <Tag color="purple">{text}</Tag>,
+        onFilter: (value, record) => record.siparisTipi.indexOf(value) === 0,
+        filterSearch: true,
       },
       {
         title: "Referans No",
@@ -95,27 +115,6 @@ function Referanslar() {
         onFilter: (value, record) => record.irsaliyeAciklamasi.indexOf(value) === 0,
         filterSearch: true,
         width: 300,
-      },
-      {
-        title: "Sipariş Tipi",
-        dataIndex: "siparisTipi",
-        key: "siparisTipi",
-        filters: createTableFilterFromData(referanslar, "siparisTipi"),
-        render: (text) =>
-          text === "Seri" ? <Tag color="volcano">{text}</Tag> : <Tag color="purple">{text}</Tag>,
-        onFilter: (value, record) => record.siparisTipi.indexOf(value) === 0,
-        filterSearch: true,
-      },
-      {
-        title: "Sipariş No",
-        dataIndex: "siparisNo",
-        key: "siparisNo",
-        filters: createTableFilterFromData(referanslar, "siparisNo"),
-        onFilter: (value, record) => {
-          const siparisNo = record.siparisNo ?? "Boş";
-          return siparisNo.indexOf(value) === 0;
-        },
-        filterSearch: true,
       },
       {
         title: "Fason",
@@ -206,15 +205,20 @@ function Referanslar() {
       cancelText: "İptal",
       async onOk() {
         try {
-          const newReferanslar = await referanslarHttp.deleteData(referanslar, selectedRows);
-          setReferanslar(newReferanslar);
+          await Promise.all(
+            selectedRows.map((row) => logoGoApi.deleteData("DeleteReferans", row.logoMalzemeRef)),
+          );
+          setReferanslar((prevReferanslar) =>
+            prevReferanslar.filter(
+              (referans) =>
+                !selectedRows.map((row) => row.logoMalzemeRef).includes(referans.logoMalzemeRef),
+            ),
+          );
+
           showNotification("success", "Seçili referanslar silindi");
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
-      },
-      onCancel() {
-        console.log("Hayır, vazgeçtim");
       },
     });
   };
@@ -227,45 +231,15 @@ function Referanslar() {
       cancelText: "İptal",
       async onOk() {
         try {
-          const newReferanslar = await referanslarHttp.deleteData(referanslar, [record]);
-          setReferanslar(newReferanslar);
+          await logoGoApi.deleteData("DeleteReferans", record.logoMalzemeRef);
+
+          setReferanslar((prevReferanslar) =>
+            prevReferanslar.filter((referans) => referans.logoMalzemeRef !== record.logoMalzemeRef),
+          );
           showNotification("success", `${record.referansNo} referansı silindi`);
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
-      },
-    });
-  };
-
-  const logoSync = async () => {
-    Modal.confirm({
-      title: "Emin misiniz?",
-      content:
-        "Referanslar, Referans Parça İsimleri ve Kaplama Cinsi ve Ana Birim bilgileri logo programından çekilip bu programa aktarılacak. Onaylıyor musunuz?",
-      okText: "Tamam",
-      cancelText: "İptal",
-      async onOk() {
-        const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
-        const newParcaAdlari = await referansParcaAdlariHttp.logoIleEsle(logoParcaAdlari);
-        setReferansParcaAdlari(newParcaAdlari);
-        showNotification("success", "Referans parça adları logo ile eşlendi.");
-
-        const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
-        const newIslemTipleri = await referansIslemTipleriHttp.logoIleEsle(logoIslemTipleri);
-        setReferansIslemTipleri(newIslemTipleri);
-        showNotification("success", "Referans işlem tipleri logo ile eşlendi.");
-
-        const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
-        setReferansAnaBirimleri(logoAnaBirimler);
-        showNotification("success", "Referans ana birimleri logo ile eşlendi.");
-
-        const logoReferanslar = await logoGoApi.getData("GetReferansList");
-        const newReferanslar = await referanslarHttp.logoIleEsle(logoReferanslar);
-        setReferanslar(newReferanslar);
-        showNotification("success", "Referanslar logo ile eşlendi.");
-      },
-      onCancel() {
-        showNotification("warning", "İşlem iptal edildi");
       },
     });
   };
@@ -297,7 +271,7 @@ function Referanslar() {
                 icon={<DeleteOutlined />}
                 onClick={deleteSelectedRecordsHandler}
               >
-                Sil ({selectedRows.length})
+                Toplu Sil ({selectedRows.length})
               </Button>
             )}
             {user.yetki === "admin" && (
@@ -310,7 +284,6 @@ function Referanslar() {
                 >
                   Referans Ekle
                 </Button>
-                <LogoSyncButton onClick={logoSync} />
               </>
             )}
           </>

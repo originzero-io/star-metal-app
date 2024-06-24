@@ -3,7 +3,7 @@ import asyncHandler from "express-async-handler";
 import fs from "fs";
 import multer from "multer";
 import { findDirname } from "../../utils/file.js";
-import Referans, { ReferansIslemTipi, ReferansParcaAdi } from "../models/referans.model.js";
+import Referans from "../models/referans.model.js";
 import { NormalUretim } from "../models/uretim.model.js";
 
 const referansResimMiddleware = multer({
@@ -110,124 +110,6 @@ router.delete(
       fs.unlinkSync(filePath);
     });
 
-    res.send("ok");
-  }),
-);
-
-router.get(
-  "/islem-tipi",
-  asyncHandler(async (req, res) => {
-    const referansIslemTipleri = await ReferansIslemTipi.findAll();
-    res.json(referansIslemTipleri);
-  }),
-);
-
-router.post(
-  "/islem-tipi",
-  asyncHandler(async (req, res) => {
-    const { islemTipi } = req.body;
-    const newIslemTipi = await ReferansIslemTipi.create({ islemTipi });
-    res.json(newIslemTipi);
-  }),
-);
-
-router.post(
-  "/islem-tipi/logo-ile-esle",
-  asyncHandler(async (req, res) => {
-    // mevcut tüm kayıtları sil yeni gelen listeyle doldur
-    const logodanGelenKayitlar = req.body;
-    await ReferansIslemTipi.destroy({
-      truncate: true,
-    });
-    const newIslemTipleri = await ReferansIslemTipi.bulkCreate(logodanGelenKayitlar);
-    res.json(newIslemTipleri);
-  }),
-);
-
-router.put(
-  "/islem-tipi",
-  asyncHandler(async (req, res) => {
-    const { mevcutIslemTipi, yeniIslemTipi } = req.body;
-
-    const [affectedRows] = await ReferansIslemTipi.update(
-      { islemTipi: yeniIslemTipi },
-      {
-        where: {
-          islemTipi: mevcutIslemTipi,
-        },
-      },
-    );
-    res.json(affectedRows);
-  }),
-);
-
-router.delete(
-  "/islem-tipi",
-  asyncHandler(async (req, res) => {
-    const { selectedRows } = req.body;
-
-    await ReferansIslemTipi.destroy({
-      where: { islemTipi: selectedRows[0] },
-    });
-    res.send("ok");
-  }),
-);
-
-router.get(
-  "/parca-adi",
-  asyncHandler(async (req, res) => {
-    const referansParcaAdlari = await ReferansParcaAdi.findAll();
-    res.json(referansParcaAdlari);
-  }),
-);
-
-router.post(
-  "/parca-adi",
-  asyncHandler(async (req, res) => {
-    const { parcaAdi } = req.body;
-    const newParcaAdi = await ReferansParcaAdi.create({ parcaAdi });
-    res.json(newParcaAdi);
-  }),
-);
-
-router.post(
-  "/parca-adi/logo-ile-esle",
-  asyncHandler(async (req, res) => {
-    // mevcut tüm kayıtları sil yeni gelen listeyle doldur
-    const logodanGelenKayitlar = req.body;
-    await ReferansParcaAdi.destroy({
-      truncate: true,
-    });
-    const newParcaAdlari = await ReferansParcaAdi.bulkCreate(logodanGelenKayitlar);
-    res.json(newParcaAdlari);
-  }),
-);
-
-router.put(
-  "/parca-adi",
-  asyncHandler(async (req, res) => {
-    const { mevcutParcaAdi, yeniParcaAdi } = req.body;
-
-    const [affectedRows] = await ReferansParcaAdi.update(
-      { parcaAdi: yeniParcaAdi },
-      {
-        where: {
-          parcaAdi: mevcutParcaAdi,
-        },
-      },
-    );
-    res.json(affectedRows);
-  }),
-);
-
-router.delete(
-  "/parca-adi",
-  asyncHandler(async (req, res) => {
-    const { selectedRows } = req.body;
-
-    await ReferansParcaAdi.destroy({
-      where: { parcaAdi: selectedRows[0] },
-    });
     res.send("ok");
   }),
 );

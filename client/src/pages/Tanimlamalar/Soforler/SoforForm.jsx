@@ -1,31 +1,16 @@
 import { Button, Divider, Form, Input } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import soforlerHttp from "services/crud-server/soforler.http";
 import logoGoApi from "services/logoGoApi";
 
-export default function SoforForm({ record, type }) {
+export default function SoforForm({ record }) {
   const { showPanel, showNotification } = useUIContext();
   const { soforler, setSoforler } = useDBContext();
 
   const onFinish = async (values) => {
-    if (type === "update") {
-      const updatedSofor = await soforlerHttp.updateData(record.id, values);
-      const updatedSoforArray = soforler.map((sofor) => {
-        if (sofor.id === updatedSofor.id) {
-          return { ...updatedSofor };
-        }
-        return sofor;
-      });
-      setSoforler(updatedSoforArray);
-      // showPanel(false);
-      showNotification("success", "Şoför güncellendi");
-    } else {
-      const logicalref = await logoGoApi.postData("PostSofor", values);
-      const newSofor = await soforlerHttp.addData({ ...values, logicalref });
-      setSoforler([...soforler, { ...newSofor }]);
-      showNotification("success", "Şoför eklendi");
-    }
+    const logicalref = await logoGoApi.postData("PostSofor", values);
+    setSoforler([...soforler, { logicalref, ...values }]);
+    showNotification("success", `${values.adi} ${values.soyadi} şoförü eklendi`);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -41,11 +26,6 @@ export default function SoforForm({ record, type }) {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      {type === "update" && (
-        <Form.Item label="Logo Kodu" name="logicalref">
-          <Input placeholder="Şoför logo kodu girin" value={record.logicalref} disabled />
-        </Form.Item>
-      )}
       <Form.Item
         label="Adı"
         name="adi"

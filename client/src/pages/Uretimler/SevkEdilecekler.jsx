@@ -1,10 +1,15 @@
-import { CaretRightOutlined, DeleteOutlined, PrinterOutlined } from "@ant-design/icons";
+import {
+  CaretRightOutlined,
+  DeleteOutlined,
+  FileDoneOutlined,
+  PrinterOutlined,
+} from "@ant-design/icons";
 import { Alert, Badge, Button, Collapse, Modal, Tag } from "antd";
 import { FcInTransit } from "react-icons/fc";
 
 import SevkiyatKarti from "components/cards/SevkiyatKarti";
 import ColumnBadge from "components/shared/ColumnBadge";
-import CountBadge from "components/shared/CounBadge";
+import CountBadge from "components/shared/CountBadge";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
 import collapseStyle from "components/shared/StyledCollapse";
@@ -73,37 +78,61 @@ export default function SevkEdilecekler() {
       dataIndex: "irsaliyeTipi",
       key: "irsaliyeTipi",
       render: (text, kayit) => {
-        if (
-          kayit.iade !== "Evet" &&
-          ((kayit.talepNo !== null && kayit.talepNo !== "") ||
-            (kayit.siparisNo !== null && kayit.siparisNo !== ""))
-        ) {
-          return <Tag color="#108ee9">Sevk</Tag>;
+        if (kayit.iade === "Hayır" || kayit?.Referanslar.kodu.toLowerCase().includes("YOK")) {
+          return <Tag color="blue">SEVK</Tag>;
         } else {
-          return <Tag color="#f50">Taşıma</Tag>;
+          return <Tag color="red">TAŞIMA</Tag>;
         }
       },
       filters: [
         {
-          text: "Sevk",
-          value: "Sevk",
+          text: "SEVK",
+          value: "SEVK",
         },
         {
-          text: "Taşıma",
-          value: "Taşıma",
+          text: "TAŞIMA",
+          value: "TAŞIMA",
         },
       ],
       onFilter: (value, kayit) => {
         const irsaliyeTipi =
-          kayit.iade !== "Evet" &&
-          ((kayit.talepNo !== null && kayit.talepNo !== "") ||
-            (kayit.siparisNo !== null && kayit.siparisNo !== ""))
-            ? "Sevk"
-            : "Taşıma";
+          kayit.iade === "Hayır" || kayit?.Referanslar.kodu.toLowerCase().includes("YOK")
+            ? "SEVK"
+            : "TAŞIMA";
         return irsaliyeTipi === value;
       },
       filterSearch: true,
       width: 120,
+    },
+    {
+      title: "Sipariş Tipi",
+      dataIndex: "siparisTipi",
+      key: "siparisTipi",
+      render: (text, record) => (
+        <ColumnBadge
+          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
+          value={record.Referanslar.siparisTipi}
+          icon={<FileDoneOutlined />}
+          style={{ width: "100%", fontSize: "12px" }}
+        />
+      ),
+    },
+    {
+      title: "Kodu",
+      dataIndex: "kodu",
+      key: "kodu",
+      render: (text, record) => (
+        <ColumnBadge
+          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
+          value={record.Referanslar.kodu}
+        />
+      ),
+      // filters: createTableFilterFromData(referanslar, "kodu"),
+      // onFilter: (value, record) => {
+      //   const siparisNo = record.siparisNo ?? "Boş";
+      //   return siparisNo.indexOf(value) === 0;
+      // },
+      // filterSearch: true,
     },
     {
       title: "Referans No",
@@ -113,13 +142,6 @@ export default function SevkEdilecekler() {
       filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "referansNo"),
       onFilter: (value, _record) => _record.referansNo.indexOf(value) === 0,
       filterSearch: true,
-      width: 120,
-    },
-    {
-      title: "İrsaliye Açıklaması",
-      dataIndex: "irsaliyeAciklamasi",
-      key: "irsaliyeAciklamasi",
-      render: (text, _record) => _record.Referanslar.irsaliyeAciklamasi,
       width: 120,
     },
     {
@@ -147,28 +169,6 @@ export default function SevkEdilecekler() {
       },
       filterSearch: true,
       width: 120,
-    },
-    {
-      title: "Sipariş No",
-      dataIndex: "siparisNo",
-      key: "siparisNo",
-      filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "siparisNo"),
-      onFilter: (value, _record) => {
-        const siparisNo = _record.siparisNo || "Boş";
-        return siparisNo.indexOf(value) === 0;
-      },
-      width: 100,
-    },
-    {
-      title: "Talep No",
-      dataIndex: "talepNo",
-      key: "talepNo",
-      filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "talepNo"),
-      onFilter: (value, _record) => {
-        const talepNo = _record.talepNo || "Boş";
-        return talepNo.indexOf(value) === 0;
-      },
-      width: 100,
     },
     {
       title: "Üretim Tarihi",
@@ -280,6 +280,7 @@ export default function SevkEdilecekler() {
                 scroll={{ x: 1500 }}
                 hideDefaultTitleButtons
                 rowSelection={createRowSelection(musteriAdi)}
+                // rowKey={kayitlar[index].id}
                 rowStyle={(row) =>
                   !row.aktif && {
                     background: "rgba(81, 81, 81, 0.3)",

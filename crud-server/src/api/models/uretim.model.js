@@ -2,58 +2,63 @@ import { DataTypes } from "sequelize";
 import sequelize from "../../dbConnection.js";
 import Referans from "./referans.model.js";
 
+const ortakSütunlar = {
+  irsaliyeNo: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+  },
+  getirenSofor: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+  },
+  personel: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+  },
+  referansNo: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+  },
+  iade: {
+    type: DataTypes.STRING(5), // EVET / HAYIR
+    allowNull: false,
+  },
+  gelenTarih: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+  },
+  birinciAmbalaj: {
+    type: DataTypes.STRING(30),
+    allowNull: false,
+  },
+  ikinciAmbalaj: {
+    type: DataTypes.STRING(30),
+    allowNull: true,
+  },
+  gelenMiktar: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  gidenMiktar: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  uretilenMiktar: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  tamamlandi: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
+};
+
 export const NormalUretim = sequelize.define(
   "NormalUretimler",
   {
-    irsaliyeNo: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    getirenSofor: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    personel: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    referansNo: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    iade: {
-      type: DataTypes.STRING(5), // EVET / HAYIR
-      allowNull: false,
-    },
-    talepNo: {
-      type: DataTypes.STRING(20),
-      allowNull: true,
-    },
-    gelenTarih: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    birinciAmbalaj: {
-      type: DataTypes.STRING(30),
-      allowNull: false,
-    },
-    ikinciAmbalaj: {
-      type: DataTypes.STRING(30),
-      allowNull: true,
-    },
-    gelenMiktar: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    gidenMiktar: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+    ...ortakSütunlar,
     kalanMiktar: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    uretilenMiktar: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -73,6 +78,8 @@ export const NormalUretim = sequelize.define(
   },
 );
 
+// • Bir NormalUretim kaydı bir Referans kaydına aittir.
+// • Bir Referans kaydı birden fazla NormalUretim kaydına sahip olabilir.
 NormalUretim.belongsTo(Referans, { foreignKey: "referansNo", targetKey: "referansNo" });
 Referans.hasMany(NormalUretim, { foreignKey: "referansNo", sourceKey: "referansNo" });
 
@@ -86,54 +93,7 @@ NormalUretim.afterUpdate(async (instance, options) => {
 export const FasonUretim = sequelize.define(
   "FasonUretimler",
   {
-    irsaliyeNo: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    getirenSofor: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    personel: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    referansNo: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    iade: {
-      type: DataTypes.STRING(5), // EVET / HAYIR
-      allowNull: false,
-    },
-    talepNo: {
-      type: DataTypes.STRING(20),
-      allowNull: true,
-    },
-    gelenTarih: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    birinciAmbalaj: {
-      type: DataTypes.STRING(30),
-      allowNull: false,
-    },
-    ikinciAmbalaj: {
-      type: DataTypes.STRING(30),
-      allowNull: true,
-    },
-    gelenMiktar: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    gidenMiktar: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    uretilenMiktar: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+    ...ortakSütunlar,
     sevkEdilenMiktar: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -145,6 +105,8 @@ export const FasonUretim = sequelize.define(
   },
 );
 
+// • Bir FasonUretim kaydı bir Referans kaydına aittir.
+// • Bir Referans kaydı birden fazla FasonUretim kaydına sahip olabilir.
 FasonUretim.belongsTo(Referans, { foreignKey: "referansNo", targetKey: "referansNo" });
 Referans.hasMany(FasonUretim, { foreignKey: "referansNo", sourceKey: "referansNo" });
 

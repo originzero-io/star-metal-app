@@ -3,7 +3,6 @@ import { Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 
 import IdBadge from "components/shared/IdBadge";
-import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
@@ -11,12 +10,8 @@ import { useUIContext } from "context/UIProvider";
 import SoforForm from "pages/Tanimlamalar/Soforler/SoforForm";
 import { GiSteeringWheel } from "react-icons/gi";
 import logoGoApi from "services/logoGoApi";
-import soforlerHttp from "services/crud-server/soforler.http";
 import TableGod from "../../../components/shared/TableGod";
 
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
 function Soforler() {
   const { user } = useAuth();
 
@@ -71,10 +66,13 @@ function Soforler() {
           await Promise.all(
             selectedRows.map((row) => logoGoApi.deleteData("DeleteSofor", row.logicalref)),
           );
+
+          setSoforler((prevSoforler) =>
+            prevSoforler.filter(
+              (sofor) => !selectedRows.map((row) => row.logicalref).includes(sofor.logicalref),
+            ),
+          );
           showNotification("success", "Seçili şoförler logodan silindi");
-          const newSoforler = await soforlerHttp.deleteData(soforler, selectedRows);
-          setSoforler(newSoforler);
-          showNotification("success", "Seçili şoförler silindi");
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
@@ -91,36 +89,17 @@ function Soforler() {
       async onOk() {
         try {
           await logoGoApi.deleteData("DeleteSofor", record.logicalref);
-          showNotification("success", `${record.adi} isimli şoför logodan silindi`);
+          setSoforler((prevSoforler) =>
+            prevSoforler.filter((sofor) => sofor.logicalref !== record.logicalref),
+          );
 
-          const newSoforler = await soforlerHttp.deleteData(soforler, [record]);
-          setSoforler(newSoforler);
-          showNotification("success", `${record.adi} isimli şoför silindi`);
+          showNotification(
+            "success",
+            `${record.adi} ${record.soyadi} isimli şoför logodan silindi`,
+          );
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
-      },
-    });
-  };
-
-  const logoSync = async () => {
-    Modal.confirm({
-      title: "Emin misiniz?",
-      content: "Şoförler logo programından çekilip bu programa aktarılacak. Onaylıyor musunuz?",
-      okText: "Tamam",
-      cancelText: "İptal",
-      async onOk() {
-        try {
-          const logoSoforler = await logoGoApi.getData("GetSoforList");
-          const newSoforler = await soforlerHttp.logoIleEsle(logoSoforler);
-          setSoforler(newSoforler);
-          showNotification("success", "Şoförler logo ile eşlendi.");
-        } catch (error) {
-          showNotification("error", "Hata oluştu", error.message);
-        }
-      },
-      onCancel() {
-        showNotification("warning", "İşlem iptal edildi");
       },
     });
   };
@@ -131,11 +110,9 @@ function Soforler() {
       <TableGod
         dataSource={soforler}
         columns={columns}
-        onChange={onChange}
         rowSelection={user.yetki === "admin" && rowSelection}
         pagination={false}
         contextMenu={{
-          editForm: SoforForm,
           deleteAction: deleteSingleRecordHandler,
         }}
         actionButtons={
@@ -147,7 +124,7 @@ function Soforler() {
                 icon={<DeleteOutlined />}
                 onClick={deleteSelectedRecordsHandler}
               >
-                Sil ({selectedRows.length})
+                Toplu Sil ({selectedRows.length})
               </Button>
             )}
             {user.yetki === "admin" && (
@@ -160,7 +137,6 @@ function Soforler() {
                 >
                   Şoför Ekle
                 </Button>
-                <LogoSyncButton onClick={logoSync} />
               </>
             )}
           </>

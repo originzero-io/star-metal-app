@@ -25,22 +25,10 @@ const Irsaliye = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
-    siparisNo: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-    },
-    talepNo: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-    },
     iade: {
       type: DataTypes.STRING(5), // EVET / HAYIR
       allowNull: false,
     },
-    // irsaliyeNo: {
-    //   type: DataTypes.STRING(50),
-    //   allowNull: false,
-    // },
     uretimTarihi: {
       type: DataTypes.STRING(50),
       allowNull: false,
@@ -63,6 +51,9 @@ const Irsaliye = sequelize.define(
     timestamps: false,
   },
 );
+
+// • Bir Irsaliye kaydı bir Referans kaydına aittir.
+// • Bir Referans kaydı birden fazla Irsaliye kaydına sahip olabilir.
 
 Irsaliye.belongsTo(Referans, { foreignKey: "referansNo", targetKey: "referansNo" });
 Referans.hasMany(Irsaliye, { foreignKey: "referansNo", sourceKey: "referansNo" });

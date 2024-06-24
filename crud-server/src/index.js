@@ -1,12 +1,11 @@
 import "./config.js";
-import db from "./dbConnection.js";
-
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import express from "express";
 import logger from "morgan";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import router from "./api/router.js";
+import db from "./dbConnection.js";
 import apiErrorHandler from "./api/errorHandler.js";
+import router from "./api/router.js";
 import { findDirname } from "./utils/file.js";
 
 const app = express();

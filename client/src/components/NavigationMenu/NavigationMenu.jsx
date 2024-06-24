@@ -33,13 +33,13 @@ const ContainerStyled = styled.div`
   border-radius: 8px;
 
   margin-top: 7px;
-  margin-left: 5px;
+  margin-left: 3px;
 `;
 const MenuListStyled = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 3px;
+  padding: 2px;
   margin-top: 20px;
 `;
 const MenuListGroupStyled = styled.div`
@@ -49,7 +49,7 @@ const MenuListGroupStyled = styled.div`
 `;
 const MenuListGroupContentStyled = styled.div`
   border-radius: 6px;
-  margin-left: 4px;
+  margin-left: 2px;
 `;
 const MenuListGroupHeaderStyled = styled.div`
   color: #4535aa;
@@ -57,12 +57,12 @@ const MenuListGroupHeaderStyled = styled.div`
   font-weight: 700;
   display: flex;
   align-items: center;
-  padding: 6px;
+  padding: 4px;
   border-radius: 6px;
 `;
 const MenuListGroupItemStyled = styled.div`
   cursor: pointer;
-  padding: 8px;
+  padding: 5px;
   padding-left: 4px;
   display: flex;
   align-items: center;
@@ -91,7 +91,7 @@ const RegisterButtonItemStyled = styled.div`
 
   border-radius: 12px;
 
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   background: linear-gradient(to right, #4535aa, #8e82df);
   color: #e8e8e8;
   padding: 8px;
@@ -118,7 +118,7 @@ const MenuListGroupItemBadge = styled.div`
   color: white;
   border-radius: 12px;
   font-size: 10px;
-  width: 47px;
+  width: 38px;
   text-align: center;
   border: 1px solid white;
 `;
@@ -128,6 +128,15 @@ const MenuListGroupTitleStyled = styled.div`
 const MenuListGroupIcon = styled.div`
   font-size: 18px;
   display: flex;
+  padding: 4px;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 `;
 
 const LinkStyled = styled(Link)`
@@ -244,7 +253,7 @@ function NavigationMenu() {
         },
       ],
     }),
-    [musteriler],
+    [musteriler, referanslar, plakalar, soforler, ambalajlar, personeller],
   );
 
   return (
@@ -262,7 +271,7 @@ function NavigationMenu() {
             </RegisterButtonItemStyled>
           </LinkStyled>
           {pages.categories.map((category, i) => (
-            <>
+            <div key={i}>
               <Divider style={{ marginTop: "4px", marginBottom: "4px", background: "#c3d1f2" }} />
               <MenuListGroupStyled key={i}>
                 <MenuListGroupHeaderStyled>
@@ -286,15 +295,15 @@ function NavigationMenu() {
                       >
                         <MenuListGroupIcon>{content.icon}</MenuListGroupIcon>
                         <MenuListGroupItemTitle>{content.title} </MenuListGroupItemTitle>
-                        {content.dataLength && (
+                        {content.dataLength && content.dataLength > 0 ? (
                           <MenuListGroupItemBadge>{content.dataLength}</MenuListGroupItemBadge>
-                        )}
+                        ) : null}
                       </MenuListGroupItemStyled>
                     </LinkStyled>
                   ))}
                 </MenuListGroupContentStyled>
               </MenuListGroupStyled>
-            </>
+            </div>
           ))}
         </MenuListStyled>
       </div>

@@ -1,9 +1,37 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../dbConnection.js";
 
+// ********** Logo Api
+// {
+//   "referansNo": "string",
+//   "parcaAdi": "string",
+//   "irsaliyeAciklamasi": "string",
+//   "siparisTipi": "string",
+//   "siparisNo": "string",
+//   "fason": 0,
+//   "miktarSapmasi": 0,
+//   "lotAdedi": 0,
+//   "referansYuzeyAlani": 0,
+//   "islemTipi": "string",
+//   "resimUrl": "string",
+//   "not": "string",
+//   "logoMalzemeRef": 0,
+//   "logoAnaBirimRef": 0,
+//   "musteriRef": 0,
+//   "musteriAdi": "string",
+//   "fasonFirmaRef": 0,
+//   "fasonFirmasi": "string"
+// }
+// ************
+
 const Referans = sequelize.define(
   "Referanslar",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     logoMalzemeRef: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -12,10 +40,14 @@ const Referans = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    musteriRef: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     referansNo: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      // unique: true,
+      primaryKey: true,
     },
     parcaAdi: {
       type: DataTypes.STRING(50),
@@ -33,13 +65,17 @@ const Referans = sequelize.define(
       type: DataTypes.STRING(10),
       allowNull: false,
     },
-    siparisNo: {
+    kodu: {
       type: DataTypes.STRING(40),
       allowNull: true,
     },
     fason: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    fasonFirmaRef: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     fasonFirmasi: {
       type: DataTypes.STRING(70),
@@ -61,10 +97,6 @@ const Referans = sequelize.define(
       type: DataTypes.STRING(30),
       allowNull: true,
     },
-    birim: {
-      type: DataTypes.STRING(10),
-      allowNull: false,
-    },
     resimUrl: {
       type: DataTypes.STRING(40),
       allowNull: true,
@@ -75,50 +107,9 @@ const Referans = sequelize.define(
     },
   },
   {
-    // Model seçenekleri
     tableName: "Referanslar",
     timestamps: false,
   },
 );
 
 export default Referans;
-
-export const ReferansIslemTipi = sequelize.define(
-  "ReferansIslemTipleri",
-  {
-    logicalref: {
-      type: DataTypes.STRING(10),
-      allowNull: false,
-    },
-    adi: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-      unique: true,
-    },
-  },
-  {
-    // Model seçenekleri
-    tableName: "ReferansIslemTipleri",
-    timestamps: false,
-  },
-);
-
-export const ReferansParcaAdi = sequelize.define(
-  "ReferansParcaAdlari",
-  {
-    logicalref: {
-      type: DataTypes.STRING(10),
-      allowNull: false,
-    },
-    adi: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-      unique: true,
-    },
-  },
-  {
-    // Model seçenekleri
-    tableName: "ReferansParcaAdlari",
-    timestamps: false,
-  },
-);

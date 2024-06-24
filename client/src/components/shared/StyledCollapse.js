@@ -19,7 +19,7 @@ const collapseStyle = {
     borderRadius: 8,
     marginBottom: 6,
     background: "rgba(255,255,255,0.5)",
-    border: "1px solid #dee2e6",
+    border: "1px solid #d5ddf1",
   },
 };
 

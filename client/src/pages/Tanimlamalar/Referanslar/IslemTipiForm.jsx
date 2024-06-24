@@ -1,7 +1,7 @@
 import { Button, Input } from "antd";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
-import { referansIslemTipleriHttp } from "services/crud-server/referanslar.http";
+import logoGoApi from "services/logoGoApi";
 
 export function IslemTipiDuzenlemeForm({
   islemTipi,
@@ -14,23 +14,28 @@ export function IslemTipiDuzenlemeForm({
 
   return (
     <div>
-      <Input placeholder={islemTipi} onChange={(e) => setYeniIslemTipi(e.target.value)} />
+      <Input defaultValue={islemTipi.adi} onChange={(e) => setYeniIslemTipi(e.target.value)} />
       {yeniIslemTipi && (
         <Button
           type="primary"
           block
           style={{ marginTop: "10px" }}
           onClick={async () => {
-            await referansIslemTipleriHttp.updateData(islemTipi, yeniIslemTipi);
-            const islemTipleri = await referansIslemTipleriHttp.getData();
-            setReferansIslemTipleri(islemTipleri);
-            form.setFieldsValue({ islemTipi: null });
-            setSeciliIslemTipi(null);
-            showModal(false);
-            showNotification(
-              "success",
-              `${islemTipi} işlemi ${yeniIslemTipi} olarak değiştirildi.`,
-            );
+            const data = { logicalref: islemTipi.logicalref, adi: yeniIslemTipi };
+            const response = await logoGoApi.putData("PutIslemTipi", data);
+
+            if (response.statusCode === 200) {
+              const islemTipiList = await logoGoApi.getData("GetIslemTipiList");
+
+              setReferansIslemTipleri(islemTipiList);
+              form.setFieldsValue({ islemTipi: null });
+              setSeciliIslemTipi(null);
+              showModal(false);
+              showNotification(
+                "success",
+                `${islemTipi.adi} işlemi ${yeniIslemTipi} olarak değiştirildi.`,
+              );
+            } else showNotification("error", response.message);
           }}
         >
           {yeniIslemTipi} olarak değiştir
@@ -53,10 +58,19 @@ export function IslemTipiEklemeForm({ setReferansIslemTipleri }) {
           block
           style={{ marginTop: "10px" }}
           onClick={async () => {
-            const data = await referansIslemTipleriHttp.addData({ islemTipi: yeniIslemTipi });
-            setReferansIslemTipleri((prevState) => [...prevState, { ...data }]);
-            showModal(false);
-            showNotification("success", `${yeniIslemTipi} işlem tipi olarak olarak eklendi.`);
+            const data = { adi: yeniIslemTipi };
+            const response = await logoGoApi.postData("PostIslemTipi", data);
+
+            if (response.statusCode === 200) {
+              setReferansIslemTipleri((prevState) => [
+                ...prevState,
+                { logicalref: response.newId, ...data },
+              ]);
+              showModal(false);
+              showNotification("success", `${yeniIslemTipi} işlem tipi olarak olarak eklendi.`);
+            } else {
+              showNotification("error", response.message);
+            }
           }}
         >
           İşlem Tipini Ekle

@@ -44,7 +44,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BoldTextStyled>ALICI</BoldTextStyled>
             </div>
             <div style={{ textAlign: "center", fontSize: "1.5vmin", marginRight: "40px" }}>
-              <BoldTextStyled>VALEO A.Ş. YALOVA YOLU 15. KM</BoldTextStyled>
+              <BoldTextStyled>{record.alici}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={12} style={{ display: "flex", justifyContent: "center" }}>
@@ -68,11 +68,11 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
         <Row>
           <ColStyled span={24}>
             <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
-              <BoldTextStyled>SİPARİŞ NO</BoldTextStyled>
-              <div>*{record.siparisNo}*</div>
+              <BoldTextStyled>KODU</BoldTextStyled>
+              <div>*{record.kodu}*</div>
             </div>
             <div style={{ textAlign: "end", fontSize: "2.2vmin", marginRight: "40px" }}>
-              <BoldTextStyled>{record.siparisNo}</BoldTextStyled>
+              <BoldTextStyled>{record.kodu}</BoldTextStyled>
             </div>
           </ColStyled>
         </Row>

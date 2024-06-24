@@ -9,23 +9,9 @@ export default function PlakaForm({ record, type }) {
   const { plakalar, setPlakalar } = useDBContext();
 
   const onFinish = async (values) => {
-    if (type === "update") {
-      const updatedPlaka = await plakalarHttp.updateData(record.id, values);
-      const updatedPlakaArray = plakalar.map((plaka) => {
-        if (plaka.id === updatedPlaka.id) {
-          return { ...updatedPlaka };
-        }
-        return plaka;
-      });
-      setPlakalar(updatedPlakaArray);
-      // showPanel(false);
-      showNotification("success", "Plaka güncellendi");
-    } else {
-      await logoGoApi.postData("PostArac", values);
-      const newPlaka = await plakalarHttp.addData(values);
-      setPlakalar([...plakalar, { ...newPlaka }]);
-      showNotification("success", "Plaka eklendi");
-    }
+    const logicalref = await logoGoApi.postData("PostArac", values);
+    setPlakalar([...plakalar, { logicalref, ...values }]);
+    showNotification("success", `${values.plaka} plakası eklendi`);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

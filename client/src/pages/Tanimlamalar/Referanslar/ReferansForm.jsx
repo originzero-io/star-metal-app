@@ -16,10 +16,7 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
 import logoGoApi from "services/logoGoApi";
-import referanslarHttp, {
-  referansParcaAdlariHttp,
-  referansIslemTipleriHttp,
-} from "services/crud-server/referanslar.http";
+import referanslarHttp from "services/crud-server/referanslar.http";
 import { ParcaAdiDuzenlemeForm, ParcaAdiEklemeForm } from "./ParcaAdiForm";
 import { IslemTipiDuzenlemeForm, IslemTipiEklemeForm } from "./IslemTipiForm";
 
@@ -43,24 +40,43 @@ export default function ReferansForm({ record, type }) {
   const [siparisTipi, setSiparisTipi] = useState(record?.siparisTipi);
   const [fason, setFason] = useState(record?.fason || false);
 
+  const [seciliParcaAdi, setSeciliParcaAdi] = useState(record?.parcaAdi);
+  const [seciliIslemTipi, setSeciliIslemTipi] = useState(record?.islemTipi);
+
   const onFileChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
 
   const onFinish = async (values) => {
-    console.log("referans-values:", values);
     if (type === "update") {
-      const updatedReferans = await referanslarHttp.updateData(record.id, values);
+      const logoyaGonderilecekPut = {
+        ...record,
+        irsaliyeAciklamasi: values.irsaliyeAciklamasi,
+        fasonFirmaRef: record.fason
+          ? musteriler.find((m) => m.unvani === values.fasonFirmasi).logoRef
+          : record.fasonFirmaRef,
+        fasonFirmasi: record.fason ? values.fasonFirmasi : record.fasonFirmasi,
+        miktarSapmasi: values.miktarSapmasi,
+        lotAdedi: values.lotAdedi,
+        referansYuzeyAlani: values.referansYuzeyAlani,
+        not: values.not,
+      };
 
-      const updatedReferanslarArray = referanslar.map((referans) => {
-        if (referans.id === updatedReferans.id) {
-          return { ...updatedReferans };
-        }
-        return referans;
-      });
-      setReferanslar(updatedReferanslarArray);
-      // showPanel(false)
-      showNotification("success", "Referans güncellendi");
+      const response = await logoGoApi.putData("PutReferans", logoyaGonderilecekPut);
+
+      if (response.statusCode === 200) {
+        // const updatedReferans = await referanslarHttp.updateData(record.id, values);
+
+        const updatedReferanslar = referanslar.map((referans) => {
+          if (referans.logoMalzemeRef === record.logoMalzemeRef) {
+            return { ...logoyaGonderilecekPut };
+          }
+          return referans;
+        });
+        setReferanslar(updatedReferanslar);
+        showNotification("success", "Referans güncellendi");
+        // showPanel(false);
+      } else showNotification("error", response.message);
     } else {
       const formData = new FormData();
 
@@ -72,31 +88,40 @@ export default function ReferansForm({ record, type }) {
         formData.append("photo", fileList[0].originFileObj);
       }
 
-      console.log("referas-formData", formData);
+      console.log("values", values);
 
-      const anaBirim = await logoGoApi.getData("GetAnaBirimList");
-
-      console.log("anaBirim", anaBirim);
-
-      const birim = anaBirim[4].logicalref;
-      console.log("birim", birim);
-
-      const logoyaGonderilecek = {
+      const logoyaGonderilecekPost = {
         ...values,
+        parcaAdi: seciliParcaAdi.adi,
+        islemTipi: seciliIslemTipi.adi,
         fason: values.fason === true ? 1 : 0,
         fasonFirmasi: values.fason === true ? values.fasonFirmasi : "",
-        logoAnaBirimRef: birim,
         logoMalzemeRef: 0,
         resimUrl: "",
+        musteriRef: musteriler.find((musteri) => musteri.unvani === values.musteriAdi).logoRef,
+        fasonFirmaRef:
+          musteriler.find((musteri) => musteri.unvani === values.fasonFirmasi)?.logoRef ?? 0, // eğer kayıt fason değilse 0 olarak doldur
       };
 
-      console.log("logoyaGonderilecek", logoyaGonderilecek);
+      console.log("logoyaGonderilecek-post", logoyaGonderilecekPost);
 
-      const r = await logoGoApi.postData("PostReferans", logoyaGonderilecek);
-      console.log("r", r);
+      // const response = await logoGoApi.postData("PostReferans", logoyaGonderilecekPost);
 
-      // const newReferans = await referanslarHttp.addData(formData);
-      // setReferanslar([...referanslar, { ...newReferans }]);
+      // if (response.statusCode === 200) {
+      //   setReferanslar([...referanslar, { logoMalzemeRef: response.newId, ...values }]);
+      //   showNotification("success", `${values.referansNo} referansı eklendi`);
+      // } else {
+      //   const duplicateError = response.message.includes("duplicate");
+      //   showNotification(
+      //     "error",
+      //     duplicateError
+      //       ? "Bu sipariş veya talep numarası daha önce girilmiş. Başka bir numara girip yeniden deneyin."
+      //       : response.message,
+      //   );
+      // }
+
+      // //! silme hem logoda var hem bizde var
+      // await referanslarHttp.addData(formData);
       // showNotification("success", "Referans eklendi");
     }
   };
@@ -105,10 +130,9 @@ export default function ReferansForm({ record, type }) {
     console.log("Failed:", errorInfo);
   };
 
-  const [seciliParcaAdi, setSeciliParcaAdi] = useState(record?.parcaAdi);
-
   const parcaAdiSec = (selected) => {
-    setSeciliParcaAdi(selected);
+    const parcaAdi = referansParcaAdlari.find((pa) => pa.logicalref === selected);
+    setSeciliParcaAdi(parcaAdi);
   };
 
   const parcaAdiEkle = async () => {
@@ -137,16 +161,19 @@ export default function ReferansForm({ record, type }) {
   const parcaAdiSil = () => {
     Modal.confirm({
       title: "Emin misiniz?",
-      content: `${seciliParcaAdi} isimli parça silinecek. Emin misiniz?`,
+      content: `${seciliParcaAdi.adi} isimli parça silinecek. Emin misiniz?`,
       okText: "Eminim",
       cancelText: "İptal",
       async onOk() {
-        await referansParcaAdlariHttp.deleteData(referansParcaAdlari, [seciliParcaAdi]);
-        const newParcaAdlari = referansParcaAdlari.filter((p) => p.parcaAdi !== seciliParcaAdi);
+        await logoGoApi.deleteData("DeleteParcaAdi", seciliParcaAdi.logicalref);
+
+        const newParcaAdlari = referansParcaAdlari.filter(
+          (pa) => pa.logicalref !== seciliParcaAdi.logicalref,
+        );
         setReferansParcaAdlari(newParcaAdlari);
         form.setFieldsValue({ parcaAdi: null });
         setSeciliParcaAdi(null);
-        showNotification("success", `${seciliParcaAdi} silindi`);
+        showNotification("success", `${seciliParcaAdi.adi} parçası silindi`);
       },
       onCancel() {
         showNotification("warning", "İşlem iptal edildi");
@@ -154,10 +181,10 @@ export default function ReferansForm({ record, type }) {
     });
   };
 
-  const [seciliIslemTipi, setSeciliIslemTipi] = useState(record?.islemTipi);
-
   const islemTipiSec = (selected) => {
-    setSeciliIslemTipi(selected);
+    const islemTipi = referansIslemTipleri.find((it) => it.logicalref === selected);
+
+    setSeciliIslemTipi(islemTipi);
   };
   const islemTipiEkle = async () => {
     showModal({
@@ -185,16 +212,19 @@ export default function ReferansForm({ record, type }) {
   const islemTipiSil = () => {
     Modal.confirm({
       title: "Emin misiniz?",
-      content: `${seciliIslemTipi} isimli işlem tipi silinecek. Emin misiniz?`,
+      content: `${seciliIslemTipi.adi} isimli işlem tipi silinecek. Emin misiniz?`,
       okText: "Eminim",
       cancelText: "İptal",
       async onOk() {
-        await referansIslemTipleriHttp.deleteData(referansIslemTipleri, [seciliIslemTipi]);
-        const newIslemTipleri = referansIslemTipleri.filter((i) => i.islemTipi !== seciliIslemTipi);
+        await logoGoApi.deleteData("DeleteIslemTipi", seciliIslemTipi.logicalref);
+
+        const newIslemTipleri = referansIslemTipleri.filter(
+          (it) => it.logicalref !== seciliIslemTipi.logicalref,
+        );
         setReferansIslemTipleri(newIslemTipleri);
         form.setFieldsValue({ islemTipi: null });
         setSeciliIslemTipi(null);
-        showNotification("success", `${seciliIslemTipi} silindi`);
+        showNotification("success", `${seciliIslemTipi.adi} işlem tipi silindi`);
       },
       onCancel() {
         showNotification("warning", "İşlem iptal edildi");
@@ -209,7 +239,7 @@ export default function ReferansForm({ record, type }) {
       labelCol={{ flex: "170px" }}
       labelAlign="left"
       key={record ? record.id : "form"}
-      initialValues={record || { miktarSapmasi: 0, fason: record?.fason || false }}
+      initialValues={record || { miktarSapmasi: 0, fason: record?.fason || false, not: "" }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -217,107 +247,93 @@ export default function ReferansForm({ record, type }) {
       <Divider style={{ color: "#4535aa", marginTop: 0 }} orientation="left">
         Logo Verileri
       </Divider>
-      {type !== "update" && (
-        <>
-          <Form.Item
-            label="Referans No"
-            name="referansNo"
-            rules={[
-              {
-                required: true,
-                message: "Bu alanı doldurun",
-              },
-            ]}
-          >
-            <Input placeholder="Referans No" />
+      <Form.Item
+        label="Referans No"
+        name="referansNo"
+        rules={[{ required: type !== "update", message: "Bu alanı doldurun" }]}
+        style={type === "update" ? { display: "none" } : null}
+      >
+        <Input placeholder="Referans No" />
+      </Form.Item>
+
+      <Form.Item
+        label="Parça Adı"
+        name="parcaAdi"
+        rules={[{ required: type !== "update", message: "Bu alanı doldurun" }]}
+        style={type === "update" ? { display: "none" } : null}
+      >
+        <Space.Compact block>
+          <Form.Item name="parcaAdi" noStyle>
+            <Select
+              placeholder="Parça Adı Seçiniz"
+              onChange={parcaAdiSec}
+              value={seciliParcaAdi}
+              showSearch
+              filterOption={(input, option) =>
+                option.children.toLowerCase().includes(input.toLowerCase())
+              }
+            >
+              {referansParcaAdlari.map((parca) => (
+                <Select.Option key={parca.logicalref} value={parca.logicalref}>
+                  {parca.adi}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Button type="primary" onClick={parcaAdiEkle} icon={<PlusOutlined />} title="Ekle" />
+          {seciliParcaAdi && (
+            <>
+              <Button
+                type="primary"
+                onClick={parcaAdiDuzenle}
+                icon={<EditOutlined />}
+                title="Düzenle"
+              />
+              <Button type="primary" onClick={parcaAdiSil} icon={<DeleteOutlined />} title="Sil" />
+            </>
+          )}
+        </Space.Compact>
+      </Form.Item>
+      <Form.Item
+        label="İşlem Tipi"
+        name="islemTipi"
+        rules={[{ required: type !== "update", message: "Bu alanı doldurun" }]}
+        style={type === "update" ? { display: "none" } : null}
+      >
+        <Space.Compact block>
+          <Form.Item name="islemTipi" noStyle>
+            <Select
+              placeholder="Tipi Seçin"
+              onChange={islemTipiSec}
+              value={seciliIslemTipi}
+              showSearch
+              filterOption={(input, option) =>
+                option.children.toLowerCase().includes(input.toLowerCase())
+              }
+            >
+              {referansIslemTipleri.map((islemTipi) => (
+                <Select.Option key={islemTipi.logicalref} value={islemTipi.logicalref}>
+                  {islemTipi.adi}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
 
-          <Form.Item
-            label="Parça Adı"
-            name="parcaAdi"
-            rules={[
-              {
-                required: true,
-                message: "Bu alanı doldurun",
-              },
-            ]}
-          >
-            <Space.Compact block>
-              <Form.Item name="parcaAdi" noStyle>
-                <Select
-                  placeholder="Parça Adı Seçiniz"
-                  onChange={parcaAdiSec}
-                  value={seciliParcaAdi}
-                  showSearch
-                >
-                  {referansParcaAdlari.map((parca) => (
-                    <Select.Option key={parca.id} value={parca.adi}>
-                      {parca.adi}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-              <Button type="primary" onClick={parcaAdiEkle} icon={<PlusOutlined />} title="Ekle" />
-              {seciliParcaAdi && (
-                <>
-                  <Button
-                    type="primary"
-                    onClick={parcaAdiDuzenle}
-                    icon={<EditOutlined />}
-                    title="Düzenle"
-                  />
-                  <Button
-                    type="primary"
-                    onClick={parcaAdiSil}
-                    icon={<DeleteOutlined />}
-                    title="Sil"
-                  />
-                </>
-              )}
-            </Space.Compact>
-          </Form.Item>
-          <Form.Item
-            label="İşlem Tipi"
-            name="islemTipi"
-            rules={[{ required: true, message: "Bu alanı doldurun" }]}
-          >
-            <Space.Compact block>
-              <Form.Item name="islemTipi" noStyle>
-                <Select
-                  placeholder="Tipi Seçin"
-                  onChange={islemTipiSec}
-                  value={seciliIslemTipi}
-                  showSearch
-                >
-                  {referansIslemTipleri.map((islemTipi) => (
-                    <Select.Option key={islemTipi.id} value={islemTipi.adi}>
-                      {islemTipi.adi}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
+          <Button type="primary" onClick={islemTipiEkle} icon={<PlusOutlined />} title="Ekle" />
+          {seciliIslemTipi && (
+            <>
+              <Button
+                type="primary"
+                onClick={islemTipiDuzenle}
+                icon={<EditOutlined />}
+                title="Düzenle"
+              />
+              <Button type="primary" onClick={islemTipiSil} icon={<DeleteOutlined />} title="Sil" />
+            </>
+          )}
+        </Space.Compact>
+      </Form.Item>
 
-              <Button type="primary" onClick={islemTipiEkle} icon={<PlusOutlined />} title="Ekle" />
-              {seciliIslemTipi && (
-                <>
-                  <Button
-                    type="primary"
-                    onClick={islemTipiDuzenle}
-                    icon={<EditOutlined />}
-                    title="Düzenle"
-                  />
-                  <Button
-                    type="primary"
-                    onClick={islemTipiSil}
-                    icon={<DeleteOutlined />}
-                    title="Sil"
-                  />
-                </>
-              )}
-            </Space.Compact>
-          </Form.Item>
-        </>
-      )}
       <Form.Item
         label="İrsaliye Açıklaması"
         name="irsaliyeAciklamasi"
@@ -331,104 +347,104 @@ export default function ReferansForm({ record, type }) {
         <Input placeholder="İrsaliye için açıklama girin" />
       </Form.Item>
 
-      {type !== "update" && (
-        <>
-          <Form.Item
-            label="Müşteri"
-            name="musteriAdi"
-            rules={[
-              {
-                required: true,
-                message: "Bu alanı doldurun",
-              },
-            ]}
-          >
-            <Select placeholder="Müşteri Adı Seçiniz" showSearch>
-              {musteriler.map((musteri) => (
-                <Select.Option key={musteri.id} value={musteri.adi}>
-                  {musteri.adi}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
+      <Form.Item
+        label="Müşteri"
+        name="musteriAdi"
+        rules={[{ required: type !== "update", message: "Bu alanı doldurun" }]}
+        style={type === "update" ? { display: "none" } : null}
+      >
+        <Select placeholder="Müşteri Adı Seçiniz" showSearch>
+          {musteriler.map((musteri) => (
+            <Select.Option key={musteri.logoRef} value={musteri.unvani}>
+              {musteri.unvani}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
 
-          <Form.Item
-            label="Birim"
-            name="birim"
-            rules={[
-              {
-                required: true,
-                message: "Bu alanı doldurun",
-              },
-            ]}
-          >
-            <Select placeholder="Birim seçin">
-              {referansAnaBirimleri.map((birim) => (
-                <Select.Option key={birim.logicalref} value={birim.kodu}>
-                  {birim.adi}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
+      <Form.Item
+        label="Birim"
+        name="logoAnaBirimRef"
+        rules={[{ required: type !== "update", message: "Bu alanı doldurun" }]}
+        style={type === "update" ? { display: "none" } : null}
+      >
+        <Select placeholder="Birim seçin">
+          {referansAnaBirimleri.map((birim) => (
+            <Select.Option key={birim.logicalref} value={birim.logicalref}>
+              {birim.adi}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
 
-          <Divider />
+      {type !== "update" && <Divider />}
 
-          <Form.Item
-            name="siparisTipi"
-            rules={[
-              {
-                required: true,
-                message: "Bu alanı doldurun",
-              },
-            ]}
-          >
-            <Radio.Group value={"Seri"} onChange={(e) => setSiparisTipi(e.target.value)}>
-              <Space direction="vertical">
-                <Radio value="Seri">
-                  <div
-                    style={{
-                      width: "500px",
-                      height: "30px",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
+      <Form.Item
+        name="siparisTipi"
+        rules={[{ required: type !== "update", message: "Bu alanı doldurun" }]}
+        style={type === "update" ? { display: "none" } : null}
+      >
+        <Radio.Group value={"Seri"} onChange={(e) => setSiparisTipi(e.target.value)}>
+          <Space direction="vertical">
+            <Radio value="Seri">
+              <div
+                style={{
+                  width: "500px",
+                  height: "30px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <div>Seri</div>
+                {siparisTipi === "Seri" && (
+                  <Form.Item
+                    name="kodu"
+                    style={{ width: 200, marginLeft: "7%" }}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Bu alanı doldurun",
+                      },
+                    ]}
                   >
-                    <div>Seri</div>
-                    {siparisTipi === "Seri" && (
-                      <Form.Item
-                        name="siparisNo"
-                        style={{ width: 200, marginLeft: "7%" }}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Bu alanı doldurun",
-                          },
-                        ]}
-                      >
-                        <Input title="Sipariş No" placeholder="Sipariş No Girin" />
-                      </Form.Item>
-                    )}
-                  </div>
-                </Radio>
-                <Radio value="Talepli">
-                  <div
-                    style={{
-                      width: "500px",
-                      height: "30px",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div>Talepli</div>
-                  </div>
-                </Radio>
-              </Space>
-            </Radio.Group>
-          </Form.Item>
+                    <Input title="Sipariş No" placeholder="Sipariş No Girin" />
+                  </Form.Item>
+                )}
+              </div>
+            </Radio>
+            <Space direction="vertical">
+              <Radio value="Talepli">
+                <div
+                  style={{
+                    width: "500px",
+                    height: "30px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>Talepli</div>
+                  {siparisTipi === "Talepli" && (
+                    <Form.Item
+                      name="kodu"
+                      style={{ width: 200, marginLeft: "7%" }}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Bu alanı doldurun",
+                        },
+                      ]}
+                    >
+                      <Input title="Talep No" placeholder="Talep No Girin" />
+                    </Form.Item>
+                  )}
+                </div>
+              </Radio>
+            </Space>
+          </Space>
+        </Radio.Group>
+      </Form.Item>
 
-          <Divider />
-        </>
-      )}
+      {type !== "update" && <Divider />}
 
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Form.Item name="fason" valuePropName="checked">
@@ -452,8 +468,8 @@ export default function ReferansForm({ record, type }) {
           >
             <Select placeholder="Fason Firması Seçiniz" showSearch>
               {musteriler.map((musteri) => (
-                <Select.Option key={musteri.id} value={musteri.adi}>
-                  {musteri.adi}
+                <Select.Option key={musteri.logoRef} value={musteri.unvani}>
+                  {musteri.unvani}
                 </Select.Option>
               ))}
             </Select>
@@ -513,25 +529,24 @@ export default function ReferansForm({ record, type }) {
         />
       </Form.Item>
 
-      {type !== "update" && (
-        <Form.Item
-          label="Resim"
-          name="resimUrl"
-          rules={[{ required: true, message: "Bu alanı doldurun" }]}
+      <Form.Item
+        label="Resim"
+        name="resimUrl"
+        rules={[{ required: type !== "update", message: "Bu alanı doldurun" }]}
+        style={type === "update" ? { display: "none" } : null}
+      >
+        <Upload
+          name="photo"
+          listType="picture"
+          accept="image/png, image/jpeg, image/jpg"
+          fileList={fileList}
+          onChange={onFileChange}
+          beforeUpload={() => false}
+          maxCount={1}
         >
-          <Upload
-            name="photo"
-            listType="picture"
-            accept="image/png, image/jpeg, image/jpg"
-            fileList={fileList}
-            onChange={onFileChange}
-            beforeUpload={() => false}
-            maxCount={1}
-          >
-            <Button icon={<UploadOutlined />}>Resim seç</Button>
-          </Upload>
-        </Form.Item>
-      )}
+          <Button icon={<UploadOutlined />}>Resim seç</Button>
+        </Upload>
+      </Form.Item>
 
       <Form.Item label="Üretim Notu" name="not">
         <Input.TextArea />

@@ -3,21 +3,16 @@ import { Badge, Button, Modal, Tag } from "antd";
 import { useMemo, useState } from "react";
 
 import IdBadge from "components/shared/IdBadge";
-import LogoSyncButton from "components/shared/LogoSyncButton";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import MusteriForm from "pages/Tanimlamalar/Musteriler/MusteriForm";
 import { RiCustomerServiceLine } from "react-icons/ri";
-import musterilerHttp from "services/crud-server/musteriler.http";
 import logoGoApi from "services/logoGoApi";
 import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../../../components/shared/TableGod";
 
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
 function Musteriler() {
   const { user } = useAuth();
 
@@ -49,25 +44,25 @@ function Musteriler() {
         key: "sahisFirmasi",
         render: (value) => (
           <Tag
-            color={value ? "volcano" : "blue"}
+            color={value ? "volcano" : "geekblue"}
             icon={value ? <UserOutlined /> : <BankOutlined />}
           >
             {value ? "Şahıs" : "Tüzel"}
           </Tag>
         ),
         filters: [
-          { text: "Şahıs", value: true },
-          { text: "Tüzel", value: false },
+          { text: "Şahıs", value: 1 },
+          { text: "Tüzel", value: 0 },
         ],
         onFilter: (value, record) => record.sahisFirmasi === value,
         width: 100,
       },
       {
-        title: "Adı",
-        dataIndex: "adi",
-        key: "adi",
-        filters: createTableFilterFromData(musteriler, "adi"),
-        onFilter: (value, record) => record.adi.indexOf(value) === 0,
+        title: "Unvan",
+        dataIndex: "unvani",
+        key: "unvani",
+        filters: createTableFilterFromData(musteriler, "unvani"),
+        onFilter: (value, record) => record.unvani.indexOf(value) === 0,
         filterSearch: true,
         render: (text, record) => (
           <Tag
@@ -81,10 +76,43 @@ function Musteriler() {
         width: 350,
       },
       {
+        title: "Adı",
+        dataIndex: "adi",
+        key: "adi",
+        filters: createTableFilterFromData(musteriler, "adi"),
+        onFilter: (value, record) => record.adi.indexOf(value) === 0,
+        filterSearch: true,
+        render: (text, record) =>
+          record.sahisFirmasi ? (
+            <Tag
+              color={record.sahisFirmasi ? "volcano" : "geekblue"}
+              icon={record.sahisFirmasi ? <UserOutlined /> : <BankOutlined />}
+              style={{ width: "100%" }}
+            >
+              {text}
+            </Tag>
+          ) : (
+            ""
+          ),
+        width: 100,
+      },
+      {
         title: "Soyadı",
         dataIndex: "soyadi",
         key: "soyadi",
-        width: 80,
+        render: (text, record) =>
+          record.sahisFirmasi ? (
+            <Tag
+              color={record.sahisFirmasi ? "volcano" : "geekblue"}
+              icon={record.sahisFirmasi ? <UserOutlined /> : <BankOutlined />}
+              style={{ width: "100%" }}
+            >
+              {text}
+            </Tag>
+          ) : (
+            ""
+          ),
+        width: 100,
       },
       {
         title: "Adres",
@@ -193,11 +221,14 @@ function Musteriler() {
           await Promise.all(
             selectedRows.map((row) => logoGoApi.deleteData("DeleteCari", row.logoRef)),
           );
-          showNotification("success", `${selectedRows.length} adet müşteri logodan silindi`);
 
-          const newMusteriler = await musterilerHttp.deleteData(musteriler, selectedRows);
-          setMusteriler(newMusteriler);
-          showNotification("success", `${selectedRows.length} adet müşteri silindi`);
+          setMusteriler((prevMusteriler) =>
+            prevMusteriler.filter(
+              (musteri) => !selectedRows.map((row) => row.logoRef).includes(musteri.logoRef),
+            ),
+          );
+
+          showNotification("success", `${selectedRows.length} adet müşteri logodan silindi`);
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
@@ -208,43 +239,19 @@ function Musteriler() {
   const deleteSingleRecordHandler = (record) => {
     Modal.confirm({
       title: "Emin misiniz?",
-      content: `${record.adi} isimli müşteriyi üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
+      content: `${record.unvani} müşterisini üzeresiniz. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
       okText: "Tamam",
       cancelText: "İptal",
       async onOk() {
         try {
           await logoGoApi.deleteData("DeleteCari", record.logoRef);
-          showNotification("success", `${record.adi} isimli müşteri logodan silindi`);
-
-          const newMusteriler = await musterilerHttp.deleteData(musteriler, [record]);
-          setMusteriler(newMusteriler);
-          showNotification("success", `${record.adi} müşterisi silindi`);
+          setMusteriler((prevMusteriler) =>
+            prevMusteriler.filter((musteriler) => musteriler.logoRef !== record.logoRef),
+          );
+          showNotification("success", `${record.unvani} müşterisi silindi`);
         } catch (error) {
           showNotification("error", "Hata oluştu", error.message);
         }
-      },
-    });
-  };
-
-  const logoSync = async () => {
-    Modal.confirm({
-      title: "Emin misiniz?",
-      content:
-        "Müşteri verileri logo programından çekilip bu programa aktarılacak. Onaylıyor musunuz?",
-      okText: "Tamam",
-      cancelText: "İptal",
-      async onOk() {
-        try {
-          const logoMusteriler = await logoGoApi.getData("GetCariList");
-          const newMusteriler = await musterilerHttp.logoIleEsle(logoMusteriler);
-          setMusteriler(newMusteriler);
-          showNotification("success", "Müşteriler logo ile eşlendi.");
-        } catch (error) {
-          showNotification("error", "Hata oluştu", error.message);
-        }
-      },
-      onCancel() {
-        showNotification("warning", "İşlem iptal edildi");
       },
     });
   };
@@ -262,7 +269,6 @@ function Musteriler() {
       <TableGod
         dataSource={musteriler}
         columns={columns}
-        onChange={onChange}
         rowSelection={user.yetki === "admin" && rowSelection}
         pagination={true}
         scroll={{ x: 2200 }}
@@ -279,7 +285,7 @@ function Musteriler() {
                 icon={<DeleteOutlined />}
                 onClick={deleteSelectedRecordsHandler}
               >
-                Sil ({selectedRows.length})
+                Toplu Sil ({selectedRows.length})
               </Button>
             )}
             {user.yetki === "admin" && (
@@ -292,7 +298,6 @@ function Musteriler() {
                 >
                   Müşteri Ekle
                 </Button>
-                <LogoSyncButton onClick={logoSync} />
               </>
             )}
           </>

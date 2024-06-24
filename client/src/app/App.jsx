@@ -26,6 +26,12 @@ const AppWrapperStyled = styled.div`
   height: 100vh;
   display: flex;
   background: linear-gradient(180deg, #d4e0fa 52%, #bacdf7 100%);
+  overflow: hidden;
+
+  border-top: 4px solid;
+  border-bottom: 4px solid;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(90deg, #f06595, #845ec2, #3b82f6);
 `;
 
 const PageWrapperStyled = styled.div`
@@ -33,10 +39,9 @@ const PageWrapperStyled = styled.div`
   padding: 10px;
   padding-left: 14px;
   overflow: auto;
-  background-color: #dbe4f9;
   background-color: rgba(255, 255, 255, 0.2);
   margin-top: 7px;
-  margin-left: 9px;
+  margin-left: 7px;
   border-top-left-radius: 8px;
   border: 1px solid #c3d1f2;
 `;

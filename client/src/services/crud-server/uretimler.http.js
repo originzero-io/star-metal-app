@@ -41,4 +41,6 @@ class DevamEdenUretim extends CRUDServerHttp {
 }
 const devamEdenUretimHttp = new DevamEdenUretim();
 
-export { devamEdenUretimHttp };
+const tamamlananUretimHttp = new CRUDServerHttp("/uretim/tamamlanan");
+
+export { devamEdenUretimHttp, tamamlananUretimHttp };

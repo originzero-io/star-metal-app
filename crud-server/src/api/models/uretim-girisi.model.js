@@ -13,14 +13,6 @@ const UretimGirisi = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    siparisNo: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-    },
-    talepNo: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
-    },
     irsaliyeNo: {
       type: DataTypes.STRING(50),
       allowNull: true,
@@ -85,8 +77,10 @@ const UretimGirisi = sequelize.define(
   },
 );
 
-UretimGirisi.belongsTo(Referans, { foreignKey: "referansNo", targetKey: "referansNo" });
-Referans.hasMany(UretimGirisi, { foreignKey: "referansNo", sourceKey: "referansNo" });
+// • Bir UretimGirisi kaydı bir Referans kaydına aittir.
+// • Bir Referans kaydı birden fazla UretimGirisi kaydına sahip olabilir.
+UretimGirisi.belongsTo(Referans, { foreignKey: "referansNo", targetKey: "referansNo", as: "Referanslar" });
+Referans.hasMany(UretimGirisi, { foreignKey: "referansNo", sourceKey: "referansNo", as: "UretimGirisleri" });
 
 // UretimGirisi.sync({ force: true });
 

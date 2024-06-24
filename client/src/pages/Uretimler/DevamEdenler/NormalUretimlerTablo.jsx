@@ -11,7 +11,7 @@ import {
 import { Collapse, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import ColumnBadge from "components/shared/ColumnBadge";
-import CountBadge from "components/shared/CounBadge";
+import CountBadge from "components/shared/CountBadge";
 import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
@@ -61,6 +61,38 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       width: 70,
     },
     {
+      title: "Sipariş Tipi",
+      dataIndex: "siparisTipi",
+      key: "siparisTipi",
+      render: (text, record) => (
+        <ColumnBadge
+          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
+          value={record.Referanslar.siparisTipi}
+        />
+      ),
+      filters: [
+        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisTipi)),
+      ].map((siparisTipi) => ({
+        text: siparisTipi,
+        value: siparisTipi,
+      })),
+      onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
+      filterSearch: true,
+      width: 100,
+    },
+    {
+      title: "Kodu",
+      dataIndex: "kodu",
+      key: "kodu",
+      render: (text, record) => (
+        <ColumnBadge
+          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
+          value={record.Referanslar.kodu}
+        />
+      ),
+      width: 170,
+    },
+    {
       title: "Referans",
       dataIndex: "referansNo",
       key: "referansNo",
@@ -77,57 +109,6 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "iade"),
       onFilter: (value, record) => record.iade.indexOf(value) === 0,
       filterSearch: true,
-    },
-    {
-      title: "Sipariş Tipi",
-      dataIndex: "siparisTipi",
-      key: "siparisTipi",
-      render: (text, record) => record?.Referanslar?.siparisTipi,
-      filters: [
-        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisTipi)),
-      ].map((siparisTipi) => ({
-        text: siparisTipi,
-        value: siparisTipi,
-      })),
-      onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
-      filterSearch: true,
-      width: 110,
-    },
-    {
-      title: "Sipariş No",
-      dataIndex: "siparisNo",
-      key: "siparisNo",
-      render: (text, record) => record?.Referanslar?.siparisNo,
-      filters: [
-        ...new Set(
-          musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisNo || "Boş"),
-        ),
-      ].map((siparisNo) => ({
-        text: siparisNo,
-        value: siparisNo,
-      })),
-      onFilter: (value, record) => {
-        const siparisNo = record.Referanslar?.siparisNo || "Boş";
-        return siparisNo.indexOf(value) === 0;
-      },
-      filterSearch: true,
-      width: 150,
-    },
-    {
-      title: "Talep No",
-      dataIndex: "talepNo",
-      key: "talepNo",
-      filters: [
-        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.talepNo || "Boş")),
-      ].map((talepNo) => ({
-        text: talepNo,
-        value: talepNo,
-      })),
-      onFilter: (value, record) => {
-        const talepNo = record.talepNo || "Boş";
-        return talepNo.indexOf(value) === 0;
-      },
-      width: 100,
     },
     {
       title: "İrsaliye No",
@@ -269,9 +250,9 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                     }),
                 },
                 user.yetki === "admin" &&
-                  record.Referanslar.siparisTipi === "Talepli" && {
+                  record.Referanslar.siparisTipi === "SERİ" && {
                     icon: <EditOutlined />,
-                    title: record.talepNo ? "Talep No Değiştir" : "Talep No Gir",
+                    title: "Talep No Gir",
                     action: () => {
                       showModal({
                         title: "Talep No Girişi",

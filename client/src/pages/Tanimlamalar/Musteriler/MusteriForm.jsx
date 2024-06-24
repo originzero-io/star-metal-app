@@ -2,7 +2,6 @@ import { Button, Checkbox, Divider, Form, Input, Select } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
-import musterilerHttp from "services/crud-server/musteriler.http";
 import logoGoApi from "services/logoGoApi";
 import iller from "utils/iller.json";
 
@@ -20,7 +19,8 @@ export default function MusteriForm({ record, type }) {
     if (!sahisFirmasi) {
       logoPostData = {
         ...values,
-        unvani: values.adi,
+        unvani: values.unvani,
+        adi: "",
         soyadi: "",
         kimlikNo: "",
         sahisFirmasi: 0,
@@ -32,22 +32,28 @@ export default function MusteriForm({ record, type }) {
         unvani: `${values.adi} ${values.soyadi}`,
         sahisFirmasi: 1,
       };
+
     if (type === "update") {
-      const updatedMusteri = await musterilerHttp.updateData(record.id, values);
-      const updatedMusterilerArray = musteriler.map((musteri) => {
-        if (musteri.id === updatedMusteri.id) {
-          return { ...updatedMusteri };
-        }
-        return musteri;
-      });
-      setMusteriler(updatedMusterilerArray);
-      // showPanel(false);
-      showNotification("success", "Müşteri güncellendi");
+      const response = await logoGoApi.putData("PutCari", logoPostData);
+
+      if (response.statusCode === 200) {
+        const updatedMusteriler = musteriler.map((musteri) => {
+          if (musteri.logoRef === values.logoRef) {
+            return { ...values };
+          }
+          return musteri;
+        });
+
+        setMusteriler(updatedMusteriler);
+
+        showNotification("success", "Müşteri güncellendi");
+      } else {
+        showNotification("success", response.message);
+      }
     } else {
       const logoRef = await logoGoApi.postData("PostCari", logoPostData);
-      const newMusteri = await musterilerHttp.addData({ ...values, logoRef });
-      setMusteriler([...musteriler, { ...newMusteri }]);
-      showNotification("success", "Müşteri eklendi");
+      setMusteriler([...musteriler, { logoRef, ...logoPostData }]);
+      showNotification("success", `Müşteri eklendi`);
     }
   };
   const onFinishFailed = (errorInfo) => {
@@ -59,8 +65,10 @@ export default function MusteriForm({ record, type }) {
       name="basic"
       labelCol={{ flex: "130px" }}
       labelAlign="left"
-      key={record ? record.id : "form"}
-      initialValues={record || { ulke: "Türkiye", sahisFirmasi: 0 }}
+      key={record ? record.logoRef : "form"}
+      initialValues={
+        record || { ulke: "Türkiye", sahisFirmasi: 0, telefon: "", mail: "", yetkili: "" }
+      }
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -108,18 +116,22 @@ export default function MusteriForm({ record, type }) {
         </Checkbox>
       </Form.Item>
 
-      <Form.Item
-        label="Adı"
-        name="adi"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input placeholder="Adı girin" />
-      </Form.Item>
+      <Divider />
+
+      {sahisFirmasi && (
+        <Form.Item
+          label="Adı"
+          name="adi"
+          rules={[
+            {
+              required: true,
+              message: "Bu alanı doldurun",
+            },
+          ]}
+        >
+          <Input placeholder="Adı girin" />
+        </Form.Item>
+      )}
 
       {sahisFirmasi ? (
         <>
@@ -164,11 +176,20 @@ export default function MusteriForm({ record, type }) {
         </Form.Item>
       )}
 
-      <Divider />
-
-      <Form.Item label="Ünvanı" name="unvani">
-        <Input placeholder="Ünvan girin" />
-      </Form.Item>
+      {!sahisFirmasi && (
+        <Form.Item
+          label="Ünvanı"
+          name="unvani"
+          rules={[
+            {
+              required: true,
+              message: "Bu alanı doldurun",
+            },
+          ]}
+        >
+          <Input placeholder="Ünvan girin" />
+        </Form.Item>
+      )}
 
       <Form.Item
         label="Adres"

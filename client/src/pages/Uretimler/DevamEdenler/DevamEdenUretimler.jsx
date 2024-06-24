@@ -1,6 +1,6 @@
 import { CaretRightOutlined } from "@ant-design/icons";
 import { Collapse, Flex, Modal } from "antd";
-import CountBadge from "components/shared/CounBadge";
+import CountBadge from "components/shared/CountBadge";
 import PageHeader from "components/shared/PageHeader";
 import collapseStyle from "components/shared/StyledCollapse";
 import { useDBContext } from "context/DBProvider";
@@ -44,7 +44,7 @@ function DevamEdenUretimler() {
 
   useEffect(() => {
     const musteriBazliNormal = devamEdenUretimler.normalUretimler.reduce((acc, uretim) => {
-      const { musteriAdi } = uretim.Referanslar;
+      const musteriAdi = uretim?.Referanslar?.musteriAdi;
 
       // Eğer bu müşteri adı ile bir grup zaten mevcut değilse, bu grup için boş bir dizi oluştur
       if (!acc[musteriAdi]) {

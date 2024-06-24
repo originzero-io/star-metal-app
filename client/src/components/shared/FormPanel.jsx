@@ -4,6 +4,12 @@ import { useUIContext } from "context/UIProvider";
 const FormPanel = () => {
   const { panel, showPanel } = useUIContext();
 
+  const key =
+    panel.content?.props?.record?.id ||
+    panel.content?.props?.record?.logoRef ||
+    panel.content?.props?.record?.logicalref ||
+    panel.content?.props?.record?.logoMalzemeRef;
+
   const onOk = () => {
     showPanel(false);
   };
@@ -17,16 +23,13 @@ const FormPanel = () => {
       styles={{
         header: {
           padding: "8px 14px",
-          // background: "#dce0e3",
           background: "#edf1fb",
         },
         body: {
           background: "#edf1fb",
         },
-
-        // mask: { background: "transparent" },
       }}
-      key={panel.content?.props?.record?.id} // başka kayıtlar seçildiğinde içerik otomatik değişsin diye benzersiz key
+      key={key} // başka kayıtlar seçildiğinde içerik otomatik değişsin diye benzersiz key
       open={panel.title}
       onOk={onOk}
       onClose={onClose}
@@ -34,7 +37,7 @@ const FormPanel = () => {
       centered
       width={panel.width || 500}
       // footer={null}
-      // mask={false}
+      mask={false}
     >
       {panel.content}
     </Drawer>

@@ -21,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             headerBg: "#eceff1",
             headerFilterHoverBg: "rgb(196, 208, 237)",
             headerColor: "rgba(0, 0, 0, 0.8)",
+            headerSplitColor: "rgba(0,0,0,0.1)",
 
             colorBgContainer: "rgba(255, 255, 255, 0.6)",
             filterDropdownBg: "#ffff",
