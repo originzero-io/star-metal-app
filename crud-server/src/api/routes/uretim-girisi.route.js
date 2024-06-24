@@ -2,7 +2,7 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 import Referans from "../models/referans.model.js";
 import UretimGirisi from "../models/uretim-girisi.model.js";
-import { FasonUretim, NormalUretim } from "../models/uretim.model.js";
+import { DFasonUretim, DNormalUretim } from "../models/uretim.model.js";
 
 const router = express.Router();
 
@@ -76,7 +76,7 @@ router.post(
     await UretimGirisi.create(req.body);
 
     if (fason) {
-      const uretim = await FasonUretim.findByPk(req.body.uretimSiraNo);
+      const uretim = await DFasonUretim.findByPk(req.body.uretimSiraNo);
       if (uretim) {
         const updatedUretim = await uretim.update({
           uretilenMiktar: uretim.uretilenMiktar + req.body.uretimAdedi,
@@ -87,7 +87,7 @@ router.post(
         res.status(400).send("üretim girişi bulunamadı");
       }
     } else {
-      const uretim = await NormalUretim.findByPk(req.body.uretimSiraNo);
+      const uretim = await DNormalUretim.findByPk(req.body.uretimSiraNo);
 
       if (uretim) {
         const updatedUretim = await uretim.update({
@@ -173,11 +173,11 @@ router.put(
 
 const uretimGidenVeKalanMiktarlariGuncelle = async (kayit) => {
   if (kayit.Referanslar.fasonFirmasi) {
-    const fasonUretim = await FasonUretim.findByPk(kayit.uretimSiraNo);
+    const fasonUretim = await DFasonUretim.findByPk(kayit.uretimSiraNo);
 
     if (fasonUretim) {
-      const updatedUretim = await fasonUretim.update({
-        sevkEdilenMiktar: fasonUretim.sevkEdilenMiktar + kayit.uretimAdedi,
+      const updatedUretim = await DFasonUretim.update({
+        sevkEdilenMiktar: DFasonUretim.sevkEdilenMiktar + kayit.uretimAdedi,
       });
 
       return updatedUretim;
@@ -185,12 +185,12 @@ const uretimGidenVeKalanMiktarlariGuncelle = async (kayit) => {
       return null;
     }
   } else {
-    const normalUretim = await NormalUretim.findByPk(kayit.uretimSiraNo);
+    const normalUretim = await DNormalUretim.findByPk(kayit.uretimSiraNo);
 
     if (normalUretim) {
-      const updatedUretim = await normalUretim.update({
-        gidenMiktar: normalUretim.gidenMiktar + kayit.uretimAdedi,
-        kalanMiktar: normalUretim.kalanMiktar - kayit.uretimAdedi,
+      const updatedUretim = await DNormalUretim.update({
+        gidenMiktar: DNormalUretim.gidenMiktar + kayit.uretimAdedi,
+        kalanMiktar: DNormalUretim.kalanMiktar - kayit.uretimAdedi,
       });
 
       return updatedUretim;
@@ -217,7 +217,7 @@ router.delete(
 
 const uretimKaydiniDuzenle = async (row) => {
   if (row.Referanslar.fason) {
-    const uretim = await FasonUretim.findByPk(row.uretimSiraNo);
+    const uretim = await DFasonUretim.findByPk(row.uretimSiraNo);
     if (uretim) {
       await uretim.update({
         uretilenMiktar: uretim.uretilenMiktar - row.uretimAdedi,
@@ -226,7 +226,7 @@ const uretimKaydiniDuzenle = async (row) => {
       console.log("böyle bir fason üretim bulunamadı");
     }
   } else {
-    const uretim = await NormalUretim.findByPk(row.uretimSiraNo);
+    const uretim = await DNormalUretim.findByPk(row.uretimSiraNo);
 
     if (uretim) {
       await uretim.update({

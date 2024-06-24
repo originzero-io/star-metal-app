@@ -16,7 +16,7 @@ import Plakalar from "pages/Tanimlamalar/Plakalar/Plakalar";
 import Referanslar from "pages/Tanimlamalar/Referanslar/Referanslar";
 import SevkEdilecekler from "pages/Uretimler/SevkEdilecekler";
 import Sicakliklar from "pages/Sicakliklar";
-import TamamlananUretimler from "pages/Uretimler/TamamlananUretimler";
+import TamamlananUretimler from "pages/Uretimler/Tamamlananlar/TamamlananUretimler";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import styled from "styled-components";
 import { AuthProvider } from "context/AuthProvider";

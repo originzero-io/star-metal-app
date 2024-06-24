@@ -4,7 +4,7 @@ import fs from "fs";
 import multer from "multer";
 import { findDirname } from "../../utils/file.js";
 import Referans from "../models/referans.model.js";
-import { NormalUretim } from "../models/uretim.model.js";
+import { DNormalUretim } from "../models/uretim.model.js";
 
 const referansResimMiddleware = multer({
   limits: {
@@ -81,7 +81,7 @@ router.put(
       const updatedReferans = await referans.update(req.body);
 
       if (updatedReferans) {
-        await NormalUretim.update(
+        await DNormalUretim.update(
           {
             referansNo: updatedReferans.referansNo,
             islemAciklama: updatedReferans.islemAciklama,

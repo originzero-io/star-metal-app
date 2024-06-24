@@ -1,12 +1,12 @@
 import axios from "axios";
 import PropTypes from "prop-types";
 import { createContext, useContext, useEffect, useState } from "react";
-import logoGoApi from "services/logoGoApi";
 import ambalajlarHttp from "services/crud-server/ambalajlar.http";
 import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import personellerHttp from "services/crud-server/personeller.http";
 import referanslarHttp from "services/crud-server/referanslar.http";
-import { devamEdenUretimHttp, tamamlananUretimHttp } from "services/crud-server/uretimler.http";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
+import logoGoApi from "services/logoGoApi";
 import getUrlByEnvVariables from "utils/getServerUrl";
 import { useUIContext } from "./UIProvider";
 
@@ -33,7 +33,6 @@ export const DBProvider = ({ children }) => {
     normalUretimler: [],
     fasonUretimler: [],
   });
-  // ? uretimler denip {devamEdenler, tamamlananlar} şeklinde verilebilir
   const [personeller, setPersoneller] = useState([]);
   const [soforler, setSoforler] = useState([]);
   const [plakalar, setPlakalar] = useState([]);
@@ -114,19 +113,6 @@ export const DBProvider = ({ children }) => {
     }
   };
 
-  const fetchTamamlananUretimler = async () => {
-    try {
-      setLoading(true);
-      const tamamlananUretimData = await tamamlananUretimHttp.getData();
-      console.log("tamamlananUretimData", tamamlananUretimData);
-
-      setTamamlananUretimler(tamamlananUretimData);
-      setLoading(false);
-    } catch (error) {
-      showNotification("error", "Üretim verisi alınamadı", error.message);
-    }
-  };
-
   const fetchPersoneller = async () => {
     try {
       setLoading(true);
@@ -163,18 +149,9 @@ export const DBProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // fetchDevamEdenUretimler();
-    // fetchReferanslar();
-    // fetchIrsaliyeler();
-    // fetchMusteriler();
-    // fetchAmbalajlar();
-    // fetchPersoneller();
-    // fetchSoforler();
-    // fetchPlakalar();
     async function fetchAllState() {
       await Promise.all([
         fetchDevamEdenUretimler(),
-        fetchTamamlananUretimler(),
         fetchReferanslar(),
         fetchIrsaliyeler(),
         fetchMusteriler(),

@@ -83,7 +83,7 @@ function DevamEdenUretimler() {
             style: collapseStyle.parentCollapseItem,
             label: (
               <Flex>
-                <CountBadge count={devamEdenUretimler.normalUretimler?.length} offset={[20, 9]}>
+                <CountBadge count={devamEdenUretimler.normalUretimler?.length} offset={[20, 6]}>
                   <div style={collapseStyle.parentCollapseHeader}>Star Metal Üretimleri</div>
                 </CountBadge>
               </Flex>
@@ -100,7 +100,7 @@ function DevamEdenUretimler() {
             style: collapseStyle.parentCollapseItem,
             label: (
               <Flex>
-                <CountBadge count={devamEdenUretimler.fasonUretimler?.length} offset={[20, 9]}>
+                <CountBadge count={devamEdenUretimler.fasonUretimler?.length} offset={[20, 6]}>
                   <div style={collapseStyle.parentCollapseHeader}>Fason Üretimler</div>
                 </CountBadge>
               </Flex>

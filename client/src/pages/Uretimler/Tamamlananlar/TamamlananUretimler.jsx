@@ -4,32 +4,40 @@ import CountBadge from "components/shared/CountBadge";
 import PageHeader from "components/shared/PageHeader";
 import collapseStyle from "components/shared/StyledCollapse";
 import { useDBContext } from "context/DBProvider";
+import { useUIContext } from "context/UIProvider";
 import { useEffect, useState } from "react";
 import { FcOk } from "react-icons/fc";
-import FasonUretimlerTablo from "./DevamEdenler/FasonUretimlerTablo";
-import NormalUretimlerTablo from "./DevamEdenler/NormalUretimlerTablo";
+import { tamamlananUretimHttp } from "services/crud-server/uretimler.http";
+import FasonUretimlerTablo from "./FasonUretimlerTablo";
+import NormalUretimlerTablo from "./NormalUretimlerTablo";
 
 function TamamlananUretimler() {
-  const { tamamlananUretimler, setLoading } = useDBContext();
+  const { tamamlananUretimler, setTamamlananUretimler, setLoading } = useDBContext();
+  const { showNotification } = useUIContext();
 
   const [musteriBazliNormalUretimler, setMusteriBazliNormalUretimler] = useState({});
   const [fasonFirmasiBazliFasonUretimler, setFasonFirmasiBazliFasonUretimler] = useState({});
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     setLoading(true);
-  //     const uretimResponse = await tamamlananUretimHttp.getData();
-  //     console.log("Tamamlanan Üretimler: ", uretimResponse);
-  //     setUretimGirisleri(uretimResponse);
-  //     setLoading(false);
-  //   }
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        const tamamlananUretimData = await tamamlananUretimHttp.getData();
+        console.log("tamamlananUretimData", tamamlananUretimData);
 
-  //   fetchData();
-  // }, []);
+        setTamamlananUretimler(tamamlananUretimData);
+        setLoading(false);
+      } catch (error) {
+        showNotification("error", "Üretim verisi alınamadı", error.message);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const musteriBazliNormal = tamamlananUretimler.normalUretimler.reduce((acc, uretim) => {
-      const musteriAdi = uretim?.Referanslar?.musteriAdi;
+      const { musteriAdi } = uretim;
 
       // Eğer bu müşteri adı ile bir grup zaten mevcut değilse, bu grup için boş bir dizi oluştur
       if (!acc[musteriAdi]) {
@@ -42,7 +50,7 @@ function TamamlananUretimler() {
     setMusteriBazliNormalUretimler(musteriBazliNormal);
 
     const fasonFirmasiBazliFason = tamamlananUretimler.fasonUretimler.reduce((acc, uretim) => {
-      const { fasonFirmasi } = uretim.Referanslar;
+      const { fasonFirmasi } = uretim;
 
       if (!acc[fasonFirmasi]) {
         acc[fasonFirmasi] = [];
@@ -60,7 +68,7 @@ function TamamlananUretimler() {
       <Collapse
         expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
         bordered={false}
-        defaultActiveKey="normal" // sağ tıklanarak gelinmişse otomatik olarak panel açık olsun
+        defaultActiveKey={["normal", "fason"]}
         items={[
           {
             key: "normal",
@@ -89,7 +97,5 @@ function TamamlananUretimler() {
     </div>
   );
 }
-
-TamamlananUretimler.propTypes = {};
 
 export default TamamlananUretimler;

@@ -2,7 +2,7 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 import Irsaliye from "../models/irsaliye.model.js";
 import Referans from "../models/referans.model.js";
-import { FasonUretim } from "../models/uretim.model.js";
+import { DFasonUretim } from "../models/uretim.model.js";
 
 const router = express.Router();
 
@@ -51,10 +51,10 @@ router.post(
 
     await Irsaliye.create(idsizIrsaliyeKaydi);
 
-    const fasonUretim = await FasonUretim.findOne({ where: { id: irsaliyeKaydi.id } });
+    const fasonUretim = await DFasonUretim.findOne({ where: { id: irsaliyeKaydi.id } });
 
     if (fasonUretim) {
-      await fasonUretim.update({ gidenMiktar: irsaliyeKaydi.gelenMiktar });
+      await DFasonUretim.update({ gidenMiktar: irsaliyeKaydi.gelenMiktar });
     } else {
       console.log(`ReferansNo ${irsaliyeKaydi.referansNo} için kayıt bulunamadı.`);
     }
@@ -98,7 +98,7 @@ router.delete(
 );
 
 const fasonKaydiniSifirla = async (row) => {
-  const uretim = await FasonUretim.findByPk(Number(row.uretimGirisiIdleri));
+  const uretim = await DFasonUretim.findByPk(Number(row.uretimGirisiIdleri));
   if (uretim) {
     await uretim.update({
       gidenMiktar: 0,

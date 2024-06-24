@@ -3,14 +3,14 @@ import asyncHandler from "express-async-handler";
 import Irsaliye from "../models/irsaliye.model.js";
 import Referans from "../models/referans.model.js";
 import UretimGirisi from "../models/uretim-girisi.model.js";
-import { FasonUretim, NormalUretim } from "../models/uretim.model.js";
+import { DFasonUretim, DNormalUretim, TFasonUretim, TNormalUretim } from "../models/uretim.model.js";
 
 const router = express.Router();
 
 router.get(
   "/devam-eden",
   asyncHandler(async (req, res) => {
-    const normalUretimler = await NormalUretim.findAll({
+    const normalUretimler = await DNormalUretim.findAll({
       include: [
         {
           model: Referans,
@@ -18,9 +18,8 @@ router.get(
           as: "Referanslar",
         },
       ],
-      where: { tamamlandi: false },
     });
-    const fasonUretimler = await FasonUretim.findAll({
+    const fasonUretimler = await DFasonUretim.findAll({
       include: [
         {
           model: Referans,
@@ -28,7 +27,6 @@ router.get(
           as: "Referanslar",
         },
       ],
-      where: { tamamlandi: false },
     });
 
     res.send({ normalUretimler, fasonUretimler });
@@ -39,7 +37,7 @@ router.get(
   "/devam-eden/fason/:id",
   asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const fasonUretim = await FasonUretim.findOne({
+    const fasonUretim = await DFasonUretim.findOne({
       where: { id },
       include: [
         {
@@ -62,14 +60,14 @@ router.post(
 
     const createPromises = malzemeler.map(async (malzeme) => {
       if (malzeme.fason) {
-        const fasonUretimler = await FasonUretim.create({
+        const fasonUretimler = await DFasonUretim.create({
           ...malzeme,
           sevkEdilenMiktar: malzeme.gidenMiktar,
         });
         newMalzemeler.fasonUretimler.push(fasonUretimler);
         return fasonUretimler;
       }
-      const normalUretimler = await NormalUretim.create({
+      const normalUretimler = await DNormalUretim.create({
         ...malzeme,
       });
       newMalzemeler.normalUretimler.push(normalUretimler);
@@ -88,13 +86,13 @@ router.put(
     let uretim;
 
     if (currentRecord.Referanslar.fason) {
-      uretim = await FasonUretim.findByPk(currentRecord.id);
+      uretim = await DFasonUretim.findByPk(currentRecord.id);
       await uretim.update({
         gelenMiktar: newData.gelenMiktar,
         gidenMiktar: uretim.gidenMiktar === 0 ? 0 : newData.gelenMiktar,
       });
     } else {
-      uretim = await NormalUretim.findByPk(currentRecord.id);
+      uretim = await DNormalUretim.findByPk(currentRecord.id);
       await uretim.update({
         gelenMiktar: newData.gelenMiktar,
         kalanMiktar: newData.gelenMiktar - uretim.gidenMiktar,
@@ -116,12 +114,12 @@ router.put(
     let uretim;
 
     if (currentRecord.Referanslar.fason) {
-      uretim = await FasonUretim.findByPk(currentRecord.id);
+      uretim = await DFasonUretim.findByPk(currentRecord.id);
       await uretim.update({
         talepNo: newData.talepNo,
       });
     } else {
-      uretim = await NormalUretim.findByPk(currentRecord.id);
+      uretim = await DNormalUretim.findByPk(currentRecord.id);
       await uretim.update({
         talepNo: newData.talepNo,
       });
@@ -139,7 +137,7 @@ router.put(
   asyncHandler(async (req, res) => {
     const { currentRecord, newOncelikDurumu } = req.body;
 
-    const uretim = await NormalUretim.findByPk(currentRecord.id);
+    const uretim = await DNormalUretim.findByPk(currentRecord.id);
     await uretim.update({
       acil: newOncelikDurumu,
     });
@@ -153,11 +151,11 @@ router.delete(
   asyncHandler(async (req, res) => {
     const { kayit } = req.body;
     if (kayit.Referanslar.fason) {
-      await FasonUretim.destroy({
+      await DFasonUretim.destroy({
         where: { id: kayit.id },
       });
     } else {
-      await NormalUretim.destroy({
+      await DNormalUretim.destroy({
         where: { id: kayit.id },
       });
     }
@@ -176,26 +174,8 @@ router.delete(
 router.get(
   "/tamamlanan",
   asyncHandler(async (req, res) => {
-    const normalUretimler = await NormalUretim.findAll({
-      include: [
-        {
-          model: Referans,
-          required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
-          as: "Referanslar",
-        },
-      ],
-      where: { tamamlandi: true },
-    });
-    const fasonUretimler = await FasonUretim.findAll({
-      include: [
-        {
-          model: Referans,
-          required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
-          as: "Referanslar",
-        },
-      ],
-      where: { tamamlandi: true },
-    });
+    const normalUretimler = await TNormalUretim.findAll();
+    const fasonUretimler = await TFasonUretim.findAll();
 
     res.send({ normalUretimler, fasonUretimler });
   }),
@@ -204,7 +184,24 @@ router.get(
 router.post(
   "/tamamlanan",
   asyncHandler(async (req, res) => {
-    res.send("aman");
+    const { fason, musteriAdi, fasonFirmasi, siparisTipi, kodu, referansYuzeyAlani, islemTipi, resimUrl, not, irsaliyeAciklamasi } = req.body.Referanslar;
+
+    const model = { 1: TFasonUretim, 0: TNormalUretim };
+
+    const eklenenUretim = await model[fason].create({
+      musteriAdi,
+      fasonFirmasi,
+      siparisTipi,
+      kodu,
+      referansYuzeyAlani,
+      islemTipi,
+      resimUrl,
+      not,
+      irsaliyeAciklamasi,
+      ...req.body,
+    });
+
+    res.send(eklenenUretim);
   }),
 );
 
