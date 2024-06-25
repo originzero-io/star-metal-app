@@ -84,7 +84,7 @@ router.post(
 
         res.json(updatedUretim);
       } else {
-        res.status(400).send("üretim girişi bulunamadı");
+        res.status(400).send("Üretim girişi bulunamadı", req.body.id);
       }
     } else {
       const uretim = await DNormalUretim.findByPk(req.body.uretimId);
@@ -97,7 +97,7 @@ router.post(
 
         res.json(updatedUretim);
       } else {
-        res.status(400).send("üretim girişi bulunamadı");
+        res.status(400).send("Üretim girişi bulunamadı", req.body.id);
       }
     }
   }),
@@ -134,7 +134,7 @@ router.put(
       );
     }
 
-    res.send("aktiflik değişti");
+    res.send("Kayıtların aktiflikleri başarıyla değiştirildi.");
   }),
 );
 
@@ -162,7 +162,7 @@ router.put(
       );
 
       // üretim giden kalan kayıtlarını güncelle
-      const updatedUretim = await uretimGidenVeKalanMiktarlariGuncelle(kayit);
+      const updatedUretim = await gidenVeKalanMiktarlariGuncelle(kayit);
 
       console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}, üretim kayıtları: ${updatedUretim}`);
       return sonuc;
@@ -174,11 +174,12 @@ router.put(
   }),
 );
 
-const uretimGidenVeKalanMiktarlariGuncelle = async (kayit) => {
+const gidenVeKalanMiktarlariGuncelle = async (kayit) => {
   if (kayit.Referanslar.fasonFirmasi) {
     const fasonUretim = await DFasonUretim.findByPk(kayit.uretimId);
 
-    if (fasonUretim) {
+    if (fasonUretim && !kayit.fasona) {
+      // irsaliye fasona kesiliyorsa sevkEdilenMiktar değişmeyecek
       const updatedUretim = await fasonUretim.update({
         sevkEdilenMiktar: fasonUretim.sevkEdilenMiktar + kayit.uretimAdedi,
       });
@@ -205,17 +206,20 @@ router.delete(
   asyncHandler(async (req, res) => {
     const { selectedRows } = req.body;
 
-    for (const row of selectedRows) {
+    const deletePromises = selectedRows.map(async (row) => {
       await UretimGirisi.destroy({
         where: { id: row.id },
       });
-      await uretimKaydiniDuzenle(row);
-    }
-    res.send("işlem başarılı");
+      await uretimMiktarlariniGeriAl(row);
+    });
+
+    await Promise.all(deletePromises);
+
+    res.send("Üretim girişi silindi, üretim miktarları geri alındı.");
   }),
 );
 
-const uretimKaydiniDuzenle = async (row) => {
+const uretimMiktarlariniGeriAl = async (row) => {
   if (row.Referanslar.fason) {
     const uretim = await DFasonUretim.findByPk(row.uretimId);
     if (uretim) {
@@ -223,7 +227,7 @@ const uretimKaydiniDuzenle = async (row) => {
         uretilenMiktar: uretim.uretilenMiktar - row.uretimAdedi,
       });
     } else {
-      console.log("böyle bir fason üretim bulunamadı");
+      console.log("Böyle bir fason üretim bulunamadı", row.id);
     }
   } else {
     const uretim = await DNormalUretim.findByPk(row.uretimId);
@@ -234,7 +238,7 @@ const uretimKaydiniDuzenle = async (row) => {
         uretilmeyenMiktar: uretim.uretilmeyenMiktar + row.uretimAdedi,
       });
     } else {
-      console.log("böyle bir normal üretim bulunamadı");
+      console.log("Böyle bir normal üretim bulunamadı", row.id);
     }
   }
 };

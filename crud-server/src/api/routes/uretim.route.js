@@ -133,7 +133,7 @@ router.put(
 );
 
 router.put(
-  "/devam-eden/oncelikAyarla",
+  "/devam-eden/oncelik-ayarla",
   asyncHandler(async (req, res) => {
     const { currentRecord, newOncelikDurumu } = req.body;
 
@@ -205,20 +205,12 @@ router.post(
         console.log("uretim", { gelen: uretim.gelenMiktar, giden: uretim.gidenMiktar, sevkEdilen: uretim.sevkEdilenMiktar });
 
         if (fason) {
-          console.log("fason kaydı tespit edildi");
-
           if (uretim.gelenMiktar === uretim.sevkEdilenMiktar) {
-            console.log("fason şartına girdim");
-
-            await uretimiTamamlananlaraTasi(uretim);
+            await uretimiTamamlananlaraGonder(uretim);
           }
         } else {
-          console.log("burdayım");
-
           if (uretim.gelenMiktar === uretim.gidenMiktar) {
-            console.log("şarta girdim");
-
-            await uretimiTamamlananlaraTasi(uretim);
+            await uretimiTamamlananlaraGonder(uretim);
           }
         }
       } catch (error) {
@@ -230,17 +222,15 @@ router.post(
     // Tüm işlemleri paralel olarak çalıştır
     await Promise.all(promises);
 
-    res.send("ok");
+    res.send("Üretimler kontrol edildi. Tamamlananlar Tamamlanan üretime taşındı.");
   }),
 );
 
-async function uretimiTamamlananlaraTasi(uretim) {
+async function uretimiTamamlananlaraGonder(uretim) {
   const { fason, musteriAdi, fasonFirmasi, siparisTipi, kodu, referansYuzeyAlani, islemTipi, resimUrl, not, irsaliyeAciklamasi } = uretim.Referanslar;
 
   const devamEdenModel = { 1: DFasonUretim, 0: DNormalUretim };
   const tamamlananModel = { 1: TFasonUretim, 0: TNormalUretim };
-
-  console.log("fason", fason);
 
   const eklenenUretim = await tamamlananModel[fason].create({
     musteriAdi,

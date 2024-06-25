@@ -92,7 +92,7 @@ router.put(
       }
       res.status(200).json(updatedReferans);
     } else {
-      res.status(400).send("referans bulunamadı");
+      res.status(400).send("Referans bulunamadı", req.body.id);
     }
   }),
 );
@@ -102,15 +102,17 @@ router.delete(
   asyncHandler(async (req, res) => {
     const { selectedRows } = req.body;
 
-    selectedRows.forEach(async (row) => {
+    const deletePromises = selectedRows.map(async (row) => {
       const filePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${row.resimUrl}`;
       await Referans.destroy({
         where: { id: row.id },
       });
-      fs.unlinkSync(filePath);
+      fs.unlink(filePath); // fs.unlinkSync yerine async/await kullanmak için fs.unlink kullanıyoruz
     });
 
-    res.send("ok");
+    await Promise.all(deletePromises);
+
+    res.send("Referans ve referans resmi silme işlemi başarılı.");
   }),
 );
 

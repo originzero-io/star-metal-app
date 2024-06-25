@@ -101,7 +101,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
       width: 90,
     },
     {
-      title: "Üretim Tarih",
+      title: "Üretim Tarihi",
       dataIndex: "uretimTarihi",
       key: "uretimTarihi",
       width: 150,
@@ -171,37 +171,29 @@ export default function UretimSevkiyatHareketleri({ record }) {
           <Col span={9}>
             <TopSectionItem>
               <TopSectionItemName>Müşteri: </TopSectionItemName>
-              <TopSectionItemValue>{record.Referanslar.musteriAdi}</TopSectionItemValue>
+              <TopSectionItemValue>
+                {record.Referanslar?.musteriAdi || record.musteriAdi}
+              </TopSectionItemValue>
             </TopSectionItem>
             <TopSectionItem>
               <TopSectionItemName>Referans No:</TopSectionItemName>
               <TopSectionItemValue>{record.referansNo}</TopSectionItemValue>
             </TopSectionItem>
-            {record.Referanslar.siparisNo ? (
-              <TopSectionItem>
-                <TopSectionItemName>Sipariş No:</TopSectionItemName>
-                <TopSectionItemValue>{record.Referanslar.siparisNo}</TopSectionItemValue>
-              </TopSectionItem>
-            ) : record.talepNo ? (
-              <TopSectionItem>
-                <TopSectionItemName>Talep No:</TopSectionItemName>
-                <TopSectionItemValue>{record.talepNo}</TopSectionItemValue>
-              </TopSectionItem>
-            ) : (
-              <TopSectionItem>
-                <TopSectionItemName>İade: </TopSectionItemName>
-                <TopSectionItemValue>{record.iade}</TopSectionItemValue>
-              </TopSectionItem>
-            )}
+            <TopSectionItem>
+              <TopSectionItemName>Kodu:</TopSectionItemName>
+              <TopSectionItemValue>{record.Referanslar?.kodu || record.kodu}</TopSectionItemValue>
+            </TopSectionItem>
           </Col>
           <Col span={9}>
             <TopSectionItem>
-              <TopSectionItemName>Parça Adı:</TopSectionItemName>
-              <TopSectionItemValue>{record.Referanslar.parcaAdi}</TopSectionItemValue>
+              <TopSectionItemName>İşlem Tipi:</TopSectionItemName>
+              <TopSectionItemValue>
+                {record.Referanslar?.islemTipi || record.islemTipi}
+              </TopSectionItemValue>
             </TopSectionItem>
             <TopSectionItem>
-              <TopSectionItemName>İşlem Tipi:</TopSectionItemName>
-              <TopSectionItemValue>{record.Referanslar.islemTipi}</TopSectionItemValue>
+              <TopSectionItemName>İade: </TopSectionItemName>
+              <TopSectionItemValue>{record.iade}</TopSectionItemValue>
             </TopSectionItem>
           </Col>
         </Row>

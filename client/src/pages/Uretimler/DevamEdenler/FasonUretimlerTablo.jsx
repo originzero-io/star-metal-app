@@ -21,7 +21,7 @@ import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
 import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
-import { devamEdenUretimHttp, tamamlananUretimHttp } from "services/crud-server/uretimler.http";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
 
@@ -267,6 +267,9 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
             columns={createColumnsForCustomer(fasonFirmasi)}
             hideDefaultTitleButtons
             scroll={{ x: 1800 }}
+            rowStyle={(row) => ({
+              background: "#fcf8f0",
+            })}
             contextMenu={{
               deleteAction: uretimiSilFunc,
               extraItems: (record) => [
@@ -332,11 +335,6 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                       content: <MiktarDuzenlemeForm record={record} />,
                       width: 400,
                     }),
-                },
-                {
-                  icon: <EditOutlined />,
-                  title: "Tamamlananlara Gönder",
-                  action: async () => await tamamlananUretimHttp.addData(record),
                 },
               ],
             }}

@@ -25,7 +25,7 @@ class DevamEdenUretim extends CRUDServerHttp {
   }
 
   async oncelikAyarla(currentRecord, newOncelikDurumu) {
-    const { data } = await axios.put(`${this.path}/oncelikAyarla`, {
+    const { data } = await axios.put(`${this.path}/oncelik-ayarla`, {
       currentRecord,
       newOncelikDurumu,
     });

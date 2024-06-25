@@ -59,7 +59,7 @@ router.post(
       console.log(`ReferansNo ${irsaliyeKaydi.referansNo} için kayıt bulunamadı.`);
     }
 
-    res.send("ok");
+    res.send("Fasona irsaliye kesildi, giden miktar gelen miktarla eşitlendi");
   }),
 );
 
@@ -73,9 +73,8 @@ router.post(
         where: { id: row.id },
       });
     });
-    //! gidenMiktar güncellenecek
 
-    res.send("liste temizlendi");
+    res.send("İrsaliye listesi temizlendi");
   }),
 );
 
@@ -84,16 +83,19 @@ router.delete(
   asyncHandler(async (req, res) => {
     const { selectedRows } = req.body;
 
-    selectedRows.forEach(async (row) => {
+    const deletePromises = selectedRows.map(async (row) => {
       await Irsaliye.destroy({
         where: { id: row.id },
       });
+
       if (row.fasona) {
         await fasonKaydiniSifirla(row);
       }
     });
 
-    res.send("silme isteği alındı");
+    await Promise.all(deletePromises);
+
+    res.send("Silme işlemi başarıyla tamamlandı.");
   }),
 );
 
@@ -104,7 +106,7 @@ const fasonKaydiniSifirla = async (row) => {
       gidenMiktar: 0,
     });
   } else {
-    console.log("böyle bir fason üretim bulunamadı");
+    console.log("böyle bir fason üretim bulunamadı", row.id);
   }
 };
 

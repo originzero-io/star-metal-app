@@ -1,13 +1,19 @@
-import { CaretRightOutlined } from "@ant-design/icons";
+import { CaretRightOutlined, TruckOutlined } from "@ant-design/icons";
 import { Collapse, Tag, Tooltip } from "antd";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
 import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
+import { useAuth } from "context/AuthProvider";
+import { useUIContext } from "context/UIProvider";
 import { createTableFilterFromData } from "utils/table.helper";
+import UretimSevkiyatHareketleri from "../DevamEdenler/UretimSevkiyatHareketleri";
 
 export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimiSilFunc }) {
+  const { user } = useAuth();
+  const { showPanel } = useUIContext();
+
   const createColumnsForCustomer = (fasonFirmasi) => [
     {
       title: "Sıra No",
@@ -175,6 +181,20 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
               background: "#f5faf0",
             })}
             scroll={{ x: 1800 }}
+            contextMenu={{
+              extraItems: (record) => [
+                user.yetki === "admin" && {
+                  icon: <TruckOutlined />,
+                  title: "Üretim / Sevkiyat Hareketleri",
+                  action: () =>
+                    showPanel({
+                      title: "Üretim / Sevkiyat Hareketleri",
+                      content: <UretimSevkiyatHareketleri record={record} />,
+                      width: 1100,
+                    }),
+                },
+              ],
+            }}
           />
         ),
         style: collapseStyle.subCollapseItem,
