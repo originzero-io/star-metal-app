@@ -31,6 +31,8 @@ export default function AmbalajForm({ record, type }) {
     } else {
       const formData = new FormData();
       formData.append("kasaAdi", values.kasaAdi);
+      formData.append("kasaTanimi", values.kasaTanimi);
+      formData.append("kasaOlcusu", values.kasaOlcusu);
 
       if (fileList.length > 0) {
         formData.append("photo", fileList[0].originFileObj);
@@ -67,6 +69,30 @@ export default function AmbalajForm({ record, type }) {
         ]}
       >
         <Input placeholder="Kasa adı girin" />
+      </Form.Item>
+      <Form.Item
+        label="Kasa Tanımı"
+        name="kasaTanimi"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Input placeholder="Kasa tanımı girin" />
+      </Form.Item>
+      <Form.Item
+        label="Kasa Ölçüsü"
+        name="kasaOlcusu"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Input placeholder="Kasa ölçüsü girin" />
       </Form.Item>
       {type !== "update" && (
         <Form.Item

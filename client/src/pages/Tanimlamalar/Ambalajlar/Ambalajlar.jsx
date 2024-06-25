@@ -105,6 +105,8 @@ function Ambalajlar() {
             }
           >
             <Card.Meta title={ambalaj.kasaAdi} />
+            <Card.Meta description={ambalaj.kasaTanimi} />
+            <Card.Meta description={ambalaj.kasaOlcusu} />
           </Card>
         ))}
       </div>

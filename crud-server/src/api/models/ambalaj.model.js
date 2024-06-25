@@ -8,8 +8,16 @@ const Ambalaj = sequelize.define(
       type: DataTypes.STRING(30),
       allowNull: false,
     },
+    kasaTanimi: {
+      type: DataTypes.STRING(60),
+      allowNull: false,
+    },
+    kasaOlcusu: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
     resimUrl: {
-      type: DataTypes.STRING(32),
+      type: DataTypes.STRING(35),
       allowNull: false,
     },
   },
