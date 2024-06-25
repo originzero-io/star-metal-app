@@ -42,6 +42,9 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       dataIndex: "kodu",
       key: "kodu",
       render: (text, record) => <ColumnBadge color="green" value={record.kodu} />,
+      filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "kodu"),
+      onFilter: (value, record) => record.kodu.indexOf(value) === 0,
+      filterSearch: true,
       width: 170,
     },
     {

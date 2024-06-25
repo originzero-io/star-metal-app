@@ -83,9 +83,9 @@ export default function UretimSevkiyatHareketleri({ record }) {
     },
     {
       title: "Üretim No",
-      dataIndex: "uretimSiraNo",
-      key: "uretimSiraNo",
-      render: (text, record) => <IdBadge value={text} />,
+      dataIndex: "uretimId",
+      key: "uretimId",
+      render: (text) => <IdBadge value={text} />,
       width: 80,
     },
     {

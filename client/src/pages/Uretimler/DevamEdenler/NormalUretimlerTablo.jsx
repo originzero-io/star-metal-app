@@ -90,6 +90,14 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
           value={record.Referanslar.kodu}
         />
       ),
+      filters: [
+        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.kodu)),
+      ].map((kod) => ({
+        text: kod,
+        value: kod,
+      })),
+      onFilter: (value, record) => record.Referanslar?.kodu.indexOf(value) === 0,
+      filterSearch: true,
       width: 170,
     },
     {
@@ -146,7 +154,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       dataIndex: "uretilenMiktar",
       key: "uretilenMiktar",
       sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
-      render: (text) => <Tag color={text > 0 ? "blue" : ""}>{text}</Tag>,
+      render: (text) => <Tag color={text > 0 ? "purple" : ""}>{text}</Tag>,
     },
     {
       title: "Üretilmeyen",
@@ -211,6 +219,9 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
             columns={createColumnsForCustomer(musteriAdi)}
             hideDefaultTitleButtons
             scroll={{ x: 1700 }}
+            rowStyle={(row) => ({
+              background: "#fcf8f0",
+            })}
             contextMenu={{
               deleteAction: uretimiSilFunc,
               extraItems: (record) => [

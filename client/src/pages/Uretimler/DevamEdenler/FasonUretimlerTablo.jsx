@@ -92,6 +92,14 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
           value={record.Referanslar.kodu}
         />
       ),
+      filters: [
+        ...new Set(fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.kodu)),
+      ].map((kod) => ({
+        text: kod,
+        value: kod,
+      })),
+      onFilter: (value, record) => record.Referanslar?.kodu.indexOf(value) === 0,
+      filterSearch: true,
       width: 170,
     },
     {
@@ -152,7 +160,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       dataIndex: "uretilenMiktar",
       key: "uretilenMiktar",
       sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
-      render: (text) => <Tag color={text > 0 ? "blue" : ""}>{text}</Tag>,
+      render: (text) => <Tag color={text > 0 ? "purple" : ""}>{text}</Tag>,
     },
     {
       title: "Sevk Edilen",

@@ -9,7 +9,7 @@ const UretimGirisi = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
-    uretimSiraNo: {
+    uretimId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

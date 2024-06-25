@@ -68,8 +68,8 @@ export default function SevkEdilecekler() {
   const createColumnsForCustomer = (musteriAdi) => [
     {
       title: "Sıra No",
-      dataIndex: "uretimSiraNo",
-      key: "uretimSiraNo",
+      dataIndex: "uretimId",
+      key: "uretimId",
       render: (text) => <IdBadge value={text} />,
       width: 70,
     },
@@ -315,7 +315,7 @@ export default function SevkEdilecekler() {
                         icon={<DeleteOutlined />}
                         onClick={() => deleteSelectedRecordsHandler(musteriAdi)}
                       >
-                        Sil ({selectedRows[musteriAdi].length})
+                        Toplu Sil ({selectedRows[musteriAdi].length})
                       </Button>
                     )}
                   </>
@@ -374,13 +374,13 @@ function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUre
           acc[key].uretimAdedi += item.uretimAdedi;
           // ? uretimGirisi id leri;
           acc[key].uretimGirisiIdleri = acc[key].uretimGirisiIdleri + "," + item.id; // String olarak ID'leri birleştir
-          acc[key].uretimSiraNo = item.uretimSiraNo;
+          acc[key].uretimId = item.uretimId;
         } else {
           // Eğer yoksa, yeni bir kayıt olarak ekle, tipi ayarla ve ilk uretimId'yi string olarak ekle
           acc[key] = {
             ...item,
             uretimGirisiIdleri: item.id.toString(),
-            uretimSiraNo: item.uretimSiraNo,
+            uretimId: item.uretimId,
             tip,
           };
           // delete acc[key].id; // her kayıdın id lerini sil (kayıt eşsizliğini bozmamak için)

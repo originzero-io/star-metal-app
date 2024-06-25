@@ -161,10 +161,10 @@ router.delete(
     }
 
     await UretimGirisi.destroy({
-      where: { uretimSiraNo: kayit.id },
+      where: { uretimId: kayit.id },
     });
     await Irsaliye.destroy({
-      where: { uretimSiraNo: kayit.id },
+      where: { uretimId: kayit.id },
     });
 
     res.send("ok");
@@ -184,25 +184,80 @@ router.get(
 router.post(
   "/tamamlanan",
   asyncHandler(async (req, res) => {
-    const { fason, musteriAdi, fasonFirmasi, siparisTipi, kodu, referansYuzeyAlani, islemTipi, resimUrl, not, irsaliyeAciklamasi } = req.body.Referanslar;
+    const kayitlar = req.body;
+    const model = { 1: DFasonUretim, 0: DNormalUretim };
 
-    const model = { 1: TFasonUretim, 0: TNormalUretim };
+    // Tüm asenkron işlemleri bir diziye topla
+    const promises = kayitlar.map(async (kayit) => {
+      const { fason } = kayit.Referanslar;
+      const { uretimId } = kayit;
 
-    const eklenenUretim = await model[fason].create({
-      musteriAdi,
-      fasonFirmasi,
-      siparisTipi,
-      kodu,
-      referansYuzeyAlani,
-      islemTipi,
-      resimUrl,
-      not,
-      irsaliyeAciklamasi,
-      ...req.body,
+      try {
+        const uretim = await model[fason].findByPk(uretimId, {
+          include: [
+            {
+              model: Referans,
+              as: "Referanslar",
+            },
+          ],
+        });
+
+        console.log("uretim", { gelen: uretim.gelenMiktar, giden: uretim.gidenMiktar, sevkEdilen: uretim.sevkEdilenMiktar });
+
+        if (fason) {
+          console.log("fason kaydı tespit edildi");
+
+          if (uretim.gelenMiktar === uretim.sevkEdilenMiktar) {
+            console.log("fason şartına girdim");
+
+            await uretimiTamamlananlaraTasi(uretim);
+          }
+        } else {
+          console.log("burdayım");
+
+          if (uretim.gelenMiktar === uretim.gidenMiktar) {
+            console.log("şarta girdim");
+
+            await uretimiTamamlananlaraTasi(uretim);
+          }
+        }
+      } catch (error) {
+        console.error(`Tamamlanan üretime taşımada hata: ${uretimId}`, error);
+        res.send(error);
+      }
     });
 
-    res.send(eklenenUretim);
+    // Tüm işlemleri paralel olarak çalıştır
+    await Promise.all(promises);
+
+    res.send("ok");
   }),
 );
+
+async function uretimiTamamlananlaraTasi(uretim) {
+  const { fason, musteriAdi, fasonFirmasi, siparisTipi, kodu, referansYuzeyAlani, islemTipi, resimUrl, not, irsaliyeAciklamasi } = uretim.Referanslar;
+
+  const devamEdenModel = { 1: DFasonUretim, 0: DNormalUretim };
+  const tamamlananModel = { 1: TFasonUretim, 0: TNormalUretim };
+
+  console.log("fason", fason);
+
+  const eklenenUretim = await tamamlananModel[fason].create({
+    musteriAdi,
+    fasonFirmasi,
+    siparisTipi,
+    kodu,
+    referansYuzeyAlani,
+    islemTipi,
+    resimUrl,
+    not,
+    irsaliyeAciklamasi,
+    ...uretim.dataValues,
+  });
+
+  await devamEdenModel[fason].destroy({ where: { id: uretim.id } });
+
+  return eklenenUretim;
+}
 
 export default router;

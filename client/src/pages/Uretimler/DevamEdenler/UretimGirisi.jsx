@@ -103,7 +103,7 @@ export default function UretimGirisi({ record }) {
         : localRecord.Referanslar.musteriAdi,
       fason: localRecord.Referanslar.fason,
       referansNo: localRecord.referansNo,
-      uretimSiraNo: localRecord.id,
+      uretimId: localRecord.id,
       kodu: localRecord.Referanslar.kodu,
       iade: localRecord.iade,
       uretimTarihi: getCurrentDateTime(),
@@ -287,8 +287,8 @@ export default function UretimGirisi({ record }) {
               >
                 <InputNumber
                   style={{ width: "100%" }}
-                  min={uretimAdediMinInput}
-                  max={uretimAdediMaxInput}
+                  // min={uretimAdediMinInput}
+                  // max={uretimAdediMaxInput}
                 />
               </Form.Item>
               <Form.Item

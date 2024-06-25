@@ -12,7 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FcRules } from "react-icons/fc";
 import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
-import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
+import { devamEdenUretimHttp, tamamlananUretimHttp } from "services/crud-server/uretimler.http";
 import logoGoApi from "services/logoGoApi";
 import { getCurrentDateTime, getCurrentTimeWithLogoFormat } from "utils/time.helper";
 import LogoIcon from "../../../public/logo.png";
@@ -52,8 +52,8 @@ export default function Irsaliyeler() {
     () => [
       {
         title: "Sıra No",
-        dataIndex: "uretimSiraNo",
-        key: "uretimSiraNo",
+        dataIndex: "uretimId",
+        key: "uretimId",
         render: (text) => <IdBadge value={text} />,
         width: 70,
       },
@@ -368,26 +368,34 @@ function LogoyaGonderButon({ kayitlar }) {
     const { musteriAdi } = kayitlar[0].Referanslar;
 
     try {
-      const logoIrsaliye = logoIrsaliyeObjesiOlustur(values.genelAciklama, gonderilecekKayitlar);
-      console.log("logoIrsaliye", logoIrsaliye);
+      await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(gonderilecekKayitlar);
+      await tamamlananUretimHttp.addData(gonderilecekKayitlar);
+      const devamEdenler = await devamEdenUretimHttp.getData();
+      const newIrsaliyeler = await irsaliyeHttp.listeyiTemizle(irsaliyeler, gonderilecekKayitlar);
+      setIrsaliyeler(newIrsaliyeler);
+      setDevamEdenUretimler(devamEdenler);
+      setIsModalVisible(false);
+      // ***
+      // const logoIrsaliye = logoIrsaliyeObjesiOlustur(values.genelAciklama, gonderilecekKayitlar);
+      // console.log("logoIrsaliye", logoIrsaliye);
 
-      const logoResponse = await logoGoApi.postData("PostIrsaliye", logoIrsaliye);
+      // const logoResponse = await logoGoApi.postData("PostIrsaliye", logoIrsaliye);
 
-      if (logoResponse.statusCode === 200) {
-        // await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(gonderilecekKayitlar);
-        // const devamEdenler = await devamEdenUretimHttp.getData();
-        // const newIrsaliyeler = await irsaliyeHttp.listeyiTemizle(irsaliyeler, gonderilecekKayitlar);
-        // //! gelen miktarla giden miktar eşitse ve "kodu" kısmı doluysa üretimi tamamlanan üretimlere taşı
-        // setIrsaliyeler(newIrsaliyeler);
-        // setDevamEdenUretimler(devamEdenler);
-        // setIsModalVisible(false);
-        showNotification(
-          "success",
-          `${musteriAdi} müşterisine ait irsaliye kaydı logoya gönderildi.`,
-        );
-      } else {
-        showNotification("error", logoResponse.message);
-      }
+      // if (logoResponse.statusCode === 200) {
+      //   // await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(gonderilecekKayitlar);
+      //   // const devamEdenler = await devamEdenUretimHttp.getData();
+      //   // const newIrsaliyeler = await irsaliyeHttp.listeyiTemizle(irsaliyeler, gonderilecekKayitlar);
+      //   // //! gelen miktarla giden miktar eşitse ve "kodu" kısmı doluysa üretimi tamamlanan üretimlere taşı
+      //   // setIrsaliyeler(newIrsaliyeler);
+      //   // setDevamEdenUretimler(devamEdenler);
+      //   // setIsModalVisible(false);
+      //   showNotification(
+      //     "success",
+      //     `${musteriAdi} müşterisine ait irsaliye kaydı logoya gönderildi.`,
+      //   );
+      // } else {
+      //   showNotification("error", logoResponse.message);
+      // }
     } catch (err) {
       showNotification("error", err.message);
     }

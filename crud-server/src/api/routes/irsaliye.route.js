@@ -54,7 +54,7 @@ router.post(
     const fasonUretim = await DFasonUretim.findOne({ where: { id: irsaliyeKaydi.id } });
 
     if (fasonUretim) {
-      await DFasonUretim.update({ gidenMiktar: irsaliyeKaydi.gelenMiktar });
+      await DFasonUretim.update({ gidenMiktar: irsaliyeKaydi.gelenMiktar }, { where: { id: irsaliyeKaydi.id } });
     } else {
       console.log(`ReferansNo ${irsaliyeKaydi.referansNo} için kayıt bulunamadı.`);
     }

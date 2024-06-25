@@ -9,7 +9,7 @@ const Irsaliye = sequelize.define(
       type: DataTypes.STRING(70), // farklı üretim kayıtlarının id lerini tutar '1,2,3' gibi bir şekilde
       allowNull: false,
     },
-    uretimSiraNo: {
+    uretimId: {
       type: DataTypes.STRING(70), // farklı üretim kayıtlarının id lerini tutar '1,2,3' gibi bir şekilde
       allowNull: false,
     },

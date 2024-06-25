@@ -62,6 +62,9 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       dataIndex: "kodu",
       key: "kodu",
       render: (text, record) => <ColumnBadge color="green" value={record.kodu} />,
+      filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "kodu"),
+      onFilter: (value, record) => record.kodu.indexOf(value) === 0,
+      filterSearch: true,
       width: 170,
     },
     {

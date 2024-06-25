@@ -51,16 +51,16 @@ router.get(
         },
       ],
       where: {
-        uretimSiraNo: req.params.id,
+        uretimId: req.params.id,
       },
       order: [["id", "ASC"]],
     });
 
     const uretimIdsiBazliUretimGirisleri = uretimGirisleri.reduce((acc, item) => {
-      if (!acc[item.uretimSiraNo]) {
-        acc[item.uretimSiraNo] = [];
+      if (!acc[item.uretimId]) {
+        acc[item.uretimId] = [];
       }
-      acc[item.uretimSiraNo].push(item);
+      acc[item.uretimId].push(item);
       return acc;
     }, {});
 
@@ -76,7 +76,7 @@ router.post(
     await UretimGirisi.create(req.body);
 
     if (fason) {
-      const uretim = await DFasonUretim.findByPk(req.body.uretimSiraNo);
+      const uretim = await DFasonUretim.findByPk(req.body.uretimId);
       if (uretim) {
         const updatedUretim = await uretim.update({
           uretilenMiktar: uretim.uretilenMiktar + req.body.uretimAdedi,
@@ -87,7 +87,7 @@ router.post(
         res.status(400).send("üretim girişi bulunamadı");
       }
     } else {
-      const uretim = await DNormalUretim.findByPk(req.body.uretimSiraNo);
+      const uretim = await DNormalUretim.findByPk(req.body.uretimId);
 
       if (uretim) {
         const updatedUretim = await uretim.update({
@@ -143,7 +143,7 @@ router.put(
   asyncHandler(async (req, res) => {
     const { kayitlar } = req.body;
 
-    kayitlar.forEach(async (kayit) => {
+    const updatePromises = kayitlar.map(async (kayit) => {
       const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
 
       const sonuc = await UretimGirisi.update(
@@ -161,11 +161,14 @@ router.put(
         },
       );
 
-      // üretim giden kalan kayıtlarını güncelle;
+      // üretim giden kalan kayıtlarını güncelle
       const updatedUretim = await uretimGidenVeKalanMiktarlariGuncelle(kayit);
 
       console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}, üretim kayıtları: ${updatedUretim}`);
+      return sonuc;
     });
+
+    await Promise.all(updatePromises);
 
     res.send("Tüm kayıtlar başarıyla sevk edildi.");
   }),
@@ -173,31 +176,28 @@ router.put(
 
 const uretimGidenVeKalanMiktarlariGuncelle = async (kayit) => {
   if (kayit.Referanslar.fasonFirmasi) {
-    const fasonUretim = await DFasonUretim.findByPk(kayit.uretimSiraNo);
+    const fasonUretim = await DFasonUretim.findByPk(kayit.uretimId);
 
     if (fasonUretim) {
-      const updatedUretim = await DFasonUretim.update({
-        sevkEdilenMiktar: DFasonUretim.sevkEdilenMiktar + kayit.uretimAdedi,
+      const updatedUretim = await fasonUretim.update({
+        sevkEdilenMiktar: fasonUretim.sevkEdilenMiktar + kayit.uretimAdedi,
       });
 
       return updatedUretim;
-    } else {
-      return null;
     }
-  } else {
-    const normalUretim = await DNormalUretim.findByPk(kayit.uretimSiraNo);
-
-    if (normalUretim) {
-      const updatedUretim = await DNormalUretim.update({
-        gidenMiktar: DNormalUretim.gidenMiktar + kayit.uretimAdedi,
-        kalanMiktar: DNormalUretim.kalanMiktar - kayit.uretimAdedi,
-      });
-
-      return updatedUretim;
-    } else {
-      return null;
-    }
+    return null;
   }
+  const normalUretim = await DNormalUretim.findByPk(kayit.uretimId);
+
+  if (normalUretim) {
+    const updatedUretim = await normalUretim.update({
+      gidenMiktar: normalUretim.gidenMiktar + kayit.uretimAdedi,
+      kalanMiktar: normalUretim.kalanMiktar - kayit.uretimAdedi,
+    });
+
+    return updatedUretim;
+  }
+  return null;
 };
 
 router.delete(
@@ -217,7 +217,7 @@ router.delete(
 
 const uretimKaydiniDuzenle = async (row) => {
   if (row.Referanslar.fason) {
-    const uretim = await DFasonUretim.findByPk(row.uretimSiraNo);
+    const uretim = await DFasonUretim.findByPk(row.uretimId);
     if (uretim) {
       await uretim.update({
         uretilenMiktar: uretim.uretilenMiktar - row.uretimAdedi,
@@ -226,7 +226,7 @@ const uretimKaydiniDuzenle = async (row) => {
       console.log("böyle bir fason üretim bulunamadı");
     }
   } else {
-    const uretim = await DNormalUretim.findByPk(row.uretimSiraNo);
+    const uretim = await DNormalUretim.findByPk(row.uretimId);
 
     if (uretim) {
       await uretim.update({
