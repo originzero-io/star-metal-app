@@ -6,10 +6,10 @@ class BaseHttp {
     this.service = axios;
   }
 
-  createService(baseURL) {
+  createService(serviceName, baseURL) {
     this.service = axios.create({
       baseURL, // Sunucunuzun base URL'si
-      timeout: 5000, // İsteğin zaman aşımını ayarlayın
+      timeout: 10000, // İsteğin zaman aşımını ayarlayın
     });
 
     // İstek interceptor
@@ -38,8 +38,10 @@ class BaseHttp {
           });
         } else if (error.request) {
           notification.error({
-            message: "Sunucu Yanıt Vermedi",
-            description: "Sunucudan yanıt alınamadı. Lütfen daha sonra tekrar deneyin.",
+            message: `${serviceName} sunucusundan yanıt alınamadı`,
+            // message: "Sunucu Yanıt Vermedi",
+            description: error.message,
+            // description: `${serviceName} sunucusundan yanıt alınamadı. Lütfen tekrar deneyin.`,
             duration: 5,
           });
         } else {

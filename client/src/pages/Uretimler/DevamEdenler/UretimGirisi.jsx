@@ -8,6 +8,7 @@ import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import styled from "styled-components";
 import { getCurrentDateTime } from "utils/time.helper";
 import SevkiyatKarti from "../../../components/cards/SevkiyatKarti";
+import kantarApi from "services/kantarApi";
 
 const SectionBase = styled.div`
   border: 1px solid #dcdcdc;
@@ -61,7 +62,7 @@ export default function UretimGirisi({ record }) {
 
   const [miktarSapmasi, setMiktarSapmasi] = useState(
     referanslar.filter((referans) => referans.referansNo === localRecord.referansNo)[0]
-      ?.miktarSapmasi,
+      ?.miktarSapmasi || 5,
   );
 
   // record değiştiğinde panelin içindeki verilerin de değişmesi için
@@ -92,6 +93,18 @@ export default function UretimGirisi({ record }) {
       adet,
     });
     form.setFieldsValue({ uretimAdedi: adet });
+  };
+
+  const terazidenOlcumAl = async () => {
+    const data = await kantarApi.getData();
+    setTeraziOlcum({
+      ...teraziOlcum,
+      brut: data.Net + data.Dara,
+      dara: data.Dara,
+      net: data.Net,
+      adet: data.Adet,
+    });
+    console.log("data", data);
   };
 
   const onFinish = async (values) => {
@@ -171,7 +184,7 @@ export default function UretimGirisi({ record }) {
         <div>
           <TeraziSection>
             <div>
-              <Button type="primary" icon={<FormOutlined />} onClick={fakeTeraziOlcumHandler}>
+              <Button type="primary" icon={<FormOutlined />} onClick={terazidenOlcumAl}>
                 Teraziden Ölçüm Al
               </Button>
             </div>

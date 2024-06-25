@@ -1,12 +1,4 @@
-const SerialPort = require("serialport").SerialPort;
-const { ReadlineParser } = require("@serialport/parser-readline");
-
-const port = new SerialPort({ path: "COM3", baudRate: 9600, dataBits: 8, parity: "none", stopBits: 1, flowControl: false });
-// const port = new SerialPort({ path: "COM3", baudRate: 9600,dataBits: 7, parity: "even", stopBits:1, flowControl:false  });
-
-const parser = port.pipe(new ReadlineParser({ delimiter: "\r\n" }));
-
-//! read_chatgpt_v5 dosyasındaki mantıkla çalışıyor.
+// read_data_v5
 
 function parseComplexData(input) {
   const data = {
@@ -53,11 +45,4 @@ function findNumberEnd(str, start, decimalPlaces) {
   return pointIndex + 1 + decimalPlaces;
 }
 
-parser.on("data", (data) => {
-  console.log("**************");
-  console.log(parseComplexData(data));
-});
-
-port.on("error", (err) => {
-  console.error("Seri port hatası:", err.message);
-});
+module.exports = parseComplexData;

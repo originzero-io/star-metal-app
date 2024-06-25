@@ -82,7 +82,7 @@ export default function AmbalajForm({ record, type }) {
           <Upload
             name="photo"
             listType="picture"
-            accept="image/png, image/jpeg, image/jpg"
+            accept="image/png, image/jpeg, image/jpg, image/bmp"
             fileList={fileList}
             onChange={onFileChange}
             beforeUpload={() => false}

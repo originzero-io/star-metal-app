@@ -3,7 +3,7 @@ import BaseHttp from "./base.http";
 class LogoGoApi extends BaseHttp {
   constructor() {
     super();
-    this.service = this.createService("http://192.168.1.254:6311");
+    this.service = this.createService("Logo", "http://192.168.1.254:6311");
   }
 
   // path: string

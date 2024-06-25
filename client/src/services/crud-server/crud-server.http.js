@@ -5,7 +5,7 @@ class CRUDServerHttp extends BaseHttp {
   constructor(path) {
     super();
     this.path = path;
-    this.service = this.createService(getUrlByEnvVariables());
+    this.service = this.createService("Veritabanı", getUrlByEnvVariables());
   }
 
   async getData() {

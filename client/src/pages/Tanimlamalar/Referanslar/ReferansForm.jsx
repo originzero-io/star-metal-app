@@ -105,20 +105,20 @@ export default function ReferansForm({ record, type }) {
 
       console.log("logoyaGonderilecek-post", logoyaGonderilecekPost);
 
-      // const response = await logoGoApi.postData("PostReferans", logoyaGonderilecekPost);
+      const response = await logoGoApi.postData("PostReferans", logoyaGonderilecekPost);
 
-      // if (response.statusCode === 200) {
-      //   setReferanslar([...referanslar, { logoMalzemeRef: response.newId, ...values }]);
-      //   showNotification("success", `${values.referansNo} referansı eklendi`);
-      // } else {
-      //   const duplicateError = response.message.includes("duplicate");
-      //   showNotification(
-      //     "error",
-      //     duplicateError
-      //       ? "Bu sipariş veya talep numarası daha önce girilmiş. Başka bir numara girip yeniden deneyin."
-      //       : response.message,
-      //   );
-      // }
+      if (response.statusCode === 200) {
+        setReferanslar([...referanslar, { logoMalzemeRef: response.newId, ...values }]);
+        showNotification("success", `${values.referansNo} referansı eklendi`);
+      } else {
+        const duplicateError = response.message.includes("duplicate");
+        showNotification(
+          "error",
+          duplicateError
+            ? "Bu sipariş veya talep numarası daha önce girilmiş. Başka bir numara girip yeniden deneyin."
+            : response.message,
+        );
+      }
 
       // //! silme hem logoda var hem bizde var
       // await referanslarHttp.addData(formData);
