@@ -14,9 +14,9 @@ import {
 } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logoGoApi from "services/logoGoApi";
-import referanslarHttp from "services/crud-server/referanslar.http";
+import referanslarHttp, { referansUretimHttp } from "services/crud-server/referanslar.http";
 import { ParcaAdiDuzenlemeForm, ParcaAdiEklemeForm } from "./ParcaAdiForm";
 import { IslemTipiDuzenlemeForm, IslemTipiEklemeForm } from "./IslemTipiForm";
 
@@ -43,6 +43,17 @@ export default function ReferansForm({ record, type }) {
   const [seciliParcaAdi, setSeciliParcaAdi] = useState(record?.parcaAdi);
   const [seciliIslemTipi, setSeciliIslemTipi] = useState(record?.islemTipi);
 
+  useEffect(() => {
+    form.setFieldsValue({
+      ...record,
+      miktarSapmasi: record?.ReferansUretim?.miktarSapmasi || 0,
+      lotAdedi: record?.ReferansUretim?.lotAdedi || 0,
+      referansYuzeyAlani: record?.ReferansUretim?.referansYuzeyAlani || 0,
+      resimUrl: record?.ReferansUretim?.resimUrl || "",
+      not: record?.ReferansUretim?.not || "",
+    });
+  }, [form, record]);
+
   const onFileChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
@@ -51,6 +62,7 @@ export default function ReferansForm({ record, type }) {
     if (type === "update") {
       const logoyaGonderilecekPut = {
         ...record,
+        kodu: values.kodu,
         irsaliyeAciklamasi: values.irsaliyeAciklamasi,
         fasonFirmaRef: record.fason
           ? musteriler.find((m) => m.unvani === values.fasonFirmasi).logoRef
@@ -65,17 +77,28 @@ export default function ReferansForm({ record, type }) {
       const response = await logoGoApi.putData("PutReferans", logoyaGonderilecekPut);
 
       if (response.statusCode === 200) {
+        showNotification("success", "Referans logoda güncellendi");
+        // showPanel(false);
+
         // const updatedReferans = await referanslarHttp.updateData(record.id, values);
+        const updatedReferansUretim = await referansUretimHttp.updateData(
+          record.id,
+          logoyaGonderilecekPut,
+        );
 
         const updatedReferanslar = referanslar.map((referans) => {
           if (referans.logoMalzemeRef === record.logoMalzemeRef) {
-            return { ...logoyaGonderilecekPut };
+            return {
+              ...logoyaGonderilecekPut,
+              ReferansUretim: { ...referans.ReferansUretim, ...updatedReferansUretim },
+            };
           }
           return referans;
         });
+
         setReferanslar(updatedReferanslar);
-        showNotification("success", "Referans güncellendi");
-        // showPanel(false);
+
+        showNotification("success", "Referans üretim verisi güncellendi");
       } else showNotification("error", response.message);
     } else {
       const formData = new FormData();
@@ -87,8 +110,6 @@ export default function ReferansForm({ record, type }) {
       if (fileList.length > 0) {
         formData.append("photo", fileList[0].originFileObj);
       }
-
-      console.log("values", values);
 
       const logoyaGonderilecekPost = {
         ...values,
@@ -108,8 +129,23 @@ export default function ReferansForm({ record, type }) {
       const response = await logoGoApi.postData("PostReferans", logoyaGonderilecekPost);
 
       if (response.statusCode === 200) {
-        setReferanslar([...referanslar, { logoMalzemeRef: response.newId, ...values }]);
-        showNotification("success", `${values.referansNo} referansı eklendi`);
+        showNotification("success", `${values.referansNo} referansı logoya eklendi`);
+
+        const newReferansUretim = await referansUretimHttp.addData({
+          ...logoyaGonderilecekPost,
+          logoMalzemeRef: response.newId,
+        });
+
+        setReferanslar([
+          ...referanslar,
+          {
+            ...logoyaGonderilecekPost,
+            logoMalzemeRef: newReferansUretim.logoMalzemeRef,
+            ReferansUretim: { ...newReferansUretim },
+          },
+        ]);
+
+        showNotification("success", `${values.referansNo} referansı için üretim verileri eklendi`);
       } else {
         const duplicateError = response.message.includes("duplicate");
         showNotification(
@@ -120,9 +156,7 @@ export default function ReferansForm({ record, type }) {
         );
       }
 
-      // //! silme hem logoda var hem bizde var
       // await referanslarHttp.addData(formData);
-      // showNotification("success", "Referans eklendi");
     }
   };
 
@@ -239,7 +273,7 @@ export default function ReferansForm({ record, type }) {
       labelCol={{ flex: "170px" }}
       labelAlign="left"
       key={record ? record.id : "form"}
-      initialValues={record || { miktarSapmasi: 0, fason: record?.fason || false, not: "" }}
+      initialValues={record || { fason: record?.fason || false }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -247,6 +281,15 @@ export default function ReferansForm({ record, type }) {
       <Divider style={{ color: "#4535aa", marginTop: 0 }} orientation="left">
         Logo Verileri
       </Divider>
+      {type === "update" && record.kodu.toLowerCase().includes("yok") && (
+        <Form.Item
+          label="Kodu"
+          name="kodu"
+          rules={[{ required: true, message: "Bu alanı doldurun" }]}
+        >
+          <Input placeholder="Kodu" style={{ color: "#e03d3d" }} />
+        </Form.Item>
+      )}
       <Form.Item
         label="Referans No"
         name="referansNo"

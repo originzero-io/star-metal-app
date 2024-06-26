@@ -158,16 +158,19 @@ function Referanslar() {
         title: "Miktar Sapması",
         dataIndex: "miktarSapmasi",
         key: "miktarSapmasi",
+        render: (value, record) => record.ReferansUretim?.miktarSapmasi,
       },
       {
         title: "Lot Adedi",
         dataIndex: "lotAdedi",
         key: "lotAdedi",
+        render: (value, record) => record.ReferansUretim?.lotAdedi,
       },
       {
         title: "Yüzey Alanı",
         dataIndex: "referansYuzeyAlani",
         key: "referansYuzeyAlani",
+        render: (value, record) => record.ReferansUretim?.referansYuzeyAlani,
       },
       {
         title: "İşlem Tipi",

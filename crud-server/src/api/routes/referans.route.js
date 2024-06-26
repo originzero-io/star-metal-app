@@ -3,7 +3,7 @@ import asyncHandler from "express-async-handler";
 import fs from "fs";
 import multer from "multer";
 import { findDirname } from "../../utils/file.js";
-import Referans from "../models/referans.model.js";
+import Referans, { ReferansUretim } from "../models/referans.model.js";
 import { DNormalUretim } from "../models/uretim.model.js";
 
 const referansResimMiddleware = multer({
@@ -57,15 +57,23 @@ router.post(
   asyncHandler(async (req, res) => {
     // mevcut tüm kayıtları sil yeni gelen listeyle doldur
     const logodanGelenKayitlar = req.body;
-    console.log("logodanGelenKayitlar", logodanGelenKayitlar);
-
     try {
       await Referans.destroy({
         truncate: true,
       });
-      const newIslemTipleri = await Referans.bulkCreate(logodanGelenKayitlar);
+      await Referans.bulkCreate(logodanGelenKayitlar);
 
-      res.json(newIslemTipleri);
+      const newReferanslar = await Referans.findAll({
+        include: [
+          {
+            model: ReferansUretim,
+            required: false, // INNER JOIN, false ise LEFT JOIN olur
+            as: "ReferansUretim",
+          },
+        ],
+      });
+
+      res.json(newReferanslar);
     } catch (error) {
       console.log("error: ", error);
     }
@@ -113,6 +121,33 @@ router.delete(
     await Promise.all(deletePromises);
 
     res.send("Referans ve referans resmi silme işlemi başarılı.");
+  }),
+);
+
+router.post(
+  "/uretim-verileri",
+  asyncHandler(async (req, res) => {
+    const uretimVerileri = req.body;
+    const newReferansUretim = await ReferansUretim.create(uretimVerileri);
+
+    res.json(newReferansUretim);
+  }),
+);
+
+router.put(
+  "/uretim-verileri",
+  asyncHandler(async (req, res) => {
+    const yeniVeri = req.body;
+
+    const referansUretim = await ReferansUretim.findOne({ where: { logoMalzemeRef: yeniVeri.logoMalzemeRef } });
+
+    if (referansUretim) {
+      const updatedReferansUretim = await referansUretim.update(yeniVeri);
+      res.json(updatedReferansUretim);
+    } else {
+      console.log("Böyle bir referans üretim verisi bulunamadı", yeniVeri.logoMalzemeRef);
+      res.send("Böyle bir referans üretim verisi bulunamadı");
+    }
   }),
 );
 

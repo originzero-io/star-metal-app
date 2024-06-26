@@ -56,10 +56,11 @@ export const DBProvider = ({ children }) => {
       setReferansAnaBirimleri(logoAnaBirimler);
       showNotification("success", "Referans ana birimleri logo ile eşlendi.");
 
-      // const logoReferanslar = await logoGoApi.getData("GetReferansList");
-      // await referanslarHttp.logoIleEsle(logoReferanslar);
-      const logoReferanslar = await referanslarHttp.getData();
-      setReferanslar(logoReferanslar);
+      const logoReferanslar = await logoGoApi.getData("GetReferansList");
+      const combinedReferanslar = await referanslarHttp.logoIleEsle(logoReferanslar);
+
+      // const logoReferanslar = await referanslarHttp.getData();
+      setReferanslar(combinedReferanslar);
       showNotification("success", "Referanslar logo ile eşlendi.");
       setLoading(false);
     } catch (error) {
@@ -104,8 +105,6 @@ export const DBProvider = ({ children }) => {
     try {
       setLoading(true);
       const devamEdenUretimData = await devamEdenUretimHttp.getData();
-      console.log("devamEdenUretimData", devamEdenUretimData);
-
       setDevamEdenUretimler(devamEdenUretimData);
       setLoading(false);
     } catch (error) {

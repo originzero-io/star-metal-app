@@ -81,21 +81,38 @@ const Referans = sequelize.define(
       type: DataTypes.STRING(70),
       allowNull: true,
     },
-    miktarSapmasi: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    lotAdedi: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    referansYuzeyAlani: {
-      type: DataTypes.DECIMAL(5, 2),
-      allowNull: true,
-    },
     islemTipi: {
       type: DataTypes.STRING(30),
       allowNull: true,
+    },
+  },
+  {
+    tableName: "Referanslar",
+    timestamps: false,
+  },
+);
+
+// Referans.sync({ force: true });
+
+export const ReferansUretim = sequelize.define(
+  "ReferansUretim",
+  {
+    logoMalzemeRef: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+    },
+    miktarSapmasi: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    lotAdedi: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    referansYuzeyAlani: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false,
     },
     resimUrl: {
       type: DataTypes.STRING(40),
@@ -107,9 +124,14 @@ const Referans = sequelize.define(
     },
   },
   {
-    tableName: "Referanslar",
+    tableName: "ReferansUretim",
     timestamps: false,
   },
 );
+
+// ReferansUretim.sync({ force: true });
+
+Referans.hasOne(ReferansUretim, { foreignKey: "logoMalzemeRef", sourceKey: "logoMalzemeRef", as: "ReferansUretim" });
+ReferansUretim.belongsTo(Referans, { foreignKey: "logoMalzemeRef", targetKey: "logoMalzemeRef", as: "Referans" });
 
 export default Referans;
