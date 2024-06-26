@@ -5,10 +5,10 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useEffect, useState } from "react";
 import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
+import kantarApi from "services/kantarApi";
 import styled from "styled-components";
 import { getCurrentDateTime } from "utils/time.helper";
 import SevkiyatKarti from "../../../components/cards/SevkiyatKarti";
-import kantarApi from "services/kantarApi";
 
 const SectionBase = styled.div`
   border: 1px solid #dcdcdc;
@@ -73,6 +73,8 @@ export default function UretimGirisi({ record }) {
   const [printTrigger, setPrintTrigger] = useState(false);
   const [sevkiyatKartiKayit, setSevkiyatKartiKayit] = useState(null);
 
+  const [teraziLoading, setTeraziLoading] = useState(null);
+
   const [teraziOlcum, setTeraziOlcum] = useState({
     brut: 0,
     dara: 0,
@@ -95,16 +97,23 @@ export default function UretimGirisi({ record }) {
     form.setFieldsValue({ uretimAdedi: adet });
   };
 
+  function roundUp(num, decimals = 1) {
+    return parseFloat(num.toFixed(decimals));
+  }
+
   const terazidenOlcumAl = async () => {
+    setTeraziLoading(true);
     const data = await kantarApi.getData();
+
     setTeraziOlcum({
       ...teraziOlcum,
-      brut: data.Net + data.Dara,
+      brut: roundUp(data.Net + data.Dara),
       dara: data.Dara,
       net: data.Net,
       adet: data.Adet,
     });
     console.log("data", data);
+    setTeraziLoading(false);
   };
 
   const onFinish = async (values) => {
@@ -184,7 +193,12 @@ export default function UretimGirisi({ record }) {
         <div>
           <TeraziSection>
             <div>
-              <Button type="primary" icon={<FormOutlined />} onClick={terazidenOlcumAl}>
+              <Button
+                type="primary"
+                icon={<FormOutlined />}
+                onClick={terazidenOlcumAl}
+                loading={teraziLoading}
+              >
                 Teraziden Ölçüm Al
               </Button>
             </div>
