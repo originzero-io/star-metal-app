@@ -78,7 +78,9 @@ function Ambalajlar() {
             cover={
               <img
                 alt="example"
-                src={`${getUrlByEnvVariables()}/uploads/ambalajlar/${ambalaj.resimUrl}`}
+                src={`${getUrlByEnvVariables()}/uploads/ambalajlar/${
+                  ambalaj.resimUrl
+                }?t=${new Date().getTime()}`}
                 height={200}
               />
             }

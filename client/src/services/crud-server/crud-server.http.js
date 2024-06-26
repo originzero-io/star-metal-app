@@ -24,6 +24,15 @@ class CRUDServerHttp extends BaseHttp {
     return data;
   }
 
+  async updateWithPhoto(newData) {
+    const { data } = await this.service.put(`${this.path}`, newData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return data;
+  }
+
   async deleteData(dataArray, selectedRows) {
     await this.service.delete(this.path, {
       data: { selectedRows },

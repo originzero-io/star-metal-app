@@ -3,41 +3,69 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import ambalajlarHttp from "services/crud-server/ambalajlar.http";
 import { UploadOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import getUrlByEnvVariables from "utils/getServerUrl";
 
 export default function AmbalajForm({ record, type }) {
   const { showPanel, showNotification } = useUIContext();
   const { ambalajlar, setAmbalajlar } = useDBContext();
 
+  const [form] = Form.useForm();
+
   const [fileList, setFileList] = useState([]);
 
+  // Düzenleme ekranında mevcut resim gözüksün diye gerekli ayarlamalar
+  useEffect(() => {
+    if (type === "update") {
+      const initialFileList = [
+        {
+          uid: "-1",
+          name: record.resimUrl,
+          status: "done",
+          url: `${getUrlByEnvVariables()}/uploads/ambalajlar/${record.resimUrl}`,
+        },
+      ];
+      setFileList(initialFileList);
+
+      form.setFieldsValue({
+        kasaAdi: record.kasaAdi,
+        kasaTanimi: record.kasaTanimi,
+        kasaOlcusu: record.kasaOlcusu,
+        photo: initialFileList,
+      });
+    }
+  }, [form, type, record]);
+
   const onFileChange = ({ fileList: newFileList }) => {
-    console.log("fileList: ", newFileList);
     setFileList(newFileList);
   };
+
   const onFinish = async (values) => {
+    const formData = new FormData();
+    formData.append("kasaAdi", values.kasaAdi);
+    formData.append("kasaTanimi", values.kasaTanimi);
+    formData.append("kasaOlcusu", values.kasaOlcusu);
+    formData.append("photo", fileList[0].originFileObj);
+
     if (type === "update") {
-      const updatedAmbalaj = await ambalajlarHttp.updateData(record.id, values);
+      formData.append("id", record.id);
+
+      const updatedAmbalaj = await ambalajlarHttp.updateWithPhoto(formData);
 
       const updatedAmbalajlarArray = ambalajlar.map((ambalaj) => {
         if (ambalaj.id === updatedAmbalaj.id) {
-          return { ...updatedAmbalaj };
+          // resmin otomatik render edilmesi için urlin sonuna query ekledik
+          return {
+            ...updatedAmbalaj,
+            resimUrl: `${updatedAmbalaj.resimUrl}?t=${new Date().getTime()}`,
+          };
         }
         return ambalaj;
       });
+
       setAmbalajlar(updatedAmbalajlarArray);
-      // showPanel(false);
       showNotification("success", "Ambalaj güncellendi");
     } else {
-      const formData = new FormData();
-      formData.append("kasaAdi", values.kasaAdi);
-      formData.append("kasaTanimi", values.kasaTanimi);
-      formData.append("kasaOlcusu", values.kasaOlcusu);
-
-      if (fileList.length > 0) {
-        formData.append("photo", fileList[0].originFileObj);
-      }
-
       const newAmbalaj = await ambalajlarHttp.addData(formData);
       setAmbalajlar([...ambalajlar, { ...newAmbalaj }]);
       showNotification("success", "Ambalaj eklendi");
@@ -49,6 +77,7 @@ export default function AmbalajForm({ record, type }) {
   };
   return (
     <Form
+      form={form}
       name="basic"
       labelCol={{ flex: "130px" }}
       labelAlign="left"
@@ -94,30 +123,29 @@ export default function AmbalajForm({ record, type }) {
       >
         <Input placeholder="Kasa ölçüsü girin" />
       </Form.Item>
-      {type !== "update" && (
-        <Form.Item
-          label="Resim Ekle"
+      <Form.Item
+        label={type === "update" ? "Resim Değiştir" : "Resim Ekle"}
+        name="photo"
+        rules={[
+          {
+            required: true,
+            message: "Bu ürüne ait bir resim seçin",
+          },
+        ]}
+      >
+        <Upload
           name="photo"
-          rules={[
-            {
-              required: true,
-              message: "Bu ürüne ait bir resim seçin",
-            },
-          ]}
+          listType="picture"
+          accept="image/png, image/jpeg, image/jpg, image/bmp"
+          fileList={fileList}
+          onChange={onFileChange}
+          beforeUpload={() => false}
+          maxCount={1}
         >
-          <Upload
-            name="photo"
-            listType="picture"
-            accept="image/png, image/jpeg, image/jpg, image/bmp"
-            fileList={fileList}
-            onChange={onFileChange}
-            beforeUpload={() => false}
-            maxCount={1}
-          >
-            <Button icon={<UploadOutlined />}>Resim seç</Button>
-          </Upload>
-        </Form.Item>
-      )}
+          <Button icon={<UploadOutlined />}>Resim seç</Button>
+        </Upload>
+      </Form.Item>
+
       <Divider />
 
       <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
