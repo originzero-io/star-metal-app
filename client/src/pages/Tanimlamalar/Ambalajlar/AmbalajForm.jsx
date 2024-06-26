@@ -129,7 +129,14 @@ export default function AmbalajForm({ record, type }) {
         rules={[
           {
             required: true,
-            message: "Bu ürüne ait bir resim seçin",
+          },
+          {
+            validator: (_, value) => {
+              if (fileList.length === 0 || !fileList[0].originFileObj) {
+                return Promise.reject(new Error("Bu ambalaja ait bir resim seçin"));
+              }
+              return Promise.resolve();
+            },
           },
         ]}
       >
