@@ -202,14 +202,14 @@ router.post(
           ],
         });
 
-        console.log("uretim", { gelen: uretim.gelenMiktar, giden: uretim.gidenMiktar, sevkEdilen: uretim.sevkEdilenMiktar });
+        const kodVar = !uretim.Referanslar.kodu.toLowerCase().includes("yok");
 
         if (fason) {
-          if (uretim.gelenMiktar === uretim.sevkEdilenMiktar) {
+          if (uretim.gelenMiktar === uretim.sevkEdilenMiktar && kodVar) {
             await uretimiTamamlananlaraGonder(uretim);
           }
         } else {
-          if (uretim.gelenMiktar === uretim.gidenMiktar) {
+          if (uretim.gelenMiktar === uretim.gidenMiktar && kodVar) {
             await uretimiTamamlananlaraGonder(uretim);
           }
         }
@@ -219,7 +219,6 @@ router.post(
       }
     });
 
-    // Tüm işlemleri paralel olarak çalıştır
     await Promise.all(promises);
 
     res.send("Üretimler kontrol edildi. Tamamlananlar Tamamlanan üretime taşındı.");
