@@ -55,9 +55,9 @@ router.put(
   ambalajResimMiddleware.single("photo"),
   asyncHandler(async (req, res) => {
     const ambalaj = await Ambalaj.findByPk(req.body.id);
-    if (ambalaj) {
-      let { resimUrl } = ambalaj;
+    let { resimUrl } = ambalaj;
 
+    if (ambalaj) {
       if (req.file) {
         // Yeni resmi kaydet
         resimUrl = `${req.body.kasaAdi}.${req.file.mimetype.split("/")[1]}`;

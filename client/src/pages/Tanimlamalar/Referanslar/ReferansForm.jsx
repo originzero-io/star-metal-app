@@ -73,6 +73,8 @@ export default function ReferansForm({ record, type }) {
   };
 
   const onFinish = async (values) => {
+    const formData = new FormData();
+
     if (type === "update") {
       const logoyaGonderilecekPut = {
         ...record,
@@ -94,17 +96,29 @@ export default function ReferansForm({ record, type }) {
         showNotification("success", "Referans logoda güncellendi");
         // showPanel(false);
 
-        // const updatedReferans = await referanslarHttp.updateData(record.id, values);
-        const updatedReferansUretim = await referansUretimHttp.updateData(
-          record.id,
-          logoyaGonderilecekPut,
-        );
+        Object.keys(logoyaGonderilecekPut).forEach((key) => {
+          if (key === "ReferansUretim") {
+            formData.append(key, JSON.stringify(logoyaGonderilecekPut[key]));
+          } else {
+            formData.append(key, logoyaGonderilecekPut[key]);
+          }
+        });
+
+        if (fileList.length > 0) {
+          formData.append("photo", fileList[0].originFileObj);
+        }
+
+        const updatedReferansUretim = await referansUretimHttp.updateWithPhoto(formData);
 
         const updatedReferanslar = referanslar.map((referans) => {
           if (referans.logoMalzemeRef === record.logoMalzemeRef) {
             return {
               ...logoyaGonderilecekPut,
-              ReferansUretim: { ...referans.ReferansUretim, ...updatedReferansUretim },
+              ReferansUretim: {
+                ...referans.ReferansUretim,
+                ...updatedReferansUretim,
+                resimUrl: `${updatedReferansUretim.resimUrl}?t=${new Date().getTime()}`,
+              },
             };
           }
           return referans;
@@ -128,16 +142,10 @@ export default function ReferansForm({ record, type }) {
           musteriler.find((musteri) => musteri.unvani === values.fasonFirmasi)?.logoRef ?? 0, // eğer kayıt fason değilse 0 olarak doldur
       };
 
-      console.log("logoyaGonderilecek-post", logoyaGonderilecekPost);
-
       const response = await logoGoApi.postData("PostReferans", logoyaGonderilecekPost);
-
-      console.log("response", response);
 
       if (response.statusCode === 200) {
         showNotification("success", `${values.referansNo} referansı logoya eklendi`);
-
-        const formData = new FormData();
 
         Object.keys(logoyaGonderilecekPost).forEach((key) => {
           formData.append(key, logoyaGonderilecekPost[key]);
@@ -599,7 +607,7 @@ export default function ReferansForm({ record, type }) {
         <Upload
           name="photo"
           listType="picture"
-          accept="image/png, image/jpeg, image/jpg"
+          accept="image/png, image/jpeg, image/jpg, image/tiff"
           fileList={fileList}
           onChange={onFileChange}
           beforeUpload={() => false}

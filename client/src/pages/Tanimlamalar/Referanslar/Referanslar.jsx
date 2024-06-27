@@ -281,7 +281,7 @@ function Referanslar() {
               title: "Resmi Göster",
               action: () =>
                 showModal({
-                  title: `${record.kodu} / ${record.referansNo}`,
+                  title: `Referans No: ${record.referansNo} `,
                   content: (
                     <Flex justify="center">
                       <img
@@ -289,11 +289,11 @@ function Referanslar() {
                         src={`${getUrlByEnvVariables()}/uploads/referanslar/${
                           record.ReferansUretim.resimUrl
                         }?t=${new Date().getTime()}`}
-                        height={300}
+                        style={{ maxHeight: "90vh", maxWidth: "100%" }}
                       />
                     </Flex>
                   ),
-                  width: 400,
+                  width: 2000,
                 }),
             },
           ],

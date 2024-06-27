@@ -2,6 +2,7 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 import fs from "fs";
 import multer from "multer";
+import path from "path";
 import { findDirname } from "../../utils/file.js";
 import Referans, { ReferansUretim } from "../models/referans.model.js";
 import { DNormalUretim } from "../models/uretim.model.js";
@@ -155,13 +156,40 @@ router.post(
 
 router.put(
   "/uretim-verileri",
+  referansResimMiddleware.single("photo"),
   asyncHandler(async (req, res) => {
     const yeniVeri = req.body;
+    console.log("yeniVeri", yeniVeri);
+
+    const yeniReferansUretim = JSON.parse(yeniVeri.ReferansUretim);
+    console.log(yeniReferansUretim);
+
+    let { resimUrl } = yeniReferansUretim;
+    console.log("eskiResimUrl", resimUrl);
 
     const referansUretim = await ReferansUretim.findOne({ where: { logoMalzemeRef: yeniVeri.logoMalzemeRef } });
 
     if (referansUretim) {
-      const updatedReferansUretim = await referansUretim.update(yeniVeri);
+      if (req.file) {
+        // Yeni resmi kaydet
+        resimUrl = `${yeniVeri.referansNo}.${req.file.mimetype.split("/")[1]}`;
+        const newFilePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${resimUrl}`;
+
+        // Dosyayı yeni adla yeniden adlandır
+        const currentFilePath = req.file.path;
+        fs.renameSync(currentFilePath, newFilePath);
+      } else {
+        // Fotoğraf değişmemişse, mevcut adı yeni ada yeniden adlandır
+        const oldFilePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${referansUretim.resimUrl}`;
+        const newFilePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${yeniVeri.referansNo}${path.extname(referansUretim.resimUrl)}`;
+        if (oldFilePath !== newFilePath && fs.existsSync(oldFilePath)) {
+          fs.renameSync(oldFilePath, newFilePath);
+          resimUrl = `${req.body.kasaAdi}${path.extname(referansUretim.resimUrl)}`;
+          console.log("resim yeniden adlandırıldı:", resimUrl);
+        }
+      }
+
+      const updatedReferansUretim = await referansUretim.update({ ...yeniVeri, resimUrl });
       res.json(updatedReferansUretim);
     } else {
       console.log("Böyle bir referans üretim verisi bulunamadı", yeniVeri.logoMalzemeRef);
