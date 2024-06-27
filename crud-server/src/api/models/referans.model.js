@@ -35,6 +35,7 @@ const Referans = sequelize.define(
     logoMalzemeRef: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
     },
     logoAnaBirimRef: {
       type: DataTypes.INTEGER,
