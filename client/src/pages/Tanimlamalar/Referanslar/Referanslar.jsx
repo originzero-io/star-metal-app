@@ -285,7 +285,7 @@ function Referanslar() {
                   content: (
                     <Flex justify="center">
                       <img
-                        alt="example"
+                        alt="Resim bulunamadı"
                         src={`${getUrlByEnvVariables()}/uploads/referanslar/${
                           record.ReferansUretim.resimUrl
                         }?t=${new Date().getTime()}`}

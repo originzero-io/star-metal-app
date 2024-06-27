@@ -15,6 +15,7 @@ import {
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useEffect, useState } from "react";
+import getUrlByEnvVariables from "utils/getServerUrl";
 import logoGoApi from "services/logoGoApi";
 import referanslarHttp, { referansUretimHttp } from "services/crud-server/referanslar.http";
 import { ParcaAdiDuzenlemeForm, ParcaAdiEklemeForm } from "./ParcaAdiForm";
@@ -44,15 +45,28 @@ export default function ReferansForm({ record, type }) {
   const [seciliIslemTipi, setSeciliIslemTipi] = useState(record?.islemTipi);
 
   useEffect(() => {
-    form.setFieldsValue({
-      ...record,
-      miktarSapmasi: record?.ReferansUretim?.miktarSapmasi || 0,
-      lotAdedi: record?.ReferansUretim?.lotAdedi || 0,
-      referansYuzeyAlani: record?.ReferansUretim?.referansYuzeyAlani || 0,
-      resimUrl: record?.ReferansUretim?.resimUrl || "",
-      not: record?.ReferansUretim?.not || "",
-    });
-  }, [form, record]);
+    if (type === "update") {
+      const initialFileList = [
+        {
+          uid: "-1",
+          name: record.ReferansUretim.resimUrl,
+          status: "done",
+          url: `${getUrlByEnvVariables()}/uploads/referanslar/${record.ReferansUretim.resimUrl}`,
+        },
+      ];
+      setFileList(initialFileList);
+
+      form.setFieldsValue({
+        ...record,
+        miktarSapmasi: record?.ReferansUretim?.miktarSapmasi || 0,
+        lotAdedi: record?.ReferansUretim?.lotAdedi || 0,
+        referansYuzeyAlani: record?.ReferansUretim?.referansYuzeyAlani || 0,
+        resimUrl: record?.ReferansUretim?.resimUrl || "",
+        not: record?.ReferansUretim?.not || "",
+        photo: initialFileList,
+      });
+    }
+  }, [form, type, record]);
 
   const onFileChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -574,10 +588,21 @@ export default function ReferansForm({ record, type }) {
       </Form.Item>
 
       <Form.Item
-        label="Resim"
+        label={type === "update" ? "Resim Değiştir" : "Resim Ekle"}
         name="resimUrl"
-        rules={[{ required: type !== "update", message: "Bu alanı doldurun" }]}
-        style={type === "update" ? { display: "none" } : null}
+        rules={[
+          {
+            required: true,
+          },
+          {
+            validator: (_, value) => {
+              if (fileList.length === 0 || !fileList[0].originFileObj) {
+                return Promise.reject(new Error("Bu referansa ait bir resim seçin"));
+              }
+              return Promise.resolve();
+            },
+          },
+        ]}
       >
         <Upload
           name="photo"
