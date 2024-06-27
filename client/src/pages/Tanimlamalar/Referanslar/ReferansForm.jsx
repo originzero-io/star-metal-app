@@ -101,16 +101,6 @@ export default function ReferansForm({ record, type }) {
         showNotification("success", "Referans üretim verisi güncellendi");
       } else showNotification("error", response.message);
     } else {
-      const formData = new FormData();
-
-      Object.keys(values).forEach((key) => {
-        formData.append(key, values[key]);
-      });
-
-      if (fileList.length > 0) {
-        formData.append("photo", fileList[0].originFileObj);
-      }
-
       const logoyaGonderilecekPost = {
         ...values,
         parcaAdi: seciliParcaAdi.adi,
@@ -128,13 +118,24 @@ export default function ReferansForm({ record, type }) {
 
       const response = await logoGoApi.postData("PostReferans", logoyaGonderilecekPost);
 
+      console.log("response", response);
+
       if (response.statusCode === 200) {
         showNotification("success", `${values.referansNo} referansı logoya eklendi`);
 
-        const newReferansUretim = await referansUretimHttp.addData({
-          ...logoyaGonderilecekPost,
-          logoMalzemeRef: response.newId,
+        const formData = new FormData();
+
+        Object.keys(logoyaGonderilecekPost).forEach((key) => {
+          formData.append(key, logoyaGonderilecekPost[key]);
         });
+
+        if (fileList.length > 0) {
+          formData.append("photo", fileList[0].originFileObj);
+        }
+
+        formData.delete("logoMalzemeRef");
+        formData.append("logoMalzemeRef", response.newId);
+        const newReferansUretim = await referansUretimHttp.addData(formData);
 
         setReferanslar([
           ...referanslar,

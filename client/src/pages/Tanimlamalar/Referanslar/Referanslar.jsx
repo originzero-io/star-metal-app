@@ -1,5 +1,11 @@
-import { BankOutlined, DeleteOutlined, FileDoneOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Modal, Tag } from "antd";
+import {
+  BankOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  FileDoneOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import { Button, Flex, Modal, Tag } from "antd";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
@@ -8,8 +14,9 @@ import { useUIContext } from "context/UIProvider";
 import ReferansForm from "pages/Tanimlamalar/Referanslar/ReferansForm";
 import { useMemo, useState } from "react";
 import { MdOutlineDocumentScanner } from "react-icons/md";
-import logoGoApi from "services/logoGoApi";
 import referanslarHttp from "services/crud-server/referanslar.http";
+import logoGoApi from "services/logoGoApi";
+import getUrlByEnvVariables from "utils/getServerUrl";
 import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../../../components/shared/TableGod";
 
@@ -21,7 +28,7 @@ function Referanslar() {
   const { user } = useAuth();
 
   const [selectedRows, setSelectedRows] = useState([]);
-  const { showPanel, showNotification } = useUIContext();
+  const { showPanel, showNotification, showModal } = useUIContext();
   const { referanslar, setReferanslar } = useDBContext();
 
   const columns = useMemo(
@@ -268,6 +275,28 @@ function Referanslar() {
         contextMenu={{
           editForm: ReferansForm,
           deleteAction: deleteSingleRecordHandler,
+          extraItems: (record) => [
+            {
+              icon: <EyeOutlined />,
+              title: "Resmi Göster",
+              action: () =>
+                showModal({
+                  title: `${record.kodu} / ${record.referansNo}`,
+                  content: (
+                    <Flex justify="center">
+                      <img
+                        alt="example"
+                        src={`${getUrlByEnvVariables()}/uploads/referanslar/${
+                          record.ReferansUretim.resimUrl
+                        }?t=${new Date().getTime()}`}
+                        height={300}
+                      />
+                    </Flex>
+                  ),
+                  width: 400,
+                }),
+            },
+          ],
         }}
         actionButtons={
           <>

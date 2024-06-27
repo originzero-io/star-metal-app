@@ -138,11 +138,18 @@ router.delete(
 
 router.post(
   "/uretim-verileri",
+  referansResimMiddleware.single("photo"),
   asyncHandler(async (req, res) => {
-    const uretimVerileri = req.body;
-    const newReferansUretim = await ReferansUretim.create(uretimVerileri);
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "Resim yok" });
+    }
+    const referansUretimVerisi = req.body;
 
-    res.json(newReferansUretim);
+    const resimUrl = `${referansUretimVerisi.referansNo}.${req.file.mimetype.split("/")[1]}`;
+
+    const newReferansUretim = await ReferansUretim.create({ ...referansUretimVerisi, resimUrl });
+
+    res.status(201).json(newReferansUretim);
   }),
 );
 
