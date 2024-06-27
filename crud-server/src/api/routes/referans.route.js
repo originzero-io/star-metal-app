@@ -121,19 +121,28 @@ router.delete(
 
     const deletePromises = selectedRows.map(async (row) => {
       await Referans.destroy({
-        where: { id: row.id },
+        where: { logoMalzemeRef: row.logoMalzemeRef },
       });
       await ReferansUretim.destroy({
         where: { logoMalzemeRef: row.logoMalzemeRef },
       });
 
-      // const filePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${row.ReferansUretim.resimUrl}`;
-      // fs.unlink(filePath); // fs.unlinkSync yerine async/await kullanmak için fs.unlink kullanıyoruz
+      const filePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${row.ReferansUretim?.resimUrl}`;
+
+      if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error(`Resmi silerken hata oluştu: ${filePath}`, err);
+          } else {
+            console.log(`Referans resmi silindi: ${filePath}`);
+          }
+        });
+      } else console.log("Bu referansa ait kayıtlı bir resim yoktu.");
     });
 
     await Promise.all(deletePromises);
 
-    res.send("Referans ve referans resmi silme işlemi başarılı.");
+    res.send("Referans, referans üretim verileri ve referans resmi silme işlemi başarılı.");
   }),
 );
 
