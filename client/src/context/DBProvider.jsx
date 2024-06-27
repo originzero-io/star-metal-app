@@ -44,24 +44,25 @@ export const DBProvider = ({ children }) => {
   const fetchReferanslar = async () => {
     try {
       setLoading(true);
-      const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
-      setReferansParcaAdlari(logoParcaAdlari);
-      showNotification("success", "Referans parça adları logo ile eşlendi.");
 
-      const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
-      setReferansIslemTipleri(logoIslemTipleri);
-      showNotification("success", "Referans işlem tipleri logo ile eşlendi.");
-
-      const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
-      setReferansAnaBirimleri(logoAnaBirimler);
-      showNotification("success", "Referans ana birimleri logo ile eşlendi.");
+      // const tumReferanslar = await referanslarHttp.getData();
+      // console.log("tumReferanslar", tumReferanslar);
 
       const logoReferanslar = await logoGoApi.getData("GetReferansList");
       const combinedReferanslar = await referanslarHttp.logoIleEsle(logoReferanslar);
 
-      // const logoReferanslar = await referanslarHttp.getData();
       setReferanslar(combinedReferanslar);
-      showNotification("success", "Referanslar logo ile eşlendi.");
+      showNotification("success", "Referanslar logodan alındı.");
+
+      const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
+      setReferansParcaAdlari(logoParcaAdlari);
+      const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
+      setReferansIslemTipleri(logoIslemTipleri);
+      const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
+      setReferansAnaBirimleri(logoAnaBirimler);
+
+      showNotification("success", "Referans alt bilgileri logodan alındı.");
+
       setLoading(false);
     } catch (error) {
       showNotification("error", "Referans verisi alınamadı", error.message);
@@ -75,7 +76,7 @@ export const DBProvider = ({ children }) => {
       setIrsaliyeler(irsaliyeData);
       setLoading(false);
     } catch (error) {
-      showNotification("error", "İrsaliye verisi alınamadı", error.message);
+      showNotification("error", "İrsaliye verisi veritabanından alınamadı", error.message);
     }
   };
   const fetchMusteriler = async () => {
@@ -83,11 +84,11 @@ export const DBProvider = ({ children }) => {
       setLoading(true);
       const logoMusteriler = await logoGoApi.getData("GetCariList");
       setMusteriler(logoMusteriler);
-      showNotification("success", "Müşteriler logo ile eşlendi.");
+      showNotification("success", "Müşteriler logodan alındı.");
 
       setLoading(false);
     } catch (error) {
-      showNotification("error", "Müşteri verisi alınamadı", error.message);
+      showNotification("error", "Müşteri verisi logodan alınamadı", error.message);
     }
   };
 
@@ -98,7 +99,7 @@ export const DBProvider = ({ children }) => {
       setAmbalajlar(ambalajData);
       setLoading(false);
     } catch (error) {
-      showNotification("error", "Ambalaj verisi alınamadı", error.message);
+      showNotification("error", "Ambalaj verisi veritabanından alınamadı", error.message);
     }
   };
   const fetchDevamEdenUretimler = async () => {
@@ -108,7 +109,7 @@ export const DBProvider = ({ children }) => {
       setDevamEdenUretimler(devamEdenUretimData);
       setLoading(false);
     } catch (error) {
-      showNotification("error", "Üretim verisi alınamadı", error.message);
+      showNotification("error", "Üretim verisi veritabanından alınamadı", error.message);
     }
   };
 
@@ -119,7 +120,7 @@ export const DBProvider = ({ children }) => {
       setPersoneller(personelData);
       setLoading(false);
     } catch (error) {
-      showNotification("error", "Personel verisi alınamadı", error.message);
+      showNotification("error", "Personel verisi veritabanından alınamadı", error.message);
     }
   };
 
@@ -128,11 +129,11 @@ export const DBProvider = ({ children }) => {
       setLoading(true);
       const logoSoforler = await logoGoApi.getData("GetSoforList");
       setSoforler(logoSoforler);
-      showNotification("success", "Şoförler logo ile eşlendi.");
+      showNotification("success", "Şoförler logodan alındı.");
 
       setLoading(false);
     } catch (error) {
-      showNotification("error", "Şoför verisi alınamadı", error.message);
+      showNotification("error", "Şoför verisi logodan alınamadı", error.message);
     }
   };
 
@@ -141,9 +142,11 @@ export const DBProvider = ({ children }) => {
       setLoading(true);
       const logoPlakalar = await logoGoApi.getData("GetAracList");
       setPlakalar(logoPlakalar);
+      showNotification("success", "Plakalar logodan alındı.");
+
       setLoading(false);
     } catch (error) {
-      showNotification("error", "Plaka verisi alınamadı", error.message);
+      showNotification("error", "Plaka verisi logodan alınamadı", error.message);
     }
   };
 

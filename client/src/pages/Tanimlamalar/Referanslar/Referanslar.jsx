@@ -209,7 +209,10 @@ function Referanslar() {
       async onOk() {
         try {
           await Promise.all(
-            selectedRows.map((row) => logoGoApi.deleteData("DeleteReferans", row.logoMalzemeRef)),
+            selectedRows.map((row) => {
+              logoGoApi.deleteData("DeleteReferans", row.logoMalzemeRef);
+              referanslarHttp.deleteData(referanslar, [row]);
+            }),
           );
           setReferanslar((prevReferanslar) =>
             prevReferanslar.filter(
@@ -235,6 +238,7 @@ function Referanslar() {
       async onOk() {
         try {
           await logoGoApi.deleteData("DeleteReferans", record.logoMalzemeRef);
+          await referanslarHttp.deleteData(referanslar, [record]);
 
           setReferanslar((prevReferanslar) =>
             prevReferanslar.filter((referans) => referans.logoMalzemeRef !== record.logoMalzemeRef),

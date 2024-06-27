@@ -29,7 +29,15 @@ const router = express.Router();
 router.get(
   "/",
   asyncHandler(async (req, res) => {
-    const referanslar = await Referans.findAll();
+    const referanslar = await Referans.findAll({
+      include: [
+        {
+          model: ReferansUretim,
+          required: false, // INNER JOIN, false ise LEFT JOIN olur
+          as: "ReferansUretim",
+        },
+      ],
+    });
 
     res.send(referanslar);
   }),
@@ -111,11 +119,15 @@ router.delete(
     const { selectedRows } = req.body;
 
     const deletePromises = selectedRows.map(async (row) => {
-      const filePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${row.resimUrl}`;
       await Referans.destroy({
         where: { id: row.id },
       });
-      fs.unlink(filePath); // fs.unlinkSync yerine async/await kullanmak için fs.unlink kullanıyoruz
+      await ReferansUretim.destroy({
+        where: { logoMalzemeRef: row.logoMalzemeRef },
+      });
+
+      // const filePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${row.ReferansUretim.resimUrl}`;
+      // fs.unlink(filePath); // fs.unlinkSync yerine async/await kullanmak için fs.unlink kullanıyoruz
     });
 
     await Promise.all(deletePromises);
