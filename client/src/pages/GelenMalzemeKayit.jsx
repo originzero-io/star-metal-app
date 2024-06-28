@@ -122,7 +122,7 @@ export default function GelenMalzemeKayit() {
       [name]: selectedReference.fason === 1 ? true : false,
     });
 
-    // bu referans no'lu kayıdın sipariş tipi bilgisini tut (Seri/Talepli)
+    // bu referans no'lu kayıdın sipariş tipi bilgisini tut (SERİ/TALEPLİ)
     setSeciliReferansSiparisTipi({
       ...seciliReferansSiparisTipi,
       [name]: selectedReference.siparisTipi,
@@ -304,7 +304,7 @@ export default function GelenMalzemeKayit() {
                       </Select>
                     </Form.Item>
 
-                    {seciliReferansSiparisTipi[name] === "Talepli" && (
+                    {seciliReferansSiparisTipi[name] === "TALEPLİ" && (
                       <Form.Item {...restField} name={[name, "talepNo"]} style={{ width: "120px" }}>
                         <Input placeholder="Talep no" />
                       </Form.Item>

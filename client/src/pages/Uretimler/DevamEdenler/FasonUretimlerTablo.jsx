@@ -318,7 +318,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                     }),
                 },
                 user.yetki === "admin" &&
-                  record.Referanslar.siparisTipi === "Talepli" && {
+                  record.Referanslar.siparisTipi === "TALEPLİ" && {
                     icon: <EditOutlined />,
                     title: record.talepNo ? "Talep No Değiştir" : "Talep No Gir",
                     action: () =>

@@ -240,13 +240,13 @@ export default function UretimGirisi({ record }) {
                 <IdBadge value={localRecord.Referanslar.id} />
               </Form.Item>
               <Form.Item label="Sipariş Tipi">
-                {localRecord.Referanslar.siparisTipi === "Seri" ? (
+                {localRecord.Referanslar.siparisTipi === "SERİ" ? (
                   <Tag color="volcano">{localRecord.Referanslar.siparisTipi}</Tag>
                 ) : (
                   <Tag color="purple">{localRecord.Referanslar.siparisTipi}</Tag>
                 )}
               </Form.Item>
-              {localRecord.Referanslar.siparisTipi === "Seri" ? (
+              {localRecord.Referanslar.siparisTipi === "SERİ" ? (
                 <Form.Item label="Sipariş No">
                   <div>{localRecord.Referanslar.siparisNo}</div>
                 </Form.Item>

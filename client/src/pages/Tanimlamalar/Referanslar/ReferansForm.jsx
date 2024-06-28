@@ -450,9 +450,9 @@ export default function ReferansForm({ record, type }) {
         rules={[{ required: type !== "update", message: "Bu alanı doldurun" }]}
         style={type === "update" ? { display: "none" } : null}
       >
-        <Radio.Group value={"Seri"} onChange={(e) => setSiparisTipi(e.target.value)}>
+        <Radio.Group value={"SERİ"} onChange={(e) => setSiparisTipi(e.target.value)}>
           <Space direction="vertical">
-            <Radio value="Seri">
+            <Radio value="SERİ">
               <div
                 style={{
                   width: "500px",
@@ -461,8 +461,8 @@ export default function ReferansForm({ record, type }) {
                   alignItems: "center",
                 }}
               >
-                <div>Seri</div>
-                {siparisTipi === "Seri" && (
+                <div>SERİ</div>
+                {siparisTipi === "SERİ" && (
                   <Form.Item
                     name="kodu"
                     style={{ width: 200, marginLeft: "7%" }}
@@ -479,7 +479,7 @@ export default function ReferansForm({ record, type }) {
               </div>
             </Radio>
             <Space direction="vertical">
-              <Radio value="Talepli">
+              <Radio value="TALEPLİ">
                 <div
                   style={{
                     width: "500px",
@@ -488,8 +488,8 @@ export default function ReferansForm({ record, type }) {
                     alignItems: "center",
                   }}
                 >
-                  <div>Talepli</div>
-                  {siparisTipi === "Talepli" && (
+                  <div>TALEPLİ</div>
+                  {siparisTipi === "TALEPLİ" && (
                     <Form.Item
                       name="kodu"
                       style={{ width: 200, marginLeft: "7%" }}
