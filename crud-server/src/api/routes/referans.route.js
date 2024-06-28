@@ -146,6 +146,18 @@ router.delete(
   }),
 );
 
+router.get(
+  "/uretim-verileri/:logoMalzemeRef",
+  asyncHandler(async (req, res) => {
+    const { logoMalzemeRef } = req.params;
+    console.log("logoMalzemeRef", logoMalzemeRef);
+
+    const referansUretim = await ReferansUretim.findOne({ where: { logoMalzemeRef } });
+
+    res.status(201).json(referansUretim);
+  }),
+);
+
 router.post(
   "/uretim-verileri",
   referansResimMiddleware.single("photo"),

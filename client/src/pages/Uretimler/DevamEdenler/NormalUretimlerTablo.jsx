@@ -4,11 +4,12 @@ import {
   ContainerOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
+  EyeOutlined,
   PrinterOutlined,
   TruckOutlined,
 } from "@ant-design/icons";
 
-import { Collapse, Tag } from "antd";
+import { Collapse, Flex, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
@@ -23,7 +24,9 @@ import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
+import getUrlByEnvVariables from "utils/getServerUrl";
 import { createTableFilterFromData } from "utils/table.helper";
+import ReferansResmi from "./ReferansResmi";
 
 export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilFunc }) {
   const { user } = useAuth();
@@ -280,6 +283,16 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                       title: "Gelen Malzeme Miktarını Düzenle",
                       content: <MiktarDuzenlemeForm record={record} />,
                       width: 400,
+                    }),
+                },
+                {
+                  icon: <EyeOutlined />,
+                  title: "Referans Resmini Göster",
+                  action: () =>
+                    showModal({
+                      title: `Referans No: ${record.referansNo} `,
+                      content: <ReferansResmi record={record} />,
+                      width: 2000,
                     }),
                 },
               ],

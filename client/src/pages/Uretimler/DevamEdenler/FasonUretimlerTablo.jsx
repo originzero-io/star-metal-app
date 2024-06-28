@@ -3,6 +3,7 @@ import {
   CaretRightOutlined,
   ContainerOutlined,
   EditOutlined,
+  EyeOutlined,
   PrinterOutlined,
   SnippetsOutlined,
 } from "@ant-design/icons";
@@ -24,6 +25,7 @@ import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
+import ReferansResmi from "./ReferansResmi";
 
 export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimiSilFunc }) {
   const { user } = useAuth();
@@ -334,6 +336,16 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                       title: "Gelen Malzeme Miktarını Düzenle",
                       content: <MiktarDuzenlemeForm record={record} />,
                       width: 400,
+                    }),
+                },
+                {
+                  icon: <EyeOutlined />,
+                  title: "Referans Resmini Göster",
+                  action: () =>
+                    showModal({
+                      title: `Referans No: ${record.referansNo} `,
+                      content: <ReferansResmi record={record} />,
+                      width: 2000,
                     }),
                 },
               ],
