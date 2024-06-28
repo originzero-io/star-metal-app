@@ -199,7 +199,7 @@ export default function UretimGirisi({ record }) {
                 onClick={terazidenOlcumAl}
                 loading={teraziLoading}
               >
-                Teraziden Ölçüm Al
+                {teraziLoading ? "Ölçüm Alınıyor..." : "Teraziden Ölçüm Al"}
               </Button>
             </div>
             <div style={{ display: "flex", width: "100%", justifyContent: "center" }}>
@@ -314,8 +314,8 @@ export default function UretimGirisi({ record }) {
               >
                 <InputNumber
                   style={{ width: "100%" }}
-                  // min={uretimAdediMinInput}
-                  // max={uretimAdediMaxInput}
+                  min={uretimAdediMinInput}
+                  max={uretimAdediMaxInput}
                 />
               </Form.Item>
               <Form.Item
