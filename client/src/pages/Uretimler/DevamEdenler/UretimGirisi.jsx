@@ -202,7 +202,14 @@ export default function UretimGirisi({ record }) {
                 {teraziLoading ? "Ölçüm Alınıyor..." : "Teraziden Ölçüm Al"}
               </Button>
             </div>
-            <div style={{ display: "flex", width: "100%", justifyContent: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+                opacity: teraziLoading ? 0.4 : 1,
+              }}
+            >
               <TeraziItem>
                 <TeraziItemHeader>Brüt</TeraziItemHeader>
                 <TeraziItemContent>{teraziOlcum.brut}</TeraziItemContent>
