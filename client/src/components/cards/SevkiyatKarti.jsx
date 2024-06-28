@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from "react";
-import { Button, Col, Row } from "antd";
-import styled from "styled-components";
-import { useReactToPrint } from "react-to-print";
-import { IoPrintOutline } from "react-icons/io5";
-import { getCurrentDateTime } from "utils/time.helper";
+import { Col, Row } from "antd";
 import PrintButton from "components/shared/PrintButton";
+import { useEffect, useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
+import { referansUretimHttp } from "services/crud-server/referanslar.http";
+import styled from "styled-components";
+import { getCurrentDateTime } from "utils/time.helper";
 
 const ContainerStyled = styled.div`
   margin-top: 8px;
@@ -26,6 +26,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
+  const [referansUretim, setReferansUretim] = useState({});
 
   useEffect(() => {
     if (printTrigger && record) {
@@ -33,6 +34,14 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
       setPrintTrigger(false);
     }
   }, [handlePrint, record]);
+
+  useEffect(() => {
+    async function getReferansUretim() {
+      const referansUretimData = await referansUretimHttp.getOneData(record.Referanslar);
+      setReferansUretim(referansUretimData);
+    }
+    getReferansUretim();
+  }, [record]);
 
   return (
     <div>
@@ -69,7 +78,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
           <ColStyled span={24}>
             <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
               <BoldTextStyled>KODU</BoldTextStyled>
-              <div>*{record.kodu}*</div>
+              <div>*{record.Referanslar.kodu}*</div>
             </div>
             <div style={{ textAlign: "end", fontSize: "2.2vmin", marginRight: "40px" }}>
               <BoldTextStyled>{record.kodu}</BoldTextStyled>
@@ -82,9 +91,6 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
             <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
               <BoldTextStyled>ADET</BoldTextStyled>
               <div>*{record.uretimAdedi} *</div>
-            </div>
-            <div style={{ textAlign: "end", fontSize: "2.2vmin", marginRight: "40px" }}>
-              {/* <BoldTextStyled>{record.siparisNo}</BoldTextStyled> */}
             </div>
           </ColStyled>
           <ColStyled span={12}>
@@ -101,15 +107,15 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
             <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
               <BoldTextStyled>AÇIKLAMA</BoldTextStyled>
             </div>
-            <div style={{ textAlign: "start", fontSize: "2.2vmin" }}>
-              <BoldTextStyled>{record.islemAciklamasi}</BoldTextStyled>
+            <div style={{ textAlign: "start", fontSize: "2vmin" }}>
+              <BoldTextStyled>{referansUretim.not}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={6}>
             <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
               <BoldTextStyled>TARİH / SAAT</BoldTextStyled>
             </div>
-            <div style={{ textAlign: "center", fontSize: "2.2vmin" }}>
+            <div style={{ textAlign: "center", fontSize: "2vmin" }}>
               <BoldTextStyled>{getCurrentDateTime()}</BoldTextStyled>
             </div>
           </ColStyled>
@@ -135,8 +141,8 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
             <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
               <BoldTextStyled>İŞLEM AÇIKLAMASI</BoldTextStyled>
             </div>
-            <div style={{ textAlign: "start", fontSize: "2.2vmin", marginTop: "8px" }}>
-              <BoldTextStyled>{record.islemAciklamasi}</BoldTextStyled>
+            <div style={{ textAlign: "start", fontSize: "2vmin", marginTop: "8px" }}>
+              <BoldTextStyled>{record.Referanslar.irsaliyeAciklamasi}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={6}>
