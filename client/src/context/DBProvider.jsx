@@ -152,9 +152,9 @@ export const DBProvider = ({ children }) => {
 
   useEffect(() => {
     async function fetchAllState() {
+      await fetchReferanslar();
       await Promise.all([
         fetchDevamEdenUretimler(),
-        fetchReferanslar(),
         fetchIrsaliyeler(),
         fetchMusteriler(),
         fetchAmbalajlar(),

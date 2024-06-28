@@ -112,7 +112,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
       filterSearch: true,
       render: (text) => <ColumnBadge color="orange" value={text} />,
-      width: 120,
+      width: 150,
     },
     {
       title: "İade",
