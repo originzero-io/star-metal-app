@@ -76,16 +76,9 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           </ColStyled>
         </Row>
         <Row style={{ height: "150px" }}>
-          <ColStyled span={12}>
+          <ColStyled span={18}>
             <BoldTextStyled>İŞLEM AÇIKLAMASI</BoldTextStyled>
             <BoldTextStyled>{record?.Referanslar?.not}</BoldTextStyled>
-          </ColStyled>
-          <ColStyled span={6}>
-            <img
-              alt="referansResim"
-              src={`${getUrlByEnvVariables()}/uploads/referanslar/${record?.Referanslar?.resimUrl}`}
-              style={{ maxWidth: "100%" }}
-            />
           </ColStyled>
           <ColStyled span={6}>
             <BoldTextStyled>ÜRETİME VEREN</BoldTextStyled>
