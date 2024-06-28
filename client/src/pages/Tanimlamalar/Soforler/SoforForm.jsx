@@ -11,6 +11,7 @@ export default function SoforForm({ record }) {
     const logicalref = await logoGoApi.postData("PostSofor", values);
     setSoforler([...soforler, { logicalref, ...values }]);
     showNotification("success", `${values.adi} ${values.soyadi} şoförü eklendi`);
+    showPanel(false);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

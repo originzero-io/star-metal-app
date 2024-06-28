@@ -47,6 +47,7 @@ export default function MusteriForm({ record, type }) {
         setMusteriler(updatedMusteriler);
 
         showNotification("success", "Müşteri güncellendi");
+        showPanel(false);
       } else {
         showNotification("success", response.message);
       }
@@ -54,6 +55,7 @@ export default function MusteriForm({ record, type }) {
       const logoRef = await logoGoApi.postData("PostCari", logoPostData);
       setMusteriler([...musteriler, { logoRef, ...logoPostData }]);
       showNotification("success", `Müşteri eklendi`);
+      showPanel(false);
     }
   };
   const onFinishFailed = (errorInfo) => {

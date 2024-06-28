@@ -65,10 +65,12 @@ export default function AmbalajForm({ record, type }) {
 
       setAmbalajlar(updatedAmbalajlarArray);
       showNotification("success", "Ambalaj güncellendi");
+      showPanel(false);
     } else {
       const newAmbalaj = await ambalajlarHttp.addData(formData);
       setAmbalajlar([...ambalajlar, { ...newAmbalaj }]);
       showNotification("success", "Ambalaj eklendi");
+      showPanel(false);
     }
   };
 

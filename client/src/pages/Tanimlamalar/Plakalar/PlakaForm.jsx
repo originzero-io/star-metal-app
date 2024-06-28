@@ -1,7 +1,6 @@
 import { Button, Divider, Form, Input } from "antd";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import plakalarHttp from "services/crud-server/plakalar.http";
 import logoGoApi from "services/logoGoApi";
 
 export default function PlakaForm({ record, type }) {
@@ -12,6 +11,7 @@ export default function PlakaForm({ record, type }) {
     const logicalref = await logoGoApi.postData("PostArac", values);
     setPlakalar([...plakalar, { logicalref, ...values }]);
     showNotification("success", `${values.plaka} plakası eklendi`);
+    showPanel(false);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

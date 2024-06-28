@@ -24,6 +24,7 @@ function Plakalar() {
         dataIndex: "logicalref",
         key: "logicalref",
         render: (text) => <IdBadge value={text} />,
+        width: 100,
       },
       {
         title: "Plaka",

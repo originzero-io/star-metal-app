@@ -32,7 +32,7 @@ export default function ReferansForm({ record, type }) {
     referansAnaBirimleri,
     musteriler,
   } = useDBContext();
-  const { showModal, showNotification } = useUIContext();
+  const { showPanel, showModal, showNotification } = useUIContext();
 
   const [fileList, setFileList] = useState([]);
 
@@ -94,7 +94,6 @@ export default function ReferansForm({ record, type }) {
 
       if (response.statusCode === 200) {
         showNotification("success", "Referans logoda güncellendi");
-        // showPanel(false);
 
         Object.keys(logoyaGonderilecekPut).forEach((key) => {
           if (key === "ReferansUretim") {
@@ -127,6 +126,7 @@ export default function ReferansForm({ record, type }) {
         setReferanslar(updatedReferanslar);
 
         showNotification("success", "Referans üretim verisi güncellendi");
+        showPanel(false);
       } else showNotification("error", response.message);
     } else {
       const logoyaGonderilecekPost = {
@@ -169,6 +169,7 @@ export default function ReferansForm({ record, type }) {
         ]);
 
         showNotification("success", `${values.referansNo} referansı için üretim verileri eklendi`);
+        showPanel(false);
       } else {
         const duplicateError = response.message.includes("duplicate");
         showNotification(
