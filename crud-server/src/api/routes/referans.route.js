@@ -150,7 +150,6 @@ router.get(
   "/uretim-verileri/:logoMalzemeRef",
   asyncHandler(async (req, res) => {
     const { logoMalzemeRef } = req.params;
-    console.log("logoMalzemeRef", logoMalzemeRef);
 
     const referansUretim = await ReferansUretim.findOne({ where: { logoMalzemeRef } });
 
@@ -162,12 +161,12 @@ router.post(
   "/uretim-verileri",
   referansResimMiddleware.single("photo"),
   asyncHandler(async (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: "Resim yok" });
-    }
     const referansUretimVerisi = req.body;
 
-    const resimUrl = `${referansUretimVerisi.referansNo}.${req.file.mimetype.split("/")[1]}`;
+    let resimUrl;
+    if (req.file) {
+      resimUrl = `${referansUretimVerisi.referansNo}.${req.file.mimetype.split("/")[1]}`;
+    }
 
     const newReferansUretim = await ReferansUretim.create({ ...referansUretimVerisi, resimUrl });
 
@@ -180,13 +179,11 @@ router.put(
   referansResimMiddleware.single("photo"),
   asyncHandler(async (req, res) => {
     const yeniVeri = req.body;
-    console.log("yeniVeri", yeniVeri);
 
     const yeniReferansUretim = JSON.parse(yeniVeri.ReferansUretim);
     console.log(yeniReferansUretim);
 
     let { resimUrl } = yeniReferansUretim;
-    console.log("eskiResimUrl", resimUrl);
 
     const referansUretim = await ReferansUretim.findOne({ where: { logoMalzemeRef: yeniVeri.logoMalzemeRef } });
 

@@ -54,9 +54,9 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           <ColStyled span={6}>
             <BoldTextStyled>{record?.referansNo}</BoldTextStyled>
           </ColStyled>
-          <ColStyled span={6}>Sipariş No</ColStyled>
+          <ColStyled span={6}>Kodu</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.kodu}</BoldTextStyled>
+            <BoldTextStyled>{record?.Referanslar?.kodu || record?.kodu}</BoldTextStyled>
           </ColStyled>
         </Row>
         <Row>
