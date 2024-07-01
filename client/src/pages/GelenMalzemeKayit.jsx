@@ -178,7 +178,6 @@ export default function GelenMalzemeKayit() {
       personel,
       referansNo: malzeme.referansNo,
       iade: malzeme.iade, // ? bu true false da yapılabilir
-      talepNo: malzeme.talepNo,
       birinciAmbalaj: malzeme.birinciAmbalaj,
       ikinciAmbalaj: malzeme.ikinciAmbalaj,
       fason: malzeme.fason === "Fason", // true or false
@@ -304,12 +303,6 @@ export default function GelenMalzemeKayit() {
                       </Select>
                     </Form.Item>
 
-                    {seciliReferansSiparisTipi[name] === "TALEPLİ" && (
-                      <Form.Item {...restField} name={[name, "talepNo"]} style={{ width: "120px" }}>
-                        <Input placeholder="Talep no" />
-                      </Form.Item>
-                    )}
-
                     <Form.Item {...restField} name={[name, "gelenMiktar"]} rules={rules}>
                       <InputNumber placeholder="Gelen Miktar" min={0} style={{ width: "140px" }} />
                     </Form.Item>
@@ -317,7 +310,7 @@ export default function GelenMalzemeKayit() {
                     <Form.Item
                       {...restField}
                       name={[name, "birinciAmbalaj"]}
-                      rules={rules}
+                      // rules={rules}
                       style={{ width: "130px" }}
                     >
                       <Select placeholder="1. Ambalaj">

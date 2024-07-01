@@ -29,7 +29,7 @@ const ortakSütunlar = {
   },
   birinciAmbalaj: {
     type: DataTypes.STRING(30),
-    allowNull: false,
+    allowNull: true,
   },
   ikinciAmbalaj: {
     type: DataTypes.STRING(30),
