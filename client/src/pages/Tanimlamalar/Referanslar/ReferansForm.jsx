@@ -596,15 +596,7 @@ export default function ReferansForm({ record, type }) {
         />
       </Form.Item>
 
-      <Form.Item
-        label={type === "update" ? "Resim Değiştir" : "Resim Ekle"}
-        name="resimUrl"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
+      <Form.Item label={type === "update" ? "Resim Değiştir" : "Resim Ekle"} name="resimUrl">
         <Upload
           name="photo"
           listType="picture"
