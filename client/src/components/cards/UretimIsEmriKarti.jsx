@@ -1,9 +1,9 @@
 import { Col, Row } from "antd";
 import PrintButton from "components/shared/PrintButton";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
+import { referansUretimHttp } from "services/crud-server/referanslar.http";
 import styled from "styled-components";
-import getUrlByEnvVariables from "utils/getServerUrl";
 import { getCurrentDateTime } from "utils/time.helper";
 
 const ContainerStyled = styled.div`
@@ -27,12 +27,22 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
     content: () => componentRef.current,
   });
 
+  const [referansUretim, setReferansUretim] = useState({});
+
   useEffect(() => {
     if (printTrigger && record) {
       handlePrint();
       setPrintTrigger(false);
     }
   }, [handlePrint, record]);
+
+  useEffect(() => {
+    async function getReferansUretim() {
+      const referansUretimData = await referansUretimHttp.getOneData(record.Referanslar);
+      setReferansUretim(referansUretimData);
+    }
+    getReferansUretim();
+  }, [record]);
 
   return (
     <div style={{ height: "10%" }}>
@@ -77,12 +87,12 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
         </Row>
         <Row style={{ height: "150px" }}>
           <ColStyled span={18}>
-            <BoldTextStyled>İŞLEM AÇIKLAMASI</BoldTextStyled>
-            <BoldTextStyled>{record?.Referanslar?.not}</BoldTextStyled>
+            <BoldTextStyled>ÜRETİM NOTU</BoldTextStyled>
+            <BoldTextStyled style={{ marginTop: 20 }}>{referansUretim.not}</BoldTextStyled>
           </ColStyled>
           <ColStyled span={6}>
             <BoldTextStyled>ÜRETİME VEREN</BoldTextStyled>
-            <BoldTextStyled>{record?.personel}</BoldTextStyled>
+            <BoldTextStyled style={{ marginTop: 20 }}>{record?.personel}</BoldTextStyled>
           </ColStyled>
         </Row>
       </ContainerStyled>

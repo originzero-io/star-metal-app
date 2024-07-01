@@ -68,7 +68,7 @@ const Referans = sequelize.define(
     },
     kodu: {
       type: DataTypes.STRING(40),
-      allowNull: true,
+      allowNull: false,
     },
     fason: {
       type: DataTypes.INTEGER,
@@ -103,6 +103,10 @@ export const ReferansUretim = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
+    kodu: {
+      type: DataTypes.STRING(40),
+      allowNull: false,
+    },
     miktarSapmasi: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -112,7 +116,7 @@ export const ReferansUretim = sequelize.define(
       allowNull: false,
     },
     referansYuzeyAlani: {
-      type: DataTypes.DECIMAL(5, 2),
+      type: DataTypes.DECIMAL(5, 4),
       allowNull: false,
     },
     resimUrl: {
@@ -120,7 +124,7 @@ export const ReferansUretim = sequelize.define(
       allowNull: true,
     },
     not: {
-      type: DataTypes.STRING(600),
+      type: DataTypes.STRING(150),
       allowNull: true,
     },
   },

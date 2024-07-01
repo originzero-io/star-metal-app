@@ -61,6 +61,19 @@ router.post(
   }),
 );
 
+const referansUretimVerileriniEsle = async (logodanGelenKayitlar) => {
+  await ReferansUretim.destroy({
+    truncate: true,
+  });
+  const data = logodanGelenKayitlar.map((kayit) => ({
+    ...kayit,
+    miktarSapmasi: 5,
+    lotAdedi: 150,
+    referansYuzeyAlani: 1.5,
+  }));
+  await ReferansUretim.bulkCreate(data);
+};
+
 router.post(
   "/logo-ile-esle",
   asyncHandler(async (req, res) => {
@@ -71,6 +84,8 @@ router.post(
         truncate: true,
       });
       await Referans.bulkCreate(logodanGelenKayitlar);
+
+      // await referansUretimVerileriniEsle();
 
       const newReferanslar = await Referans.findAll({
         include: [
