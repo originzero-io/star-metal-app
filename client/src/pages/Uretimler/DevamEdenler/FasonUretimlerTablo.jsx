@@ -317,17 +317,6 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                       width: 800,
                     }),
                 },
-                user.yetki === "admin" &&
-                  record.Referanslar.siparisTipi === "TALEPLİ" && {
-                    icon: <EditOutlined />,
-                    title: record.talepNo ? "Talep No Değiştir" : "Talep No Gir",
-                    action: () =>
-                      showModal({
-                        title: "Talep No Girişi",
-                        content: <TalepNoGiris record={record} />,
-                        width: 400,
-                      }),
-                  },
                 user.yetki === "admin" && {
                   icon: <EditOutlined />,
                   title: "Gelen Malzeme Miktarını Değiştir",

@@ -263,18 +263,6 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                       width: 800,
                     }),
                 },
-                user.yetki === "admin" &&
-                  record.Referanslar.siparisTipi === "SERİ" && {
-                    icon: <EditOutlined />,
-                    title: "Talep No Gir",
-                    action: () => {
-                      showModal({
-                        title: "Talep No Girişi",
-                        content: <TalepNoGiris record={record} />,
-                        width: 400,
-                      });
-                    },
-                  },
                 user.yetki === "admin" && {
                   icon: <EditOutlined />,
                   title: "Gelen Malzeme Miktarını Değiştir",
