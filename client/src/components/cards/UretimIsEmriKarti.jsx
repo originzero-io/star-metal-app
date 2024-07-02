@@ -78,7 +78,7 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           <ColStyled span={18}>
             <BoldTextStyled>ÜRETİM NOTU</BoldTextStyled>
             <BoldTextStyled style={{ marginTop: 20 }}>
-              {record.Referanslar.ReferansUretim.not}
+              {record.Referanslar?.ReferansUretim?.not}
             </BoldTextStyled>
           </ColStyled>
           <ColStyled span={6}>

@@ -182,7 +182,7 @@ function NavigationMenu() {
           link: "/uretim/sevk-edilecekler",
         },
         {
-          title: "İrsaliye Sayfası",
+          title: "İrsaliye Kesilecekler",
           icon: <FcRules />,
           link: "/uretim/irsaliye-sayfasi",
         },

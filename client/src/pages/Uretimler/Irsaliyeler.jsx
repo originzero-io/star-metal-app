@@ -160,7 +160,7 @@ export default function Irsaliyeler() {
 
   return (
     <div>
-      <PageHeader label="İrsaliye Sayfası" icon={<FcRules />} />
+      <PageHeader label="İrsaliye Kesilecekler" icon={<FcRules />} />
       <Collapse
         bordered={false}
         defaultActiveKey={["sevk", "tasima"]}
