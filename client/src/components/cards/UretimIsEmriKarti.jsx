@@ -1,8 +1,7 @@
 import { Col, Row } from "antd";
 import PrintButton from "components/shared/PrintButton";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
-import { referansUretimHttp } from "services/crud-server/referanslar.http";
 import styled from "styled-components";
 import { getCurrentDateTime } from "utils/time.helper";
 
@@ -27,22 +26,12 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
     content: () => componentRef.current,
   });
 
-  const [referansUretim, setReferansUretim] = useState({});
-
   useEffect(() => {
     if (printTrigger && record) {
       handlePrint();
       setPrintTrigger(false);
     }
   }, [handlePrint, record]);
-
-  useEffect(() => {
-    async function getReferansUretim() {
-      const referansUretimData = await referansUretimHttp.getOneData(record.Referanslar);
-      setReferansUretim(referansUretimData);
-    }
-    getReferansUretim();
-  }, [record]);
 
   return (
     <div style={{ height: "10%" }}>
@@ -88,7 +77,9 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
         <Row style={{ height: "150px" }}>
           <ColStyled span={18}>
             <BoldTextStyled>ÜRETİM NOTU</BoldTextStyled>
-            <BoldTextStyled style={{ marginTop: 20 }}>{referansUretim.not}</BoldTextStyled>
+            <BoldTextStyled style={{ marginTop: 20 }}>
+              {record.Referanslar.ReferansUretim.not}
+            </BoldTextStyled>
           </ColStyled>
           <ColStyled span={6}>
             <BoldTextStyled>ÜRETİME VEREN</BoldTextStyled>

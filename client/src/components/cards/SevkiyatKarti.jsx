@@ -1,9 +1,7 @@
 import { Col, Row } from "antd";
 import PrintButton from "components/shared/PrintButton";
-import { useDBContext } from "context/DBProvider";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
-import { referansUretimHttp } from "services/crud-server/referanslar.http";
 import styled from "styled-components";
 import { getCurrentDateTime } from "utils/time.helper";
 
@@ -27,7 +25,8 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-  const [referansUretim, setReferansUretim] = useState({});
+
+  console.log("record", record);
 
   useEffect(() => {
     if (printTrigger && record) {
@@ -35,14 +34,6 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
       setPrintTrigger(false);
     }
   }, [handlePrint, record]);
-
-  useEffect(() => {
-    async function getReferansUretim() {
-      const referansUretimData = await referansUretimHttp.getOneData(record.Referanslar);
-      setReferansUretim(referansUretimData);
-    }
-    getReferansUretim();
-  }, [record]);
 
   return (
     <div>
@@ -143,7 +134,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BoldTextStyled>İŞLEM AÇIKLAMASI</BoldTextStyled>
             </div>
             <div style={{ textAlign: "start", fontSize: "2vmin", marginTop: "8px" }}>
-              <BoldTextStyled>{referansUretim.not}</BoldTextStyled>
+              <BoldTextStyled>{record.Referanslar.ReferansUretim.not}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={6}>

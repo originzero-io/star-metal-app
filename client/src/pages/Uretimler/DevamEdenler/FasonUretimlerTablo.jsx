@@ -18,7 +18,6 @@ import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeForm";
-import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
 import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
@@ -175,7 +174,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       title: "Yüzey Alanı",
       // dataIndex: ["Referanslar", "referansYuzeyAlani"],
       key: "referansYuzeyAlanı",
-      render: (text, record) => record.Referanslar?.referansYuzeyAlani,
+      render: (text, record) => record.Referanslar.ReferansUretim?.referansYuzeyAlani,
     },
     {
       title: "İşlem Tipi",

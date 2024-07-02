@@ -1,7 +1,7 @@
 import express from "express";
 import asyncHandler from "express-async-handler";
 import Irsaliye from "../models/irsaliye.model.js";
-import Referans from "../models/referans.model.js";
+import Referans, { ReferansUretim } from "../models/referans.model.js";
 import UretimGirisi from "../models/uretim-girisi.model.js";
 import { DFasonUretim, DNormalUretim, TFasonUretim, TNormalUretim } from "../models/uretim.model.js";
 
@@ -16,6 +16,13 @@ router.get(
           model: Referans,
           required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
           as: "Referanslar",
+          include: [
+            {
+              model: ReferansUretim,
+              required: false,
+              as: "ReferansUretim",
+            },
+          ],
         },
       ],
     });
@@ -25,6 +32,13 @@ router.get(
           model: Referans,
           required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
           as: "Referanslar",
+          include: [
+            {
+              model: ReferansUretim,
+              required: false,
+              as: "ReferansUretim",
+            },
+          ],
         },
       ],
     });
@@ -44,6 +58,12 @@ router.get(
           model: Referans,
           required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
           as: "Referanslar",
+          include: [
+            {
+              model: ReferansUretim,
+              as: "ReferansUretim",
+            },
+          ],
         },
       ],
     });
@@ -101,32 +121,20 @@ router.put(
     }
 
     // newData, mevcut değerle aynı gelirse update hook u çalışmıyor. Bu durumun önüne geçmek için modeli reload yapıyoruz.
-    await uretim.reload({ include: [{ model: Referans, as: "Referanslar" }] });
-
-    res.json(uretim);
-  }),
-);
-
-router.put(
-  "/devam-eden/talepNo",
-  asyncHandler(async (req, res) => {
-    const { currentRecord, newData } = req.body;
-    let uretim;
-
-    if (currentRecord.Referanslar.fason) {
-      uretim = await DFasonUretim.findByPk(currentRecord.id);
-      await uretim.update({
-        talepNo: newData.talepNo,
-      });
-    } else {
-      uretim = await DNormalUretim.findByPk(currentRecord.id);
-      await uretim.update({
-        talepNo: newData.talepNo,
-      });
-    }
-
-    // newData, mevcut değerle aynı gelirse update hook u çalışmıyor. Bu durumun önüne geçmek için modeli reload yapıyoruz.
-    await uretim.reload({ include: [{ model: Referans, as: "Referanslar" }] });
+    await uretim.reload({
+      include: [
+        {
+          model: Referans,
+          as: "Referanslar",
+          include: [
+            {
+              model: ReferansUretim,
+              as: "ReferansUretim",
+            },
+          ],
+        },
+      ],
+    });
 
     res.json(uretim);
   }),

@@ -16,14 +16,6 @@ class DevamEdenUretim extends CRUDServerHttp {
     return data;
   }
 
-  async talepNoGir(currentRecord, newData) {
-    const { data } = await axios.put(`${this.path}/talepNo`, {
-      currentRecord,
-      newData,
-    });
-    return data;
-  }
-
   async oncelikAyarla(currentRecord, newOncelikDurumu) {
     const { data } = await axios.put(`${this.path}/oncelik-ayarla`, {
       currentRecord,

@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../../dbConnection.js";
-import Referans from "./referans.model.js";
+import Referans, { ReferansUretim } from "./referans.model.js";
 
 const ortakSütunlar = {
   irsaliyeNo: {
@@ -79,10 +79,36 @@ DNormalUretim.belongsTo(Referans, { foreignKey: "referansNo", targetKey: "refera
 Referans.hasMany(DNormalUretim, { foreignKey: "referansNo", sourceKey: "referansNo" });
 
 DNormalUretim.afterCreate(async (instance, options) => {
-  await instance.reload({ include: [{ model: Referans, as: "Referanslar" }] });
+  await instance.reload({
+    include: [
+      {
+        model: Referans,
+        as: "Referanslar",
+        include: [
+          {
+            model: ReferansUretim,
+            as: "ReferansUretim",
+          },
+        ],
+      },
+    ],
+  });
 });
 DNormalUretim.afterUpdate(async (instance, options) => {
-  await instance.reload({ include: [{ model: Referans, as: "Referanslar" }] });
+  await instance.reload({
+    include: [
+      {
+        model: Referans,
+        as: "Referanslar",
+        include: [
+          {
+            model: ReferansUretim,
+            as: "ReferansUretim",
+          },
+        ],
+      },
+    ],
+  });
 });
 
 export const DFasonUretim = sequelize.define(
@@ -106,10 +132,36 @@ DFasonUretim.belongsTo(Referans, { foreignKey: "referansNo", targetKey: "referan
 Referans.hasMany(DFasonUretim, { foreignKey: "referansNo", sourceKey: "referansNo" });
 
 DFasonUretim.afterCreate(async (instance, options) => {
-  await instance.reload({ include: [{ model: Referans, as: "Referanslar" }] });
+  await instance.reload({
+    include: [
+      {
+        model: Referans,
+        as: "Referanslar",
+        include: [
+          {
+            model: ReferansUretim,
+            as: "ReferansUretim",
+          },
+        ],
+      },
+    ],
+  });
 });
 DFasonUretim.afterUpdate(async (instance, options) => {
-  await instance.reload({ include: [{ model: Referans, as: "Referanslar" }] });
+  await instance.reload({
+    include: [
+      {
+        model: Referans,
+        as: "Referanslar",
+        include: [
+          {
+            model: ReferansUretim,
+            as: "ReferansUretim",
+          },
+        ],
+      },
+    ],
+  });
 });
 
 // ** TAMAMLANAN ÜRETİM

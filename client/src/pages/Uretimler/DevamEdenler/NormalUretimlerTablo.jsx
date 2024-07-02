@@ -9,7 +9,7 @@ import {
   TruckOutlined,
 } from "@ant-design/icons";
 
-import { Collapse, Flex, Tag } from "antd";
+import { Collapse, Tag } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
@@ -20,11 +20,9 @@ import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeForm";
-import TalepNoGiris from "pages/Uretimler/DevamEdenler/TalepNoGiris";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
-import getUrlByEnvVariables from "utils/getServerUrl";
 import { createTableFilterFromData } from "utils/table.helper";
 import ReferansResmi from "./ReferansResmi";
 
@@ -170,7 +168,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       title: "Yüzey Alanı",
       // dataIndex: ["Referanslar", "referansYuzeyAlani"],
       key: "referansYuzeyAlanı",
-      render: (text, record) => record.Referanslar?.referansYuzeyAlani,
+      render: (text, record) => record.Referanslar.ReferansUretim.referansYuzeyAlani,
       width: 110,
     },
     {

@@ -1,6 +1,6 @@
 import express from "express";
 import asyncHandler from "express-async-handler";
-import Referans from "../models/referans.model.js";
+import Referans, { ReferansUretim } from "../models/referans.model.js";
 import UretimGirisi from "../models/uretim-girisi.model.js";
 import { DFasonUretim, DNormalUretim } from "../models/uretim.model.js";
 
@@ -15,6 +15,12 @@ router.get(
           model: Referans,
           required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
           as: "Referanslar",
+          include: [
+            {
+              model: ReferansUretim,
+              as: "ReferansUretim",
+            },
+          ],
         },
       ],
       where: {
@@ -48,6 +54,12 @@ router.get(
           model: Referans,
           required: false, // true ise INNER JOIN yapar, false ise LEFT OUTER JOIN yapar
           as: "Referanslar", // Sadece bu alanlar
+          include: [
+            {
+              model: ReferansUretim,
+              as: "ReferansUretim",
+            },
+          ],
         },
       ],
       where: {
