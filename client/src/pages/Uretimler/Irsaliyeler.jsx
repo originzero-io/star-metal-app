@@ -219,7 +219,7 @@ export default function Irsaliyeler() {
                   offset={[20, 7]}
                   title="Toplam taşıma irsaliyesi sayısı"
                 >
-                  <div style={collapseStyle.parentCollapseHeader}>Taşıma İrsaliyeleri</div>
+                  <div style={collapseStyle.parentCollapseHeader}>Fason & İade İrsaliyeleri</div>
                 </CountBadge>
               </Flex>
             ),
