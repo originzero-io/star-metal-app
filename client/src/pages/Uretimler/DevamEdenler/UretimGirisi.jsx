@@ -1,4 +1,4 @@
-import { CreditCardOutlined, FormOutlined, PrinterOutlined } from "@ant-design/icons";
+import { CreditCardOutlined, FormOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, InputNumber, Row, Select, Table, Tag } from "antd";
 import IdBadge from "components/shared/IdBadge";
 import { useDBContext } from "context/DBProvider";
@@ -57,7 +57,7 @@ export default function UretimGirisi({ record }) {
 
   const { ambalajlar, referanslar, devamEdenUretimler, setDevamEdenUretimler, personeller } =
     useDBContext();
-  const { showNotification, showPanel, showAlert } = useUIContext();
+  const { showNotification, showPanel, showAlert, showModal } = useUIContext();
   const [form] = Form.useForm();
 
   const [miktarSapmasi, setMiktarSapmasi] = useState(
@@ -185,11 +185,12 @@ export default function UretimGirisi({ record }) {
 
   useEffect(() => {
     if (sevkiyatKartiKayit !== null) {
-      showPanel({
+      showModal({
         title: "Sevkiyat Kartı",
         content: <SevkiyatKarti record={sevkiyatKartiKayit} />,
         width: 800,
       });
+      showPanel(false);
     }
   }, [sevkiyatKartiKayit]);
 
@@ -376,23 +377,6 @@ export default function UretimGirisi({ record }) {
           </Row>
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Form.Item>
-              <Button
-                type="primary"
-                style={{ marginRight: "4px" }}
-                icon={<PrinterOutlined />}
-                disabled={sevkiyatKartiKayit === null}
-                onClick={() =>
-                  showPanel({
-                    title: "Sevkiyat Kartı",
-                    content: <SevkiyatKarti record={sevkiyatKartiKayit} />,
-                    width: 800,
-                  })
-                }
-              >
-                Sevkiyat Kartı Çıkart
-              </Button>
-            </Form.Item>
             <Form.Item>
               <Button type="primary" icon={<CreditCardOutlined />} htmlType="submit">
                 Üretim Girişi Yap
