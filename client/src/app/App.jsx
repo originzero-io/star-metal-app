@@ -163,10 +163,9 @@ function App() {
                   />
                 </Routes>
               </PageWrapperStyled>
+              <FormModal />
+              <FormPanel />
             </AuthProvider>
-
-            <FormModal />
-            <FormPanel />
           </Router>
         </DBProvider>
       </UIProvider>

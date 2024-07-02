@@ -1,9 +1,12 @@
 /* eslint-disable no-nested-ternary */
-import { Alert, Col, Row, Tag } from "antd";
+import { PrinterOutlined } from "@ant-design/icons";
+import { Alert, Button, Col, Row, Tag, Tooltip } from "antd";
+import SevkiyatKarti from "components/cards/SevkiyatKarti";
 import IdBadge from "components/shared/IdBadge";
 import { useDBContext } from "context/DBProvider";
+import { useUIContext } from "context/UIProvider";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import styled from "styled-components";
 import TableGod from "../../../components/shared/TableGod";
@@ -34,6 +37,7 @@ const TopSectionItemValue = styled.div`
 
 export default function UretimSevkiyatHareketleri({ record }) {
   const { setLoading, loading } = useDBContext();
+  const { showModal } = useUIContext();
   const [uretimGirisleri, setUretimGirisleri] = useState({});
 
   useEffect(() => {
@@ -55,6 +59,27 @@ export default function UretimSevkiyatHareketleri({ record }) {
   const uretimIdsiBazli = Object.entries(uretimGirisleri);
 
   const columns = [
+    {
+      title: "",
+      key: "action",
+      render: (_, record) =>
+        record.sevkTarihi && (
+          <Tooltip title="Sevkiyat Kartı Çıkart">
+            <Button
+              icon={<PrinterOutlined />}
+              onClick={() =>
+                showModal({
+                  title: "Sevkiyat Kartı",
+                  content: React.createElement(SevkiyatKarti, {
+                    record,
+                  }),
+                  width: 800,
+                })
+              }
+            />
+          </Tooltip>
+        ),
+    },
     {
       title: "Durum",
       // dataIndex: "id",
