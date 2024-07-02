@@ -6,8 +6,8 @@ class UretimGirisi extends CRUDServerHttp {
     super("/uretim-girisleri");
   }
 
-  async getDataById(recordId) {
-    const rawData = await axios.get(`${this.path}/${recordId}`);
+  async getDataByRecord(recordId, refNo) {
+    const rawData = await axios.get(`${this.path}/${recordId}/${refNo}`);
     return rawData.data;
   }
 

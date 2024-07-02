@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import styled from "styled-components";
-import getUrlByEnvVariables from "utils/getServerUrl";
 import TableGod from "../../../components/shared/TableGod";
 
 const TopSectionItem = styled.div`
@@ -40,7 +39,10 @@ export default function UretimSevkiyatHareketleri({ record }) {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const uretimResponse = await uretimGirisleriHttp.getDataById(record.id);
+      const uretimResponse = await uretimGirisleriHttp.getDataByRecord(
+        record.id,
+        record.referansNo || record.Referanslar.referansNo,
+      );
       console.log("Üretim Id'ye göre sevkiyat hareketleri: ", Object.entries(uretimGirisleri));
       setUretimGirisleri(uretimResponse);
 
@@ -160,14 +162,6 @@ export default function UretimSevkiyatHareketleri({ record }) {
           }}
           gutter={16}
         >
-          <Col span={4}>
-            <img
-              alt="referansResim"
-              src={`${getUrlByEnvVariables()}/uploads/referanslar/${record?.Referanslar?.resimUrl}`}
-              style={{ marginTop: "5%" }}
-              height={100}
-            />
-          </Col>
           <Col span={9}>
             <TopSectionItem>
               <TopSectionItemName>Müşteri: </TopSectionItemName>

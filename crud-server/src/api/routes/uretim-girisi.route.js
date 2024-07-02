@@ -40,7 +40,7 @@ router.get(
 );
 
 router.get(
-  "/:id",
+  "/:id/:referansNo",
   asyncHandler(async (req, res) => {
     const uretimGirisleri = await UretimGirisi.findAll({
       include: [
@@ -52,6 +52,7 @@ router.get(
       ],
       where: {
         uretimId: req.params.id,
+        referansNo: req.params.referansNo,
       },
       order: [["id", "ASC"]],
     });
