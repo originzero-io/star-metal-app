@@ -127,12 +127,6 @@ export default function SevkEdilecekler() {
           value={record.Referanslar.kodu}
         />
       ),
-      // filters: createTableFilterFromData(referanslar, "kodu"),
-      // onFilter: (value, record) => {
-      //   const siparisNo = record.siparisNo ?? "Boş";
-      //   return siparisNo.indexOf(value) === 0;
-      // },
-      // filterSearch: true,
     },
     {
       title: "Referans No",
@@ -350,19 +344,23 @@ function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUre
   );
 
   const irsaliyeVerisiOlustur = (data) => {
+    const koduOlmayanUretimVar = data.find((kayit) =>
+      kayit.Referanslar.kodu.toLowerCase().includes("yok"),
+    );
+
     if (seciliFarkliReferansSayisi > 10) {
       throw new Error(
         `En fazla 10 adet farklı referans seçebilirsiniz. Seçtiğiniz referans sayısı: ${seciliFarkliReferansSayisi}`,
+      );
+    } else if (koduOlmayanUretimVar) {
+      throw new Error(
+        "Kodu olmayan bir üretim irsaliyeye gönderilemez. Lütfen seçimleri düzeltiniz. ",
       );
     } else {
       const gruplanmisData = data.reduce((acc, item) => {
         // Tipi belirle
         let tip = "sevk";
-        if (
-          item.iade === "Evet" ||
-          ((item.talepNo === null || item.talepNo === "") &&
-            (item.siparisNo === null || item.siparisNo === ""))
-        ) {
+        if (item.iade === "Evet") {
           tip = "tasima";
         }
 
