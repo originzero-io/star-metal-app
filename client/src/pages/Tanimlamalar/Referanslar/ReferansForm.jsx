@@ -78,6 +78,7 @@ export default function ReferansForm({ record, type }) {
     if (type === "update") {
       const logoyaGonderilecekPut = {
         ...record,
+        referansNo: values.referansNo,
         kodu: values.kodu,
         irsaliyeAciklamasi: values.irsaliyeAciklamasi,
         fasonFirmaRef: record.fason
@@ -317,8 +318,7 @@ export default function ReferansForm({ record, type }) {
       <Form.Item
         label="Referans No"
         name="referansNo"
-        rules={[{ required: type !== "update", message: "Bu alanı doldurun" }]}
-        style={type === "update" ? { display: "none" } : null}
+        rules={[{ required: true, message: "Bu alanı doldurun" }]}
       >
         <Input placeholder="Referans No" />
       </Form.Item>
