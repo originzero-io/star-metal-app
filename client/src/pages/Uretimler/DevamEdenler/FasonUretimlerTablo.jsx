@@ -286,7 +286,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                   ),
                   action: () => fasonaIrsaliyeKes(record),
                 },
-                {
+                record.gelenMiktar === record.gidenMiktar && {
                   icon: <ContainerOutlined />,
                   title: "Fason Üretim Girişi Yap",
                   action: () =>
