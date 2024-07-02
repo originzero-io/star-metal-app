@@ -67,20 +67,14 @@ function Plakalar() {
           deleteAction: deleteSingleRecordHandler,
         }}
         actionButtons={
-          <>
-            {user.yetki === "admin" && (
-              <>
-                <Button
-                  style={{ marginRight: "4px" }}
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={() => showPanel({ title: "Plaka Ekle", content: <PlakaForm /> })}
-                >
-                  Plaka Ekle
-                </Button>
-              </>
-            )}
-          </>
+          <Button
+            style={{ marginRight: "4px" }}
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => showPanel({ title: "Plaka Ekle", content: <PlakaForm /> })}
+          >
+            Plaka Ekle
+          </Button>
         }
       />
     </div>

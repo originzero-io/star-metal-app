@@ -127,18 +127,14 @@ function Soforler() {
                 Toplu Sil ({selectedRows.length})
               </Button>
             )}
-            {user.yetki === "admin" && (
-              <>
-                <Button
-                  style={{ marginRight: "4px" }}
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={() => showPanel({ title: "Şoför Ekle", content: <SoforForm /> })}
-                >
-                  Şoför Ekle
-                </Button>
-              </>
-            )}
+            <Button
+              style={{ marginRight: "4px" }}
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => showPanel({ title: "Şoför Ekle", content: <SoforForm /> })}
+            >
+              Şoför Ekle
+            </Button>
           </>
         }
       />
