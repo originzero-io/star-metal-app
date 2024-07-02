@@ -196,7 +196,7 @@ export default function UretimGirisi({ record }) {
               <Button
                 type="primary"
                 icon={<FormOutlined />}
-                onClick={terazidenOlcumAl}
+                onClick={fakeTeraziOlcumHandler}
                 loading={teraziLoading}
               >
                 {teraziLoading ? "Ölçüm Alınıyor..." : "Teraziden Ölçüm Al"}
@@ -343,16 +343,7 @@ export default function UretimGirisi({ record }) {
                   ))}
                 </Select>
               </Form.Item>
-              <Form.Item
-                label="Ambalaj Tanımı 1"
-                name="birinciAmbalaj"
-                rules={[
-                  {
-                    required: true,
-                    message: "Bu alanı doldurun",
-                  },
-                ]}
-              >
+              <Form.Item label="Ambalaj Tanımı 1" name="birinciAmbalaj">
                 <Select placeholder="Ambalaj giriniz">
                   {ambalajlar.map((ambalaj, i) => (
                     <Select.Option key={i} value={ambalaj.kasaAdi}>
