@@ -474,16 +474,7 @@ function LogoyaGonderButon({ kayitlar }) {
             </Select>
           </Form.Item>
 
-          <Form.Item
-            label="Açıklama"
-            name="genelAciklama"
-            rules={[
-              {
-                required: true,
-                message: "Bu alanı doldurun",
-              },
-            ]}
-          >
+          <Form.Item label="Açıklama" name="genelAciklama">
             <Input placeholder="Açıklama girin" />
           </Form.Item>
 
