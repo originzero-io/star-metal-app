@@ -137,6 +137,7 @@ export default function UretimGirisi({ record }) {
       brut: teraziOlcum.brut,
       dara: teraziOlcum.dara,
       net: teraziOlcum.net,
+      Referanslar: { ...record.Referanslar }, // sevkiyat kartı için
     };
 
     if (data.uretimAdedi + localRecord.uretilenMiktar <= localRecord.gelenMiktar) {
@@ -181,6 +182,16 @@ export default function UretimGirisi({ record }) {
       );
     }
   };
+
+  useEffect(() => {
+    if (sevkiyatKartiKayit !== null) {
+      showPanel({
+        title: "Sevkiyat Kartı",
+        content: <SevkiyatKarti record={sevkiyatKartiKayit} />,
+        width: 800,
+      });
+    }
+  }, [sevkiyatKartiKayit]);
 
   const uretimAdediMinInput = !localRecord.Referanslar.fason ? teraziOlcum.adet - miktarSapmasi : 0;
   const uretimAdediMaxInput = !localRecord.Referanslar.fason

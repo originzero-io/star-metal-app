@@ -1,5 +1,6 @@
 import { Col, Row } from "antd";
 import PrintButton from "components/shared/PrintButton";
+import { useDBContext } from "context/DBProvider";
 import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { referansUretimHttp } from "services/crud-server/referanslar.http";
@@ -81,7 +82,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <div>*{record.Referanslar.kodu}*</div>
             </div>
             <div style={{ textAlign: "end", fontSize: "2.2vmin", marginRight: "40px" }}>
-              <BoldTextStyled>{record.kodu}</BoldTextStyled>
+              <BoldTextStyled>{record.Referanslar.kodu}</BoldTextStyled>
             </div>
           </ColStyled>
         </Row>
@@ -108,7 +109,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BoldTextStyled>AÇIKLAMA</BoldTextStyled>
             </div>
             <div style={{ textAlign: "start", fontSize: "2vmin" }}>
-              <BoldTextStyled>{referansUretim.not}</BoldTextStyled>
+              <BoldTextStyled>{record.Referanslar.irsaliyeAciklamasi}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={6}>
@@ -142,7 +143,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BoldTextStyled>İŞLEM AÇIKLAMASI</BoldTextStyled>
             </div>
             <div style={{ textAlign: "start", fontSize: "2vmin", marginTop: "8px" }}>
-              <BoldTextStyled>{record.Referanslar.irsaliyeAciklamasi}</BoldTextStyled>
+              <BoldTextStyled>{referansUretim.not}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={6}>
