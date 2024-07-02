@@ -85,7 +85,7 @@ router.post(
       });
       await Referans.bulkCreate(logodanGelenKayitlar);
 
-      // await referansUretimVerileriniEsle();
+      // await referansUretimVerileriniEsle(logodanGelenKayitlar);
 
       const newReferanslar = await Referans.findAll({
         include: [
