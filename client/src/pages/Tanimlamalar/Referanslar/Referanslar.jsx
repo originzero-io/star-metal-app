@@ -166,18 +166,39 @@ function Referanslar() {
         dataIndex: "miktarSapmasi",
         key: "miktarSapmasi",
         render: (value, record) => record.ReferansUretim?.miktarSapmasi,
+        filters: [...new Set(referanslar.map((item) => item.ReferansUretim?.miktarSapmasi))].map(
+          (value) => ({ text: value, value }),
+        ),
+        onFilter: (value, record) => {
+          const miktarSapmasi = record.ReferansUretim?.miktarSapmasi ?? "Boş";
+          return miktarSapmasi === value;
+        },
       },
       {
         title: "Lot Adedi",
         dataIndex: "lotAdedi",
         key: "lotAdedi",
         render: (value, record) => record.ReferansUretim?.lotAdedi,
+        filters: [...new Set(referanslar.map((item) => item.ReferansUretim?.lotAdedi))].map(
+          (value) => ({ text: value, value }),
+        ),
+        onFilter: (value, record) => {
+          const lotAdedi = record.ReferansUretim?.lotAdedi ?? "Boş";
+          return lotAdedi === value;
+        },
       },
       {
         title: "Yüzey Alanı",
         dataIndex: "referansYuzeyAlani",
         key: "referansYuzeyAlani",
         render: (value, record) => record.ReferansUretim?.referansYuzeyAlani,
+        filters: [
+          ...new Set(referanslar.map((item) => item.ReferansUretim?.referansYuzeyAlani)),
+        ].map((value) => ({ text: value, value })),
+        onFilter: (value, record) => {
+          const yuzeyAlani = record.ReferansUretim?.referansYuzeyAlani ?? "Boş";
+          return yuzeyAlani === value;
+        },
       },
       {
         title: "İşlem Tipi",
