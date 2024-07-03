@@ -125,12 +125,10 @@ function Personeller() {
         onChange={onChange}
         rowSelection={user.yetki !== "operator" && rowSelection}
         pagination={false}
-        contextMenu={
-          user.yetki !== "operator" && {
-            editForm: PersonelForm,
-            deleteAction: deleteSingleRecordHandler,
-          }
-        }
+        contextMenu={{
+          editForm: user.yetki !== "operator" ? PersonelForm : undefined,
+          deleteAction: user.yetki === "admin" ? deleteSingleRecordHandler : undefined,
+        }}
         actionButtons={
           <>
             {selectedRows.length > 0 && (

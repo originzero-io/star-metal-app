@@ -1,4 +1,5 @@
 import { Button, Divider, Form, Input, Select, Switch } from "antd";
+import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import personelHttp from "services/crud-server/personeller.http";
@@ -6,6 +7,7 @@ import personelHttp from "services/crud-server/personeller.http";
 export default function PersonelForm({ record, type }) {
   const { showPanel, showNotification } = useUIContext();
   const { personeller, setPersoneller } = useDBContext();
+  const { user } = useAuth();
 
   const onFinish = async (values) => {
     if (type === "update") {
@@ -38,6 +40,7 @@ export default function PersonelForm({ record, type }) {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
+      disabled={user.yetki !== "admin" && user.ad !== record.ad}
     >
       <Form.Item
         label="Ad"
@@ -120,18 +123,20 @@ export default function PersonelForm({ record, type }) {
         />
       </Form.Item>
 
-      <Form.Item
-        label="Parola"
-        name="parola"
-        rules={[
-          {
-            required: true,
-            message: "Bu alanı doldurun",
-          },
-        ]}
-      >
-        <Input.Password placeholder="Giriş için kullanılacak parola girin" />
-      </Form.Item>
+      {(user.yetki === "admin" || (user.yetki === "yonetici" && user.ad === record.ad)) && (
+        <Form.Item
+          label="Parola"
+          name="parola"
+          rules={[
+            {
+              required: true,
+              message: "Bu alanı doldurun",
+            },
+          ]}
+        >
+          <Input.Password placeholder="Giriş için kullanılacak parola girin" />
+        </Form.Item>
+      )}
 
       <Divider />
 
