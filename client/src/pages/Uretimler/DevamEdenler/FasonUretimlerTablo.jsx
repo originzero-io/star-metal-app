@@ -310,10 +310,10 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                   icon: <PrinterOutlined />,
                   title: "Üretim İş Emri Kartı Çıkart",
                   action: () =>
-                    showPanel({
+                    showModal({
                       title: "Üretim İş Emri Kartı",
                       content: <UretimIsEmriKarti record={record} />,
-                      width: 800,
+                      width: 1200,
                     }),
                 },
                 user.yetki !== "operator" && {
