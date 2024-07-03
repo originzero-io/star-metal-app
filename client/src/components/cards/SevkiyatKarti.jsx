@@ -12,12 +12,13 @@ const ContainerStyled = styled.div`
 const ColStyled = styled(Col)`
   border: 1px solid black;
   text-align: center;
-  font-size: 2vmin;
+  font-size: 3vmin;
   padding: 6px;
   flex-direction: column;
 `;
 const BoldTextStyled = styled.div`
   font-weight: 800;
+  font-size: 3vmin;
 `;
 
 export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger }) {
@@ -25,8 +26,6 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-
-  console.log("record", record);
 
   useEffect(() => {
     if (printTrigger && record) {
@@ -59,7 +58,6 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
           <ColStyled span={24}>
             <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
               <BoldTextStyled>REFERANS NO</BoldTextStyled>
-              <div>*{record.referansNo}*</div>
             </div>
             <div style={{ textAlign: "end", fontSize: "2.2vmin", marginRight: "40px" }}>
               <BoldTextStyled>{record.referansNo}</BoldTextStyled>
@@ -70,7 +68,6 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
           <ColStyled span={24}>
             <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
               <BoldTextStyled>KODU</BoldTextStyled>
-              <div>*{record.Referanslar.kodu}*</div>
             </div>
             <div style={{ textAlign: "end", fontSize: "2.2vmin", marginRight: "40px" }}>
               <BoldTextStyled>{record.Referanslar.kodu}</BoldTextStyled>
@@ -80,9 +77,11 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
 
         <Row>
           <ColStyled span={12}>
-            <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
+            <div style={{ textAlign: "start" }}>
               <BoldTextStyled>ADET</BoldTextStyled>
-              <div>*{record.uretimAdedi} *</div>
+              <div style={{ textAlign: "start", fontSize: "2.2vmin" }}>
+                <BoldTextStyled>{record.uretimAdedi}</BoldTextStyled>
+              </div>
             </div>
           </ColStyled>
           <ColStyled span={12}>

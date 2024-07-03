@@ -50,7 +50,7 @@ export default function SevkEdilecekler() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const { showPanel, showNotification } = useUIContext();
+  const { showModal, showNotification } = useUIContext();
   const { setLoading, loading, setDevamEdenUretimler } = useDBContext();
 
   useEffect(() => {
@@ -291,12 +291,12 @@ export default function SevkEdilecekler() {
                         style={{ marginRight: "4px" }}
                         icon={<PrinterOutlined />}
                         onClick={() =>
-                          showPanel({
+                          showModal({
                             title: "Sevkiyat Kartı",
                             content: React.createElement(SevkiyatKarti, {
                               record: selectedRows[musteriAdi][0],
                             }),
-                            width: 800,
+                            width: 1200,
                           })
                         }
                       >
