@@ -28,7 +28,13 @@ function Personeller() {
         dataIndex: "yetki",
         key: "yetki",
         render: (text, record) =>
-          text === "admin" ? <Tag color="volcano">Admin</Tag> : <Tag color="blue">Operatör</Tag>,
+          text === "admin" ? (
+            <Tag color="volcano">Admin</Tag>
+          ) : text === "yonetici" ? (
+            <Tag color="purple">Yönetici</Tag>
+          ) : (
+            <Tag color="blue">Operatör</Tag>
+          ),
         filters: createTableFilterFromData(personeller, "yetki"),
 
         onFilter: (value, record) => record.yetki.indexOf(value) === 0,

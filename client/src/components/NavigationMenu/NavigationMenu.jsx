@@ -10,6 +10,7 @@ import { TbRulerMeasure } from "react-icons/tb";
 
 import { CarOutlined } from "@ant-design/icons";
 import { Divider } from "antd";
+import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
@@ -148,6 +149,7 @@ function NavigationMenu() {
 
   const { showPanel, selectedPage, setSelectedPage } = useUIContext();
   const { musteriler, referanslar, ambalajlar, soforler, plakalar, personeller } = useDBContext();
+  const { user } = useAuth();
 
   const pages = useMemo(
     () => ({
@@ -216,12 +218,13 @@ function NavigationMenu() {
           link: "/ambalajlar",
           dataLength: ambalajlar.length,
         },
-        {
-          title: "Personeller",
-          icon: <PiUsersThreeBold />,
-          link: "/personeller",
-          dataLength: personeller.length,
-        },
+        user &&
+          user.yetki !== "operator" && {
+            title: "Personeller",
+            icon: <PiUsersThreeBold />,
+            link: "/personeller",
+            dataLength: personeller.length,
+          },
         {
           title: "Şoförler",
           icon: <GiSteeringWheel />,
@@ -234,7 +237,7 @@ function NavigationMenu() {
           link: "/plakalar",
           dataLength: plakalar.length,
         },
-      ],
+      ].filter(Boolean),
       veriler: [
         {
           title: "Sıcaklık",
@@ -253,7 +256,7 @@ function NavigationMenu() {
         },
       ],
     }),
-    [musteriler, referanslar, plakalar, soforler, ambalajlar, personeller],
+    [musteriler, referanslar, plakalar, soforler, ambalajlar, personeller, user],
   );
 
   return (

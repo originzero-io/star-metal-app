@@ -114,6 +114,7 @@ export default function PersonelForm({ record, type }) {
           placeholder="Yetki düzeyi seçin"
           options={[
             { value: "admin", label: "Admin" },
+            { value: "yonetici", label: "Yönetici" },
             { value: "operator", label: "Operatör" },
           ]}
         />
