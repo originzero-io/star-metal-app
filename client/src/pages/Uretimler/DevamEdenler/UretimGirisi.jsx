@@ -73,7 +73,8 @@ export default function UretimGirisi({ record }) {
   const [printTrigger, setPrintTrigger] = useState(false);
   const [sevkiyatKartiKayit, setSevkiyatKartiKayit] = useState(null);
 
-  const [teraziLoading, setTeraziLoading] = useState(null);
+  const [teraziLoading, setTeraziLoading] = useState(false);
+  const [adetGirisiYapabilir, setAdetGirisiYapabilir] = useState(false);
 
   const [teraziOlcum, setTeraziOlcum] = useState({
     brut: 0,
@@ -83,18 +84,24 @@ export default function UretimGirisi({ record }) {
   });
 
   const fakeTeraziOlcumHandler = () => {
-    const brut = Math.round((Math.random() * 100 + 1) * 10) / 10;
-    const dara = Math.round((Math.random() * 100 + 1) * 10) / 10;
-    const net = Math.round((Math.random() * 100 + 1) * 10) / 10;
-    const adet = Math.floor(Math.random() * 50);
-    setTeraziOlcum({
-      ...teraziOlcum,
-      brut,
-      dara,
-      net,
-      adet,
-    });
-    form.setFieldsValue({ uretimAdedi: adet });
+    setTeraziLoading(true);
+    setAdetGirisiYapabilir(false);
+    setTimeout(() => {
+      const brut = Math.round((Math.random() * 100 + 1) * 10) / 10;
+      const dara = Math.round((Math.random() * 100 + 1) * 10) / 10;
+      const net = Math.round((Math.random() * 100 + 1) * 10) / 10;
+      const adet = Math.floor(Math.random() * 50);
+      setTeraziOlcum({
+        ...teraziOlcum,
+        brut,
+        dara,
+        net,
+        adet,
+      });
+      form.setFieldsValue({ uretimAdedi: adet });
+      setTeraziLoading(false);
+      setAdetGirisiYapabilir(true);
+    }, 3000);
   };
 
   function roundUp(num, decimals = 1) {
@@ -103,6 +110,7 @@ export default function UretimGirisi({ record }) {
 
   const terazidenOlcumAl = async () => {
     setTeraziLoading(true);
+    setAdetGirisiYapabilir(false);
     const data = await kantarApi.getData();
 
     setTeraziOlcum({
@@ -114,6 +122,7 @@ export default function UretimGirisi({ record }) {
     });
     console.log("data", data);
     setTeraziLoading(false);
+    setAdetGirisiYapabilir(true);
   };
 
   const onFinish = async (values) => {
@@ -208,7 +217,7 @@ export default function UretimGirisi({ record }) {
               <Button
                 type="primary"
                 icon={<FormOutlined />}
-                onClick={fakeTeraziOlcumHandler}
+                onClick={terazidenOlcumAl}
                 loading={teraziLoading}
               >
                 {teraziLoading ? "Ölçüm Alınıyor..." : "Teraziden Ölçüm Al"}
@@ -335,6 +344,7 @@ export default function UretimGirisi({ record }) {
                   style={{ width: "100%" }}
                   min={uretimAdediMinInput}
                   max={uretimAdediMaxInput}
+                  disabled={!adetGirisiYapabilir}
                 />
               </Form.Item>
               <Form.Item
