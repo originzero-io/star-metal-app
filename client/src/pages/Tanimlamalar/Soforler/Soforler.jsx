@@ -110,7 +110,7 @@ function Soforler() {
       <TableGod
         dataSource={soforler}
         columns={columns}
-        rowSelection={user.yetki === "admin" && rowSelection}
+        rowSelection={user.yetki !== "operator" && rowSelection}
         pagination={false}
         contextMenu={{
           deleteAction: deleteSingleRecordHandler,

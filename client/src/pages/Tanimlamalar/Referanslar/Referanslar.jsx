@@ -290,7 +290,7 @@ function Referanslar() {
         dataSource={referanslar}
         columns={columns}
         onChange={onChange}
-        rowSelection={user.yetki === "admin" && rowSelection}
+        rowSelection={user.yetki !== "operator" && rowSelection}
         pagination={true}
         scroll={{ x: 1800 }}
         contextMenu={{
@@ -331,7 +331,7 @@ function Referanslar() {
                 Toplu Sil ({selectedRows.length})
               </Button>
             )}
-            {user.yetki === "admin" && (
+            {user.yetki !== "operator" && (
               <>
                 <Button
                   style={{ marginRight: "4px" }}

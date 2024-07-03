@@ -303,7 +303,7 @@ export default function SevkEdilecekler() {
                         Sevkiyat Kartı Çıkart
                       </Button>
                     )}
-                    {user.yetki === "admin" && selectedRows[musteriAdi]?.length > 0 && (
+                    {user.yetki !== "operator" && selectedRows[musteriAdi]?.length > 0 && (
                       <Button
                         danger
                         icon={<DeleteOutlined />}

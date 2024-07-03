@@ -183,7 +183,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
             scroll={{ x: 1800 }}
             contextMenu={{
               extraItems: (record) => [
-                user.yetki === "admin" && {
+                user.yetki !== "operator" && {
                   icon: <TruckOutlined />,
                   title: "Üretim / Sevkiyat Hareketleri",
                   action: () =>

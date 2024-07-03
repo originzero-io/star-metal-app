@@ -162,7 +162,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
             scroll={{ x: 1700 }}
             contextMenu={{
               extraItems: (record) => [
-                user.yetki === "admin" && {
+                user.yetki !== "operator" && {
                   icon: <TruckOutlined />,
                   title: "Üretim / Sevkiyat Hareketleri",
                   action: () =>

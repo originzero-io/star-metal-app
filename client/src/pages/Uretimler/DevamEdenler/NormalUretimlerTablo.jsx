@@ -226,7 +226,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
             contextMenu={{
               deleteAction: uretimiSilFunc,
               extraItems: (record) => [
-                user.yetki === "admin" && {
+                user.yetki !== "operator" && {
                   icon: <ExclamationCircleOutlined />,
                   title: record.acil ? "Acilliği Kaldır" : "Acil Olarak İşaretle",
                   action: () => oncelikDurumunuDegistir(record),
@@ -261,7 +261,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                       width: 800,
                     }),
                 },
-                user.yetki === "admin" && {
+                user.yetki !== "operator" && {
                   icon: <EditOutlined />,
                   title: "Gelen Malzeme Miktarını Değiştir",
                   action: () =>

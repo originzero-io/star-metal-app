@@ -269,7 +269,7 @@ function Musteriler() {
       <TableGod
         dataSource={musteriler}
         columns={columns}
-        rowSelection={user.yetki === "admin" && rowSelection}
+        rowSelection={user.yetki !== "operator" && rowSelection}
         pagination={true}
         scroll={{ x: 2200 }}
         contextMenu={{
@@ -288,7 +288,7 @@ function Musteriler() {
                 Toplu Sil ({selectedRows.length})
               </Button>
             )}
-            {user.yetki === "admin" && (
+            {user.yetki !== "operator" && (
               <>
                 <Button
                   style={{ marginRight: "4px" }}

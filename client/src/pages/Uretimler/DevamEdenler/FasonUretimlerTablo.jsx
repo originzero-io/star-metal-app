@@ -316,7 +316,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                       width: 800,
                     }),
                 },
-                user.yetki === "admin" && {
+                user.yetki !== "operator" && {
                   icon: <EditOutlined />,
                   title: "Gelen Malzeme Miktarını Değiştir",
                   action: () =>

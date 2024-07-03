@@ -41,7 +41,7 @@ function Ambalajlar() {
     <Container>
       <PageHeader label="Ambalajlar" icon={<FaDropbox />} dataLength={ambalajlar.length} />
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {user.yetki === "admin" && (
+        {user.yetki !== "operator" && (
           <Card
             hoverable
             style={{
@@ -85,7 +85,7 @@ function Ambalajlar() {
               />
             }
             actions={
-              user.yetki === "admin" && [
+              user.yetki !== "operator" && [
                 <Tooltip key="edit" placement="bottom" title="Düzenle">
                   <EditOutlined
                     style={{ fontSize: "1.5vmin" }}

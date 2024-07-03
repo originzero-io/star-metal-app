@@ -64,7 +64,7 @@ export default function RecordContextMenu({ position, record, contextMenu }) {
               </MenuItemStyled>
             ))}
 
-        {user.yetki === "admin" && contextMenu.editForm && (
+        {user.yetki !== "operator" && contextMenu.editForm && (
           <MenuItemStyled onClick={editRecordHandler}>
             <span>
               <EditOutlined />
@@ -73,7 +73,7 @@ export default function RecordContextMenu({ position, record, contextMenu }) {
           </MenuItemStyled>
         )}
 
-        {user.yetki === "admin" && contextMenu.deleteAction && (
+        {user.yetki !== "operator" && contextMenu.deleteAction && (
           <MenuItemStyled
             onClick={() => contextMenu.deleteAction(record)}
             style={{ color: "red" }}

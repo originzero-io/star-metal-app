@@ -123,10 +123,10 @@ function Personeller() {
         dataSource={personeller}
         columns={columns}
         onChange={onChange}
-        rowSelection={user.yetki === "admin" && rowSelection}
+        rowSelection={user.yetki !== "operator" && rowSelection}
         pagination={false}
         contextMenu={
-          user.yetki === "admin" && {
+          user.yetki !== "operator" && {
             editForm: PersonelForm,
             deleteAction: deleteSingleRecordHandler,
           }
@@ -143,7 +143,7 @@ function Personeller() {
                 Toplu Sil ({selectedRows.length})
               </Button>
             )}
-            {user.yetki === "admin" && (
+            {user.yetki !== "operator" && (
               <Button
                 style={{ marginRight: "4px" }}
                 type="primary"
