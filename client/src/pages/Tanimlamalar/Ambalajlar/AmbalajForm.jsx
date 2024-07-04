@@ -45,6 +45,7 @@ export default function AmbalajForm({ record, type }) {
     formData.append("kasaAdi", values.kasaAdi);
     formData.append("kasaTanimi", values.kasaTanimi);
     formData.append("kasaOlcusu", values.kasaOlcusu);
+    formData.append("dara", values.dara);
     formData.append("photo", fileList[0].originFileObj);
 
     if (type === "update") {
@@ -124,6 +125,18 @@ export default function AmbalajForm({ record, type }) {
         ]}
       >
         <Input placeholder="Kasa ölçüsü girin" />
+      </Form.Item>
+      <Form.Item
+        label="Dara"
+        name="dara"
+        rules={[
+          {
+            required: true,
+            message: "Bu alanı doldurun",
+          },
+        ]}
+      >
+        <Input placeholder="Dara girin" />
       </Form.Item>
       <Form.Item
         label={type === "update" ? "Resim Değiştir" : "Resim Ekle"}

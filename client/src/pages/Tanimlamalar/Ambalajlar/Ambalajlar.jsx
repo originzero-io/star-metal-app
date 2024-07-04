@@ -109,6 +109,22 @@ function Ambalajlar() {
             <Card.Meta title={ambalaj.kasaAdi} />
             <Card.Meta description={ambalaj.kasaTanimi} />
             <Card.Meta description={ambalaj.kasaOlcusu} />
+            <Card.Meta
+              description={
+                <span>
+                  Dara:
+                  <span
+                    style={{
+                      marginLeft: 6,
+                      fontWeight: 600,
+                      color: ambalaj.dara ? "green" : "tomato",
+                    }}
+                  >
+                    {ambalaj.dara || "Girilmemiş"}
+                  </span>
+                </span>
+              }
+            />
           </Card>
         ))}
       </div>

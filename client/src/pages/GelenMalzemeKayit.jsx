@@ -395,10 +395,14 @@ export default function GelenMalzemeKayit() {
           )}
         </Form.List>
         <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button htmlType="reset" style={{ marginRight: "10px" }}>
+          <Button
+            htmlType="reset"
+            style={{ marginRight: "10px" }}
+            onClick={() => setKayitDurumu(false)}
+          >
             Sıfırla
           </Button>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" disabled={kayitDurumu}>
             Malzemeleri Kaydet
           </Button>
         </Form.Item>

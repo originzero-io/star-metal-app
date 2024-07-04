@@ -16,6 +16,10 @@ const Ambalaj = sequelize.define(
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+    dara: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
+    },
     resimUrl: {
       type: DataTypes.STRING(35),
       allowNull: false,
@@ -27,5 +31,7 @@ const Ambalaj = sequelize.define(
     timestamps: false,
   },
 );
+
+Ambalaj.sync({ alter: true });
 
 export default Ambalaj;
