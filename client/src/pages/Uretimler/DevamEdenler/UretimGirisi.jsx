@@ -74,7 +74,8 @@ export default function UretimGirisi({ record }) {
   const [sevkiyatKartiKayit, setSevkiyatKartiKayit] = useState(null);
 
   const [teraziLoading, setTeraziLoading] = useState(false);
-  const [adetGirisiYapabilir, setAdetGirisiYapabilir] = useState(false);
+  const [terazidenOlcumAlindi, setTerazidenOlcumAlindi] = useState(false);
+  const [uretimAdedi, setUretimAdedi] = useState(0);
 
   const [teraziOlcum, setTeraziOlcum] = useState({
     brut: 0,
@@ -85,7 +86,7 @@ export default function UretimGirisi({ record }) {
 
   const fakeTeraziOlcumHandler = () => {
     setTeraziLoading(true);
-    setAdetGirisiYapabilir(false);
+    setTerazidenOlcumAlindi(false);
     setTimeout(() => {
       const brut = Math.round((Math.random() * 100 + 1) * 10) / 10;
       const dara = Math.round((Math.random() * 100 + 1) * 10) / 10;
@@ -99,9 +100,10 @@ export default function UretimGirisi({ record }) {
         adet,
       });
       form.setFieldsValue({ uretimAdedi: adet });
+      setUretimAdedi(adet);
       setTeraziLoading(false);
-      setAdetGirisiYapabilir(true);
-    }, 3000);
+      setTerazidenOlcumAlindi(true);
+    }, 1000);
   };
 
   function roundUp(num, decimals = 1) {
@@ -110,7 +112,7 @@ export default function UretimGirisi({ record }) {
 
   const terazidenOlcumAl = async () => {
     setTeraziLoading(true);
-    setAdetGirisiYapabilir(false);
+    setTerazidenOlcumAlindi(false);
     const data = await kantarApi.getData();
 
     setTeraziOlcum({
@@ -120,9 +122,9 @@ export default function UretimGirisi({ record }) {
       net: data.Net,
       adet: data.Adet,
     });
-    console.log("data", data);
     setTeraziLoading(false);
-    setAdetGirisiYapabilir(true);
+    form.setFieldsValue({ uretimAdedi: data.Adet });
+    setTerazidenOlcumAlindi(true);
   };
 
   const onFinish = async (values) => {
@@ -203,8 +205,10 @@ export default function UretimGirisi({ record }) {
     }
   }, [sevkiyatKartiKayit]);
 
-  const uretimAdediMinInput = !localRecord.Referanslar.fason ? teraziOlcum.adet - miktarSapmasi : 0;
-  const uretimAdediMaxInput = !localRecord.Referanslar.fason
+  const uretimAdediMinInput = !localRecord.Referanslar?.fason
+    ? teraziOlcum.adet - miktarSapmasi
+    : 0;
+  const uretimAdediMaxInput = !localRecord.Referanslar?.fason
     ? teraziOlcum.adet + miktarSapmasi
     : localRecord.gelenMiktar - localRecord.uretilenMiktar;
 
@@ -256,7 +260,7 @@ export default function UretimGirisi({ record }) {
           form={form}
           labelCol={{ flex: "150px" }}
           labelAlign="left"
-          initialValues={{ uretimAdedi: teraziOlcum.adet, uretimTarihi: getCurrentDateTime() }}
+          initialValues={{ uretimAdedi: teraziOlcum.adet || 0, uretimTarihi: getCurrentDateTime() }}
           onFinish={onFinish}
         >
           <Row gutter={32}>
@@ -332,7 +336,7 @@ export default function UretimGirisi({ record }) {
               <Form.Item
                 label="Üretim Adedi"
                 name="uretimAdedi"
-                tooltip={`En fazla ${uretimAdediMaxInput} girebilirsiniz.`}
+                tooltip={`${uretimAdediMinInput}-${uretimAdediMaxInput} arası girebilirsiniz`}
                 rules={[
                   {
                     required: true,
@@ -342,9 +346,10 @@ export default function UretimGirisi({ record }) {
               >
                 <InputNumber
                   style={{ width: "100%" }}
-                  min={uretimAdediMinInput}
+                  min={uretimAdediMinInput > 0 ? uretimAdediMinInput : 0}
                   max={uretimAdediMaxInput}
-                  disabled={!adetGirisiYapabilir}
+                  disabled={!localRecord.Referanslar.fason && !terazidenOlcumAlindi}
+                  onChange={(value) => setUretimAdedi(value)}
                 />
               </Form.Item>
               <Form.Item
@@ -388,7 +393,12 @@ export default function UretimGirisi({ record }) {
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <Form.Item>
-              <Button type="primary" icon={<CreditCardOutlined />} htmlType="submit">
+              <Button
+                type="primary"
+                icon={<CreditCardOutlined />}
+                htmlType="submit"
+                disabled={uretimAdedi === 0}
+              >
                 Üretim Girişi Yap
               </Button>
             </Form.Item>
