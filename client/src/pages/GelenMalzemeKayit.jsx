@@ -93,7 +93,7 @@ export default function GelenMalzemeKayit() {
     try {
       const data = form.getFieldsValue();
 
-      const { kodu } = referanslar.filter(
+      const referans = referanslar.filter(
         (referans) => referans.referansNo === data.malzemeler[name].referansNo,
       )[0];
 
@@ -101,7 +101,8 @@ export default function GelenMalzemeKayit() {
         key: name,
         irsaliyeNo: data.irsaliyeNo,
         personel: data.personel,
-        kodu,
+        kodu: referans.kodu,
+        Referanslar: { ...referans }, // üretim iş emri kartı için
         ...data.malzemeler[name],
       };
 
