@@ -49,9 +49,9 @@ export default function ReferansForm({ record, type }) {
       const initialFileList = [
         {
           uid: "-1",
-          name: record.ReferansUretim.resimUrl,
+          name: record.ReferansUretim?.resimUrl,
           status: "done",
-          url: `${getUrlByEnvVariables()}/uploads/referanslar/${record.ReferansUretim.resimUrl}`,
+          url: `${getUrlByEnvVariables()}/uploads/referanslar/${record.ReferansUretim?.resimUrl}`,
         },
       ];
       setFileList(initialFileList);
