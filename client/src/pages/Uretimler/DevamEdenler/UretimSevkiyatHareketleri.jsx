@@ -73,7 +73,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
                   content: React.createElement(SevkiyatKarti, {
                     record,
                   }),
-                  width: 800,
+                  width: 1200,
                 })
               }
             />
@@ -155,7 +155,13 @@ export default function UretimSevkiyatHareketleri({ record }) {
       title: "İrsaliye No",
       dataIndex: "irsaliyeNo",
       key: "irsaliyeNo",
-      // width: 150,
+      width: 150,
+    },
+    {
+      title: "Açıklama",
+      dataIndex: "aciklama",
+      key: "aciklama",
+      width: 150,
     },
     {
       title: "Şoför",

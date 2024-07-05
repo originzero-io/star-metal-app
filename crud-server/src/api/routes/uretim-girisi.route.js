@@ -166,6 +166,7 @@ router.put(
           sofor: `${kayit.sofor.adi} ${kayit.sofor.soyadi}`,
           plaka: kayit.plaka,
           irsaliyeNo: kayit.irsaliyeNo,
+          aciklama: kayit.genelAciklama,
         },
         {
           where: {

@@ -363,6 +363,7 @@ function LogoyaGonderButon({ kayitlar }) {
       plaka: values.plaka,
       irsaliyeNo: "14-ABCDE",
       sevkTarihi: getCurrentDateTime(),
+      aciklama: values.genelAciklama,
     }));
 
     const { musteriAdi } = kayitlar[0].Referanslar;
