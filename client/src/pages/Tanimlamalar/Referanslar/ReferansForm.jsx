@@ -81,6 +81,11 @@ export default function ReferansForm({ record, type }) {
         referansNo: values.referansNo,
         kodu: values.kodu,
         irsaliyeAciklamasi: values.irsaliyeAciklamasi,
+        musteriAdi: record.musteriAdi || values.musteriAdi,
+        musteriRef:
+          record.musteriRef === 0
+            ? musteriler.find((m) => m.unvani === values.musteriAdi).logoRef
+            : record.musteriRef,
         fasonFirmaRef: record.fason
           ? musteriler.find((m) => m.unvani === values.fasonFirmasi).logoRef
           : record.fasonFirmaRef,
@@ -89,7 +94,18 @@ export default function ReferansForm({ record, type }) {
         lotAdedi: values.lotAdedi,
         referansYuzeyAlani: values.referansYuzeyAlani,
         not: values.not,
+        ReferansUretim: {
+          logoMalzemeRef: record.logoMalzemeRef,
+          kodu: record.kodu,
+          resimUrl: record.resimUrl,
+          miktarSapmasi: values.miktarSapmasi,
+          lotAdedi: values.lotAdedi,
+          referansYuzeyAlani: values.referansYuzeyAlani,
+          not: values.not,
+        },
       };
+
+      console.log("put-:", logoyaGonderilecekPut);
 
       const response = await logoGoApi.putData("PutReferans", logoyaGonderilecekPut);
 
@@ -123,6 +139,11 @@ export default function ReferansForm({ record, type }) {
           }
           return referans;
         });
+
+        console.log(
+          "updated: ",
+          updatedReferanslar.find((u) => u.logoMalzemeRef === record.logoMalzemeRef),
+        );
 
         setReferanslar(updatedReferanslar);
 
@@ -417,8 +438,8 @@ export default function ReferansForm({ record, type }) {
       <Form.Item
         label="Müşteri"
         name="musteriAdi"
-        rules={[{ required: type !== "update", message: "Bu alanı doldurun" }]}
-        style={type === "update" ? { display: "none" } : null}
+        rules={[{ required: true, message: "Bu alanı doldurun" }]}
+        style={record.musteriAdi !== "" ? { display: "none" } : null}
       >
         <Select placeholder="Müşteri Adı Seçiniz" showSearch>
           {musteriler.map((musteri) => (

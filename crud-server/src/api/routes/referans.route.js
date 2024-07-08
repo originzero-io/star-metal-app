@@ -198,12 +198,12 @@ router.put(
     const yeniReferansUretim = JSON.parse(yeniVeri.ReferansUretim);
     console.log(yeniReferansUretim);
 
-    let { resimUrl } = yeniReferansUretim;
+    let resimUrl;
 
     const referansUretim = await ReferansUretim.findOne({ where: { logoMalzemeRef: yeniVeri.logoMalzemeRef } });
 
     if (referansUretim) {
-      if (req.file) {
+      if (req.file && resimUrl) {
         // Yeni resmi kaydet
         resimUrl = `${yeniVeri.referansNo}.${req.file.mimetype.split("/")[1]}`;
         const newFilePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${resimUrl}`;
@@ -211,7 +211,7 @@ router.put(
         // Dosyayı yeni adla yeniden adlandır
         const currentFilePath = req.file.path;
         fs.renameSync(currentFilePath, newFilePath);
-      } else if (referansUretim.resimUrl !== "") {
+      } else if (referansUretim.resimUrl && referansUretim.resimUrl !== "") {
         // Fotoğraf değişmemişse ve mevcut bir resim varsa, mevcut adı yeni ada yeniden adlandır
         const oldFilePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${referansUretim.resimUrl}`;
         const newFilePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${yeniVeri.referansNo}${path.extname(referansUretim.resimUrl)}`;
@@ -226,8 +226,11 @@ router.put(
       const updatedReferansUretim = await referansUretim.update({ ...yeniVeri, resimUrl });
       res.json(updatedReferansUretim);
     } else {
-      console.log("Böyle bir referans üretim verisi bulunamadı", yeniVeri.logoMalzemeRef);
-      res.status(404).send("Böyle bir referans üretim verisi bulunamadı");
+      console.log("Böyle bir referans üretim verisi bulunamadı, oluşturuluyor...", yeniVeri.logoMalzemeRef);
+      const newReferansUretim = await ReferansUretim.create({ ...yeniVeri, resimUrl: "" });
+      console.log("Referans üretim verisi oluşturuldu", yeniVeri.logoMalzemeRef);
+
+      res.json(newReferansUretim);
     }
   }),
 );

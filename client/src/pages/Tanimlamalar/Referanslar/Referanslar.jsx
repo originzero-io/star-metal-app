@@ -79,8 +79,16 @@ function Referanslar() {
         title: "Referans No",
         dataIndex: "referansNo",
         key: "referansNo",
-        filters: createTableFilterFromData(referanslar, "referansNo"),
-        onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
+        filters: [
+          ...createTableFilterFromData(referanslar, "referansNo"),
+          { text: "Boş", value: "Boş" },
+        ],
+        onFilter: (value, record) => {
+          if (value === "Boş") {
+            return !record.referansNo;
+          }
+          return record.referansNo.indexOf(value) === 0;
+        },
         filterSearch: true,
         render: (text) => (
           <Tag
@@ -88,20 +96,29 @@ function Referanslar() {
             icon={<FileDoneOutlined />}
             style={{ width: "100%", fontSize: "12px" }}
           >
-            {text}
+            {text || "Boş"}
           </Tag>
         ),
       },
+
       {
         title: "Müşteri",
         dataIndex: "musteriAdi",
         key: "musteriAdi",
-        filters: createTableFilterFromData(referanslar, "musteriAdi"),
-        onFilter: (value, record) => record.musteriAdi.indexOf(value) === 0,
+        filters: [
+          ...createTableFilterFromData(referanslar, "musteriAdi"),
+          { text: "Boş", value: "Boş" },
+        ],
+        onFilter: (value, record) => {
+          if (value === "Boş") {
+            return !record.musteriAdi;
+          }
+          return record.musteriAdi.indexOf(value) === 0;
+        },
         filterSearch: true,
         render: (text) => (
           <Tag icon={<BankOutlined />} color="geekblue" style={{ width: "100%", fontSize: "12px" }}>
-            {text}
+            {text || "Boş"}
           </Tag>
         ),
         width: 170,
