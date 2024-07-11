@@ -18,7 +18,7 @@ const ColStyled = styled(Col)`
 `;
 const BoldTextStyled = styled.div`
   font-weight: 800;
-  font-size: 3vmin;
+  font-size: 3.3vmin;
 `;
 
 export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger }) {
@@ -40,7 +40,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
       <ContainerStyled ref={componentRef}>
         <Row>
           <ColStyled span={6}>
-            <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
+            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
               <BoldTextStyled>ALICI</BoldTextStyled>
             </div>
             <div style={{ textAlign: "center", fontSize: "1.5vmin", marginRight: "40px" }}>
@@ -56,20 +56,20 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
         </Row>
         <Row>
           <ColStyled span={24}>
-            <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
+            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
               <BoldTextStyled>REFERANS NO</BoldTextStyled>
             </div>
-            <div style={{ textAlign: "end", fontSize: "2.2vmin", marginRight: "40px" }}>
+            <div style={{ textAlign: "end", fontSize: "2.5vmin", marginRight: "40px" }}>
               <BoldTextStyled>{record.referansNo}</BoldTextStyled>
             </div>
           </ColStyled>
         </Row>
         <Row>
           <ColStyled span={24}>
-            <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
+            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
               <BoldTextStyled>KODU</BoldTextStyled>
             </div>
-            <div style={{ textAlign: "end", fontSize: "2.2vmin", marginRight: "40px" }}>
+            <div style={{ textAlign: "end", fontSize: "2.5vmin", marginRight: "40px" }}>
               <BoldTextStyled>{record.Referanslar.kodu}</BoldTextStyled>
             </div>
           </ColStyled>
@@ -79,23 +79,23 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
           <ColStyled span={12}>
             <div style={{ textAlign: "start" }}>
               <BoldTextStyled>ADET</BoldTextStyled>
-              <div style={{ textAlign: "start", fontSize: "2.2vmin" }}>
+              <div style={{ textAlign: "start", fontSize: "2.5vmin" }}>
                 <BoldTextStyled>{record.uretimAdedi}</BoldTextStyled>
               </div>
             </div>
           </ColStyled>
           <ColStyled span={12}>
-            <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
+            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
               <BoldTextStyled>GELİŞ REFERANSI</BoldTextStyled>
             </div>
-            <div style={{ textAlign: "start", fontSize: "2.2vmin" }}>
+            <div style={{ textAlign: "start", fontSize: "2.5vmin" }}>
               <BoldTextStyled>{record.referansNo}</BoldTextStyled>
             </div>
           </ColStyled>
         </Row>
         <Row>
           <ColStyled span={12}>
-            <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
+            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
               <BoldTextStyled>AÇIKLAMA</BoldTextStyled>
             </div>
             <div style={{ textAlign: "start", fontSize: "2vmin" }}>
@@ -103,7 +103,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
             </div>
           </ColStyled>
           <ColStyled span={6}>
-            <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
+            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
               <BoldTextStyled>TARİH / SAAT</BoldTextStyled>
             </div>
             <div style={{ textAlign: "center", fontSize: "2vmin" }}>
@@ -111,36 +111,36 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
             </div>
           </ColStyled>
           <ColStyled span={3}>
-            <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
+            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
               <BoldTextStyled>BRÜT</BoldTextStyled>
             </div>
-            <div style={{ textAlign: "center", fontSize: "2.2vmin" }}>
+            <div style={{ textAlign: "center", fontSize: "2.5vmin" }}>
               <BoldTextStyled>{record.brut}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={3}>
-            <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
+            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
               <BoldTextStyled>DARA</BoldTextStyled>
             </div>
-            <div style={{ textAlign: "center", fontSize: "2.2vmin" }}>
+            <div style={{ textAlign: "center", fontSize: "2.5vmin" }}>
               <BoldTextStyled>{record.dara}</BoldTextStyled>
             </div>
           </ColStyled>
         </Row>
         <Row>
           <ColStyled span={18}>
-            <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
+            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
               <BoldTextStyled>İŞLEM AÇIKLAMASI</BoldTextStyled>
             </div>
-            <div style={{ textAlign: "start", fontSize: "2vmin", marginTop: "8px" }}>
+            <div style={{ textAlign: "start", fontSize: "3.2vmin", marginTop: "8px" }}>
               <BoldTextStyled>{record.Referanslar.ReferansUretim.not}</BoldTextStyled>
             </div>
           </ColStyled>
           <ColStyled span={6}>
-            <div style={{ textAlign: "start", fontSize: "1.3vmin" }}>
+            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
               <BoldTextStyled>KONTROL EDEN</BoldTextStyled>
             </div>
-            <div style={{ textAlign: "center", fontSize: "2.2vmin", marginTop: "8px" }}>
+            <div style={{ textAlign: "center", fontSize: "2.5vmin", marginTop: "8px" }}>
               <BoldTextStyled>{record.personel}</BoldTextStyled>
             </div>
           </ColStyled>

@@ -18,7 +18,7 @@ const ColStyled = styled(Col)`
 `;
 const BoldTextStyled = styled.div`
   font-weight: 800;
-  font-size: 3vmin;
+  font-size: 3.3vmin;
 `;
 
 export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigger }) {
@@ -78,7 +78,7 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
         <Row style={{ height: "150px" }}>
           <ColStyled span={16}>
             <BoldTextStyled style={{ fontSize: "2.8vmin" }}>ÜRETİM NOTU</BoldTextStyled>
-            <BoldTextStyled style={{ marginTop: 20, fontSize: "3.2vmin" }}>
+            <BoldTextStyled style={{ marginTop: 20, fontSize: "3.4vmin", fontWeight: 800 }}>
               {record?.Referanslar?.ReferansUretim.not}
             </BoldTextStyled>
           </ColStyled>
