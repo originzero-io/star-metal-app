@@ -240,12 +240,20 @@ export default function GelenMalzemeKayit() {
           </Col>
           <Col span={6}>
             <Form.Item label="Şoför" name="getirenSofor" rules={rules}>
-              <Select placeholder="Şoför seçiniz" showSearch>
-                {soforler.map((sofor) => (
-                  <Select.Option key={sofor.id} value={`${sofor.adi} ${sofor.soyadi}`}>
-                    {`${sofor.adi} ${sofor.soyadi}`}
-                  </Select.Option>
-                ))}
+              <Select
+                placeholder="Şoför seçiniz"
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {[...soforler]
+                  .sort((a, b) => a.adi.localeCompare(b.adi))
+                  .map((sofor) => (
+                    <Select.Option key={sofor.id} value={`${sofor.adi} ${sofor.soyadi}`}>
+                      {`${sofor.adi} ${sofor.soyadi}`}
+                    </Select.Option>
+                  ))}
               </Select>
             </Form.Item>
           </Col>
@@ -283,9 +291,12 @@ export default function GelenMalzemeKayit() {
                         placeholder="Referans No"
                         name={name}
                         onChange={(value) => referansSecimiYap(value, name)}
+                        filterOption={(input, option) =>
+                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
                       >
                         {musteriReferanslari.map((referans) => (
-                          <Select.Option key={referans.referansNo} value={referans.referansNo}>
+                          <Select.Option key={referans.logoMalzemeRef} value={referans.referansNo}>
                             {referans.referansNo}
                           </Select.Option>
                         ))}
