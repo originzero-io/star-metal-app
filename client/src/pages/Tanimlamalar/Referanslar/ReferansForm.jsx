@@ -20,6 +20,7 @@ import logoGoApi from "services/logoGoApi";
 import referanslarHttp, { referansUretimHttp } from "services/crud-server/referanslar.http";
 import { ParcaAdiDuzenlemeForm, ParcaAdiEklemeForm } from "./ParcaAdiForm";
 import { IslemTipiDuzenlemeForm, IslemTipiEklemeForm } from "./IslemTipiForm";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 
 export default function ReferansForm({ record, type }) {
   const {
@@ -31,6 +32,7 @@ export default function ReferansForm({ record, type }) {
     setReferansParcaAdlari,
     referansAnaBirimleri,
     musteriler,
+    setDevamEdenUretimler,
   } = useDBContext();
   const { showPanel, showModal, showNotification } = useUIContext();
 
@@ -123,6 +125,10 @@ export default function ReferansForm({ record, type }) {
         if (fileList.length > 0) {
           formData.append("photo", fileList[0].originFileObj);
         }
+
+        const updatedRefss = await referanslarHttp.updateData(record.id, logoyaGonderilecekPut);
+
+        console.log("updatedRefffs: ", updatedRefss);
 
         const updatedReferansUretim = await referansUretimHttp.updateWithPhoto(formData);
 
@@ -439,6 +445,7 @@ export default function ReferansForm({ record, type }) {
         label="Müşteri"
         name="musteriAdi"
         rules={[{ required: true, message: "Bu alanı doldurun" }]}
+        // style={type === "update" ? { display: "none" } : null}
         style={record.musteriAdi !== "" ? { display: "none" } : null}
       >
         <Select placeholder="Müşteri Adı Seçiniz" showSearch>

@@ -107,20 +107,21 @@ router.post(
 router.put(
   "/",
   asyncHandler(async (req, res) => {
-    const referans = await Referans.findByPk(req.body.id);
+    const referans = await Referans.findOne({ where: { id: req.body.id } });
+
     const currentReferansNo = referans.referansNo;
+
     if (referans) {
       const updatedReferans = await referans.update(req.body);
 
       if (updatedReferans) {
-        await DNormalUretim.update(
+        const upd = await DNormalUretim.update(
           {
-            referansNo: updatedReferans.referansNo,
-            islemAciklama: updatedReferans.islemAciklama,
-            siparisNo: updatedReferans.siparisNo,
+            referansNo: req.body.referansNo,
           }, // Güncellenecek yeni değerler
           { where: { referansNo: currentReferansNo } }, // eski değer
         );
+        console.log("upd", upd);
       }
       res.status(200).json(updatedReferans);
     } else {
@@ -198,6 +199,8 @@ router.put(
     const yeniReferansUretim = JSON.parse(yeniVeri.ReferansUretim);
     console.log(yeniReferansUretim);
 
+    // let { resimUrl } = yeniReferansUretim;
+
     let resimUrl;
 
     const referansUretim = await ReferansUretim.findOne({ where: { logoMalzemeRef: yeniVeri.logoMalzemeRef } });
@@ -213,6 +216,7 @@ router.put(
         fs.renameSync(currentFilePath, newFilePath);
       } else if (referansUretim.resimUrl && referansUretim.resimUrl !== "") {
         // Fotoğraf değişmemişse ve mevcut bir resim varsa, mevcut adı yeni ada yeniden adlandır
+        console.log("BURDAYIM");
         const oldFilePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${referansUretim.resimUrl}`;
         const newFilePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${yeniVeri.referansNo}${path.extname(referansUretim.resimUrl)}`;
 
@@ -227,10 +231,9 @@ router.put(
       res.json(updatedReferansUretim);
     } else {
       console.log("Böyle bir referans üretim verisi bulunamadı, oluşturuluyor...", yeniVeri.logoMalzemeRef);
-      const newReferansUretim = await ReferansUretim.create({ ...yeniVeri, resimUrl: "" });
-      console.log("Referans üretim verisi oluşturuldu", yeniVeri.logoMalzemeRef);
 
-      res.json(newReferansUretim);
+      const referansUretim = await ReferansUretim.create({ ...yeniVeri, resimUrl: "" });
+      res.json(referansUretim);
     }
   }),
 );
