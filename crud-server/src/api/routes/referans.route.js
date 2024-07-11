@@ -6,6 +6,8 @@ import path from "path";
 import { findDirname } from "../../utils/file.js";
 import Referans, { ReferansUretim } from "../models/referans.model.js";
 import { DNormalUretim } from "../models/uretim.model.js";
+import UretimGirisi from "../models/uretim-girisi.model.js";
+import Irsaliye from "../models/irsaliye.model.js";
 
 const referansResimMiddleware = multer({
   limits: {
@@ -115,13 +117,24 @@ router.put(
       const updatedReferans = await referans.update(req.body);
 
       if (updatedReferans) {
-        const upd = await DNormalUretim.update(
+        await DNormalUretim.update(
           {
             referansNo: req.body.referansNo,
           }, // Güncellenecek yeni değerler
           { where: { referansNo: currentReferansNo } }, // eski değer
         );
-        console.log("upd", upd);
+        await UretimGirisi.update(
+          {
+            referansNo: req.body.referansNo,
+          }, // Güncellenecek yeni değerler
+          { where: { referansNo: currentReferansNo, sevkTarihi: null } }, // eski değer ve sevk edilmemiş olanları güncelle
+        );
+        await Irsaliye.update(
+          {
+            referansNo: req.body.referansNo,
+          }, // Güncellenecek yeni değerler
+          { where: { referansNo: currentReferansNo } }, // eski değer
+        );
       }
       res.status(200).json(updatedReferans);
     } else {
