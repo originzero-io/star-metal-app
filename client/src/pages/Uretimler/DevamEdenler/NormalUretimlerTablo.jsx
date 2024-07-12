@@ -22,6 +22,7 @@ import { useUIContext } from "context/UIProvider";
 import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeForm";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
+import { useState } from "react";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import ReferansResmi from "./ReferansResmi";
@@ -31,6 +32,40 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
 
   const { showPanel, showModal } = useUIContext();
   const { setDevamEdenUretimler } = useDBContext();
+
+  const [miktarToplam, setMiktarToplam] = useState({});
+
+  const handleTableChange = (pagination, filters, sorter, extra, index) => {
+    const data = extra.currentDataSource.reduce(
+      (acc, item) => {
+        acc.gelenMiktarToplam += item.gelenMiktar || 0;
+        acc.gidenMiktarToplam += item.gidenMiktar || 0;
+        acc.kalanMiktarToplam += item.kalanMiktar || 0;
+        acc.uretilenMiktarToplam += item.uretilenMiktar || 0;
+        acc.uretilmeyenMiktarToplam += item.uretilmeyenMiktar || 0;
+        return acc;
+      },
+      {
+        gelenMiktarToplam: 0,
+        gidenMiktarToplam: 0,
+        kalanMiktarToplam: 0,
+        uretilenMiktarToplam: 0,
+        uretilmeyenMiktarToplam: 0,
+      },
+    );
+
+    setMiktarToplam((prevState) => ({
+      ...prevState,
+      [index]: {
+        state: true,
+        gelenMiktarToplam: data.gelenMiktarToplam,
+        gidenMiktarToplam: data.gidenMiktarToplam,
+        kalanMiktarToplam: data.kalanMiktarToplam,
+        uretilenMiktarToplam: data.uretilenMiktarToplam,
+        uretilmeyenMiktarToplam: data.uretilmeyenMiktarToplam,
+      },
+    }));
+  };
 
   const createColumnsForCustomer = (musteriAdi) => [
     {
@@ -136,6 +171,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       dataIndex: "gelenMiktar",
       key: "gelenMiktar",
       sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
+      render: (text) => <Tag color={text > 0 ? "orange" : ""}>{text}</Tag>,
     },
     {
       title: "Giden",
@@ -149,6 +185,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       dataIndex: "kalanMiktar",
       key: "kalanMiktar",
       sorter: (a, b) => a.kalanMiktar - b.kalanMiktar,
+      render: (text) => <Tag color={text > 0 ? "magenta" : ""}>{text}</Tag>,
     },
     {
       title: "Üretilen",
@@ -162,6 +199,8 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       dataIndex: "uretilmeyenMiktar",
       key: "uretilmeyenMiktar",
       sorter: (a, b) => a.uretilmeyenMiktar - b.uretilmeyenMiktar,
+      render: (text) => <Tag color={text > 0 ? "purple" : ""}>{text}</Tag>,
+
       width: 120,
     },
     {
@@ -174,7 +213,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
     {
       title: "İşlem Tipi",
       // dataIndex: "referansTipi",
-      render: (text, record) => <Tag color="blue">{record.Referanslar?.islemTipi}</Tag>,
+      render: (text, record) => record.Referanslar?.islemTipi,
       key: "islemTipi",
       filters: [
         ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.islemTipi)),
@@ -218,7 +257,34 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
           <TableGod
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
+            onChange={(...args) => handleTableChange(...args, index)}
             hideDefaultTitleButtons
+            footer={
+              miktarToplam[index]?.state && (
+                <div style={{ fontSize: "13px" }}>
+                  <span>
+                    Gelen Miktar Toplam:{" "}
+                    <Tag color="orange">{miktarToplam[index].gelenMiktarToplam}</Tag>
+                  </span>
+                  <span style={{ marginLeft: 6 }}>
+                    Giden Miktar Toplam:{" "}
+                    <Tag color="cyan">{miktarToplam[index].gidenMiktarToplam}</Tag>
+                  </span>
+                  <span style={{ marginLeft: 6 }}>
+                    Kalan Miktar Toplam:{" "}
+                    <Tag color="magenta">{miktarToplam[index].kalanMiktarToplam}</Tag>
+                  </span>
+                  <span style={{ marginLeft: 6 }}>
+                    Üretilen Miktar Toplam:{" "}
+                    <Tag color="purple">{miktarToplam[index].uretilenMiktarToplam}</Tag>
+                  </span>
+                  <span style={{ marginLeft: 6 }}>
+                    Üretilmeyen Miktar Toplam:{" "}
+                    <Tag color="purple">{miktarToplam[index].uretilmeyenMiktarToplam}</Tag>
+                  </span>
+                </div>
+              )
+            }
             scroll={{ x: 1700 }}
             rowStyle={(row) => ({
               background: "#fcf8f0",

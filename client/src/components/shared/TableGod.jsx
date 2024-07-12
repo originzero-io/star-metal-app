@@ -32,6 +32,7 @@ export default function TableGod({
   wrapperStyle,
   rowStyle,
   rowKey,
+  footer,
 }) {
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
@@ -97,6 +98,7 @@ export default function TableGod({
       )}
       <div ref={componentRef}>
         <Table
+          footer={() => footer || null}
           dataSource={dataSource}
           columns={columns}
           rowKey={
@@ -210,4 +212,5 @@ TableGod.propTypes = {
   wrapperStyle: PropTypes.object,
   rowStyle: PropTypes.func,
   rowKey: PropTypes.number,
+  footer: PropTypes.oneOfType([PropTypes.node, PropTypes.oneOf([null])]),
 };

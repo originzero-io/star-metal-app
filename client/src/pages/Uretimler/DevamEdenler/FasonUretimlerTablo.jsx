@@ -20,6 +20,7 @@ import { useUIContext } from "context/UIProvider";
 import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeForm";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
+import { useState } from "react";
 import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
@@ -31,6 +32,37 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
 
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
   const { showPanel, showNotification, showAlert, showModal } = useUIContext();
+
+  const [miktarToplam, setMiktarToplam] = useState({});
+
+  const handleTableChange = (pagination, filters, sorter, extra, index) => {
+    const data = extra.currentDataSource.reduce(
+      (acc, item) => {
+        acc.gelenMiktarToplam += item.gelenMiktar || 0;
+        acc.fasonaGonderilenToplam += item.gidenMiktar || 0;
+        acc.uretilenMiktarToplam += item.uretilenMiktar || 0;
+        acc.sevkEdilenMiktarToplam += item.sevkEdilenMiktar || 0;
+        return acc;
+      },
+      {
+        gelenMiktarToplam: 0,
+        fasonaGonderilenToplam: 0,
+        uretilenMiktarToplam: 0,
+        sevkEdilenMiktarToplam: 0,
+      },
+    );
+
+    setMiktarToplam((prevState) => ({
+      ...prevState,
+      [index]: {
+        state: true,
+        gelenMiktarToplam: data.gelenMiktarToplam,
+        fasonaGonderilenToplam: data.fasonaGonderilenToplam,
+        uretilenMiktarToplam: data.uretilenMiktarToplam,
+        sevkEdilenMiktarToplam: data.sevkEdilenMiktarToplam,
+      },
+    }));
+  };
 
   const createColumnsForCustomer = (fasonFirmasi) => [
     {
@@ -266,7 +298,30 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
           <TableGod
             dataSource={kayitlar}
             columns={createColumnsForCustomer(fasonFirmasi)}
+            onChange={(...args) => handleTableChange(...args, index)}
             hideDefaultTitleButtons
+            footer={
+              miktarToplam[index]?.state && (
+                <div style={{ fontSize: "13px" }}>
+                  <span>
+                    Gelen Miktar Toplam:{" "}
+                    <Tag color="orange">{miktarToplam[index].gelenMiktarToplam}</Tag>
+                  </span>
+                  <span style={{ marginLeft: 6 }}>
+                    Fasona Gönderilen Toplam:{" "}
+                    <Tag color="cyan">{miktarToplam[index].fasonaGonderilenToplam}</Tag>
+                  </span>
+                  <span style={{ marginLeft: 6 }}>
+                    Fasonda Üretilen Toplam:{" "}
+                    <Tag color="purple">{miktarToplam[index].uretilenMiktarToplam}</Tag>
+                  </span>
+                  <span style={{ marginLeft: 6 }}>
+                    Sevk Edilen Miktar Toplam:{" "}
+                    <Tag color="purple">{miktarToplam[index].sevkEdilenMiktarToplam}</Tag>
+                  </span>
+                </div>
+              )
+            }
             scroll={{ x: 1800 }}
             rowStyle={(row) => ({
               background: "#fcf8f0",
