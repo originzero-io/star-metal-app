@@ -211,7 +211,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
     {
       title: "İşlem Tipi",
       // dataIndex: "referansTipi",
-      render: (text, record) => <Tag color="blue">{record.Referanslar?.islemTipi}</Tag>,
+      render: (text, record) => record.Referanslar?.islemTipi,
       key: "islemTipi",
       filters: [
         ...new Set(
@@ -305,11 +305,11 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                 <div style={{ fontSize: "13px" }}>
                   <span>
                     Gelen Miktar Toplam:{" "}
-                    <Tag color="orange">{miktarToplam[index].gelenMiktarToplam}</Tag>
+                    <Tag color="green">{miktarToplam[index].gelenMiktarToplam}</Tag>
                   </span>
                   <span style={{ marginLeft: 6 }}>
                     Fasona Gönderilen Toplam:{" "}
-                    <Tag color="cyan">{miktarToplam[index].fasonaGonderilenToplam}</Tag>
+                    <Tag color="green">{miktarToplam[index].fasonaGonderilenToplam}</Tag>
                   </span>
                   <span style={{ marginLeft: 6 }}>
                     Fasonda Üretilen Toplam:{" "}
@@ -317,7 +317,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                   </span>
                   <span style={{ marginLeft: 6 }}>
                     Sevk Edilen Miktar Toplam:{" "}
-                    <Tag color="purple">{miktarToplam[index].sevkEdilenMiktarToplam}</Tag>
+                    <Tag color="cyan">{miktarToplam[index].sevkEdilenMiktarToplam}</Tag>
                   </span>
                 </div>
               )
