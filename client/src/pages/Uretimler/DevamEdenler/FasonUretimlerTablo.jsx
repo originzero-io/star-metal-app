@@ -302,7 +302,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
             hideDefaultTitleButtons
             footer={
               miktarToplam[index]?.state && (
-                <div style={{ fontSize: "13px" }}>
+                <div style={{ fontSize: "13px", marginTop: 14 }}>
                   <span>
                     Gelen Miktar Toplam:{" "}
                     <Tag color="orange">{miktarToplam[index].gelenMiktarToplam}</Tag>
