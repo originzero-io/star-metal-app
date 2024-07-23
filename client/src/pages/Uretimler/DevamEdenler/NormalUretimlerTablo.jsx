@@ -286,6 +286,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
               )
             }
             scroll={{ x: 1700 }}
+            pagination={true}
             rowStyle={(row) => ({
               background: "#fcf8f0",
             })}

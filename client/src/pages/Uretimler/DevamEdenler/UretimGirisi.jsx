@@ -1,4 +1,4 @@
-import { CreditCardOutlined, FormOutlined } from "@ant-design/icons";
+import { CreditCardOutlined, FileDoneOutlined, FormOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, InputNumber, Row, Select, Table, Tag } from "antd";
 import IdBadge from "components/shared/IdBadge";
 import { useDBContext } from "context/DBProvider";
@@ -278,21 +278,22 @@ export default function UretimGirisi({ record }) {
                   <Tag color="purple">{localRecord.Referanslar.siparisTipi}</Tag>
                 )}
               </Form.Item>
-              {localRecord.Referanslar.siparisTipi === "SERİ" ? (
-                <Form.Item label="Sipariş No">
-                  <div>{localRecord.Referanslar.siparisNo}</div>
-                </Form.Item>
-              ) : (
-                <Form.Item label="Talep No">
-                  <div>{localRecord.talepNo}</div>
-                </Form.Item>
-              )}
+              <Form.Item label="Kodu">
+                <Tag
+                  color={localRecord.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
+                  icon={<FileDoneOutlined />}
+                >
+                  {localRecord.Referanslar.kodu}
+                </Tag>
+              </Form.Item>
               <Form.Item label="İrsaliye No">
-                <div>{localRecord.irsaliyeNo}</div>
+                <Tag>{localRecord.irsaliyeNo}</Tag>
               </Form.Item>
               <Form.Item label="Referans No">
                 <div>
-                  <Tag color="orange">{localRecord.referansNo}</Tag>
+                  <Tag color="orange" icon={<FileDoneOutlined />}>
+                    {localRecord.referansNo}
+                  </Tag>
                 </div>
               </Form.Item>
               <Form.Item label="Fason">
