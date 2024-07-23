@@ -5,7 +5,7 @@ import multer from "multer";
 import path from "path";
 import { findDirname } from "../../utils/file.js";
 import Referans, { ReferansUretim } from "../models/referans.model.js";
-import { DNormalUretim } from "../models/uretim.model.js";
+import { DFasonUretim, DNormalUretim } from "../models/uretim.model.js";
 import UretimGirisi from "../models/uretim-girisi.model.js";
 import Irsaliye from "../models/irsaliye.model.js";
 
@@ -48,17 +48,8 @@ router.get(
 
 router.post(
   "/",
-  referansResimMiddleware.single("photo"),
   asyncHandler(async (req, res) => {
-    const { referansNo } = req.body;
-    if (!req.file) {
-      throw new Error("Referans resmi yüklemek zorunludur");
-    }
-
-    const resimUrl = `${referansNo}.${req.file.mimetype.split("/")[1]}`;
-
-    console.log("ref:", { ...req.body, resimUrl });
-    const newReferans = await Referans.create({ ...req.body, resimUrl });
+    const newReferans = await Referans.create({ ...req.body });
     res.json(newReferans);
   }),
 );
@@ -114,14 +105,31 @@ router.put(
     const currentReferansNo = referans.referansNo;
 
     if (referans) {
-      const updatedReferans = await referans.update(req.body);
+      const refDbResponse = await Referans.update(
+        {
+          referansNo: req.body.referansNo,
+        },
+        { where: { id: req.body.id } },
+      );
 
-      if (updatedReferans) {
+      if (refDbResponse[0] > 0) {
         await DNormalUretim.update(
           {
             referansNo: req.body.referansNo,
           }, // Güncellenecek yeni değerler
           { where: { referansNo: currentReferansNo } }, // eski değer
+        );
+        await DFasonUretim.update(
+          {
+            referansNo: req.body.referansNo,
+          }, // Güncellenecek yeni değerler
+          { where: { referansNo: currentReferansNo } }, // eski değer
+        );
+        await ReferansUretim.update(
+          {
+            kodu: req.body.kodu,
+          }, // Güncellenecek yeni değerler
+          { where: { logoMalzemeRef: req.body.logoMalzemeRef } }, // eski değer
         );
         await UretimGirisi.update(
           {
@@ -136,7 +144,7 @@ router.put(
           { where: { referansNo: currentReferansNo } }, // eski değer
         );
       }
-      res.status(200).json(updatedReferans);
+      res.status(200).json("Referans ve diğer tablo güncellemeleri başarılı");
     } else {
       res.status(400).send("Referans bulunamadı", req.body.id);
     }
@@ -203,6 +211,50 @@ router.post(
   }),
 );
 
+router.post(
+  "/uretim-verileri/logo-ile-esle",
+  asyncHandler(async (req, res) => {
+    // mevcut tüm kayıtları sil yeni gelen listeyle doldur
+    const logoReferanslar = req.body;
+    try {
+      console.log("logoReferanslar.length", logoReferanslar.length);
+
+      const referanslarDb = await Referans.findAll({
+        attributes: ["logoMalzemeRef", "kodu"],
+      });
+
+      // ReferansUretim tablosundaki tüm logoMalzemeKodu değerlerini çekiyoruz
+      const referansUretimDb = await ReferansUretim.findAll({
+        attributes: ["logoMalzemeRef", "kodu"],
+      });
+
+      // Referanslar tablosunda olup ReferansUretim tablosunda olmayanları buluyoruz
+      const eksikMalzemeler = referanslarDb.filter((referans) => !referansUretimDb.some((uretim) => uretim.logoMalzemeRef === referans.logoMalzemeRef));
+      console.log("eksikMalzemeler", eksikMalzemeler);
+
+      await Promise.all(
+        eksikMalzemeler.map((eksikMalzeme) =>
+          ReferansUretim.create({
+            logoMalzemeRef: eksikMalzeme.logoMalzemeRef,
+            kodu: eksikMalzeme.kodu,
+            miktarSapmasi: 5,
+            lotAdedi: 150,
+            referansYuzeyAlani: 1.0,
+            resimUrl: "",
+            not: "",
+          }),
+        ),
+      );
+
+      console.log("ReferansUretim tablosu senkronize edildi.");
+
+      res.send("ReferansUretim tablosu senkronize edildi.");
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }),
+);
+
 router.put(
   "/uretim-verileri",
   referansResimMiddleware.single("photo"),
@@ -229,7 +281,6 @@ router.put(
         fs.renameSync(currentFilePath, newFilePath);
       } else if (referansUretim.resimUrl && referansUretim.resimUrl !== "") {
         // Fotoğraf değişmemişse ve mevcut bir resim varsa, mevcut adı yeni ada yeniden adlandır
-        console.log("BURDAYIM");
         const oldFilePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${referansUretim.resimUrl}`;
         const newFilePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${yeniVeri.referansNo}${path.extname(referansUretim.resimUrl)}`;
 

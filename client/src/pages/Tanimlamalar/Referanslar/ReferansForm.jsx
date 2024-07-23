@@ -92,10 +92,6 @@ export default function ReferansForm({ record, type }) {
           ? musteriler.find((m) => m.unvani === values.fasonFirmasi).logoRef
           : record.fasonFirmaRef,
         fasonFirmasi: record.fason ? values.fasonFirmasi : record.fasonFirmasi,
-        miktarSapmasi: values.miktarSapmasi,
-        lotAdedi: values.lotAdedi,
-        referansYuzeyAlani: values.referansYuzeyAlani,
-        not: values.not,
         ReferansUretim: {
           logoMalzemeRef: record.logoMalzemeRef,
           kodu: record.kodu,
@@ -126,9 +122,7 @@ export default function ReferansForm({ record, type }) {
           formData.append("photo", fileList[0].originFileObj);
         }
 
-        const updatedRefss = await referanslarHttp.updateData(record.id, logoyaGonderilecekPut);
-
-        console.log("updatedRefffs: ", updatedRefss);
+        await referanslarHttp.updateData(record.id, logoyaGonderilecekPut);
 
         const updatedReferansUretim = await referansUretimHttp.updateWithPhoto(formData);
 
@@ -145,11 +139,6 @@ export default function ReferansForm({ record, type }) {
           }
           return referans;
         });
-
-        console.log(
-          "updated: ",
-          updatedReferanslar.find((u) => u.logoMalzemeRef === record.logoMalzemeRef),
-        );
 
         setReferanslar(updatedReferanslar);
 
@@ -185,6 +174,11 @@ export default function ReferansForm({ record, type }) {
 
         formData.delete("logoMalzemeRef");
         formData.append("logoMalzemeRef", response.newId);
+
+        await referanslarHttp.addData({
+          ...logoyaGonderilecekPost,
+          logoMalzemeRef: response.newId,
+        });
         const newReferansUretim = await referansUretimHttp.addData(formData);
 
         setReferanslar([
@@ -207,8 +201,6 @@ export default function ReferansForm({ record, type }) {
             : response.message,
         );
       }
-
-      // await referanslarHttp.addData(formData);
     }
   };
 

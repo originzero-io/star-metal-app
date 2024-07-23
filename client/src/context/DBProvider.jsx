@@ -45,14 +45,12 @@ export const DBProvider = ({ children }) => {
     try {
       setLoading(true);
 
-      // const tumReferanslar = await referanslarHttp.getData();
-      // console.log("tumReferanslar", tumReferanslar);
+      const dbReferanslar = await referanslarHttp.getData();
 
-      const logoReferanslar = await logoGoApi.getData("GetReferansList");
-      const combinedReferanslar = await referanslarHttp.logoIleEsle(logoReferanslar);
+      const combinedReferanslar = await referanslarHttp.logoIleEsle(dbReferanslar);
 
       setReferanslar(combinedReferanslar);
-      showNotification("success", "Referanslar logodan alındı.");
+      showNotification("success", "Referanslar veri tabanından alındı.");
 
       const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
       setReferansParcaAdlari(logoParcaAdlari);

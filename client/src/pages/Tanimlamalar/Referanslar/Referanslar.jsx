@@ -14,10 +14,11 @@ import { useUIContext } from "context/UIProvider";
 import ReferansForm from "pages/Tanimlamalar/Referanslar/ReferansForm";
 import { useMemo, useState } from "react";
 import { MdOutlineDocumentScanner } from "react-icons/md";
-import referanslarHttp from "services/crud-server/referanslar.http";
+import referanslarHttp, { referansUretimHttp } from "services/crud-server/referanslar.http";
 import logoGoApi from "services/logoGoApi";
 import getUrlByEnvVariables from "utils/getServerUrl";
 import { createTableFilterFromData } from "utils/table.helper";
+import LogoIcon from "../../../../public/logo.png";
 import TableGod from "../../../components/shared/TableGod";
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -29,7 +30,13 @@ function Referanslar() {
 
   const [selectedRows, setSelectedRows] = useState([]);
   const { showPanel, showNotification, showModal } = useUIContext();
-  const { referanslar, setReferanslar } = useDBContext();
+  const {
+    referanslar,
+    setReferanslar,
+    setReferansIslemTipleri,
+    setReferansParcaAdlari,
+    setReferansAnaBirimleri,
+  } = useDBContext();
 
   const columns = useMemo(
     () => [
@@ -296,6 +303,32 @@ function Referanslar() {
     });
   };
 
+  const logoIleEsle = async () => {
+    try {
+      showNotification("info", "Referanslar ve alt bilgiler logo ile eşitleniyor...");
+
+      const logoReferanslar = await logoGoApi.getData("GetReferansList");
+      const combinedReferanslar = await referanslarHttp.logoIleEsle(logoReferanslar);
+
+      // logodan girilmiş verilere ait referans üretim bilgilerinin doldurulması
+      await referansUretimHttp.logoIleEsle(logoReferanslar);
+
+      setReferanslar(combinedReferanslar);
+      showNotification("success", `${logoReferanslar.length} adet referans logo ile eşitlendi.`);
+
+      const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
+      setReferansParcaAdlari(logoParcaAdlari);
+      const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
+      setReferansIslemTipleri(logoIslemTipleri);
+      const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
+      setReferansAnaBirimleri(logoAnaBirimler);
+
+      showNotification("success", "Referans alt bilgileri logo ile eşitlendi.");
+    } catch (error) {
+      showNotification("error", "Referans verisi alınamadı", error.message);
+    }
+  };
+
   return (
     <div>
       <PageHeader
@@ -338,6 +371,26 @@ function Referanslar() {
         }}
         actionButtons={
           <>
+            <Button
+              style={{
+                position: "absolute",
+                left: 10,
+                justifyContent: "center",
+                alignItems: "center",
+                width: "8%",
+                background: "#b7e4c7",
+                fontWeight: 600,
+                color: "#484646",
+                border: "1px solid #77b64d",
+              }}
+              icon={
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <img src={LogoIcon} width={35} style={{ marginRight: 5 }} />
+                  <span> ile Eşle</span>
+                </div>
+              }
+              onClick={logoIleEsle}
+            />
             {selectedRows.length > 0 && (
               <Button
                 style={{ marginRight: "4px" }}
