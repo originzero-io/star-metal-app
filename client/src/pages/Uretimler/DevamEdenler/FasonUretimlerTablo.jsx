@@ -169,37 +169,37 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       dataIndex: "gelenMiktar",
       key: "gelenMiktar",
       sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
-      render: (text, record) =>
-        record.gelenMiktar === record.gidenMiktar ? (
-          <Tag color="green">{text}</Tag>
-        ) : (
-          <Tag>{text}</Tag>
-        ),
+      render: (text, record) => (
+        <ColumnBadge
+          color={record.gelenMiktar === record.gidenMiktar ? "green" : ""}
+          value={text}
+        />
+      ),
     },
     {
       title: "Fasona Gönderilen",
       dataIndex: "gidenMiktar",
       key: "gidenMiktar",
       sorter: (a, b) => a.gidenMiktar - b.gidenMiktar,
-      render: (text, record) =>
-        record.gelenMiktar === record.gidenMiktar ? (
-          <Tag color="green">{text}</Tag>
-        ) : (
-          <Tag>{text}</Tag>
-        ),
+      render: (text, record) => (
+        <ColumnBadge
+          color={record.gelenMiktar === record.gidenMiktar ? "green" : ""}
+          value={text}
+        />
+      ),
     },
     {
       title: "Fasonda Üretilen",
       dataIndex: "uretilenMiktar",
       key: "uretilenMiktar",
       sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
-      render: (text) => <Tag color={text > 0 ? "purple" : ""}>{text}</Tag>,
+      render: (text) => <ColumnBadge color={text > 0 ? "purple" : ""} value={text} />,
     },
     {
       title: "Sevk Edilen",
       dataIndex: "sevkEdilenMiktar",
       key: "sevkEdilenMiktar",
-      render: (text) => <Tag color={text > 0 && "cyan"}>{text}</Tag>,
+      render: (text) => <ColumnBadge color={text > 0 ? "cyan" : ""} value={text} />,
       sorter: (a, b) => a.sevkEdilenMiktar - b.sevkEdilenMiktar,
     },
     {
