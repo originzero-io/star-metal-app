@@ -446,7 +446,7 @@ export default function ReferansForm({ record, type }) {
         name="musteriAdi"
         rules={[{ required: true, message: "Bu alanı doldurun" }]}
         // style={type === "update" ? { display: "none" } : null}
-        style={record.musteriAdi !== "" ? { display: "none" } : null}
+        style={type === "update" && record.musteriAdi !== "" ? { display: "none" } : null}
       >
         <Select placeholder="Müşteri Adı Seçiniz" showSearch>
           {musteriler.map((musteri) => (
