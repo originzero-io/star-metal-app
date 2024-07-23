@@ -15,12 +15,13 @@ import {
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useEffect, useState } from "react";
-import getUrlByEnvVariables from "utils/getServerUrl";
-import logoGoApi from "services/logoGoApi";
+import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import referanslarHttp, { referansUretimHttp } from "services/crud-server/referanslar.http";
-import { ParcaAdiDuzenlemeForm, ParcaAdiEklemeForm } from "./ParcaAdiForm";
-import { IslemTipiDuzenlemeForm, IslemTipiEklemeForm } from "./IslemTipiForm";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
+import logoGoApi from "services/logoGoApi";
+import getUrlByEnvVariables from "utils/getServerUrl";
+import { IslemTipiDuzenlemeForm, IslemTipiEklemeForm } from "./IslemTipiForm";
+import { ParcaAdiDuzenlemeForm, ParcaAdiEklemeForm } from "./ParcaAdiForm";
 
 export default function ReferansForm({ record, type }) {
   const {
@@ -33,6 +34,7 @@ export default function ReferansForm({ record, type }) {
     referansAnaBirimleri,
     musteriler,
     setDevamEdenUretimler,
+    setIrsaliyeler,
   } = useDBContext();
   const { showPanel, showModal, showNotification } = useUIContext();
 
@@ -143,6 +145,13 @@ export default function ReferansForm({ record, type }) {
         setReferanslar(updatedReferanslar);
 
         showNotification("success", "Referans üretim verisi güncellendi");
+
+        const devamEdenler = await devamEdenUretimHttp.getData();
+        setDevamEdenUretimler(devamEdenler);
+
+        const irsaliyeler = await irsaliyeHttp.getData();
+        setIrsaliyeler(irsaliyeler);
+
         showPanel(false);
       } else showNotification("error", response.message);
     } else {
