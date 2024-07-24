@@ -124,6 +124,7 @@ export default function UretimGirisi({ record }) {
     });
     setTeraziLoading(false);
     form.setFieldsValue({ uretimAdedi: data.Adet });
+    setUretimAdedi(data.adet);
     setTerazidenOlcumAlindi(true);
   };
 
