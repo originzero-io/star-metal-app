@@ -73,27 +73,6 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       width: 70,
     },
     {
-      title: "Müşteri",
-      dataIndex: "Referanslar.musteriAdi",
-      key: "fasonFirmasi",
-      render: (text, record) => (
-        <Tooltip title={record.Referanslar?.musteriAdi}>
-          <Tag
-            color="blue"
-            style={{
-              width: "120px",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {record.Referanslar?.musteriAdi}
-          </Tag>
-        </Tooltip>
-      ),
-      width: 120,
-    },
-    {
       title: "Referans",
       dataIndex: "referansNo",
       key: "referansNo",
@@ -126,7 +105,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
     {
       title: "İşlem Tipi",
       // dataIndex: "referansTipi",
-      render: (text, record) => <Tag color="blue">{record.Referanslar?.islemTipi}</Tag>,
+      render: (text, record) => record.Referanslar?.islemTipi,
       key: "islemTipi",
       filters: [
         ...new Set(
@@ -191,6 +170,17 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       render: (text) => <ColumnBadge color={text > 0 ? "purple" : ""} value={text} />,
     },
     {
+      title: "Kalan",
+      dataIndex: "kalanMiktar",
+      key: "kalanMiktar",
+      render: (text, record) => (
+        <ColumnBadge
+          color={record.gelenMiktar - record.sevkEdilenMiktar > 0 ? "magenta" : ""}
+          value={record.gelenMiktar - record.sevkEdilenMiktar}
+        />
+      ),
+    },
+    {
       title: "Sevk Edilen",
       dataIndex: "sevkEdilenMiktar",
       key: "sevkEdilenMiktar",
@@ -218,6 +208,27 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
       filterSearch: true,
       width: 100,
+    },
+    {
+      title: "Müşteri",
+      dataIndex: "Referanslar.musteriAdi",
+      key: "fasonFirmasi",
+      render: (text, record) => (
+        <Tooltip title={record.Referanslar?.musteriAdi}>
+          <Tag
+            color="blue"
+            style={{
+              width: "120px",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {record.Referanslar?.musteriAdi}
+          </Tag>
+        </Tooltip>
+      ),
+      width: 120,
     },
     {
       title: "İade",
