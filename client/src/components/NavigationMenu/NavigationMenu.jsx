@@ -8,13 +8,13 @@ import { PiUsersThreeBold } from "react-icons/pi";
 import { RiCustomerServiceLine } from "react-icons/ri";
 import { TbRulerMeasure } from "react-icons/tb";
 
-import { CarOutlined } from "@ant-design/icons";
-import { Divider } from "antd";
+import { AppstoreAddOutlined, CarOutlined } from "@ant-design/icons";
+import { Button, Divider } from "antd";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import useDetectUserInteraction from "utils/useDetectInteraction.hook";
 import CompanyLogo from "../shared/CompanyLogo";
 import UserCard from "./UserCard";
@@ -81,25 +81,41 @@ const MenuListGroupItemStyled = styled.div`
   }
 `;
 
-const RegisterButtonItemStyled = styled.div`
-  font-weight: 600;
-  font-size: 1.5vmin;
+const glow = keyframes`
+  0% {
+    box-shadow: 0 0 5px rgba(255, 69, 58, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 8px rgba(255, 69, 58, 1);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(255, 69, 58, 0.4);
+  }
+`;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+const RegisterButtonItemStyled = styled(Button)`
+  background: #bf2d25;
 
-  border-radius: 12px;
-
-  margin-bottom: 10px;
-  background: linear-gradient(to right, #4535aa, #8e82df);
-  color: #e8e8e8;
-  padding: 8px;
-  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  animation: ${glow} 2s infinite;
+  width: 100%;
+  font-size: 1.3vmin;
+  margin-bottom: 6px;
+  padding: 6px;
+  height: 34px;
 
   &:hover {
-    background: linear-gradient(to right, #4535aa, #a198e0);
+    background: #d32f2f;
+    color: white !important;
+  }
+
+  &:active {
+    background: #b71c1c;
+    transform: scale(0.95);
   }
 `;
 
@@ -264,13 +280,14 @@ function NavigationMenu() {
       <div>
         <CompanyLogo />
         <MenuListStyled>
-          <LinkStyled to="/gelen-malzeme-kayit">
+          <LinkStyled to="/gelen-malzeme-kayit" style={{ paddingLeft: 5, paddingRight: 5 }}>
             <RegisterButtonItemStyled
               onClick={() => {
                 setSelectedPage("");
               }}
+              icon={<AppstoreAddOutlined style={{ fontSize: "1.4vmin" }} />}
             >
-              Gelen Malzeme Kaydı
+              Malzeme Kaydı Yap
             </RegisterButtonItemStyled>
           </LinkStyled>
           {pages.categories.map((category, i) => (

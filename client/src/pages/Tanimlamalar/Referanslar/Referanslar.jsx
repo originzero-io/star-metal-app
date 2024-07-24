@@ -21,9 +21,7 @@ import styled, { keyframes } from "styled-components";
 import getUrlByEnvVariables from "utils/getServerUrl";
 import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../../../components/shared/TableGod";
-import LogoIcon from "../../../../public/logo.png";
 
-// Butonun parlamasını sağlayan bir animasyon
 const glow = keyframes`
   0% {
     box-shadow: 0 0 15px #24cd24;
@@ -39,9 +37,8 @@ const glow = keyframes`
   }
 `;
 
-// Hover ve tıklama animasyonlarını tanımlayan buton stili
-const SpecialButton = styled(Button)`
-  background-color: #3fad3f; /* Orta koyulukta yeşil */
+const LogoSyncButton = styled(Button)`
+  background-color: #3fad3f;
 
   color: #ffffff;
   border: none;
@@ -50,9 +47,9 @@ const SpecialButton = styled(Button)`
   transition: background-color 0.3s ease;
   animation: ${glow} 1s infinite;
 
-  // margin-right: 10px;
   position: absolute;
   left: 15px;
+
   &:hover {
     background: #50c350;
     color: white !important;
@@ -63,10 +60,6 @@ const SpecialButton = styled(Button)`
     transform: scale(0.95);
   }
 `;
-
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
 
 function Referanslar() {
   const { user } = useAuth();
@@ -347,29 +340,44 @@ function Referanslar() {
   };
 
   const logoIleEsle = async () => {
-    try {
-      showNotification("info", "Referanslar ve alt bilgiler logo ile eşitleniyor...");
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content:
+        "Bunu yaptığınızda logodan tüm referans kayıtları alınıp bu programa aktarılacak. Bunu logo programından bir referans değiştirdiğinizde yapın. ",
+      okText: "Eminim",
+      cancelText: "İptal",
+      async onOk() {
+        try {
+          showNotification("info", "Referanslar ve alt bilgiler logo ile eşitleniyor...");
 
-      const logoReferanslar = await logoGoApi.getData("GetReferansList");
-      const combinedReferanslar = await referanslarHttp.logoIleEsle(logoReferanslar);
+          const logoReferanslar = await logoGoApi.getData("GetReferansList");
+          const combinedReferanslar = await referanslarHttp.logoIleEsle(logoReferanslar);
 
-      // logodan girilmiş verilere ait referans üretim bilgilerinin doldurulması
-      await referansUretimHttp.logoIleEsle(logoReferanslar);
+          // logodan girilmiş verilere ait referans üretim bilgilerinin doldurulması
+          await referansUretimHttp.logoIleEsle(logoReferanslar);
 
-      setReferanslar(combinedReferanslar);
-      showNotification("success", `${logoReferanslar.length} adet referans logo ile eşitlendi.`);
+          setReferanslar(combinedReferanslar);
+          showNotification(
+            "success",
+            `${logoReferanslar.length} adet referans logo ile eşitlendi.`,
+          );
 
-      const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
-      setReferansParcaAdlari(logoParcaAdlari);
-      const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
-      setReferansIslemTipleri(logoIslemTipleri);
-      const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
-      setReferansAnaBirimleri(logoAnaBirimler);
+          const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
+          setReferansParcaAdlari(logoParcaAdlari);
+          const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
+          setReferansIslemTipleri(logoIslemTipleri);
+          const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
+          setReferansAnaBirimleri(logoAnaBirimler);
 
-      showNotification("success", "Referans alt bilgileri logo ile eşitlendi.");
-    } catch (error) {
-      showNotification("error", "Referans verisi alınamadı", error.message);
-    }
+          showNotification("success", "Referans alt bilgileri logo ile eşitlendi.");
+        } catch (error) {
+          showNotification("error", "Referans verisi alınamadı", error.message);
+        }
+      },
+      onCancel() {
+        showNotification("warning", "İşlem iptal edildi");
+      },
+    });
   };
 
   return (
@@ -382,7 +390,6 @@ function Referanslar() {
       <TableGod
         dataSource={referanslar}
         columns={columns}
-        onChange={onChange}
         rowSelection={user.yetki !== "operator" && rowSelection}
         pagination={true}
         scroll={{ x: 1800 }}
@@ -414,33 +421,9 @@ function Referanslar() {
         }}
         actionButtons={
           <>
-            <SpecialButton
-              onClick={logoIleEsle}
-              icon={<SyncOutlined />}
-              // icon={<img src={LogoIcon} width={35} style={{ marginRight: 5 }} />}
-            >
-              Logo ile Eşle
-            </SpecialButton>
-            {/* <Button
-              style={{
-                position: "absolute",
-                left: 10,
-                justifyContent: "center",
-                alignItems: "center",
-                width: "8%",
-                background: "#b7e4c7",
-                fontWeight: 600,
-                color: "#484646",
-                border: "1px solid #77b64d",
-              }}
-              icon={
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <img src={LogoIcon} width={35} style={{ marginRight: 5 }} />
-                  <span> ile Eşle</span>
-                </div>
-              }
-              onClick={logoIleEsle}
-            /> */}
+            <LogoSyncButton onClick={logoIleEsle} icon={<SyncOutlined />}>
+              Logo ile Eşitle
+            </LogoSyncButton>
             {selectedRows.length > 0 && (
               <Button
                 style={{ marginRight: "4px" }}
