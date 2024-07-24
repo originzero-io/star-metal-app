@@ -157,6 +157,15 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       title: "İrsaliye No",
       dataIndex: "irsaliyeNo",
       key: "irsaliyeNo",
+      width: 120,
+      filters: [
+        ...new Set(fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.irsaliyeNo)),
+      ].map((a) => ({
+        text: a,
+        value: a,
+      })),
+      onFilter: (value, record) => record.irsaliyeNo.indexOf(value) === 0,
+      filterSearch: true,
     },
     {
       title: "Gelen Tarih",
