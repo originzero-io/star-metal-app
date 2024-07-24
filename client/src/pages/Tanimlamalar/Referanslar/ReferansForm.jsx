@@ -489,9 +489,10 @@ export default function ReferansForm({ record, type }) {
                   height: "30px",
                   display: "flex",
                   alignItems: "center",
+                  fontSize: "15px",
                 }}
               >
-                <div>SERİ</div>
+                <div>Seri</div>
                 {siparisTipi === "SERİ" && (
                   <Form.Item
                     name="kodu"
@@ -516,9 +517,10 @@ export default function ReferansForm({ record, type }) {
                     height: "30px",
                     display: "flex",
                     alignItems: "center",
+                    fontSize: "15px",
                   }}
                 >
-                  <div>TALEPLİ</div>
+                  <div>Talepli</div>
                   {siparisTipi === "TALEPLİ" && (
                     <Form.Item
                       name="kodu"

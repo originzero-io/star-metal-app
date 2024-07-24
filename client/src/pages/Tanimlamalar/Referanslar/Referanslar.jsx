@@ -4,6 +4,7 @@ import {
   EyeOutlined,
   FileDoneOutlined,
   PlusOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
 import { Button, Flex, Modal, Tag } from "antd";
 import IdBadge from "components/shared/IdBadge";
@@ -16,10 +17,52 @@ import { useMemo, useState } from "react";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 import referanslarHttp, { referansUretimHttp } from "services/crud-server/referanslar.http";
 import logoGoApi from "services/logoGoApi";
+import styled, { keyframes } from "styled-components";
 import getUrlByEnvVariables from "utils/getServerUrl";
 import { createTableFilterFromData } from "utils/table.helper";
-import LogoIcon from "../../../../public/logo.png";
 import TableGod from "../../../components/shared/TableGod";
+import LogoIcon from "../../../../public/logo.png";
+
+// Butonun parlamasını sağlayan bir animasyon
+const glow = keyframes`
+  0% {
+    box-shadow: 0 0 15px #24cd24;
+    box-shadow: 0 0 15px rgba(34, 139, 34, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px #24cd24;
+  }
+  100% {
+    box-shadow: 0 0 15px #27b127;
+    box-shadow: 0 0 15px rgba(34, 139, 34, 0.3);
+
+  }
+`;
+
+// Hover ve tıklama animasyonlarını tanımlayan buton stili
+const SpecialButton = styled(Button)`
+  background-color: #3fad3f; /* Orta koyulukta yeşil */
+
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  animation: ${glow} 1s infinite;
+
+  // margin-right: 10px;
+  position: absolute;
+  left: 15px;
+  &:hover {
+    background: #50c350;
+    color: white !important;
+  }
+
+  &:active {
+    background: linear-gradient(45deg, #1a6e1a, #269926, #77dd77); /* Daha da koyu gradient */
+    transform: scale(0.95);
+  }
+`;
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
@@ -371,7 +414,14 @@ function Referanslar() {
         }}
         actionButtons={
           <>
-            <Button
+            <SpecialButton
+              onClick={logoIleEsle}
+              icon={<SyncOutlined />}
+              // icon={<img src={LogoIcon} width={35} style={{ marginRight: 5 }} />}
+            >
+              Logo ile Eşle
+            </SpecialButton>
+            {/* <Button
               style={{
                 position: "absolute",
                 left: 10,
@@ -390,7 +440,7 @@ function Referanslar() {
                 </div>
               }
               onClick={logoIleEsle}
-            />
+            /> */}
             {selectedRows.length > 0 && (
               <Button
                 style={{ marginRight: "4px" }}

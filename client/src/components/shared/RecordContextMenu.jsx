@@ -69,7 +69,7 @@ export default function RecordContextMenu({ position, record, contextMenu }) {
             <span>
               <EditOutlined />
             </span>
-            <span style={{ marginLeft: "6px", fontSize: "16px" }}>Düzenle</span>
+            <span style={{ marginLeft: "6px", fontSize: "14px" }}>Düzenle</span>
           </MenuItemStyled>
         )}
 
