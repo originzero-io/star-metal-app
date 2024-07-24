@@ -67,6 +67,7 @@ const MenuListGroupItemStyled = styled.div`
   padding-left: 4px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   font-weight: 500;
 
   background: ${(props) =>
@@ -125,19 +126,24 @@ const MenuListGroupItemTitle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 90px;
 `;
 
 const MenuListGroupItemBadge = styled.div`
-  margin-left: 6px;
-  background: #002f49bf;
-  padding: 3px 4px;
-  color: white;
-  border-radius: 12px;
-  font-size: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
   width: 38px;
   text-align: center;
-  border: 1px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(168, 168, 168, 0.3);
+  color: ${(props) => (!props.selected ? "#4e4e4e" : "white")};
 `;
 const MenuListGroupTitleStyled = styled.div`
   margin-left: 2px;
@@ -313,10 +319,14 @@ function NavigationMenu() {
                           showPanel(false);
                         }}
                       >
-                        <MenuListGroupIcon>{content.icon}</MenuListGroupIcon>
-                        <MenuListGroupItemTitle>{content.title} </MenuListGroupItemTitle>
+                        <div style={{ display: "flex" }}>
+                          <MenuListGroupIcon>{content.icon}</MenuListGroupIcon>
+                          <MenuListGroupItemTitle>{content.title} </MenuListGroupItemTitle>
+                        </div>
                         {content.dataLength && content.dataLength > 0 ? (
-                          <MenuListGroupItemBadge>{content.dataLength}</MenuListGroupItemBadge>
+                          <MenuListGroupItemBadge selected={selectedPage === content.link}>
+                            {content.dataLength}
+                          </MenuListGroupItemBadge>
                         ) : null}
                       </MenuListGroupItemStyled>
                     </LinkStyled>
