@@ -94,26 +94,14 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       width: 120,
     },
     {
-      title: "Sipariş Tipi",
-      dataIndex: "siparisTipi",
-      key: "siparisTipi",
-      render: (text, record) => (
-        <ColumnBadge
-          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
-          value={record.Referanslar.siparisTipi}
-        />
-      ),
-      filters: [
-        ...new Set(
-          fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.siparisTipi),
-        ),
-      ].map((siparisTipi) => ({
-        text: siparisTipi,
-        value: siparisTipi,
-      })),
-      onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
+      title: "Referans",
+      dataIndex: "referansNo",
+      key: "referansNo",
+      filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "referansNo"),
+      onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
       filterSearch: true,
-      width: 100,
+      render: (text) => <ColumnBadge color="orange" value={text} />,
+      width: 150,
     },
     {
       title: "Kodu",
@@ -136,21 +124,19 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       width: 170,
     },
     {
-      title: "Referans",
-      dataIndex: "referansNo",
-      key: "referansNo",
-      filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "referansNo"),
-      onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
-      filterSearch: true,
-      render: (text) => <ColumnBadge color="orange" value={text} />,
-      width: 150,
-    },
-    {
-      title: "İade",
-      dataIndex: "iade",
-      key: "iade",
-      filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "iade"),
-      onFilter: (value, record) => record.iade.indexOf(value) === 0,
+      title: "İşlem Tipi",
+      // dataIndex: "referansTipi",
+      render: (text, record) => <Tag color="blue">{record.Referanslar?.islemTipi}</Tag>,
+      key: "islemTipi",
+      filters: [
+        ...new Set(
+          fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.islemTipi),
+        ),
+      ].map((islemTipi) => ({
+        text: islemTipi,
+        value: islemTipi,
+      })),
+      onFilter: (value, record) => record.Referanslar?.islemTipi.indexOf(value) === 0,
       filterSearch: true,
     },
     {
@@ -158,12 +144,12 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       dataIndex: "irsaliyeNo",
       key: "irsaliyeNo",
       width: 120,
-      filters: [
-        ...new Set(fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.irsaliyeNo)),
-      ].map((a) => ({
-        text: a,
-        value: a,
-      })),
+      filters: [...new Set(fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.irsaliyeNo))]
+        .sort((a, b) => a.localeCompare(b)) // Küçükten büyüğe sıralama
+        .map((a) => ({
+          text: a,
+          value: a,
+        })),
       onFilter: (value, record) => record.irsaliyeNo.indexOf(value) === 0,
       filterSearch: true,
     },
@@ -212,26 +198,40 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       sorter: (a, b) => a.sevkEdilenMiktar - b.sevkEdilenMiktar,
     },
     {
+      title: "Sipariş Tipi",
+      dataIndex: "siparisTipi",
+      key: "siparisTipi",
+      render: (text, record) => (
+        <ColumnBadge
+          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
+          value={record.Referanslar.siparisTipi}
+        />
+      ),
+      filters: [
+        ...new Set(
+          fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.siparisTipi),
+        ),
+      ].map((siparisTipi) => ({
+        text: siparisTipi,
+        value: siparisTipi,
+      })),
+      onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
+      filterSearch: true,
+      width: 100,
+    },
+    {
+      title: "İade",
+      dataIndex: "iade",
+      key: "iade",
+      filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "iade"),
+      onFilter: (value, record) => record.iade.indexOf(value) === 0,
+      filterSearch: true,
+    },
+    {
       title: "Yüzey Alanı",
       // dataIndex: ["Referanslar", "referansYuzeyAlani"],
       key: "referansYuzeyAlanı",
       render: (text, record) => record.Referanslar.ReferansUretim?.referansYuzeyAlani,
-    },
-    {
-      title: "İşlem Tipi",
-      // dataIndex: "referansTipi",
-      render: (text, record) => <Tag color="blue">{record.Referanslar?.islemTipi}</Tag>,
-      key: "islemTipi",
-      filters: [
-        ...new Set(
-          fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.islemTipi),
-        ),
-      ].map((islemTipi) => ({
-        text: islemTipi,
-        value: islemTipi,
-      })),
-      onFilter: (value, record) => record.Referanslar?.islemTipi.indexOf(value) === 0,
-      filterSearch: true,
     },
   ];
 
