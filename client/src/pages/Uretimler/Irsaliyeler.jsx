@@ -433,12 +433,20 @@ function LogoyaGonderButon({ kayitlar }) {
               },
             ]}
           >
-            <Select placeholder="Şoför seçiniz" showSearch onChange={soforSec}>
-              {soforler.map((sofor) => (
-                <Select.Option key={sofor.logicalref} value={sofor.logicalref}>
-                  {`${sofor.adi} ${sofor.soyadi}`}
-                </Select.Option>
-              ))}
+            <Select
+              placeholder="Şoför seçiniz"
+              showSearch
+              filterOption={(input, option) =>
+                option.children.toLowerCase().includes(input.toLowerCase())
+              }
+            >
+              {[...soforler]
+                .sort((a, b) => a.adi.localeCompare(b.adi))
+                .map((sofor) => (
+                  <Select.Option key={sofor.logicalref} value={`${sofor.adi} ${sofor.soyadi}`}>
+                    {`${sofor.adi} ${sofor.soyadi}`}
+                  </Select.Option>
+                ))}
             </Select>
           </Form.Item>
           <Form.Item
