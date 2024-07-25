@@ -14,8 +14,8 @@ import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import { devamEdenUretimHttp, tamamlananUretimHttp } from "services/crud-server/uretimler.http";
 import logoGoApi from "services/logoGoApi";
+import styled from "styled-components";
 import { getCurrentDateTime, getCurrentTimeWithLogoFormat } from "utils/time.helper";
-import LogoIcon from "../../../public/logo.png";
 
 export default function Irsaliyeler() {
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
@@ -265,6 +265,29 @@ function IrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
   );
 }
 
+const LogoSyncButton = styled(Button)`
+  background: linear-gradient(135deg, #b1e6bc 58%, #a4e5b1 100%);
+
+  color: #090909;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1.4vmin;
+  margin-bottom: 6px;
+  padding: 2px 15px;
+  border: 1px solid rgb(73, 171, 66);
+  position: absolute;
+  left: 4px;
+
+  &:hover {
+    background: linear-gradient(135deg, #ceecd4 58%, #b6e9c1 100%);
+    color: black !important;
+    border: 1px solid rgb(73, 171, 66) !important;
+  }
+`;
+
 function LogoyaGonderButon({ kayitlar }) {
   const { soforler, plakalar, irsaliyeler, setIrsaliyeler, setDevamEdenUretimler, referanslar } =
     useDBContext();
@@ -391,18 +414,24 @@ function LogoyaGonderButon({ kayitlar }) {
   return (
     <Button
       style={{
-        marginRight: "4px",
-        fontSize: "12px",
+        background: "linear-gradient(135deg, #b1e6bc 58%, #a4e5b1 100%)",
+        color: "#090909",
+        fontWeight: "bold",
+        borderRadius: "8px",
+        cursor: "pointer",
+        fontSize: "1.4vmin",
+        marginBottom: "6px",
+        padding: "10px 15px",
+        border: "1px solid rgb(73, 171, 66)",
+        height: 35,
+        display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: "#ddd9f4",
-        color: "#484646",
-        border: "1px solid #786cc9",
       }}
       icon={
         <div style={{ display: "flex", alignItems: "center" }}>
-          <img src={LogoIcon} width={35} />
-          <span>'ya Gönder</span>
+          <CaretRightOutlined />
+          <span style={{ marginLeft: 5 }}>Logoya Gönder</span>
         </div>
       }
       onClick={showModal}
@@ -477,13 +506,26 @@ function LogoyaGonderButon({ kayitlar }) {
           <Button
             htmlType="submit"
             block
+            style={{
+              background: "linear-gradient(135deg, #b1e6bc 58%, #a4e5b1 100%)",
+              color: "#090909",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "1.4vmin",
+              padding: "10px 15px",
+              border: "1px solid rgb(73, 171, 66)",
+              height: 35,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
             icon={
               <div style={{ display: "flex", alignItems: "center" }}>
-                <img src={LogoIcon} width={40} />
-                <div>'ya Gönder</div>
+                <CaretRightOutlined />
+                <span style={{ marginLeft: 5 }}>Logoya Gönder ({kayitlar.length} adet)</span>
               </div>
             }
-            style={{ background: "#ddd9f4", color: "#484646", border: "1px solid #786cc9" }}
           />
         </Form>
       </Modal>
