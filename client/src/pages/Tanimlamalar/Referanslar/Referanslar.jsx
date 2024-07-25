@@ -401,9 +401,11 @@ function Referanslar() {
         }}
         actionButtons={
           <>
-            <LogoSyncButton onClick={logoIleEsle} icon={<SyncOutlined />}>
-              Logo ile Eşitle
-            </LogoSyncButton>
+            {user.yetki !== "operator" && (
+              <LogoSyncButton onClick={logoIleEsle} icon={<SyncOutlined />}>
+                Logo ile Eşitle
+              </LogoSyncButton>
+            )}
             {selectedRows.length > 0 && (
               <Button
                 style={{ marginRight: "4px" }}
