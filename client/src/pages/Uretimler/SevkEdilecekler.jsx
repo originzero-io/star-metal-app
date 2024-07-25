@@ -1,5 +1,5 @@
 import { CaretRightOutlined, DeleteOutlined, PrinterOutlined } from "@ant-design/icons";
-import { Alert, Badge, Button, Collapse, Flex, Modal } from "antd";
+import { Alert, Badge, Button, Collapse, Flex, Modal, Tag, Tooltip } from "antd";
 import { FcInTransit } from "react-icons/fc";
 
 import SevkiyatKarti from "components/cards/SevkiyatKarti";
@@ -129,15 +129,28 @@ export default function SevkEdilecekler() {
       key: "iade",
       width: 60,
     },
-
     {
       title: "Fason Firması",
       dataIndex: "fasonFirmasi",
       key: "fasonFirmasi",
-      render: (text, _record) =>
-        _record.Referanslar.fasonFirmasi && (
-          <ColumnBadge>{_record.Referanslar.fasonFirmasi}</ColumnBadge>
-        ),
+      render: (text, _record) => (
+        <Tooltip title={_record.Referanslar.fasonFirmasi}>
+          {_record.Referanslar.fasonFirmasi && (
+            <Tag
+              style={{
+                width: "160px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                fontWeight: "500",
+                fontSize: 13,
+              }}
+            >
+              {_record.Referanslar?.fasonFirmasi}
+            </Tag>
+          )}
+        </Tooltip>
+      ),
       filters: createTableFilterFromData(
         uretimGirisleri[musteriAdi].map((item) => item.Referanslar), // Eğer Referanslar her zaman varsa
         "fasonFirmasi",
@@ -147,7 +160,7 @@ export default function SevkEdilecekler() {
         return fasonFirmasi.indexOf(value) === 0;
       },
       filterSearch: true,
-      width: 120,
+      width: 70,
     },
     {
       title: "Üretim Tarihi",
