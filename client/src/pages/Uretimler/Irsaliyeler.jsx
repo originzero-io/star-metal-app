@@ -1,5 +1,5 @@
-import { CaretRightOutlined, FileDoneOutlined } from "@ant-design/icons";
-import { Badge, Button, Collapse, Divider, Flex, Form, Input, Modal, Select, Tag } from "antd";
+import { CaretRightOutlined } from "@ant-design/icons";
+import { Button, Collapse, Divider, Flex, Form, Input, Modal, Select } from "antd";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
 import IdBadge from "components/shared/IdBadge";
@@ -266,15 +266,8 @@ function IrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
 }
 
 function LogoyaGonderButon({ kayitlar }) {
-  const {
-    soforler,
-    plakalar,
-    irsaliyeler,
-    setIrsaliyeler,
-    setDevamEdenUretimler,
-    referanslar,
-    musteriler,
-  } = useDBContext();
+  const { soforler, plakalar, irsaliyeler, setIrsaliyeler, setDevamEdenUretimler, referanslar } =
+    useDBContext();
   const { showNotification } = useUIContext();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [secilenSofor, setSecilenSofor] = useState({});
@@ -285,11 +278,17 @@ function LogoyaGonderButon({ kayitlar }) {
   };
 
   const logoIrsaliyeObjesiOlustur = (genelAciklama, irsaliyeKaydi) => {
-    const firmaAdi = irsaliyeKaydi[0].Referanslar.fasonFirmasi
+    const firmaAdi = irsaliyeKaydi[0].fasona
       ? irsaliyeKaydi[0].Referanslar.fasonFirmasi
       : irsaliyeKaydi[0].Referanslar.musteriAdi;
 
-    const musteri = musteriler.find((m) => m.unvani === firmaAdi);
+    console.log("firmaAdi", firmaAdi);
+
+    const firmaRef = irsaliyeKaydi[0].fasona
+      ? irsaliyeKaydi[0].Referanslar.fasonFirmaRef
+      : irsaliyeKaydi[0].Referanslar.musteriRef;
+
+    console.log("firmaRef", firmaRef);
 
     const irsaliyeTipi = irsaliyeKaydi[0].tip;
     const fason = irsaliyeKaydi[0].fasona;
@@ -305,9 +304,9 @@ function LogoyaGonderButon({ kayitlar }) {
       }
     }
 
-    console.log("genelAciklama", genelAciklama);
-    console.log("gonderilecekGenelAciklama", gonderilecekGenelAciklama);
-    console.log("irsaliyeKaydi", irsaliyeKaydi);
+    // console.log("genelAciklama", genelAciklama);
+    // console.log("gonderilecekGenelAciklama", gonderilecekGenelAciklama);
+    // console.log("irsaliyeKaydi", irsaliyeKaydi);
 
     const irsaliyeMaster = {
       genelAciklama1: gonderilecekGenelAciklama,
@@ -315,10 +314,8 @@ function LogoyaGonderButon({ kayitlar }) {
       logicalref: 0,
       turu: 8, // 1: alış , 8: satış irsaliyesi
       tarih: getCurrentTimeWithLogoFormat(),
-      cariRef: musteri.logoRef,
-      cariHesapKoduUnvani: irsaliyeKaydi[0].Referanslar.fasonFirmasi
-        ? irsaliyeKaydi[0].Referanslar.fasonFirmasi
-        : irsaliyeKaydi[0].Referanslar.musteriAdi,
+      cariRef: firmaRef,
+      cariHesapKoduUnvani: firmaAdi,
       plaka: irsaliyeKaydi[0].plaka,
       soforAdi: secilenSofor.adi,
       soforSoyadi: secilenSofor.soyadi,
