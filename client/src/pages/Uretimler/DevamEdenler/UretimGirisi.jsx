@@ -9,6 +9,7 @@ import kantarApi from "services/kantarApi";
 import styled from "styled-components";
 import { getCurrentDateTime } from "utils/time.helper";
 import SevkiyatKarti from "../../../components/cards/SevkiyatKarti";
+import ColumnBadge from "components/shared/ColumnBadge";
 
 const SectionBase = styled.div`
   border: 1px solid #dcdcdc;
@@ -273,45 +274,32 @@ export default function UretimGirisi({ record }) {
                 <IdBadge value={localRecord.Referanslar.id} />
               </Form.Item>
               <Form.Item label="Sipariş Tipi">
-                {localRecord.Referanslar.siparisTipi === "SERİ" ? (
-                  <Tag color="volcano">{localRecord.Referanslar.siparisTipi}</Tag>
-                ) : (
-                  <Tag color="purple">{localRecord.Referanslar.siparisTipi}</Tag>
-                )}
+                <ColumnBadge value={localRecord.Referanslar.siparisTipi} width="60%" />
               </Form.Item>
               <Form.Item label="Kodu">
-                <Tag
-                  color={localRecord.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
-                  icon={<FileDoneOutlined />}
-                >
-                  {localRecord.Referanslar.kodu}
-                </Tag>
+                <ColumnBadge color="#ffecdc" value={localRecord.Referanslar.kodu} width="60%" />
               </Form.Item>
               <Form.Item label="İrsaliye No">
-                <Tag>{localRecord.irsaliyeNo}</Tag>
+                <ColumnBadge color="#ffecdc" value={localRecord.irsaliyeNo} width="60%" />
               </Form.Item>
               <Form.Item label="Referans No">
-                <div>
-                  <Tag color="orange" icon={<FileDoneOutlined />}>
-                    {localRecord.referansNo}
-                  </Tag>
-                </div>
+                <ColumnBadge color="#ffecdc" value={localRecord.referansNo} width="60%" />
               </Form.Item>
               <Form.Item label="Fason">
                 <div>
                   {localRecord.Referanslar.fason ? (
-                    <Tag color="green">Evet</Tag>
+                    <ColumnBadge color="#e2f9e9" value="FASON" width="60%" />
                   ) : (
-                    <Tag color="red">Hayır</Tag>
+                    <ColumnBadge color="#f3f3f3" value="DEĞİL" width="60%" />
                   )}
                 </div>
               </Form.Item>
               <Form.Item label="İade">
                 <div>
                   {localRecord.iade === "Evet" ? (
-                    <Tag color="green">{localRecord.iade}</Tag>
+                    <ColumnBadge value={localRecord.iade} width="60%" />
                   ) : (
-                    <Tag color="red">{localRecord.iade}</Tag>
+                    <ColumnBadge value={localRecord.iade} width="60%" />
                   )}
                 </div>
               </Form.Item>
