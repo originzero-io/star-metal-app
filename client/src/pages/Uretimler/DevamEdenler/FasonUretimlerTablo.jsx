@@ -351,7 +351,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                 </div>
               )
             }
-            scroll={{ x: 1500 }}
+            scroll={{ x: 1500, y: 400 }}
             pagination={true}
             contextMenu={{
               deleteAction: uretimiSilFunc,

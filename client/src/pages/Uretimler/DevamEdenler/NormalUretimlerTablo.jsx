@@ -23,7 +23,7 @@ import { useUIContext } from "context/UIProvider";
 import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeForm";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import ReferansResmi from "./ReferansResmi";
@@ -330,7 +330,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                 </div>
               )
             }
-            scroll={{ x: 1500 }}
+            scroll={{ x: 1500, y: 400 }}
             pagination={true}
             contextMenu={{
               deleteAction: uretimiSilFunc,
