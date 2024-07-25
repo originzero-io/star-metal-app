@@ -105,7 +105,7 @@ const RegisterButtonItemStyled = styled(Button)`
   }
 
   &:active {
-    background: #b71c1c;
+    background: rgb(121, 187, 246);
     transform: scale(0.95);
   }
 `;

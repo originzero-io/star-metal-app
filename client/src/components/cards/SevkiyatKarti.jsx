@@ -11,7 +11,7 @@ const ContainerStyled = styled.div`
   height: 40;
 `;
 const ColStyled = styled(Col)`
-  border: 1px dotted #cacaca;
+  border: 1px solid black;
   text-align: center;
   font-size: 2.3vmin;
   padding: 6px;

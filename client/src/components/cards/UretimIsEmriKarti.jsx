@@ -11,7 +11,7 @@ const ContainerStyled = styled.div`
   height: 600px;
 `;
 const ColStyled = styled(Col)`
-  border: 1px solid #c9c9c9;
+  border: 1px solid black;
   font-size: 24px;
   font-family: Arial, sans-serif;
   padding: 14px;
