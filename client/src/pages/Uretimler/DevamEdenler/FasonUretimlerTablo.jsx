@@ -305,19 +305,48 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                 <div style={{ fontSize: "13px", marginTop: 14 }}>
                   <span>
                     Gelen Miktar Toplam:{" "}
-                    <Tag color="orange">{miktarToplam[index].gelenMiktarToplam}</Tag>
+                    <ColumnBadge
+                      value={miktarToplam[index].gelenMiktarToplam}
+                      width="70px"
+                      textAlign="center"
+                    />
                   </span>
                   <span style={{ marginLeft: 6 }}>
                     Fasona Gönderilen Toplam:{" "}
-                    <Tag color="cyan">{miktarToplam[index].fasonaGonderilenToplam}</Tag>
+                    <ColumnBadge
+                      value={miktarToplam[index].fasonaGonderilenToplam}
+                      width="70px"
+                      textAlign="center"
+                    />
                   </span>
                   <span style={{ marginLeft: 6 }}>
                     Fasonda Üretilen Toplam:{" "}
-                    <Tag color="purple">{miktarToplam[index].uretilenMiktarToplam}</Tag>
+                    <ColumnBadge
+                      value={miktarToplam[index].uretilenMiktarToplam}
+                      width="70px"
+                      textAlign="center"
+                    />
+                  </span>
+                  <span style={{ marginLeft: 6 }}>
+                    Kalan Toplam:{" "}
+                    <ColumnBadge
+                      color="#f8e9fa"
+                      value={
+                        miktarToplam[index].gelenMiktarToplam -
+                        miktarToplam[index].sevkEdilenMiktarToplam
+                      }
+                      width="70px"
+                      textAlign="center"
+                    />
                   </span>
                   <span style={{ marginLeft: 6 }}>
                     Sevk Edilen Miktar Toplam:{" "}
-                    <Tag color="purple">{miktarToplam[index].sevkEdilenMiktarToplam}</Tag>
+                    <ColumnBadge
+                      color="#ebf6e5"
+                      value={miktarToplam[index].sevkEdilenMiktarToplam}
+                      width="70px"
+                      textAlign="center"
+                    />
                   </span>
                 </div>
               )

@@ -286,23 +286,46 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                 >
                   <span>
                     Gelen Miktar Toplam:{" "}
-                    <Tag color="orange">{miktarToplam[index].gelenMiktarToplam}</Tag>
+                    <ColumnBadge
+                      value={miktarToplam[index].gelenMiktarToplam}
+                      width="70px"
+                      textAlign="center"
+                    />
                   </span>
                   <span style={{ marginLeft: 6 }}>
                     Giden Miktar Toplam:{" "}
-                    <Tag color="cyan">{miktarToplam[index].gidenMiktarToplam}</Tag>
+                    <ColumnBadge
+                      color="#ebf6e5"
+                      value={miktarToplam[index].gidenMiktarToplam}
+                      width="70px"
+                      textAlign="center"
+                    />
                   </span>
                   <span style={{ marginLeft: 6 }}>
-                    Kalan Miktar Toplam:{" "}
-                    <Tag color="magenta">{miktarToplam[index].kalanMiktarToplam}</Tag>
+                    Kalan Miktar Toplam:
+                    <ColumnBadge
+                      color="#f8e9fa"
+                      value={miktarToplam[index].kalanMiktarToplam}
+                      width="70px"
+                      textAlign="center"
+                    />
                   </span>
                   <span style={{ marginLeft: 6 }}>
                     Üretilen Miktar Toplam:{" "}
-                    <Tag color="purple">{miktarToplam[index].uretilenMiktarToplam}</Tag>
+                    <ColumnBadge
+                      value={miktarToplam[index].uretilenMiktarToplam}
+                      width="70px"
+                      textAlign="center"
+                    />
                   </span>
                   <span style={{ marginLeft: 6 }}>
                     Üretilmeyen Miktar Toplam:{" "}
-                    <Tag color="purple">{miktarToplam[index].uretilmeyenMiktarToplam}</Tag>
+                    <ColumnBadge
+                      color="#f8e9fa"
+                      value={miktarToplam[index].uretilmeyenMiktarToplam}
+                      width="70px"
+                      textAlign="center"
+                    />
                   </span>
                 </div>
               )

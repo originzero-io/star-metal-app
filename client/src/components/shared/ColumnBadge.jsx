@@ -1,14 +1,15 @@
 import { Tag } from "antd";
 
-export default function ColumnBadge({ color, value }) {
+export default function ColumnBadge({ color, value, width = "100%", textAlign = "" }) {
   return (
     <Tag
       style={{
-        width: "100%",
+        width,
         fontSize: "13px",
         fontWeight: "500",
         background: color,
         padding: "4px",
+        textAlign,
       }}
     >
       {value}
