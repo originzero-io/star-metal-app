@@ -83,9 +83,8 @@ function DevamEdenUretimler() {
             style: collapseStyle.parentCollapseItem,
             label: (
               <Flex>
-                <CountBadge count={devamEdenUretimler.normalUretimler?.length} offset={[20, 6]}>
-                  <div style={collapseStyle.parentCollapseHeader}>Star Metal Üretimleri</div>
-                </CountBadge>
+                <div style={collapseStyle.parentCollapseHeader}>Star Metal Üretimleri</div>
+                <CountBadge>{devamEdenUretimler.normalUretimler?.length}</CountBadge>
               </Flex>
             ),
             children: (
@@ -100,9 +99,8 @@ function DevamEdenUretimler() {
             style: collapseStyle.parentCollapseItem,
             label: (
               <Flex>
-                <CountBadge count={devamEdenUretimler.fasonUretimler?.length} offset={[20, 6]}>
-                  <div style={collapseStyle.parentCollapseHeader}>Fason Üretimler</div>
-                </CountBadge>
+                <div style={collapseStyle.parentCollapseHeader}>Fason Üretimler</div>
+                <CountBadge>{devamEdenUretimler.fasonUretimler?.length}</CountBadge>
               </Flex>
             ),
             children: (

@@ -1,6 +1,7 @@
 import {
+  BellFilled,
   CaretRightOutlined,
-  CheckCircleOutlined,
+  CheckCircleFilled,
   ContainerOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
@@ -9,7 +10,7 @@ import {
   TruckOutlined,
 } from "@ant-design/icons";
 
-import { Collapse, Tag } from "antd";
+import { Collapse, Flex, Tag, Tooltip } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
@@ -73,20 +74,32 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       dataIndex: "acil",
       key: "acil",
       render: (text) => (
-        <Tag
-          color={text && "#c1121f"}
-          icon={text ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />}
-          style={{ width: "100%", textAlign: "center" }}
-        >
-          {text ? "ACİL" : "NORMAL"}
-        </Tag>
+        <Tooltip title={text ? "ACİL" : "NORMAL"}>
+          <Tag
+            style={{
+              width: "70%",
+              textAlign: "center",
+              fontSize: 16,
+              color: text ? "#f94242" : "#2bc03f",
+              fontWeight: "bold",
+              border: "none",
+            }}
+            icon={
+              text ? (
+                <BellFilled style={{ fontSize: 20 }} />
+              ) : (
+                <CheckCircleFilled style={{ fontSize: 20 }} />
+              )
+            }
+          />
+        </Tooltip>
       ),
       filters: [
         { text: "ACİL", value: true },
         { text: "NORMAL", value: false },
       ],
       onFilter: (value, record) => record.acil === value,
-      width: 100,
+      width: 70,
       fixed: "left",
     },
     {
@@ -94,7 +107,8 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       dataIndex: "id",
       key: "id",
       render: (text) => <IdBadge value={text} />,
-      width: 70,
+      sorter: (a, b) => a.id - b.id,
+      width: 67,
     },
     {
       title: "Referans",
@@ -103,19 +117,14 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "referansNo"),
       onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
       filterSearch: true,
-      render: (text) => <ColumnBadge color="orange" value={text} />,
-      width: 150,
+      render: (text) => <ColumnBadge value={text} />,
+      width: 120,
     },
     {
       title: "Kodu",
       dataIndex: "kodu",
       key: "kodu",
-      render: (text, record) => (
-        <ColumnBadge
-          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
-          value={record.Referanslar.kodu}
-        />
-      ),
+      render: (text, record) => <ColumnBadge value={record.Referanslar.kodu} />,
       filters: [
         ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.kodu)),
       ].map((kod) => ({
@@ -124,7 +133,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       })),
       onFilter: (value, record) => record.Referanslar?.kodu.indexOf(value) === 0,
       filterSearch: true,
-      width: 170,
+      width: 135,
     },
     {
       title: "İşlem Tipi",
@@ -145,7 +154,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       title: "İrsaliye No",
       dataIndex: "irsaliyeNo",
       key: "irsaliyeNo",
-      width: 120,
+      width: 100,
       filters: [...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.irsaliyeNo))]
         .sort((a, b) => a.localeCompare(b)) // Küçükten büyüğe sıralama
         .map((a) => ({
@@ -159,54 +168,53 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       title: "Gelen Tarih",
       dataIndex: "gelenTarih",
       key: "gelenTarih",
-      width: 160,
+      width: 135,
     },
     {
       title: "Gelen",
       dataIndex: "gelenMiktar",
       key: "gelenMiktar",
       sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
-      render: (text) => <ColumnBadge color={text > 0 ? "orange" : ""} value={text} />,
+      render: (text) => <ColumnBadge value={text} />,
+      width: 90,
     },
     {
       title: "Giden",
       dataIndex: "gidenMiktar",
       key: "gidenMiktar",
       sorter: (a, b) => a.gidenMiktar - b.gidenMiktar,
-      render: (text) => <ColumnBadge color={text > 0 ? "cyan" : ""} value={text} />,
+      render: (text) => <ColumnBadge value={text} color="#ebf6e5" />,
+      width: 90,
     },
     {
       title: "Kalan",
       dataIndex: "kalanMiktar",
       key: "kalanMiktar",
       sorter: (a, b) => a.kalanMiktar - b.kalanMiktar,
-      render: (text) => <ColumnBadge color={text > 0 ? "magenta" : ""} value={text} />,
+      render: (text) => <ColumnBadge value={text} color="#f8e9fa" />,
+      width: 90,
     },
     {
       title: "Üretilen",
       dataIndex: "uretilenMiktar",
       key: "uretilenMiktar",
       sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
-      render: (text) => <ColumnBadge color={text > 0 ? "purple" : ""} value={text} />,
+      render: (text) => <ColumnBadge value={text} />,
+      width: 90,
     },
     {
       title: "Üretilmeyen",
       dataIndex: "uretilmeyenMiktar",
       key: "uretilmeyenMiktar",
       sorter: (a, b) => a.uretilmeyenMiktar - b.uretilmeyenMiktar,
-      render: (text) => <ColumnBadge color={text > 0 ? "purple" : ""} value={text} />,
-      width: 120,
+      render: (text) => <ColumnBadge value={text} color="#f8e9fa" />,
+      width: 90,
     },
     {
       title: "Sipariş Tipi",
       dataIndex: "siparisTipi",
       key: "siparisTipi",
-      render: (text, record) => (
-        <ColumnBadge
-          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
-          value={record.Referanslar.siparisTipi}
-        />
-      ),
+      render: (text, record) => <ColumnBadge value={record.Referanslar.siparisTipi} />,
       filters: [
         ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.siparisTipi)),
       ].map((siparisTipi) => ({
@@ -215,7 +223,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       })),
       onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
       filterSearch: true,
-      width: 100,
+      width: 90,
     },
     {
       title: "İade",
@@ -224,13 +232,14 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "iade"),
       onFilter: (value, record) => record.iade.indexOf(value) === 0,
       filterSearch: true,
+      width: 60,
     },
     {
       title: "Yüzey Alanı",
       // dataIndex: ["Referanslar", "referansYuzeyAlani"],
       key: "referansYuzeyAlanı",
       render: (text, record) => record.Referanslar.ReferansUretim.referansYuzeyAlani,
-      width: 110,
+      width: 80,
     },
   ];
 
@@ -256,9 +265,10 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       items={Object.entries(musteriBazliKayitlar).map(([musteriAdi, kayitlar], index) => ({
         key: index.toString(),
         label: (
-          <CountBadge count={kayitlar.length} offset={[20, 6]}>
+          <Flex>
             <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-          </CountBadge>
+            <CountBadge>{kayitlar.length}</CountBadge>
+          </Flex>
         ),
         children: (
           <TableGod
@@ -297,11 +307,8 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                 </div>
               )
             }
-            scroll={{ x: 1700 }}
+            scroll={{ x: 1500 }}
             pagination={true}
-            rowStyle={(row) => ({
-              background: "#fcf8f0",
-            })}
             contextMenu={{
               deleteAction: uretimiSilFunc,
               extraItems: (record) => [
@@ -337,7 +344,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                     showModal({
                       title: "Üretim İş Emri Kartı",
                       content: <UretimIsEmriKarti record={record} />,
-                      width: 1200,
+                      width: 1400,
                     }),
                 },
                 user.yetki !== "operator" && {

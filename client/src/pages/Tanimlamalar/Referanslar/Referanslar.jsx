@@ -1,13 +1,6 @@
-import {
-  BankOutlined,
-  DeleteOutlined,
-  EyeOutlined,
-  FileDoneOutlined,
-  PlusOutlined,
-  SyncOutlined,
-} from "@ant-design/icons";
-import { Button, Flex, Modal, Tag } from "antd";
-import IdBadge from "components/shared/IdBadge";
+import { DeleteOutlined, EyeOutlined, PlusOutlined, SyncOutlined } from "@ant-design/icons";
+import { Button, Flex, Modal, Tag, Tooltip } from "antd";
+import ColumnBadge from "components/shared/ColumnBadge";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
@@ -17,47 +10,31 @@ import { useMemo, useState } from "react";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 import referanslarHttp, { referansUretimHttp } from "services/crud-server/referanslar.http";
 import logoGoApi from "services/logoGoApi";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import getUrlByEnvVariables from "utils/getServerUrl";
 import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../../../components/shared/TableGod";
 
-const glow = keyframes`
-  0% {
-    box-shadow: 0 0 15px #24cd24;
-    box-shadow: 0 0 15px rgba(34, 139, 34, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 15px #24cd24;
-  }
-  100% {
-    box-shadow: 0 0 15px #27b127;
-    box-shadow: 0 0 15px rgba(34, 139, 34, 0.3);
-
-  }
-`;
-
 const LogoSyncButton = styled(Button)`
-  background-color: #3fad3f;
+  background: linear-gradient(135deg, #b1e6bc 58%, #a4e5b1 100%);
 
-  color: #ffffff;
+  color: #090909;
+  font-weight: bold;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  animation: ${glow} 1s infinite;
-
+  font-size: 1.4vmin;
+  margin-bottom: 6px;
+  padding: 2px 15px;
+  border: 1px solid rgb(73, 171, 66);
   position: absolute;
-  left: 15px;
+  left: 4px;
 
   &:hover {
-    background: #50c350;
-    color: white !important;
-  }
-
-  &:active {
-    background: linear-gradient(45deg, #1a6e1a, #269926, #77dd77); /* Daha da koyu gradient */
-    transform: scale(0.95);
+    background: linear-gradient(135deg, #ceecd4 58%, #b6e9c1 100%);
+    color: black !important;
+    border: 1px solid rgb(73, 171, 66) !important;
   }
 `;
 
@@ -77,46 +54,27 @@ function Referanslar() {
   const columns = useMemo(
     () => [
       {
-        title: "Logo Ana Birim Ref",
-        dataIndex: "logoAnaBirimRef",
-        key: "logoAnaBirimRef",
-        render: (text) => <IdBadge value={text} />,
-      },
-      {
-        title: "Logo Malzeme Ref",
-        dataIndex: "logoMalzemeRef",
-        key: "logoMalzemeRef",
-        render: (text) => <IdBadge value={text} />,
-      },
-      {
         title: "Kodu",
         dataIndex: "kodu",
         key: "kodu",
-        render: (text, record) => (
-          <Tag
-            color={record.siparisTipi === "SERİ" ? "volcano" : "purple"}
-            icon={<FileDoneOutlined />}
-            style={{ width: "100%", fontSize: "12px" }}
-          >
-            {text}
-          </Tag>
-        ),
+        render: (text) => <ColumnBadge value={text} />,
         filters: createTableFilterFromData(referanslar, "kodu"),
         onFilter: (value, record) => {
           const kodu = record.kodu ?? "Boş";
           return kodu.indexOf(value) === 0;
         },
         filterSearch: true,
+        width: 150,
       },
       {
         title: "Sipariş Tipi",
         dataIndex: "siparisTipi",
         key: "siparisTipi",
         filters: createTableFilterFromData(referanslar, "siparisTipi"),
-        render: (text) =>
-          text === "SERİ" ? <Tag color="volcano">{text}</Tag> : <Tag color="purple">{text}</Tag>,
+        render: (text) => <ColumnBadge value={text} />,
         onFilter: (value, record) => record.siparisTipi.indexOf(value) === 0,
         filterSearch: true,
+        width: 100,
       },
       {
         title: "Referans No",
@@ -133,15 +91,8 @@ function Referanslar() {
           return record.referansNo.indexOf(value) === 0;
         },
         filterSearch: true,
-        render: (text) => (
-          <Tag
-            color="orange"
-            icon={<FileDoneOutlined />}
-            style={{ width: "100%", fontSize: "12px" }}
-          >
-            {text || "Boş"}
-          </Tag>
-        ),
+        render: (text) => <ColumnBadge value={text || "Boş"} />,
+        width: 120,
       },
 
       {
@@ -160,11 +111,22 @@ function Referanslar() {
         },
         filterSearch: true,
         render: (text) => (
-          <Tag icon={<BankOutlined />} color="geekblue" style={{ width: "100%", fontSize: "12px" }}>
-            {text || "Boş"}
-          </Tag>
+          <Tooltip title={text}>
+            <Tag
+              style={{
+                width: "120px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                background: "#d8f4fc",
+                fontWeight: "600",
+              }}
+            >
+              {text}
+            </Tag>
+          </Tooltip>
         ),
-        width: 170,
+        width: 120,
       },
       {
         title: "Parça Adı",
@@ -173,6 +135,7 @@ function Referanslar() {
         filters: createTableFilterFromData(referanslar, "parcaAdi"),
         onFilter: (value, record) => record.parcaAdi.indexOf(value) === 0,
         filterSearch: true,
+        width: 100,
       },
       {
         title: "İrsaliye Açıklaması",
@@ -181,17 +144,21 @@ function Referanslar() {
         filters: createTableFilterFromData(referanslar, "irsaliyeAciklamasi"),
         onFilter: (value, record) => record.irsaliyeAciklamasi.indexOf(value) === 0,
         filterSearch: true,
-        width: 300,
+        width: 200,
       },
       {
         title: "Fason",
         dataIndex: "fason",
         key: "fason",
         render: (text, record) =>
-          record.fason ? <Tag color="green">Evet</Tag> : <Tag color="red">Hayır</Tag>,
+          record.fason ? (
+            <ColumnBadge color="#e2f9e9" value="FASON" />
+          ) : (
+            <ColumnBadge color="#f3f3f3" value="DEĞİL" />
+          ),
         filters: [
-          { text: "Evet", value: 1 },
-          { text: "Hayır", value: 0 },
+          { text: "FASON", value: 1 },
+          { text: "FASON DEĞİL", value: 0 },
         ],
         onFilter: (value, record) => {
           // value değeri string olarak geliyor, bu yüzden boolean'a çevirmemiz gerekiyor.
@@ -199,6 +166,7 @@ function Referanslar() {
           return record.fason === filterValue;
         },
         filterSearch: true,
+        width: 80,
       },
       {
         title: "Fason Firması",
@@ -209,17 +177,25 @@ function Referanslar() {
           const fasonFirmasi = record.fasonFirmasi ?? "Boş";
           return fasonFirmasi.indexOf(value) === 0;
         },
-        render: (value) =>
-          value && (
-            <Tag
-              icon={<BankOutlined />}
-              color="volcano"
-              style={{ width: "100%", fontSize: "12px" }}
-            >
-              {value}
-            </Tag>
+        render: (text) =>
+          text && (
+            <Tooltip title={text}>
+              <Tag
+                style={{
+                  width: "120px",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  background: "#fce2d8",
+                  fontWeight: "bold",
+                }}
+              >
+                {text}
+              </Tag>
+            </Tooltip>
           ),
         filterSearch: true,
+        width: 120,
       },
       {
         title: "Miktar Sapması",
@@ -233,6 +209,7 @@ function Referanslar() {
           const miktarSapmasi = record.ReferansUretim?.miktarSapmasi ?? "Boş";
           return miktarSapmasi === value;
         },
+        width: 130,
       },
       {
         title: "Lot Adedi",
@@ -246,6 +223,7 @@ function Referanslar() {
           const lotAdedi = record.ReferansUretim?.lotAdedi ?? "Boş";
           return lotAdedi === value;
         },
+        width: 120,
       },
       {
         title: "Yüzey Alanı",
@@ -259,15 +237,17 @@ function Referanslar() {
           const yuzeyAlani = record.ReferansUretim?.referansYuzeyAlani ?? "Boş";
           return yuzeyAlani === value;
         },
+        width: 110,
       },
       {
         title: "İşlem Tipi",
         dataIndex: "islemTipi",
         key: "islemTipi",
-        render: (text, record) => <Tag color="blue">{record.islemTipi}</Tag>,
+        render: (text) => <ColumnBadge value={text} />,
         filters: createTableFilterFromData(referanslar, "islemTipi"),
         onFilter: (value, record) => record.islemTipi.indexOf(value) === 0,
         filterSearch: true,
+        width: 110,
       },
       {
         title: "Birim",

@@ -1,5 +1,5 @@
 import { CaretRightOutlined, TruckOutlined } from "@ant-design/icons";
-import { Collapse, Tag, Tooltip } from "antd";
+import { Collapse, Flex, Tag, Tooltip } from "antd";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
 import IdBadge from "components/shared/IdBadge";
@@ -20,7 +20,8 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       dataIndex: "id",
       key: "id",
       render: (text) => <IdBadge value={text} />,
-      width: 70,
+      sorter: (a, b) => a.id - b.id,
+      width: 77,
     },
     {
       title: "Müşteri",
@@ -29,30 +30,25 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       render: (text, record) => (
         <Tooltip title={record.musteriAdi}>
           <Tag
-            color="blue"
             style={{
               width: "120px",
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
+              fontWeight: "bold",
             }}
           >
             {record.musteriAdi}
           </Tag>
         </Tooltip>
       ),
-      width: 120,
+      width: 110,
     },
     {
       title: "Sipariş Tipi",
       dataIndex: "siparisTipi",
       key: "siparisTipi",
-      render: (text, record) => (
-        <ColumnBadge
-          color={record.siparisTipi === "SERİ" ? "volcano" : "purple"}
-          value={record.siparisTipi}
-        />
-      ),
+      render: (text, record) => <ColumnBadge value={record.siparisTipi} />,
       filters: [
         ...new Set(fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.siparisTipi)),
       ].map((siparisTipi) => ({
@@ -67,11 +63,11 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       title: "Kodu",
       dataIndex: "kodu",
       key: "kodu",
-      render: (text, record) => <ColumnBadge color="green" value={record.kodu} />,
+      render: (text, record) => <ColumnBadge value={record.kodu} />,
       filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "kodu"),
       onFilter: (value, record) => record.kodu.indexOf(value) === 0,
       filterSearch: true,
-      width: 170,
+      width: 135,
     },
     {
       title: "Referans",
@@ -80,7 +76,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "referansNo"),
       onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
       filterSearch: true,
-      render: (text) => <ColumnBadge color="green" value={text} />,
+      render: (text) => <ColumnBadge value={text} />,
       width: 120,
     },
     {
@@ -107,37 +103,27 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       dataIndex: "gelenMiktar",
       key: "gelenMiktar",
       sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
-      render: (text, record) =>
-        record.gelenMiktar === record.gidenMiktar ? (
-          <Tag color="green">{text}</Tag>
-        ) : (
-          <Tag>{text}</Tag>
-        ),
+      render: (text) => <ColumnBadge value={text} />,
     },
     {
       title: "Fasona Gönderilen",
       dataIndex: "gidenMiktar",
       key: "gidenMiktar",
       sorter: (a, b) => a.gidenMiktar - b.gidenMiktar,
-      render: (text, record) =>
-        record.gelenMiktar === record.gidenMiktar ? (
-          <Tag color="green">{text}</Tag>
-        ) : (
-          <Tag>{text}</Tag>
-        ),
+      render: (text) => <ColumnBadge value={text} />,
     },
     {
       title: "Fasonda Üretilen",
       dataIndex: "uretilenMiktar",
       key: "uretilenMiktar",
       sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
-      render: (text) => <Tag color={text > 0 ? "blue" : ""}>{text}</Tag>,
+      render: (text) => <ColumnBadge value={text} />,
     },
     {
       title: "Sevk Edilen",
       dataIndex: "sevkEdilenMiktar",
       key: "sevkEdilenMiktar",
-      render: (text) => <Tag color={text > 0 && "cyan"}>{text}</Tag>,
+      render: (text) => <ColumnBadge value={text} />,
       sorter: (a, b) => a.sevkEdilenMiktar - b.sevkEdilenMiktar,
     },
     {
@@ -147,7 +133,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
     },
     {
       title: "İşlem Tipi",
-      render: (text, record) => <Tag color="blue">{record.islemTipi}</Tag>,
+      render: (text, record) => <ColumnBadge value={record.islemTipi} />,
       key: "islemTipi",
       filters: [
         ...new Set(fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.islemTipi)),
@@ -168,19 +154,17 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       items={Object.entries(fasonFirmasiBazliKayitlar).map(([fasonFirmasi, kayitlar], index) => ({
         key: index.toString(),
         label: (
-          <CountBadge count={kayitlar.length} offset={[20, 6]}>
+          <Flex>
             <div style={collapseStyle.subCollapseHeader}>{fasonFirmasi}</div>
-          </CountBadge>
+            <CountBadge>{kayitlar.length}</CountBadge>
+          </Flex>
         ),
         children: (
           <TableGod
             dataSource={kayitlar}
             columns={createColumnsForCustomer(fasonFirmasi)}
             hideDefaultTitleButtons
-            rowStyle={(row) => ({
-              background: "#f5faf0",
-            })}
-            scroll={{ x: 1800 }}
+            scroll={{ x: 1500 }}
             contextMenu={{
               extraItems: (record) => [
                 user.yetki !== "operator" && {

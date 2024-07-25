@@ -1,7 +1,8 @@
-import { BankOutlined, DeleteOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
-import { Badge, Button, Modal, Tag } from "antd";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { Badge, Button, Modal } from "antd";
 import { useMemo, useState } from "react";
 
+import ColumnBadge from "components/shared/ColumnBadge";
 import IdBadge from "components/shared/IdBadge";
 import PageHeader from "components/shared/PageHeader";
 import { useAuth } from "context/AuthProvider";
@@ -27,7 +28,7 @@ function Musteriler() {
         dataIndex: "logoRef",
         key: "logoRef",
         render: (text) => <IdBadge value={text} />,
-        width: 100,
+        width: 90,
       },
       {
         title: "Kodu",
@@ -36,19 +37,17 @@ function Musteriler() {
         filters: createTableFilterFromData(musteriler, "kodu"),
         onFilter: (value, record) => record.kodu.indexOf(value) === 0,
         filterSearch: true,
-        // width: 200,
+        width: 80,
       },
       {
         title: "Firma Tipi",
         dataIndex: "sahisFirmasi",
         key: "sahisFirmasi",
-        render: (value) => (
-          <Tag
-            color={value ? "volcano" : "geekblue"}
-            icon={value ? <UserOutlined /> : <BankOutlined />}
-          >
-            {value ? "Şahıs" : "Tüzel"}
-          </Tag>
+        render: (value, record) => (
+          <ColumnBadge
+            value={value ? "Şahıs" : "Tüzel"}
+            color={record.sahisFirmasi ? "#fbfaf1" : "#e7f3ff"}
+          />
         ),
         filters: [
           { text: "Şahıs", value: 1 },
@@ -65,13 +64,7 @@ function Musteriler() {
         onFilter: (value, record) => record.unvani.indexOf(value) === 0,
         filterSearch: true,
         render: (text, record) => (
-          <Tag
-            color={record.sahisFirmasi ? "volcano" : "geekblue"}
-            icon={record.sahisFirmasi ? <UserOutlined /> : <BankOutlined />}
-            style={{ width: "100%" }}
-          >
-            {text}
-          </Tag>
+          <ColumnBadge color={record.sahisFirmasi ? "#fbfaf1" : "#e7f3ff"} value={text} />
         ),
         width: 350,
       },
@@ -84,13 +77,7 @@ function Musteriler() {
         filterSearch: true,
         render: (text, record) =>
           record.sahisFirmasi ? (
-            <Tag
-              color={record.sahisFirmasi ? "volcano" : "geekblue"}
-              icon={record.sahisFirmasi ? <UserOutlined /> : <BankOutlined />}
-              style={{ width: "100%" }}
-            >
-              {text}
-            </Tag>
+            <ColumnBadge color={record.sahisFirmasi ? "#fbfaf1" : "#e7f3ff"} value={text} />
           ) : (
             ""
           ),
@@ -102,13 +89,7 @@ function Musteriler() {
         key: "soyadi",
         render: (text, record) =>
           record.sahisFirmasi ? (
-            <Tag
-              color={record.sahisFirmasi ? "volcano" : "geekblue"}
-              icon={record.sahisFirmasi ? <UserOutlined /> : <BankOutlined />}
-              style={{ width: "100%" }}
-            >
-              {text}
-            </Tag>
+            <ColumnBadge color={record.sahisFirmasi ? "#fbfaf1" : "#e7f3ff"} value={text} />
           ) : (
             ""
           ),

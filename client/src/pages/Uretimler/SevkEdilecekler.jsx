@@ -1,10 +1,5 @@
-import {
-  CaretRightOutlined,
-  DeleteOutlined,
-  FileDoneOutlined,
-  PrinterOutlined,
-} from "@ant-design/icons";
-import { Alert, Badge, Button, Collapse, Modal, Tag } from "antd";
+import { CaretRightOutlined, DeleteOutlined, PrinterOutlined } from "@ant-design/icons";
+import { Alert, Badge, Button, Collapse, Flex, Modal } from "antd";
 import { FcInTransit } from "react-icons/fc";
 
 import SevkiyatKarti from "components/cards/SevkiyatKarti";
@@ -71,6 +66,7 @@ export default function SevkEdilecekler() {
       dataIndex: "uretimId",
       key: "uretimId",
       render: (text) => <IdBadge value={text} />,
+      sorter: (a, b) => a.id - b.id,
       width: 70,
     },
     {
@@ -79,10 +75,9 @@ export default function SevkEdilecekler() {
       key: "irsaliyeTipi",
       render: (text, kayit) => {
         if (kayit.iade === "Hayır" || kayit?.Referanslar.kodu.toLowerCase().includes("YOK")) {
-          return <Tag color="blue">SEVK</Tag>;
-        } else {
-          return <Tag color="red">TAŞIMA</Tag>;
+          return <ColumnBadge color="#e1f2fa" value="SEVK" />;
         }
+        return <ColumnBadge color="#fcf2e9" value="TAŞIMA" />;
       },
       filters: [
         {
@@ -102,37 +97,27 @@ export default function SevkEdilecekler() {
         return irsaliyeTipi === value;
       },
       filterSearch: true,
-      width: 120,
+      width: 100,
     },
     {
       title: "Sipariş Tipi",
       dataIndex: "siparisTipi",
       key: "siparisTipi",
-      render: (text, record) => (
-        <ColumnBadge
-          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
-          value={record.Referanslar.siparisTipi}
-          icon={<FileDoneOutlined />}
-          style={{ width: "100%", fontSize: "12px" }}
-        />
-      ),
+      render: (text, record) => <ColumnBadge value={record.Referanslar.siparisTipi} />,
+      width: 100,
     },
     {
       title: "Kodu",
       dataIndex: "kodu",
       key: "kodu",
-      render: (text, record) => (
-        <ColumnBadge
-          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
-          value={record.Referanslar.kodu}
-        />
-      ),
+      render: (text, record) => <ColumnBadge value={record.Referanslar.kodu} />,
+      width: 135,
     },
     {
       title: "Referans No",
       dataIndex: "referansNo",
       key: "referansNo",
-      render: (text) => <ColumnBadge color="orange" value={text} />,
+      render: (text) => <ColumnBadge value={text} />,
       filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "referansNo"),
       onFilter: (value, _record) => _record.referansNo.indexOf(value) === 0,
       filterSearch: true,
@@ -142,7 +127,7 @@ export default function SevkEdilecekler() {
       title: "İade",
       dataIndex: "iade",
       key: "iade",
-      width: 100,
+      width: 60,
     },
 
     {
@@ -151,7 +136,7 @@ export default function SevkEdilecekler() {
       key: "fasonFirmasi",
       render: (text, _record) =>
         _record.Referanslar.fasonFirmasi && (
-          <Tag color="green">{_record.Referanslar.fasonFirmasi}</Tag>
+          <ColumnBadge>{_record.Referanslar.fasonFirmasi}</ColumnBadge>
         ),
       filters: createTableFilterFromData(
         uretimGirisleri[musteriAdi].map((item) => item.Referanslar), // Eğer Referanslar her zaman varsa
@@ -192,7 +177,7 @@ export default function SevkEdilecekler() {
       title: "İşlem Tipi",
       dataIndex: "islemTipi",
       key: "islemTipi",
-      render: (text, record) => <Tag color="blue">{record.Referanslar.islemTipi}</Tag>,
+      render: (text, record) => <ColumnBadge value={record.Referanslar.islemTipi} />,
       filters: createTableFilterFromData(
         uretimGirisleri[musteriAdi].map((item) => item.Referanslar), // Eğer Referanslar her zaman varsa
         "islemTipi",
@@ -202,7 +187,7 @@ export default function SevkEdilecekler() {
         return fasonFirmasi.indexOf(value) === 0;
       },
       filterSearch: true,
-      width: 120,
+      width: 110,
     },
   ];
 
@@ -261,9 +246,10 @@ export default function SevkEdilecekler() {
           items={Object.entries(uretimGirisleri).map(([musteriAdi, kayitlar], index) => ({
             key: index.toString(),
             label: (
-              <CountBadge count={kayitlar.length} offset={[20, 6]}>
+              <Flex>
                 <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-              </CountBadge>
+                <CountBadge>{kayitlar.length}</CountBadge>
+              </Flex>
             ),
             style: collapseStyle.subCollapseItem,
             children: (
@@ -271,7 +257,7 @@ export default function SevkEdilecekler() {
                 dataSource={kayitlar}
                 columns={createColumnsForCustomer(musteriAdi)}
                 pagination={false}
-                scroll={{ x: 1500 }}
+                scroll={{ x: 1400 }}
                 hideDefaultTitleButtons
                 rowSelection={createRowSelection(musteriAdi)}
                 // rowKey={kayitlar[index].id}
@@ -280,7 +266,6 @@ export default function SevkEdilecekler() {
                     background: "rgba(81, 81, 81, 0.3)",
                     cursor: "not-allowed",
                     opacity: 0.5,
-                    // filter: "blur(0.7px)",
                   }
                 }
                 actionButtons={
@@ -296,7 +281,7 @@ export default function SevkEdilecekler() {
                             content: React.createElement(SevkiyatKarti, {
                               record: selectedRows[musteriAdi][0],
                             }),
-                            width: 1200,
+                            width: 1500,
                           })
                         }
                       >

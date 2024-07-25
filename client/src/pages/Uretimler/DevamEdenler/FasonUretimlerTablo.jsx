@@ -7,7 +7,7 @@ import {
   PrinterOutlined,
   SnippetsOutlined,
 } from "@ant-design/icons";
-import { Collapse, Modal, Tag, Tooltip } from "antd";
+import { Collapse, Flex, Modal, Tag, Tooltip } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
@@ -70,7 +70,8 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       dataIndex: "id",
       key: "id",
       render: (text) => <IdBadge value={text} />,
-      width: 70,
+      sorter: (a, b) => a.id - b.id,
+      width: 77,
     },
     {
       title: "Referans",
@@ -79,19 +80,14 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "referansNo"),
       onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
       filterSearch: true,
-      render: (text) => <ColumnBadge color="orange" value={text} />,
-      width: 150,
+      render: (text) => <ColumnBadge value={text} />,
+      width: 120,
     },
     {
       title: "Kodu",
       dataIndex: "kodu",
       key: "kodu",
-      render: (text, record) => (
-        <ColumnBadge
-          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
-          value={record.Referanslar.kodu}
-        />
-      ),
+      render: (text, record) => <ColumnBadge value={record.Referanslar.kodu} />,
       filters: [
         ...new Set(fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.kodu)),
       ].map((kod) => ({
@@ -100,7 +96,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       })),
       onFilter: (value, record) => record.Referanslar?.kodu.indexOf(value) === 0,
       filterSearch: true,
-      width: 170,
+      width: 135,
     },
     {
       title: "İşlem Tipi",
@@ -122,7 +118,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       title: "İrsaliye No",
       dataIndex: "irsaliyeNo",
       key: "irsaliyeNo",
-      width: 120,
+      width: 100,
       filters: [...new Set(fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.irsaliyeNo))]
         .sort((a, b) => a.localeCompare(b)) // Küçükten büyüğe sıralama
         .map((a) => ({
@@ -136,67 +132,51 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       title: "Gelen Tarih",
       dataIndex: "gelenTarih",
       key: "gelenTarih",
-      width: 160,
+      width: 135,
     },
     {
       title: "Gelen",
       dataIndex: "gelenMiktar",
       key: "gelenMiktar",
       sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
-      render: (text, record) => (
-        <ColumnBadge
-          color={record.gelenMiktar === record.gidenMiktar ? "green" : ""}
-          value={text}
-        />
-      ),
+      render: (text, record) => <ColumnBadge value={text} />,
     },
     {
       title: "Fasona Gönderilen",
       dataIndex: "gidenMiktar",
       key: "gidenMiktar",
       sorter: (a, b) => a.gidenMiktar - b.gidenMiktar,
-      render: (text, record) => (
-        <ColumnBadge
-          color={record.gelenMiktar === record.gidenMiktar ? "green" : ""}
-          value={text}
-        />
-      ),
+      render: (text, record) => <ColumnBadge value={text} />,
+      width: 135,
     },
     {
       title: "Fasonda Üretilen",
       dataIndex: "uretilenMiktar",
       key: "uretilenMiktar",
       sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
-      render: (text) => <ColumnBadge color={text > 0 ? "purple" : ""} value={text} />,
+      render: (text) => <ColumnBadge value={text} />,
+      width: 130,
     },
     {
       title: "Kalan",
       dataIndex: "kalanMiktar",
       key: "kalanMiktar",
       render: (text, record) => (
-        <ColumnBadge
-          color={record.gelenMiktar - record.sevkEdilenMiktar > 0 ? "magenta" : ""}
-          value={record.gelenMiktar - record.sevkEdilenMiktar}
-        />
+        <ColumnBadge color="#f8e9fa" value={record.gelenMiktar - record.sevkEdilenMiktar} />
       ),
     },
     {
       title: "Sevk Edilen",
       dataIndex: "sevkEdilenMiktar",
       key: "sevkEdilenMiktar",
-      render: (text) => <ColumnBadge color={text > 0 ? "cyan" : ""} value={text} />,
+      render: (text) => <ColumnBadge value={text} color="#ebf6e5" />,
       sorter: (a, b) => a.sevkEdilenMiktar - b.sevkEdilenMiktar,
     },
     {
       title: "Sipariş Tipi",
       dataIndex: "siparisTipi",
       key: "siparisTipi",
-      render: (text, record) => (
-        <ColumnBadge
-          color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
-          value={record.Referanslar.siparisTipi}
-        />
-      ),
+      render: (text, record) => <ColumnBadge value={record.Referanslar.siparisTipi} />,
       filters: [
         ...new Set(
           fasonFirmasiBazliKayitlar[fasonFirmasi]?.map((item) => item.Referanslar?.siparisTipi),
@@ -216,7 +196,6 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       render: (text, record) => (
         <Tooltip title={record.Referanslar?.musteriAdi}>
           <Tag
-            color="blue"
             style={{
               width: "120px",
               whiteSpace: "nowrap",
@@ -310,9 +289,10 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       items={Object.entries(fasonFirmasiBazliKayitlar).map(([fasonFirmasi, kayitlar], index) => ({
         key: index.toString(),
         label: (
-          <CountBadge count={kayitlar.length} offset={[20, 6]}>
+          <Flex>
             <div style={collapseStyle.subCollapseHeader}>{fasonFirmasi}</div>
-          </CountBadge>
+            <CountBadge>{kayitlar.length}</CountBadge>
+          </Flex>
         ),
         children: (
           <TableGod
@@ -342,11 +322,8 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                 </div>
               )
             }
-            scroll={{ x: 1800 }}
+            scroll={{ x: 1500 }}
             pagination={true}
-            rowStyle={(row) => ({
-              background: "#fcf8f0",
-            })}
             contextMenu={{
               deleteAction: uretimiSilFunc,
               extraItems: (record) => [
@@ -389,7 +366,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                     showModal({
                       title: "Üretim İş Emri Kartı",
                       content: <UretimIsEmriKarti record={record} />,
-                      width: 1200,
+                      width: 1400,
                     }),
                 },
                 user.yetki !== "operator" && {

@@ -14,7 +14,7 @@ import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import useDetectUserInteraction from "utils/useDetectInteraction.hook";
 import CompanyLogo from "../shared/CompanyLogo";
 import UserCard from "./UserCard";
@@ -68,7 +68,7 @@ const MenuListGroupItemStyled = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-weight: 500;
+  font-weight: 600;
 
   background: ${(props) =>
     props.selected ? "linear-gradient(to right, #4535aa, #8e82df)" : "transparent"};
@@ -82,36 +82,26 @@ const MenuListGroupItemStyled = styled.div`
   }
 `;
 
-const glow = keyframes`
-  0% {
-    box-shadow: 0 0 5px rgba(255, 69, 58, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 8px rgba(255, 69, 58, 1);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(255, 69, 58, 0.4);
-  }
-`;
-
 const RegisterButtonItemStyled = styled(Button)`
-  background: #bf2d25;
+  background: linear-gradient(135deg, rgba(197, 227, 253, 1) 43%, #b6d9f9 100%);
 
-  color: #ffffff;
+  color: #090909;
+  font-weight: bold;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  animation: ${glow} 2s infinite;
   width: 100%;
-  font-size: 1.3vmin;
+  font-size: 1.4vmin;
   margin-bottom: 6px;
   padding: 6px;
-  height: 34px;
+  height: 40px;
+  border: 1px solid rgb(87, 161, 225);
 
   &:hover {
-    background: #d32f2f;
-    color: white !important;
+    background: linear-gradient(135deg, #d3e9fb 43%, #c9e2fb 100%);
+    color: black !important;
+    border: 1px solid rgb(87, 161, 225) !important;
   }
 
   &:active {
@@ -121,7 +111,7 @@ const RegisterButtonItemStyled = styled(Button)`
 `;
 
 const MenuListGroupItemTitle = styled.div`
-  margin-left: 6px;
+  margin-left: 4px;
   font-size: 0.8vw;
   display: flex;
   justify-content: space-between;
@@ -291,7 +281,7 @@ function NavigationMenu() {
               onClick={() => {
                 setSelectedPage("");
               }}
-              icon={<AppstoreAddOutlined style={{ fontSize: "1.4vmin" }} />}
+              icon={<AppstoreAddOutlined style={{ fontSize: "1.6vmin", marginRight: -5 }} />}
             >
               Malzeme Kaydı Yap
             </RegisterButtonItemStyled>

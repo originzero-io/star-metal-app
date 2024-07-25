@@ -11,14 +11,26 @@ const ContainerStyled = styled.div`
   height: 600px;
 `;
 const ColStyled = styled(Col)`
-  border: 1px solid black;
-  text-align: center;
-  font-size: 2.9vmin;
+  border: 1px solid #c9c9c9;
+  font-size: 24px;
+  font-family: Arial, sans-serif;
   padding: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
-const BoldTextStyled = styled.div`
-  font-weight: 800;
-  font-size: 3.3vmin;
+const BaslikStyled = styled.div`
+  font-size: 24px;
+  font-family: Arial, sans-serif;
+  /* font-family: "Courier New", Courier, monospace; */
+`;
+
+const IcerikStyled = styled.div`
+  font-weight: bold;
+  font-size: 44px;
+  font-family: Arial, sans-serif;
+  /* font-family: "Courier New", Courier, monospace; */
 `;
 
 export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigger }) {
@@ -40,53 +52,55 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
       <ContainerStyled ref={componentRef}>
         <Row>
           <ColStyled span={6}>
-            <BoldTextStyled>STAR METAL</BoldTextStyled>
+            <BaslikStyled style={{ fontWeight: "bold", fontSize: 22 }}>STAR METAL</BaslikStyled>
           </ColStyled>
           <ColStyled span={12}>
-            <BoldTextStyled>ÜRETİM İŞ EMRİ KARTI</BoldTextStyled>
+            <BaslikStyled style={{ fontWeight: "bold", fontSize: 22 }}>
+              ÜRETİM İŞ EMRİ KARTI
+            </BaslikStyled>
           </ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{getCurrentDateTime()}</BoldTextStyled>
+            <BaslikStyled style={{ fontWeight: "bold", fontSize: 22 }}>
+              {getCurrentDateTime()}
+            </BaslikStyled>
           </ColStyled>
         </Row>
         <Row>
           <ColStyled span={6}>REFERANS NO</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.referansNo}</BoldTextStyled>
+            <IcerikStyled>{record?.referansNo}</IcerikStyled>
           </ColStyled>
           <ColStyled span={6}>KODU</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.Referanslar?.kodu || record?.kodu}</BoldTextStyled>
+            <IcerikStyled>{record?.Referanslar?.kodu || record?.kodu}</IcerikStyled>
           </ColStyled>
         </Row>
         <Row>
           <ColStyled span={6}>ADET</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.gelenMiktar}</BoldTextStyled>
+            <IcerikStyled>{record?.gelenMiktar}</IcerikStyled>
           </ColStyled>
           <ColStyled span={6}>KAYIT EDEN</ColStyled>
           <ColStyled span={6}>
-            <BoldTextStyled>{record?.personel}</BoldTextStyled>
+            <IcerikStyled>{record?.personel}</IcerikStyled>
           </ColStyled>
         </Row>
         <Row>
           <ColStyled span={6}>İRSALİYE NO</ColStyled>
           <ColStyled span={18}>
-            <BoldTextStyled>{record?.irsaliyeNo}</BoldTextStyled>
+            <IcerikStyled>{record?.irsaliyeNo}</IcerikStyled>
           </ColStyled>
         </Row>
         <Row style={{ height: "150px" }}>
           <ColStyled span={16}>
-            <BoldTextStyled style={{ fontSize: "2.8vmin" }}>ÜRETİM NOTU</BoldTextStyled>
-            <BoldTextStyled style={{ marginTop: 20, fontSize: "3.4vmin", fontWeight: 800 }}>
+            <BaslikStyled>ÜRETİM NOTU</BaslikStyled>
+            <IcerikStyled style={{ marginTop: 20 }}>
               {record?.Referanslar?.ReferansUretim.not}
-            </BoldTextStyled>
+            </IcerikStyled>
           </ColStyled>
           <ColStyled span={8}>
-            <BoldTextStyled style={{ fontSize: "2.8vmin" }}>ÜRETİME VEREN</BoldTextStyled>
-            <BoldTextStyled style={{ marginTop: 20, fontSize: "3.2vmin" }}>
-              {record?.personel}
-            </BoldTextStyled>
+            <BaslikStyled>ÜRETİME VEREN</BaslikStyled>
+            <IcerikStyled style={{ marginTop: 20 }}>{record?.personel}</IcerikStyled>
           </ColStyled>
         </Row>
       </ContainerStyled>

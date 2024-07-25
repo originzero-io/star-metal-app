@@ -1,6 +1,6 @@
 import { CaretRightOutlined, TruckOutlined } from "@ant-design/icons";
 
-import { Collapse, Tag } from "antd";
+import { Collapse, Flex } from "antd";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
 import IdBadge from "components/shared/IdBadge";
@@ -21,18 +21,14 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       dataIndex: "id",
       key: "id",
       render: (text) => <IdBadge value={text} />,
-      width: 70,
+      sorter: (a, b) => a.id - b.id,
+      width: 72,
     },
     {
       title: "Sipariş Tipi",
       dataIndex: "siparisTipi",
       key: "siparisTipi",
-      render: (text, record) => (
-        <ColumnBadge
-          color={record.siparisTipi === "SERİ" ? "volcano" : "purple"}
-          value={record.siparisTipi}
-        />
-      ),
+      render: (text, record) => <ColumnBadge value={record.siparisTipi} />,
       filters: [...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.siparisTipi))].map(
         (siparisTipi) => ({
           text: siparisTipi,
@@ -47,7 +43,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       title: "Kodu",
       dataIndex: "kodu",
       key: "kodu",
-      render: (text, record) => <ColumnBadge color="green" value={record.kodu} />,
+      render: (text, record) => <ColumnBadge value={record.kodu} />,
       filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "kodu"),
       onFilter: (value, record) => record.kodu.indexOf(value) === 0,
       filterSearch: true,
@@ -60,7 +56,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "referansNo"),
       onFilter: (value, record) => record.referansNo.indexOf(value) === 0,
       filterSearch: true,
-      render: (text) => <ColumnBadge color="green" value={text} />,
+      render: (text) => <ColumnBadge value={text} />,
       width: 120,
     },
     {
@@ -88,26 +84,28 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       dataIndex: "gelenMiktar",
       key: "gelenMiktar",
       sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
+      render: (text) => <ColumnBadge value={text} />,
     },
     {
       title: "Giden",
       dataIndex: "gidenMiktar",
       key: "gidenMiktar",
       sorter: (a, b) => a.gidenMiktar - b.gidenMiktar,
-      render: (text) => <Tag color={text > 0 ? "cyan" : ""}>{text}</Tag>,
+      render: (text) => <ColumnBadge value={text} />,
     },
     {
       title: "Kalan",
       dataIndex: "kalanMiktar",
       key: "kalanMiktar",
       sorter: (a, b) => a.kalanMiktar - b.kalanMiktar,
+      render: (text) => <ColumnBadge value={text} />,
     },
     {
       title: "Üretilen",
       dataIndex: "uretilenMiktar",
       key: "uretilenMiktar",
       sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
-      render: (text) => <Tag color={text > 0 ? "blue" : ""}>{text}</Tag>,
+      render: (text) => <ColumnBadge value={text} />,
     },
     {
       title: "Üretilmeyen",
@@ -125,8 +123,8 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
     {
       title: "İşlem Tipi",
       // dataIndex: "referansTipi",
-      render: (text, record) => <Tag color="blue">{record.islemTipi}</Tag>,
       key: "islemTipi",
+      render: (text, record) => <ColumnBadge value={record.islemTipi} />,
       filters: [...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.islemTipi))].map(
         (islemTipi) => ({
           text: islemTipi,
@@ -147,18 +145,16 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       items={Object.entries(musteriBazliKayitlar).map(([musteriAdi, kayitlar], index) => ({
         key: index.toString(),
         label: (
-          <CountBadge count={kayitlar.length} offset={[20, 6]}>
+          <Flex>
             <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-          </CountBadge>
+            <CountBadge>{kayitlar.length}</CountBadge>
+          </Flex>
         ),
         children: (
           <TableGod
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
             hideDefaultTitleButtons
-            rowStyle={(row) => ({
-              background: "#f5faf0",
-            })}
             scroll={{ x: 1700 }}
             contextMenu={{
               extraItems: (record) => [

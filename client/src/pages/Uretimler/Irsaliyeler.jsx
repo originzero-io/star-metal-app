@@ -55,7 +55,8 @@ export default function Irsaliyeler() {
         dataIndex: "uretimId",
         key: "uretimId",
         render: (text) => <IdBadge value={text} />,
-        width: 70,
+        sorter: (a, b) => a.id - b.id,
+        width: 77,
       },
       {
         title: "Sipariş Tipi",
@@ -73,20 +74,15 @@ export default function Irsaliyeler() {
         title: "Kodu",
         dataIndex: "kodu",
         key: "kodu",
-        render: (text, record) => (
-          <ColumnBadge
-            color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
-            value={record.Referanslar.kodu}
-          />
-        ),
-        width: 170,
+        render: (text, record) => <ColumnBadge value={record.Referanslar.kodu} />,
+        width: 135,
       },
       {
         title: "Referans No",
         dataIndex: "referansNo",
         key: "referansNo",
-        render: (text) => <ColumnBadge color="orange" value={text} />,
-        width: 160,
+        render: (text) => <ColumnBadge value={text} />,
+        width: 120,
       },
       {
         title: "İade",
@@ -105,7 +101,7 @@ export default function Irsaliyeler() {
         title: "Üretim Adedi",
         dataIndex: "uretimAdedi",
         key: "uretimAdedi",
-        // width: 100,
+        width: 100,
       },
       {
         title: "1. Ambalaj",
@@ -170,13 +166,8 @@ export default function Irsaliyeler() {
             key: "sevk",
             label: (
               <Flex>
-                <CountBadge
-                  count={sevkIrsaliyeleri.length}
-                  offset={[20, 9]}
-                  title="Toplam sevk irsaliyesi sayısı"
-                >
-                  <div style={collapseStyle.parentCollapseHeader}>Sevk İrsaliyeleri</div>
-                </CountBadge>
+                <div style={collapseStyle.parentCollapseHeader}>Sevk İrsaliyeleri</div>
+                <CountBadge>{sevkIrsaliyeleri.length}</CountBadge>
               </Flex>
             ),
             style: collapseStyle.parentCollapseItem,
@@ -191,9 +182,10 @@ export default function Irsaliyeler() {
                   Object.entries(tipBazliIrsaliye.sevk).map(([musteriAdi, kayitlar], index) => ({
                     key: index.toString(),
                     label: (
-                      <CountBadge count={kayitlar.length} offset={[20, 5]} title="Kayıt sayısı">
+                      <Flex>
                         <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-                      </CountBadge>
+                        <CountBadge>{kayitlar.length}</CountBadge>
+                      </Flex>
                     ),
                     children: (
                       <IrsaliyeTablo
@@ -214,13 +206,8 @@ export default function Irsaliyeler() {
             key: "tasima",
             label: (
               <Flex>
-                <CountBadge
-                  count={tasimaIrsaliyeleri.length}
-                  offset={[20, 7]}
-                  title="Toplam taşıma irsaliyesi sayısı"
-                >
-                  <div style={collapseStyle.parentCollapseHeader}>Fason & İade İrsaliyeleri</div>
-                </CountBadge>
+                <div style={collapseStyle.parentCollapseHeader}>Fason & İade İrsaliyeleri</div>
+                <CountBadge>{tasimaIrsaliyeleri.length}</CountBadge>
               </Flex>
             ),
 
@@ -237,9 +224,10 @@ export default function Irsaliyeler() {
                   Object.entries(tipBazliIrsaliye.tasima).map(([musteriAdi, kayitlar], index) => ({
                     key: index.toString(),
                     label: (
-                      <CountBadge count={kayitlar.length} offset={[20, 5]} title="Kayıt sayısı">
+                      <Flex>
                         <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-                      </CountBadge>
+                        <CountBadge>{kayitlar.length}</CountBadge>
+                      </Flex>
                     ),
                     children: (
                       <IrsaliyeTablo

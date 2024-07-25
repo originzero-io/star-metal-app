@@ -1,9 +1,19 @@
-import { Badge } from "antd";
+import { Tag } from "antd";
 
-export default function CountBadge({ count, offset, color = "#002f49bf", children, ...rest }) {
+export default function CountBadge({ color = "#f6f1fd", children, ...rest }) {
   return (
-    <Badge count={count} offset={offset} color={color} overflowCount={99999} {...rest}>
+    <Tag
+      color={color}
+      style={{
+        border: "1px solid #a782f6",
+        color: "black",
+        fontWeight: "bold",
+        marginLeft: 10,
+        borderRadius: 8,
+      }}
+      {...rest}
+    >
       {children}
-    </Badge>
+    </Tag>
   );
 }

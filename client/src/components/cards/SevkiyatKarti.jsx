@@ -8,17 +8,26 @@ import { getCurrentDateTime } from "utils/time.helper";
 const ContainerStyled = styled.div`
   margin-top: 8px;
   padding: 10px;
+  height: 40;
 `;
 const ColStyled = styled(Col)`
-  border: 1px solid black;
+  border: 1px dotted #cacaca;
   text-align: center;
-  font-size: 3vmin;
+  font-size: 2.3vmin;
   padding: 6px;
   flex-direction: column;
 `;
-const BoldTextStyled = styled.div`
-  font-weight: 800;
-  font-size: 3.3vmin;
+const BaslikStyled = styled.div`
+  font-size: 18px;
+  font-family: Arial, sans-serif;
+  /* font-family: "Courier New", Courier, monospace; */
+`;
+
+const IcerikStyled = styled.div`
+  font-weight: bold;
+  font-size: 30px;
+  font-family: Arial, sans-serif;
+  /* font-family: "Courier New", Courier, monospace; */
 `;
 
 export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger }) {
@@ -39,38 +48,42 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
       <PrintButton colorful handlePrintFunc={handlePrint} />
       <ContainerStyled ref={componentRef}>
         <Row>
-          <ColStyled span={6}>
-            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
-              <BoldTextStyled>ALICI</BoldTextStyled>
+          <ColStyled span={8}>
+            <div style={{ textAlign: "start" }}>
+              <BaslikStyled>ALICI</BaslikStyled>
             </div>
-            <div style={{ textAlign: "center", fontSize: "1.5vmin", marginRight: "40px" }}>
-              <BoldTextStyled>{record.alici}</BoldTextStyled>
+            <div style={{ textAlign: "center", fontSize: "1.2vmin", marginRight: "40px" }}>
+              <IcerikStyled style={{ fontSize: "20px" }}>
+                {record.Referanslar.musteriAdi}
+              </IcerikStyled>
             </div>
           </ColStyled>
-          <ColStyled span={12} style={{ display: "flex", justifyContent: "center" }}>
-            <BoldTextStyled>SEVKİYAT TANITIM KARTI</BoldTextStyled>
+          <ColStyled span={8} style={{ display: "flex", justifyContent: "center" }}>
+            <BaslikStyled style={{ fontWeight: "bold", fontSize: 25 }}>
+              SEVKİYAT TANITIM KARTI
+            </BaslikStyled>
           </ColStyled>
-          <ColStyled span={6} style={{ display: "flex", justifyContent: "center" }}>
-            <BoldTextStyled>STAR METAL</BoldTextStyled>
-          </ColStyled>
-        </Row>
-        <Row>
-          <ColStyled span={24}>
-            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
-              <BoldTextStyled>REFERANS NO</BoldTextStyled>
-            </div>
-            <div style={{ textAlign: "end", fontSize: "2.5vmin", marginRight: "40px" }}>
-              <BoldTextStyled>{record.referansNo}</BoldTextStyled>
-            </div>
+          <ColStyled span={8} style={{ display: "flex", justifyContent: "center" }}>
+            <BaslikStyled style={{ fontWeight: "bold", fontSize: 25 }}>STAR METAL</BaslikStyled>
           </ColStyled>
         </Row>
         <Row>
           <ColStyled span={24}>
-            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
-              <BoldTextStyled>KODU</BoldTextStyled>
+            <div style={{ textAlign: "start" }}>
+              <BaslikStyled>REFERANS NO</BaslikStyled>
             </div>
-            <div style={{ textAlign: "end", fontSize: "2.5vmin", marginRight: "40px" }}>
-              <BoldTextStyled>{record.Referanslar.kodu}</BoldTextStyled>
+            <div style={{ textAlign: "end", marginRight: "40px" }}>
+              <IcerikStyled style={{ fontSize: "54px" }}>{record.referansNo}</IcerikStyled>
+            </div>
+          </ColStyled>
+        </Row>
+        <Row>
+          <ColStyled span={24}>
+            <div style={{ textAlign: "start" }}>
+              <BaslikStyled>KODU</BaslikStyled>
+            </div>
+            <div style={{ textAlign: "end", marginRight: "40px" }}>
+              <IcerikStyled>{record.Referanslar.kodu}</IcerikStyled>
             </div>
           </ColStyled>
         </Row>
@@ -78,70 +91,74 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
         <Row>
           <ColStyled span={12}>
             <div style={{ textAlign: "start" }}>
-              <BoldTextStyled>ADET</BoldTextStyled>
-              <div style={{ textAlign: "start", fontSize: "2.5vmin" }}>
-                <BoldTextStyled>{record.uretimAdedi}</BoldTextStyled>
+              <BaslikStyled>ADET</BaslikStyled>
+              <div style={{ textAlign: "center" }}>
+                <IcerikStyled style={{ fontSize: "54px" }}>{record.uretimAdedi}</IcerikStyled>
               </div>
             </div>
           </ColStyled>
           <ColStyled span={12}>
-            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
-              <BoldTextStyled>GELİŞ REFERANSI</BoldTextStyled>
+            <div style={{ textAlign: "start" }}>
+              <BaslikStyled>GELİŞ REFERANSI</BaslikStyled>
             </div>
-            <div style={{ textAlign: "start", fontSize: "2.5vmin" }}>
-              <BoldTextStyled>{record.referansNo}</BoldTextStyled>
+            <div style={{ textAlign: "start" }}>
+              <IcerikStyled>{record.referansNo}</IcerikStyled>
             </div>
           </ColStyled>
         </Row>
         <Row>
           <ColStyled span={12}>
-            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
-              <BoldTextStyled>AÇIKLAMA</BoldTextStyled>
+            <div style={{ textAlign: "start" }}>
+              <BaslikStyled>AÇIKLAMA</BaslikStyled>
             </div>
-            <div style={{ textAlign: "start", fontSize: "2vmin" }}>
-              <BoldTextStyled>{record.Referanslar.irsaliyeAciklamasi}</BoldTextStyled>
+            <div style={{ textAlign: "center" }}>
+              <IcerikStyled style={{ fontSize: "48px" }}>
+                {record.Referanslar.irsaliyeAciklamasi}
+              </IcerikStyled>
             </div>
           </ColStyled>
           <ColStyled span={6}>
-            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
-              <BoldTextStyled>TARİH / SAAT</BoldTextStyled>
+            <div style={{ textAlign: "start" }}>
+              <BaslikStyled>TARİH / SAAT</BaslikStyled>
             </div>
-            <div style={{ textAlign: "center", fontSize: "2vmin" }}>
-              <BoldTextStyled>{getCurrentDateTime()}</BoldTextStyled>
-            </div>
-          </ColStyled>
-          <ColStyled span={3}>
-            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
-              <BoldTextStyled>BRÜT</BoldTextStyled>
-            </div>
-            <div style={{ textAlign: "center", fontSize: "2.5vmin" }}>
-              <BoldTextStyled>{record.brut}</BoldTextStyled>
+            <div style={{ textAlign: "center" }}>
+              <IcerikStyled>{getCurrentDateTime()}</IcerikStyled>
             </div>
           </ColStyled>
           <ColStyled span={3}>
-            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
-              <BoldTextStyled>DARA</BoldTextStyled>
+            <div style={{ textAlign: "start" }}>
+              <BaslikStyled>BRÜT</BaslikStyled>
             </div>
-            <div style={{ textAlign: "center", fontSize: "2.5vmin" }}>
-              <BoldTextStyled>{record.dara}</BoldTextStyled>
+            <div style={{ textAlign: "center" }}>
+              <IcerikStyled>{record.brut}</IcerikStyled>
+            </div>
+          </ColStyled>
+          <ColStyled span={3}>
+            <div style={{ textAlign: "start" }}>
+              <BaslikStyled>DARA</BaslikStyled>
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <IcerikStyled>{record.dara}</IcerikStyled>
             </div>
           </ColStyled>
         </Row>
         <Row>
           <ColStyled span={18}>
-            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
-              <BoldTextStyled>İŞLEM AÇIKLAMASI</BoldTextStyled>
+            <div style={{ textAlign: "start" }}>
+              <BaslikStyled>İŞLEM AÇIKLAMASI</BaslikStyled>
             </div>
-            <div style={{ textAlign: "start", fontSize: "3.2vmin", marginTop: "8px" }}>
-              <BoldTextStyled>{record.Referanslar.ReferansUretim.not}</BoldTextStyled>
+            <div style={{ textAlign: "center", marginTop: "8px" }}>
+              <IcerikStyled style={{ fontSize: "42px" }}>
+                {record.Referanslar.ReferansUretim.not}
+              </IcerikStyled>
             </div>
           </ColStyled>
           <ColStyled span={6}>
-            <div style={{ textAlign: "start", fontSize: "1.5vmin" }}>
-              <BoldTextStyled>KONTROL EDEN</BoldTextStyled>
+            <div style={{ textAlign: "start" }}>
+              <BaslikStyled>KONTROL EDEN</BaslikStyled>
             </div>
-            <div style={{ textAlign: "center", fontSize: "2.5vmin", marginTop: "8px" }}>
-              <BoldTextStyled>{record.personel}</BoldTextStyled>
+            <div style={{ textAlign: "center", marginTop: "8px" }}>
+              <IcerikStyled>{record.personel}</IcerikStyled>
             </div>
           </ColStyled>
         </Row>

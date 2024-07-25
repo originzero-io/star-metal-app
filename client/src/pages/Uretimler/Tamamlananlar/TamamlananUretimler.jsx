@@ -1,5 +1,5 @@
 import { CaretRightOutlined } from "@ant-design/icons";
-import { Collapse } from "antd";
+import { Collapse, Flex } from "antd";
 import CountBadge from "components/shared/CountBadge";
 import PageHeader from "components/shared/PageHeader";
 import collapseStyle from "components/shared/StyledCollapse";
@@ -23,7 +23,6 @@ function TamamlananUretimler() {
       try {
         setLoading(true);
         const tamamlananUretimData = await tamamlananUretimHttp.getData();
-        console.log("tamamlananUretimData", tamamlananUretimData);
 
         setTamamlananUretimler(tamamlananUretimData);
         setLoading(false);
@@ -74,9 +73,10 @@ function TamamlananUretimler() {
             key: "normal",
             style: collapseStyle.parentCollapseItem,
             label: (
-              <CountBadge count={tamamlananUretimler.normalUretimler?.length} offset={[20, 6]}>
+              <Flex>
                 <div style={collapseStyle.parentCollapseHeader}>Star Metal Üretimleri</div>
-              </CountBadge>
+                <CountBadge>{tamamlananUretimler.normalUretimler?.length}</CountBadge>
+              </Flex>
             ),
             children: <NormalUretimlerTablo musteriBazliKayitlar={musteriBazliNormalUretimler} />,
           },
@@ -84,9 +84,10 @@ function TamamlananUretimler() {
             key: "fason",
             style: collapseStyle.parentCollapseItem,
             label: (
-              <CountBadge count={tamamlananUretimler.fasonUretimler?.length} offset={[20, 6]}>
+              <Flex>
                 <div style={collapseStyle.parentCollapseHeader}>Fason Üretimler</div>
-              </CountBadge>
+                <CountBadge>{tamamlananUretimler.fasonUretimler?.length}</CountBadge>
+              </Flex>
             ),
             children: (
               <FasonUretimlerTablo fasonFirmasiBazliKayitlar={fasonFirmasiBazliFasonUretimler} />

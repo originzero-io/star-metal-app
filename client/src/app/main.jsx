@@ -14,7 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           rowSelectedHoverBg: "rgb(189, 185, 233)",
 
           borderColor: "#cfcfcf",
-          cellFontSizeSM: 12,
+          cellFontSizeSM: 13,
 
           // headerBg: "rgb(221, 231, 247)",
           headerBg: "#eceff1",
