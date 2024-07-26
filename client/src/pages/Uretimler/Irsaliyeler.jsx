@@ -468,11 +468,12 @@ function LogoyaGonderButon({ kayitlar }) {
               filterOption={(input, option) =>
                 option.children.toLowerCase().includes(input.toLowerCase())
               }
+              onChange={soforSec}
             >
               {[...soforler]
                 .sort((a, b) => a.adi.localeCompare(b.adi))
                 .map((sofor) => (
-                  <Select.Option key={sofor.logicalref} value={`${sofor.adi} ${sofor.soyadi}`}>
+                  <Select.Option key={sofor.logicalref} value={sofor.logicalref}>
                     {`${sofor.adi} ${sofor.soyadi}`}
                   </Select.Option>
                 ))}

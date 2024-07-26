@@ -197,7 +197,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
         <Tooltip title={record.Referanslar?.musteriAdi}>
           <Tag
             style={{
-              width: "120px",
+              width: "110px",
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",

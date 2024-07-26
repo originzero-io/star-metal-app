@@ -1,6 +1,6 @@
 const collapseStyle = {
   parentCollapseHeader: {
-    fontSize: "15px",
+    fontSize: "17px",
     fontWeight: "600",
     color: "#4535aa",
   },
@@ -11,7 +11,7 @@ const collapseStyle = {
     boxShadow: "0 2px 7px -5px rgba(0, 0, 0, 0.20)",
   },
   subCollapseHeader: {
-    fontSize: "13px",
+    fontSize: "15px",
     fontWeight: "500",
     color: "#4d4d4d",
   },
