@@ -30,6 +30,21 @@ const IcerikStyled = styled.div`
   /* font-family: "Courier New", Courier, monospace; */
 `;
 
+const OKDaireStyled = styled.div`
+  background-color: black;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  margin-top: 10px;
+  margin-left: 40%;
+  font-weight: bold;
+  color: white;
+`;
+
 export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger }) {
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
@@ -162,6 +177,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
             </div>
           </ColStyled>
         </Row>
+        <OKDaireStyled>OK</OKDaireStyled>
       </ContainerStyled>
     </div>
   );
