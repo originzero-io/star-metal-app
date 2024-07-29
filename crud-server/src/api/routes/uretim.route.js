@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import express from "express";
 import asyncHandler from "express-async-handler";
 import Irsaliye from "../models/irsaliye.model.js";
@@ -197,11 +198,14 @@ router.post(
 
     // Tüm asenkron işlemleri bir diziye topla
     const promises = kayitlar.map(async (kayit) => {
+      const uretimIdleri = kayit.uretimId.split(",").map(Number);
+
       const { fason } = kayit.Referanslar;
       const { uretimId } = kayit;
 
       try {
-        const uretim = await model[fason].findByPk(uretimId, {
+        const uretimList = await model[fason].findAll({
+          where: { id: uretimIdleri },
           include: [
             {
               model: Referans,
@@ -210,14 +214,14 @@ router.post(
           ],
         });
 
-        const kodVar = !uretim.Referanslar.kodu.toLowerCase().includes("yok");
+        for (const uretim of uretimList) {
+          const kodVar = !uretim.Referanslar.kodu.toLowerCase().includes("yok");
 
-        if (fason) {
-          if (uretim.gelenMiktar === uretim.sevkEdilenMiktar && kodVar) {
-            await uretimiTamamlananlaraGonder(uretim);
-          }
-        } else {
-          if (uretim.gelenMiktar === uretim.gidenMiktar && kodVar) {
+          if (fason) {
+            if (uretim.gelenMiktar === uretim.sevkEdilenMiktar && kodVar) {
+              await uretimiTamamlananlaraGonder(uretim);
+            }
+          } else if (uretim.gelenMiktar === uretim.gidenMiktar && kodVar) {
             await uretimiTamamlananlaraGonder(uretim);
           }
         }

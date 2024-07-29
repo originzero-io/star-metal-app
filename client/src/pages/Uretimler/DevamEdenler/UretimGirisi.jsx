@@ -88,23 +88,21 @@ export default function UretimGirisi({ record }) {
   const fakeTeraziOlcumHandler = () => {
     setTeraziLoading(true);
     setTerazidenOlcumAlindi(false);
-    setTimeout(() => {
-      const brut = Math.round((Math.random() * 100 + 1) * 10) / 10;
-      const dara = Math.round((Math.random() * 100 + 1) * 10) / 10;
-      const net = Math.round((Math.random() * 100 + 1) * 10) / 10;
-      const adet = Math.floor(Math.random() * 50);
-      setTeraziOlcum({
-        ...teraziOlcum,
-        brut,
-        dara,
-        net,
-        adet,
-      });
-      form.setFieldsValue({ uretimAdedi: adet });
-      setUretimAdedi(adet);
-      setTeraziLoading(false);
-      setTerazidenOlcumAlindi(true);
-    }, 1000);
+    const brut = Math.round((Math.random() * 100 + 1) * 10) / 10;
+    const dara = Math.round((Math.random() * 100 + 1) * 10) / 10;
+    const net = Math.round((Math.random() * 100 + 1) * 10) / 10;
+    const adet = Math.floor(Math.random() * 50);
+    setTeraziOlcum({
+      ...teraziOlcum,
+      brut,
+      dara,
+      net,
+      adet,
+    });
+    form.setFieldsValue({ uretimAdedi: adet });
+    setUretimAdedi(adet);
+    setTeraziLoading(false);
+    setTerazidenOlcumAlindi(true);
   };
 
   function roundUp(num, decimals = 1) {
@@ -132,6 +130,7 @@ export default function UretimGirisi({ record }) {
   const onFinish = async (values) => {
     // console.log("localRecord: ", localRecord);
     // console.log("values: ", values);
+
     const data = {
       alici: localRecord.Referanslar.fason
         ? localRecord.Referanslar.fasonFirmasi
@@ -150,6 +149,7 @@ export default function UretimGirisi({ record }) {
       brut: teraziOlcum.brut,
       dara: teraziOlcum.dara,
       net: teraziOlcum.net,
+      irsaliyeNo: localRecord.irsaliyeNo,
       Referanslar: { ...record.Referanslar }, // sevkiyat kartı için
     };
 

@@ -62,49 +62,22 @@ export default function SevkEdilecekler() {
 
   const createColumnsForCustomer = (musteriAdi) => [
     {
-      title: "Sıra No",
+      title: "Uretim ID",
       dataIndex: "uretimId",
       key: "uretimId",
       render: (text) => <IdBadge value={text} />,
       sorter: (a, b) => a.id - b.id,
+      filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "uretimId"),
+      onFilter: (value, _record) => _record.uretimId === value,
       width: 70,
     },
     {
-      title: "İrsaliye Tipi",
-      dataIndex: "irsaliyeTipi",
-      key: "irsaliyeTipi",
-      render: (text, kayit) => {
-        if (kayit.iade === "Hayır" || kayit?.Referanslar.kodu.toLowerCase().includes("YOK")) {
-          return <ColumnBadge color="#e1f2fa" value="SEVK" />;
-        }
-        return <ColumnBadge color="#fcf2e9" value="TAŞIMA" />;
-      },
-      filters: [
-        {
-          text: "SEVK",
-          value: "SEVK",
-        },
-        {
-          text: "TAŞIMA",
-          value: "TAŞIMA",
-        },
-      ],
-      onFilter: (value, kayit) => {
-        const irsaliyeTipi =
-          kayit.iade === "Hayır" || kayit?.Referanslar.kodu.toLowerCase().includes("YOK")
-            ? "SEVK"
-            : "TAŞIMA";
-        return irsaliyeTipi === value;
-      },
-      filterSearch: true,
-      width: 100,
-    },
-    {
-      title: "Sipariş Tipi",
-      dataIndex: "siparisTipi",
-      key: "siparisTipi",
-      render: (text, record) => <ColumnBadge value={record.Referanslar.siparisTipi} />,
-      width: 100,
+      title: "Uretim Girişi ID",
+      dataIndex: "id",
+      key: "id",
+      render: (text) => <IdBadge value={text} />,
+      sorter: (a, b) => a.id - b.id,
+      width: 150,
     },
     {
       title: "Kodu",
@@ -185,6 +158,43 @@ export default function SevkEdilecekler() {
       dataIndex: "ikinciAmbalaj",
       key: "ikinciAmbalaj",
       width: 120,
+    },
+    {
+      title: "İrsaliye Tipi",
+      dataIndex: "irsaliyeTipi",
+      key: "irsaliyeTipi",
+      render: (text, kayit) => {
+        if (kayit.iade === "Hayır" || kayit?.Referanslar.kodu.toLowerCase().includes("YOK")) {
+          return <ColumnBadge color="#e1f2fa" value="SEVK" />;
+        }
+        return <ColumnBadge color="#fcf2e9" value="TAŞIMA" />;
+      },
+      filters: [
+        {
+          text: "SEVK",
+          value: "SEVK",
+        },
+        {
+          text: "TAŞIMA",
+          value: "TAŞIMA",
+        },
+      ],
+      onFilter: (value, kayit) => {
+        const irsaliyeTipi =
+          kayit.iade === "Hayır" || kayit?.Referanslar.kodu.toLowerCase().includes("YOK")
+            ? "SEVK"
+            : "TAŞIMA";
+        return irsaliyeTipi === value;
+      },
+      filterSearch: true,
+      width: 100,
+    },
+    {
+      title: "Sipariş Tipi",
+      dataIndex: "siparisTipi",
+      key: "siparisTipi",
+      render: (text, record) => <ColumnBadge value={record.Referanslar.siparisTipi} />,
+      width: 100,
     },
     {
       title: "İşlem Tipi",
@@ -370,7 +380,8 @@ function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUre
           acc[key].uretimAdedi += item.uretimAdedi;
           // ? uretimGirisi id leri;
           acc[key].uretimGirisiIdleri = acc[key].uretimGirisiIdleri + "," + item.id; // String olarak ID'leri birleştir
-          acc[key].uretimId = item.uretimId;
+          // acc[key].uretimId = item.uretimId;
+          acc[key].uretimId = acc[key].uretimId + "," + item.uretimId;
         } else {
           // Eğer yoksa, yeni bir kayıt olarak ekle, tipi ayarla ve ilk uretimId'yi string olarak ekle
           acc[key] = {

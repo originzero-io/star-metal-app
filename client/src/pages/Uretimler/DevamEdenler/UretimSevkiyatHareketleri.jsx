@@ -16,6 +16,7 @@ const TopSectionItem = styled.div`
   display: flex;
   align-items: center;
   padding: 4px;
+  // background-color: red;
 `;
 
 const TopSectionItemName = styled.div`
@@ -23,16 +24,17 @@ const TopSectionItemName = styled.div`
 `;
 const TopSectionItemValue = styled.div`
   padding: 5px;
-  color: rgb(106, 48, 208);
+  color: black;
+  // color: rgb(106, 48, 208);
   border-radius: 6px;
-  width: 100%;
+  width: 50%;
+  background-color: red;
   text-align: center;
-  margin-left: 8px;
-  font-weight: 600;
-  font-size: 1.35vmin;
+  font-weight: 700;
+  font-size: 1.7vmin;
   background-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 2px 3px 8px -8px rgba(0, 0, 0, 0.75);
-  border: 1px solid rgb(128, 84, 206);
+  border: 1px solid black;
+  // border: 1px solid rgb(128, 84, 206);
 `;
 
 export default function UretimSevkiyatHareketleri({ record }) {

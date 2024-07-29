@@ -51,23 +51,18 @@ export default function Irsaliyeler() {
   const columns = useMemo(
     () => [
       {
-        title: "Sıra No",
+        title: "Üretim ID",
         dataIndex: "uretimId",
         key: "uretimId",
         render: (text) => <IdBadge value={text} />,
-        sorter: (a, b) => a.id - b.id,
-        width: 77,
+        sorter: (a, b) => a.uretimId - b.uretimId,
+        width: 100,
       },
       {
-        title: "Sipariş Tipi",
-        dataIndex: "siparisTipi",
-        key: "siparisTipi",
-        render: (text, record) => (
-          <ColumnBadge
-            color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
-            value={record.Referanslar.siparisTipi}
-          />
-        ),
+        title: "Üretim Girişi IDler",
+        dataIndex: "uretimGirisiIdleri",
+        key: "uretimGirisiIdleri",
+        render: (text) => <IdBadge value={text} />,
         width: 100,
       },
       {
@@ -114,6 +109,18 @@ export default function Irsaliyeler() {
         dataIndex: "ikinciAmbalaj",
         key: "ikinciAmbalaj",
         // width: 120,
+      },
+      {
+        title: "Sipariş Tipi",
+        dataIndex: "siparisTipi",
+        key: "siparisTipi",
+        render: (text, record) => (
+          <ColumnBadge
+            color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
+            value={record.Referanslar.siparisTipi}
+          />
+        ),
+        width: 100,
       },
     ],
     [irsaliyeler],
@@ -414,12 +421,12 @@ function LogoyaGonderButon({ kayitlar }) {
   return (
     <Button
       style={{
-        background: "linear-gradient(135deg, #b1e6bc 58%, #a4e5b1 100%)",
+        background: "linear-gradient(135deg, #b1e6bc 58%, #69de81 100%)",
         color: "#090909",
         fontWeight: "bold",
         borderRadius: "8px",
         cursor: "pointer",
-        fontSize: "1.4vmin",
+        fontSize: "1.6vmin",
         marginBottom: "6px",
         padding: "10px 15px",
         border: "1px solid rgb(73, 171, 66)",
@@ -508,7 +515,7 @@ function LogoyaGonderButon({ kayitlar }) {
             htmlType="submit"
             block
             style={{
-              background: "linear-gradient(135deg, #b1e6bc 58%, #a4e5b1 100%)",
+              background: "linear-gradient(135deg, #b1e6bc 58%, #88df99 100%)",
               color: "#090909",
               fontWeight: "bold",
               borderRadius: "8px",
