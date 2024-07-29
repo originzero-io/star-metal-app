@@ -353,7 +353,6 @@ function LogoyaGonderButon({ kayitlar }) {
       ...kayit,
       sofor: secilenSofor,
       plaka: values.plaka,
-      irsaliyeNo: "14-ABCDE",
       sevkTarihi: getCurrentDateTime(),
       aciklama: values.genelAciklama,
     }));
@@ -366,7 +365,10 @@ function LogoyaGonderButon({ kayitlar }) {
       const logoResponse = await logoGoApi.postData("PostIrsaliye", logoIrsaliye);
 
       if (logoResponse.statusCode === 200) {
-        await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(gonderilecekKayitlar);
+        await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(
+          gonderilecekKayitlar,
+          logoResponse.message, // logo irsaliye no
+        );
         await tamamlananUretimHttp.addData(gonderilecekKayitlar);
         const devamEdenler = await devamEdenUretimHttp.getData();
         const newIrsaliyeler = await irsaliyeHttp.listeyiTemizle(irsaliyeler, gonderilecekKayitlar);

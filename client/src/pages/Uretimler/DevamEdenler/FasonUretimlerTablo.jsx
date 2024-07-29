@@ -385,7 +385,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
                       content: <UretimSevkiyatHareketleri record={record} />,
-                      width: 1400,
+                      width: 1500,
                     }),
                 },
                 {

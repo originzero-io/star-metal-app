@@ -81,6 +81,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
             />
           </Tooltip>
         ),
+      width: 50,
     },
     {
       title: "Durum",
@@ -102,7 +103,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
             SEVK EDİLMEDİ
           </Tag>
         ),
-      width: 100,
+      width: 130,
     },
     {
       title: "Sıra No",
@@ -139,13 +140,13 @@ export default function UretimSevkiyatHareketleri({ record }) {
       title: "Brüt",
       dataIndex: "brut",
       key: "brut",
-      // width: 150,
+      width: 70,
     },
     {
       title: "Dara",
       dataIndex: "dara",
       key: "dara",
-      // width: 150,
+      width: 70,
     },
     {
       title: "Sevkiyat Tarihi",

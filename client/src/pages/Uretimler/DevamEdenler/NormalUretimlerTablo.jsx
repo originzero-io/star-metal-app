@@ -357,7 +357,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
                       content: <UretimSevkiyatHareketleri record={record} />,
-                      width: 1400,
+                      width: 1500,
                     }),
                 },
                 {

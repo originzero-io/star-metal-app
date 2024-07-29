@@ -156,9 +156,7 @@ router.put(
 router.put(
   "/sevkiyat-bilgilerini-doldur",
   asyncHandler(async (req, res) => {
-    const { kayitlar } = req.body;
-
-    console.log("kayitlar: ", kayitlar);
+    const { kayitlar, logoIrsaliyeNo } = req.body;
 
     const updatePromises = kayitlar.map(async (kayit) => {
       const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
@@ -170,8 +168,8 @@ router.put(
           personel: kayit.personel,
           sofor: `${kayit.sofor.adi} ${kayit.sofor.soyadi}`,
           plaka: kayit.plaka,
-          irsaliyeNo: kayit.irsaliyeNo,
-          aciklama: kayit.genelAciklama,
+          irsaliyeNo: logoIrsaliyeNo,
+          aciklama: kayit.aciklama,
         },
         {
           where: {
