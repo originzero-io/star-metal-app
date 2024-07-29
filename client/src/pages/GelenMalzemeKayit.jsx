@@ -308,6 +308,7 @@ export default function GelenMalzemeKayit() {
                       name={[name, "iade"]}
                       rules={rules}
                       style={{ width: "120px" }}
+                      initialValue="Hayır"
                     >
                       <Select placeholder="İade mi?" name={name}>
                         <Select.Option value="Evet">İade</Select.Option>
