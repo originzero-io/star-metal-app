@@ -1,11 +1,12 @@
+/* eslint-disable no-restricted-syntax */
 import { CaretRightOutlined } from "@ant-design/icons";
-import { Collapse, Flex, Modal } from "antd";
+import { Collapse, Flex, Input, Modal } from "antd";
 import CountBadge from "components/shared/CountBadge";
 import PageHeader from "components/shared/PageHeader";
 import collapseStyle from "components/shared/StyledCollapse";
 import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FcSynchronize } from "react-icons/fc";
 import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
@@ -42,6 +43,7 @@ function DevamEdenUretimler() {
   const [musteriBazliNormalUretimler, setMusteriBazliNormalUretimler] = useState({});
   const [fasonFirmasiBazliFasonUretimler, setFasonFirmasiBazliFasonUretimler] = useState({});
 
+  // ? normal ve fason bazlı kategorize etme
   useEffect(() => {
     const musteriBazliNormal = devamEdenUretimler.normalUretimler.reduce((acc, uretim) => {
       const musteriAdi = uretim?.Referanslar?.musteriAdi;
@@ -69,6 +71,39 @@ function DevamEdenUretimler() {
     setFasonFirmasiBazliFasonUretimler(fasonFirmasiBazliFason);
   }, [devamEdenUretimler]);
 
+  // ? referans no bazlı filtreleme
+
+  const [normalUretimAramaMetni, setNormalUretimAramaMetni] = useState("");
+  const [fasonUretimAramaMetni, setFasonUretimAramaMetni] = useState("");
+
+  const normalUretimFilteredData = useMemo(
+    () =>
+      Object.entries(musteriBazliNormalUretimler).reduce((acc, [company, items]) => {
+        const filteredItems = items.filter((item) =>
+          item.referansNo.toLowerCase().includes(normalUretimAramaMetni.toLowerCase()),
+        );
+        if (filteredItems.length > 0) {
+          acc[company] = filteredItems;
+        }
+        return acc;
+      }, {}),
+    [musteriBazliNormalUretimler, normalUretimAramaMetni],
+  );
+
+  const fasonUretimFilteredData = useMemo(
+    () =>
+      Object.entries(fasonFirmasiBazliFasonUretimler).reduce((acc, [company, items]) => {
+        const filteredItems = items.filter((item) =>
+          item.referansNo.toLowerCase().includes(fasonUretimAramaMetni.toLowerCase()),
+        );
+        if (filteredItems.length > 0) {
+          acc[company] = filteredItems;
+        }
+        return acc;
+      }, {}),
+    [fasonFirmasiBazliFasonUretimler, fasonUretimAramaMetni],
+  );
+
   return (
     <div>
       <PageHeader label="Devam Eden Üretimler" icon={<FcSynchronize />} />
@@ -82,14 +117,32 @@ function DevamEdenUretimler() {
             key: "normal",
             style: collapseStyle.parentCollapseItem,
             label: (
-              <Flex>
-                <div style={collapseStyle.parentCollapseHeader}>Star Metal Üretimleri</div>
-                <CountBadge>{devamEdenUretimler.normalUretimler?.length}</CountBadge>
-              </Flex>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Flex>
+                  <div style={collapseStyle.parentCollapseHeader}>Star Metal Üretimleri</div>
+                  <CountBadge>
+                    {Object.values(normalUretimFilteredData).reduce(
+                      (total, company) => total + company.length,
+                      0,
+                    )}
+                  </CountBadge>
+                </Flex>
+                <Input.Search
+                  enterButton
+                  placeholder="Referans Girin"
+                  onChange={(e) => setNormalUretimAramaMetni(e.target.value)}
+                  value={normalUretimAramaMetni}
+                  style={{ width: "240px" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                />
+              </div>
             ),
             children: (
               <NormalUretimlerTablo
-                musteriBazliKayitlar={musteriBazliNormalUretimler}
+                musteriBazliKayitlar={normalUretimFilteredData}
                 uretimiSilFunc={uretimiSil}
               />
             ),
@@ -98,14 +151,32 @@ function DevamEdenUretimler() {
             key: "fason",
             style: collapseStyle.parentCollapseItem,
             label: (
-              <Flex>
-                <div style={collapseStyle.parentCollapseHeader}>Fason Üretimler</div>
-                <CountBadge>{devamEdenUretimler.fasonUretimler?.length}</CountBadge>
-              </Flex>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Flex>
+                  <div style={collapseStyle.parentCollapseHeader}>Fason Üretimler</div>
+                  <CountBadge>
+                    {Object.values(fasonUretimFilteredData).reduce(
+                      (total, company) => total + company.length,
+                      0,
+                    )}
+                  </CountBadge>
+                </Flex>
+                <Input.Search
+                  enterButton
+                  placeholder="Referans Girin"
+                  onChange={(e) => setFasonUretimAramaMetni(e.target.value)}
+                  value={fasonUretimAramaMetni}
+                  style={{ width: "240px" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                />
+              </div>
             ),
             children: (
               <FasonUretimlerTablo
-                fasonFirmasiBazliKayitlar={fasonFirmasiBazliFasonUretimler}
+                fasonFirmasiBazliKayitlar={fasonUretimFilteredData}
                 uretimiSilFunc={uretimiSil}
               />
             ),
