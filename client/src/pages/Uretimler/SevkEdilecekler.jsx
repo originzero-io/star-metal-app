@@ -328,6 +328,7 @@ export default function SevkEdilecekler() {
               <IrsaliyeyeGonder
                 musteriAdi={musteriAdi}
                 selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
                 setSelectedRowKeys={setSelectedRowKeys}
                 setUretimGirisleri={setUretimGirisleri}
               />
@@ -341,8 +342,14 @@ export default function SevkEdilecekler() {
   );
 }
 
-function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUretimGirisleri }) {
-  const musteriKayitlari = selectedRows[musteriAdi];
+function IrsaliyeyeGonder({
+  musteriAdi,
+  selectedRows,
+  setSelectedRows,
+  setSelectedRowKeys,
+  setUretimGirisleri,
+}) {
+  let musteriKayitlari = selectedRows[musteriAdi];
   const { showNotification, showAlert } = useUIContext();
   const { irsaliyeler, setIrsaliyeler } = useDBContext();
 
@@ -416,6 +423,7 @@ function IrsaliyeyeGonder({ musteriAdi, selectedRows, setSelectedRowKeys, setUre
       async onOk() {
         const limit = 10;
         setSelectedRowKeys({}); // seçilmiş bütün alanları temizle
+        setSelectedRows([]);
         try {
           const irsaliyeVerisi = irsaliyeVerisiOlustur(musteriKayitlari);
 

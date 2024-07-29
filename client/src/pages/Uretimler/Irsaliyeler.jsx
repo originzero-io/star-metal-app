@@ -272,29 +272,6 @@ function IrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
   );
 }
 
-const LogoSyncButton = styled(Button)`
-  background: linear-gradient(135deg, #b1e6bc 58%, #a4e5b1 100%);
-
-  color: #090909;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 1.4vmin;
-  margin-bottom: 6px;
-  padding: 2px 15px;
-  border: 1px solid rgb(73, 171, 66);
-  position: absolute;
-  left: 4px;
-
-  &:hover {
-    background: linear-gradient(135deg, #ceecd4 58%, #b6e9c1 100%);
-    color: black !important;
-    border: 1px solid rgb(73, 171, 66) !important;
-  }
-`;
-
 function LogoyaGonderButon({ kayitlar }) {
   const { soforler, plakalar, irsaliyeler, setIrsaliyeler, setDevamEdenUretimler, referanslar } =
     useDBContext();
