@@ -7,7 +7,7 @@ const router = express.Router();
 router.get(
   "/",
   asyncHandler(async (req, res) => {
-    const personeller = await Personel.findAll();
+    const personeller = await Personel.findAll({ order: [["id", "ASC"]] });
     res.send(personeller);
   }),
 );

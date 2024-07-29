@@ -26,6 +26,7 @@ router.get(
           ],
         },
       ],
+      order: [["id", "ASC"]],
     });
     const fasonUretimler = await DFasonUretim.findAll({
       include: [
@@ -42,6 +43,7 @@ router.get(
           ],
         },
       ],
+      order: [["id", "ASC"]],
     });
 
     res.send({ normalUretimler, fasonUretimler });
@@ -183,8 +185,8 @@ router.delete(
 router.get(
   "/tamamlanan",
   asyncHandler(async (req, res) => {
-    const normalUretimler = await TNormalUretim.findAll();
-    const fasonUretimler = await TFasonUretim.findAll();
+    const normalUretimler = await TNormalUretim.findAll({ order: [["id", "ASC"]] });
+    const fasonUretimler = await TFasonUretim.findAll({ order: [["id", "ASC"]] });
 
     res.send({ normalUretimler, fasonUretimler });
   }),

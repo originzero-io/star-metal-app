@@ -17,6 +17,7 @@ router.get(
           as: "Referanslar",
         },
       ],
+      order: [["id", "ASC"]],
     });
     res.send(irsaliyeler);
   }),

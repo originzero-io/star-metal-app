@@ -40,6 +40,7 @@ router.get(
           as: "ReferansUretim",
         },
       ],
+      order: [["logoMalzemeRef", "ASC"]],
     });
 
     res.send(referanslar);
