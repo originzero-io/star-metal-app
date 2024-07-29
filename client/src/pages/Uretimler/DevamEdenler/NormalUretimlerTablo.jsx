@@ -235,7 +235,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       width: 60,
     },
     {
-      title: "Yüzey Alanı",
+      title: "Y.Alanı",
       // dataIndex: ["Referanslar", "referansYuzeyAlani"],
       key: "referansYuzeyAlanı",
       render: (text, record) => record.Referanslar.ReferansUretim.referansYuzeyAlani,

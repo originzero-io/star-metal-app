@@ -113,6 +113,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       })),
       onFilter: (value, record) => record.Referanslar?.islemTipi.indexOf(value) === 0,
       filterSearch: true,
+      width: 100,
     },
     {
       title: "İrsaliye No",
@@ -132,7 +133,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       title: "Gelen Tarih",
       dataIndex: "gelenTarih",
       key: "gelenTarih",
-      width: 135,
+      width: 145,
     },
     {
       title: "Gelen",
@@ -187,7 +188,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       })),
       onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
       filterSearch: true,
-      width: 100,
+      width: 110,
     },
     {
       title: "Müşteri",
@@ -218,7 +219,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       filterSearch: true,
     },
     {
-      title: "Yüzey Alanı",
+      title: "Y.Alanı",
       // dataIndex: ["Referanslar", "referansYuzeyAlani"],
       key: "referansYuzeyAlanı",
       render: (text, record) => record.Referanslar.ReferansUretim?.referansYuzeyAlani,

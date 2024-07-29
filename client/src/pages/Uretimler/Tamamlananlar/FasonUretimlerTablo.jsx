@@ -42,7 +42,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
           </Tag>
         </Tooltip>
       ),
-      width: 110,
+      width: 130,
     },
     {
       title: "Sipariş Tipi",
@@ -57,7 +57,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       })),
       onFilter: (value, record) => record.siparisTipi.indexOf(value) === 0,
       filterSearch: true,
-      width: 100,
+      width: 120,
     },
     {
       title: "Kodu",
@@ -86,6 +86,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       filters: createTableFilterFromData(fasonFirmasiBazliKayitlar[fasonFirmasi], "iade"),
       onFilter: (value, record) => record.iade.indexOf(value) === 0,
       filterSearch: true,
+      width: 80,
     },
     {
       title: "İrsaliye No",

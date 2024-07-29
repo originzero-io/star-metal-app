@@ -201,7 +201,7 @@ export default function UretimGirisi({ record }) {
       showModal({
         title: "Sevkiyat Kartı",
         content: <SevkiyatKarti record={sevkiyatKartiKayit} />,
-        width: 800,
+        width: 1200,
       });
       showPanel(false);
     }
@@ -223,7 +223,7 @@ export default function UretimGirisi({ record }) {
               <Button
                 type="primary"
                 icon={<FormOutlined />}
-                onClick={terazidenOlcumAl}
+                onClick={fakeTeraziOlcumHandler}
                 loading={teraziLoading}
               >
                 {teraziLoading ? "Ölçüm Alınıyor..." : "Teraziden Ölçüm Al"}

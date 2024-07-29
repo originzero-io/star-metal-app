@@ -304,7 +304,7 @@ export default function SevkEdilecekler() {
                             content: React.createElement(SevkiyatKarti, {
                               record: selectedRows[musteriAdi][0],
                             }),
-                            width: 1500,
+                            width: 1200,
                           })
                         }
                       >

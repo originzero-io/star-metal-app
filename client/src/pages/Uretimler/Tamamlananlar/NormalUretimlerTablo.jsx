@@ -22,7 +22,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       key: "id",
       render: (text) => <IdBadge value={text} />,
       sorter: (a, b) => a.id - b.id,
-      width: 72,
+      width: 80,
     },
     {
       title: "Sipariş Tipi",
@@ -37,7 +37,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       ),
       onFilter: (value, record) => record.siparisTipi.indexOf(value) === 0,
       filterSearch: true,
-      width: 100,
+      width: 120,
     },
     {
       title: "Kodu",
@@ -66,6 +66,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       filters: createTableFilterFromData(musteriBazliKayitlar[musteriAdi], "iade"),
       onFilter: (value, record) => record.iade.indexOf(value) === 0,
       filterSearch: true,
+      width: 70,
     },
     {
       title: "İrsaliye No",
@@ -77,7 +78,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       title: "Gelen Tarih",
       dataIndex: "gelenTarih",
       key: "gelenTarih",
-      width: 160,
+      width: 140,
     },
     {
       title: "Gelen",
@@ -85,6 +86,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       key: "gelenMiktar",
       sorter: (a, b) => a.gelenMiktar - b.gelenMiktar,
       render: (text) => <ColumnBadge value={text} />,
+      width: 100,
     },
     {
       title: "Giden",
@@ -92,6 +94,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       key: "gidenMiktar",
       sorter: (a, b) => a.gidenMiktar - b.gidenMiktar,
       render: (text) => <ColumnBadge value={text} />,
+      width: 100,
     },
     {
       title: "Kalan",
@@ -99,6 +102,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       key: "kalanMiktar",
       sorter: (a, b) => a.kalanMiktar - b.kalanMiktar,
       render: (text) => <ColumnBadge value={text} />,
+      width: 100,
     },
     {
       title: "Üretilen",
@@ -106,13 +110,14 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       key: "uretilenMiktar",
       sorter: (a, b) => a.uretilenMiktar - b.uretilenMiktar,
       render: (text) => <ColumnBadge value={text} />,
+      width: 100,
     },
     {
       title: "Üretilmeyen",
       dataIndex: "uretilmeyenMiktar",
       key: "uretilmeyenMiktar",
       sorter: (a, b) => a.uretilmeyenMiktar - b.uretilmeyenMiktar,
-      width: 120,
+      width: 110,
     },
     {
       title: "Yüzey Alanı",
@@ -155,7 +160,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
             hideDefaultTitleButtons
-            scroll={{ x: 1700 }}
+            scroll={{ x: 1600 }}
             contextMenu={{
               extraItems: (record) => [
                 user.yetki !== "operator" && {
