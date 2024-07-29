@@ -110,7 +110,7 @@ export default function TableGod({
           // bordered
           pagination={
             pagination && {
-              defaultPageSize: 20,
+              defaultPageSize: 50,
               showSizeChanger: true,
             }
           }
@@ -181,9 +181,9 @@ export default function TableGod({
             }
           }
           loading={loading}
-          // sticky={{
-          //   offsetHeader: 64,
-          // }}
+          sticky={{
+            offsetHeader: 28,
+          }}
           scroll={scroll}
         />
       </div>

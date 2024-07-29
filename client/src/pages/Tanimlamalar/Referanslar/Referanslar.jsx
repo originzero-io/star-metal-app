@@ -67,7 +67,7 @@ function Referanslar() {
         width: 150,
       },
       {
-        title: "Sipariş Tipi",
+        title: "Tipi",
         dataIndex: "siparisTipi",
         key: "siparisTipi",
         filters: createTableFilterFromData(referanslar, "siparisTipi"),
@@ -120,13 +120,14 @@ function Referanslar() {
                 textOverflow: "ellipsis",
                 background: "#d8f4fc",
                 fontWeight: "600",
+                padding: 4,
               }}
             >
               {text}
             </Tag>
           </Tooltip>
         ),
-        width: 120,
+        width: 135,
       },
       {
         title: "Parça Adı",

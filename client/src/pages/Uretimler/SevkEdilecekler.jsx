@@ -69,7 +69,7 @@ export default function SevkEdilecekler() {
       sorter: (a, b) => a.id - b.id,
       filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "uretimId"),
       onFilter: (value, _record) => _record.uretimId === value,
-      width: 70,
+      width: 120,
     },
     {
       title: "Uretim Girişi ID",
@@ -77,7 +77,7 @@ export default function SevkEdilecekler() {
       key: "id",
       render: (text) => <IdBadge value={text} />,
       sorter: (a, b) => a.id - b.id,
-      width: 150,
+      width: 120,
     },
     {
       title: "Kodu",
@@ -133,7 +133,7 @@ export default function SevkEdilecekler() {
         return fasonFirmasi.indexOf(value) === 0;
       },
       filterSearch: true,
-      width: 70,
+      width: 170,
     },
     {
       title: "Üretim Tarihi",
@@ -523,8 +523,22 @@ function IrsaliyeyeGonder({
   return (
     <div>
       {musteriKayitlari?.length > 0 && (
-        <Badge count={seciliFarkliReferansSayisi} overflowCount={99999999} color="#44961a">
-          <Button onClick={irsaliyeyeGonder}>İrsaliyeye Gönder</Button>
+        <Badge count={seciliFarkliReferansSayisi} overflowCount={99999999} color="blue">
+          <Button
+            style={{
+              background: "linear-gradient(135deg, #d3e9fb 43%, #c9e2fb 100%)",
+              color: "#090909",
+              fontWeight: "500",
+              fontSize: "1.5vmin",
+              border: "1px solid rgb(87, 161, 225)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onClick={irsaliyeyeGonder}
+          >
+            İrsaliyeye Gönder
+          </Button>
         </Badge>
       )}
     </div>

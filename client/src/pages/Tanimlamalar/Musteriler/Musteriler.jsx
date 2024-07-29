@@ -1,5 +1,5 @@
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { Badge, Button, Modal } from "antd";
+import { Badge, Button, Modal, Tag, Tooltip } from "antd";
 import { useMemo, useState } from "react";
 
 import ColumnBadge from "components/shared/ColumnBadge";
@@ -40,7 +40,7 @@ function Musteriler() {
         width: 80,
       },
       {
-        title: "Firma Tipi",
+        title: "Tipi",
         dataIndex: "sahisFirmasi",
         key: "sahisFirmasi",
         render: (value, record) => (
@@ -54,7 +54,7 @@ function Musteriler() {
           { text: "Tüzel", value: 0 },
         ],
         onFilter: (value, record) => record.sahisFirmasi === value,
-        width: 100,
+        width: 80,
       },
       {
         title: "Unvan",
@@ -64,9 +64,25 @@ function Musteriler() {
         onFilter: (value, record) => record.unvani.indexOf(value) === 0,
         filterSearch: true,
         render: (text, record) => (
-          <ColumnBadge color={record.sahisFirmasi ? "#fbfaf1" : "#e7f3ff"} value={text} />
+          <Tooltip title={text}>
+            <Tag
+              style={{
+                width: "200px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                background: record.sahisFirmasi ? "#fbfaf1" : "#e7f3ff",
+                fontSize: "13px",
+                fontWeight: "500",
+                padding: "4px",
+                border: "1px solid #888888",
+              }}
+            >
+              {text}
+            </Tag>
+          </Tooltip>
         ),
-        width: 350,
+        width: 220,
       },
       {
         title: "Adı",
@@ -99,7 +115,7 @@ function Musteriler() {
         title: "Adres",
         dataIndex: "adres",
         key: "adres",
-        // width: 200,
+        width: 240,
       },
       {
         title: "İl",
@@ -108,7 +124,7 @@ function Musteriler() {
         filters: createTableFilterFromData(musteriler, "il"),
         onFilter: (value, record) => record.il.indexOf(value) === 0,
         filterSearch: true,
-        // width: 200,
+        width: 100,
       },
       {
         title: "İlçe",
@@ -117,31 +133,22 @@ function Musteriler() {
         filters: createTableFilterFromData(musteriler, "ilce"),
         onFilter: (value, record) => record.ilce.indexOf(value) === 0,
         filterSearch: true,
-        // width: 200,
-      },
-      {
-        title: "Ülke",
-        dataIndex: "ulke",
-        key: "ulke",
-        filters: createTableFilterFromData(musteriler, "ulke"),
-        onFilter: (value, record) => record.ulke.indexOf(value) === 0,
-        filterSearch: true,
-        // width: 200,
+        width: 100,
       },
       {
         title: "Posta Kodu",
         dataIndex: "postaKodu",
         key: "postaKodu",
-        // width: 200,
+        width: 100,
       },
       {
-        title: "Vergi Dairesi",
+        title: "V. Dairesi",
         dataIndex: "vergiDairesi",
         key: "vergiDairesi",
         filters: createTableFilterFromData(musteriler, "vergiDairesi"),
         onFilter: (value, record) => record.vergiDairesi.indexOf(value) === 0,
         filterSearch: true,
-        width: 100,
+        width: 130,
       },
       {
         title: "Vergi No",
@@ -150,7 +157,7 @@ function Musteriler() {
         filters: createTableFilterFromData(musteriler, "vergiNo"),
         onFilter: (value, record) => record.vergiNo.indexOf(value) === 0,
         filterSearch: true,
-        // width: 150,
+        width: 130,
       },
       {
         title: "Kimlik No",
@@ -159,7 +166,7 @@ function Musteriler() {
         filters: createTableFilterFromData(musteriler, "kimlikNo"),
         onFilter: (value, record) => record.kimlikNo.indexOf(value) === 0,
         filterSearch: true,
-        // width: 150,
+        width: 120,
       },
       {
         title: "Telefon",
