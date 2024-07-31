@@ -9,7 +9,7 @@ import { RiCustomerServiceLine } from "react-icons/ri";
 import { TbRulerMeasure } from "react-icons/tb";
 
 import { AppstoreAddOutlined, CarOutlined } from "@ant-design/icons";
-import { Button, Divider } from "antd";
+import { Button, Divider, Tooltip } from "antd";
 import { useAuth } from "context/AuthProvider";
 import { useDBContext } from "context/DBProvider";
 import { useMemo } from "react";
@@ -21,7 +21,7 @@ import UserCard from "./UserCard";
 
 const ContainerStyled = styled.div`
   height: 100%;
-  width: 11%;
+  width: 13%;
   display: flex;
   flex-direction: column;
   padding-top: 10px;
@@ -160,7 +160,17 @@ function NavigationMenu() {
   useDetectUserInteraction();
 
   const { showPanel, selectedPage, setSelectedPage } = useUIContext();
-  const { musteriler, referanslar, ambalajlar, soforler, plakalar, personeller } = useDBContext();
+  const {
+    musteriler,
+    referanslar,
+    ambalajlar,
+    soforler,
+    plakalar,
+    personeller,
+    devamEdenUretimler,
+    irsaliyeler,
+  } = useDBContext();
+
   const { user } = useAuth();
 
   const pages = useMemo(
@@ -180,15 +190,22 @@ function NavigationMenu() {
         // },
       ],
       uretim: [
-        // {
-        //   title: "Gelen Malzeme Kaydı",
-        //   icon: <FolderAddTwoTone twoToneColor="#5c0099" />,
-        //   link: "/gelen-malzeme-kayit",
-        // },
         {
           title: "Devam Edenler",
           icon: <FcSynchronize />,
           link: "/uretim/devam-eden",
+          dataLength: (
+            <div>
+              <Tooltip title="Star Metal" placement="right" color="#0887ef">
+                <div style={{ borderBottom: "1px solid" }}>
+                  {devamEdenUretimler?.normalUretimler?.length}
+                </div>
+              </Tooltip>
+              <Tooltip title="Fason" placement="right" color="#0887ef">
+                <div>{devamEdenUretimler?.fasonUretimler?.length}</div>
+              </Tooltip>
+            </div>
+          ),
         },
         {
           title: "Sevk Edilecekler",
@@ -199,6 +216,7 @@ function NavigationMenu() {
           title: "İrsaliye Kesilecekler",
           icon: <FcRules />,
           link: "/uretim/irsaliye-sayfasi",
+          dataLength: irsaliyeler.length,
         },
         {
           title: "Tamamlananlar",
@@ -268,7 +286,17 @@ function NavigationMenu() {
         },
       ],
     }),
-    [musteriler, referanslar, plakalar, soforler, ambalajlar, personeller, user],
+    [
+      musteriler,
+      referanslar,
+      plakalar,
+      soforler,
+      ambalajlar,
+      personeller,
+      user,
+      devamEdenUretimler,
+      irsaliyeler,
+    ],
   );
 
   return (
@@ -313,7 +341,7 @@ function NavigationMenu() {
                           <MenuListGroupIcon>{content.icon}</MenuListGroupIcon>
                           <MenuListGroupItemTitle>{content.title} </MenuListGroupItemTitle>
                         </div>
-                        {content.dataLength && content.dataLength > 0 ? (
+                        {content.dataLength ? (
                           <MenuListGroupItemBadge selected={selectedPage === content.link}>
                             {content.dataLength}
                           </MenuListGroupItemBadge>

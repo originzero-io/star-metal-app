@@ -66,7 +66,7 @@ router.get(
       ],
       where: {
         uretimId: req.params.id,
-        // referansNo: req.params.referansNo,
+        referansNo: req.params.referansNo,
       },
       order: [["id", "ASC"]],
     });

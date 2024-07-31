@@ -35,7 +35,7 @@ const AppWrapperStyled = styled.div`
 `;
 
 const PageWrapperStyled = styled.div`
-  width: 89%;
+  width: 87%;
   padding: 10px;
   padding-left: 14px;
   overflow: auto;

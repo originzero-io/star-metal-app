@@ -17,29 +17,6 @@ function DevamEdenUretimler() {
   const { devamEdenUretimler, setDevamEdenUretimler, setIrsaliyeler } = useDBContext();
   const { showNotification } = useUIContext();
 
-  const uretimiSil = (record) => {
-    Modal.confirm({
-      title: "Emin misiniz?",
-      content: `${record.id} numaralı üretim kaydını silmek üzeresiniz. Bu kaydı sildiğinizde üretime ait veriler Sevk Edilecekler ve İrsaliye Sayfasından da silinecek. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
-      okText: "Tamam",
-      cancelText: "İptal",
-      async onOk() {
-        await devamEdenUretimHttp.uretimiSil(record);
-        const newDevamEdenUretimler = await devamEdenUretimHttp.getData();
-        const newIrsaliyeler = await irsaliyeHttp.getData();
-        setDevamEdenUretimler(newDevamEdenUretimler);
-        setIrsaliyeler(newIrsaliyeler);
-        showNotification(
-          "success",
-          `${record.id} numaralı üretim kaydı silindi. Bu üretime bağlı üretim girişi ve irsaliye kayıtları da silindi.`,
-        );
-      },
-      onCancel() {
-        showNotification("warning", "İşlem iptal edildi");
-      },
-    });
-  };
-
   const [musteriBazliNormalUretimler, setMusteriBazliNormalUretimler] = useState({});
   const [fasonFirmasiBazliFasonUretimler, setFasonFirmasiBazliFasonUretimler] = useState({});
 
@@ -103,6 +80,29 @@ function DevamEdenUretimler() {
       }, {}),
     [fasonFirmasiBazliFasonUretimler, fasonUretimAramaMetni],
   );
+
+  const uretimiSil = (record) => {
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content: `${record.id} numaralı üretim kaydını silmek üzeresiniz. Bu kaydı sildiğinizde üretime ait veriler Sevk Edilecekler ve İrsaliye Sayfasından da silinecek. Bu işlemi gerçekleştirmek istediğinizden emin misiniz?`,
+      okText: "Tamam",
+      cancelText: "İptal",
+      async onOk() {
+        await devamEdenUretimHttp.uretimiSil(record);
+        const newDevamEdenUretimler = await devamEdenUretimHttp.getData();
+        const newIrsaliyeler = await irsaliyeHttp.getData();
+        setDevamEdenUretimler(newDevamEdenUretimler);
+        setIrsaliyeler(newIrsaliyeler);
+        showNotification(
+          "success",
+          `${record.id} numaralı üretim kaydı silindi. Bu üretime bağlı üretim girişi ve irsaliye kayıtları da silindi.`,
+        );
+      },
+      onCancel() {
+        showNotification("warning", "İşlem iptal edildi");
+      },
+    });
+  };
 
   return (
     <div>
