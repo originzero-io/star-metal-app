@@ -223,7 +223,7 @@ export default function UretimGirisi({ record }) {
               <Button
                 type="primary"
                 icon={<FormOutlined />}
-                onClick={fakeTeraziOlcumHandler}
+                onClick={terazidenOlcumAl}
                 loading={teraziLoading}
               >
                 {teraziLoading ? "Ölçüm Alınıyor..." : "Teraziden Ölçüm Al"}

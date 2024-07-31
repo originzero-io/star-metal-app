@@ -47,9 +47,9 @@ export const DBProvider = ({ children }) => {
 
       const dbReferanslar = await referanslarHttp.getData();
 
-      const combinedReferanslar = await referanslarHttp.logoIleEsle(dbReferanslar);
+      // const combinedReferanslar = await referanslarHttp.logoIleEsle(dbReferanslar);
 
-      setReferanslar(combinedReferanslar);
+      setReferanslar(dbReferanslar);
       showNotification("success", "Referanslar veri tabanından alındı.");
 
       const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
@@ -151,8 +151,8 @@ export const DBProvider = ({ children }) => {
   useEffect(() => {
     async function fetchAllState() {
       await fetchReferanslar();
+      await fetchDevamEdenUretimler();
       await Promise.all([
-        fetchDevamEdenUretimler(),
         fetchIrsaliyeler(),
         fetchMusteriler(),
         fetchAmbalajlar(),
