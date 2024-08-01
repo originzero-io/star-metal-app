@@ -272,7 +272,7 @@ router.put(
     const referansUretim = await ReferansUretim.findOne({ where: { logoMalzemeRef: yeniVeri.logoMalzemeRef } });
 
     if (referansUretim) {
-      if (req.file && resimUrl) {
+      if (req.file) {
         // Yeni resmi kaydet
         resimUrl = `${yeniVeri.referansNo}.${req.file.mimetype.split("/")[1]}`;
         const newFilePath = `${findDirname(import.meta.url)}/../uploads/referanslar/${resimUrl}`;

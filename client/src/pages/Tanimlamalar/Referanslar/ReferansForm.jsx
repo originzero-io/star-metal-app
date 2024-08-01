@@ -50,14 +50,17 @@ export default function ReferansForm({ record, type }) {
 
   useEffect(() => {
     if (type === "update") {
-      const initialFileList = [
-        {
+      const initialFileList = [];
+
+      if (record.ReferansUretim?.resimUrl) {
+        initialFileList.push({
           uid: "-1",
-          name: record.ReferansUretim?.resimUrl,
+          name: record.ReferansUretim.resimUrl,
           status: "done",
-          url: `${getUrlByEnvVariables()}/uploads/referanslar/${record.ReferansUretim?.resimUrl}`,
-        },
-      ];
+          url: `${getUrlByEnvVariables()}/uploads/referanslar/${record.ReferansUretim.resimUrl}`,
+        });
+      }
+
       setFileList(initialFileList);
 
       form.setFieldsValue({
@@ -67,7 +70,7 @@ export default function ReferansForm({ record, type }) {
         referansYuzeyAlani: record?.ReferansUretim?.referansYuzeyAlani || 0,
         resimUrl: record?.ReferansUretim?.resimUrl || "",
         not: record?.ReferansUretim?.not || "",
-        photo: initialFileList,
+        photo: initialFileList.length > 0 ? initialFileList : undefined,
       });
     }
   }, [form, type, record]);
