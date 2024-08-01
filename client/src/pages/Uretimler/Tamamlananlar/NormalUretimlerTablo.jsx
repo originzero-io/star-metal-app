@@ -120,12 +120,6 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       width: 110,
     },
     {
-      title: "Yüzey Alanı",
-      dataIndex: "referansYuzeyAlani",
-      key: "referansYuzeyAlani",
-      width: 110,
-    },
-    {
       title: "İşlem Tipi",
       // dataIndex: "referansTipi",
       key: "islemTipi",
@@ -170,7 +164,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
                       content: <UretimSevkiyatHareketleri record={record} />,
-                      width: 1400,
+                      width: 1500,
                     }),
                 },
               ],

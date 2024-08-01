@@ -22,12 +22,16 @@ import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
 import { useState } from "react";
 import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
-import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
+import { devamEdenUretimHttp, tamamlananUretimHttp } from "services/crud-server/uretimler.http";
 import { fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
 import ReferansResmi from "./ReferansResmi";
 
-export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimiSilFunc }) {
+export default function FasonUretimlerTablo({
+  fasonFirmasiBazliKayitlar,
+  uretimiSilFunc,
+  tamamlananlaraGonderFunc,
+}) {
   const { user } = useAuth();
 
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
@@ -282,6 +286,30 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
     });
   };
 
+  // const tamamlananlaraGonder = (record) => {
+  //   Modal.confirm({
+  //     title: "Emin misiniz?",
+  //     content: `Bu üretim TAMAMLANANLARA taşınacak.`,
+  //     okText: "Tamam",
+  //     cancelText: "İptal",
+  //     async onOk() {
+  //       try {
+  //         const tamamlananData = {
+  //           ...record,
+  //           uretimId: record.id.toString(),
+  //         };
+
+  //         await tamamlananUretimHttp.addData([{ ...tamamlananData }]);
+  //         const devamEdenler = await devamEdenUretimHttp.getData();
+  //         setDevamEdenUretimler(devamEdenler);
+  //         showNotification("success", `${record.id} sıra no'lu üretim tamamlananlara taşındı.`);
+  //       } catch (error) {
+  //         showAlert("error", error.message);
+  //       }
+  //     },
+  //   });
+  // };
+
   return (
     <Collapse
       bordered={false}
@@ -419,6 +447,16 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                       width: 2000,
                     }),
                 },
+                user.yetki === "admin" &&
+                  record.gelenMiktar === record.sevkEdilenMiktar && {
+                    icon: <CaretRightOutlined style={{ color: "purple" }} />,
+                    title: (
+                      <div style={{ color: "purple", fontWeight: "bold" }}>
+                        Tamamlananlara Gönder
+                      </div>
+                    ),
+                    action: () => tamamlananlaraGonderFunc(record),
+                  },
               ],
             }}
           />

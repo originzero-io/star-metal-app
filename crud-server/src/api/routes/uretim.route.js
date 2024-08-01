@@ -192,26 +192,80 @@ router.get(
   }),
 );
 
+// router.post(
+//   "/tamamlanan",
+//   asyncHandler(async (req, res) => {
+//     const kayitlar = req.body;
+//     const model = { 1: DFasonUretim, 0: DNormalUretim };
+
+//     console.log("kayitlar", kayitlar);
+
+//     // Tüm asenkron işlemleri bir diziye topla
+//     const promises = kayitlar.map(async (kayit) => {
+//       const uretimIdleri = kayit.uretimId.split(",").map(Number);
+
+//       const { fason } = kayit.Referanslar;
+//       const { uretimId } = kayit;
+
+//       try {
+//         const uretimList = await model[fason].findAll({
+//           where: { id: uretimIdleri },
+//           include: [
+//             {
+//               model: Referans,
+//               as: "Referanslar",
+//             },
+//           ],
+//         });
+
+//         for (const uretim of uretimList) {
+//           const kodVar = !uretim.Referanslar.kodu.toLowerCase().includes("yok");
+
+//           if (fason) {
+//             console.log("burdaıym");
+
+//             if (uretim.gelenMiktar === uretim.sevkEdilenMiktar && kodVar) {
+//               await uretimiTamamlananlaraGonder(uretim);
+//             }
+//           } else if (uretim.gelenMiktar === uretim.gidenMiktar && kodVar) {
+//             await uretimiTamamlananlaraGonder(uretim);
+//           }
+//         }
+//       } catch (error) {
+//         console.error(`Tamamlanan üretime taşımada hata: ${uretimId}`, error);
+//         res.send(error);
+//       }
+//     });
+
+//     await Promise.all(promises);
+
+//     res.send("Üretimler kontrol edildi. Tamamlananlar Tamamlanan üretime taşındı.");
+//   }),
+// );
+
 router.post(
   "/tamamlanan",
   asyncHandler(async (req, res) => {
     const kayitlar = req.body;
     const model = { 1: DFasonUretim, 0: DNormalUretim };
 
-    // Tüm asenkron işlemleri bir diziye topla
-    const promises = kayitlar.map(async (kayit) => {
-      const uretimIdleri = kayit.uretimId.split(",").map(Number);
-
-      const { fason } = kayit.Referanslar;
-      const { uretimId } = kayit;
-
-      try {
+    try {
+      // Tüm asenkron işlemleri bir diziye topla
+      const promises = kayitlar.map(async (kayit) => {
+        const uretimIdleri = kayit.uretimId.split(",").map(Number);
+        const { fason } = kayit.Referanslar;
         const uretimList = await model[fason].findAll({
           where: { id: uretimIdleri },
           include: [
             {
               model: Referans,
               as: "Referanslar",
+              include: [
+                {
+                  model: ReferansUretim,
+                  as: "ReferansUretim",
+                },
+              ],
             },
           ],
         });
@@ -227,35 +281,37 @@ router.post(
             await uretimiTamamlananlaraGonder(uretim);
           }
         }
-      } catch (error) {
-        console.error(`Tamamlanan üretime taşımada hata: ${uretimId}`, error);
-        res.send(error);
-      }
-    });
+      });
 
-    await Promise.all(promises);
-
-    res.send("Üretimler kontrol edildi. Tamamlananlar Tamamlanan üretime taşındı.");
+      await Promise.all(promises);
+      res.send("Üretimler kontrol edildi. Tamamlananlar tamamlanan üretime taşındı.");
+    } catch (error) {
+      console.error(`Tamamlanan üretime taşımada hata:`, error);
+      res.status(500).send("İşlem sırasında bir hata oluştu.");
+    }
   }),
 );
 
 async function uretimiTamamlananlaraGonder(uretim) {
-  const { fason, musteriAdi, fasonFirmasi, siparisTipi, kodu, referansYuzeyAlani, islemTipi, resimUrl, not, irsaliyeAciklamasi } = uretim.Referanslar;
+  const { fason, musteriAdi, fasonFirmasi, siparisTipi, kodu, islemTipi, irsaliyeAciklamasi } = uretim.Referanslar;
 
   const devamEdenModel = { 1: DFasonUretim, 0: DNormalUretim };
   const tamamlananModel = { 1: TFasonUretim, 0: TNormalUretim };
+
+  const { id, ...rest } = uretim.dataValues; // tamamlananlarda aynı id ye sahip kayıt varsa sorun olur diye
 
   const eklenenUretim = await tamamlananModel[fason].create({
     musteriAdi,
     fasonFirmasi,
     siparisTipi,
     kodu,
-    referansYuzeyAlani,
     islemTipi,
-    resimUrl,
-    not,
     irsaliyeAciklamasi,
-    ...uretim.dataValues,
+    // referansYuzeyAlani,
+    // resimUrl,
+    // not,
+    // ...uretim.dataValues,
+    ...rest,
   });
 
   await devamEdenModel[fason].destroy({ where: { id: uretim.id } });

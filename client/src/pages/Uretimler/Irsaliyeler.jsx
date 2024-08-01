@@ -116,7 +116,7 @@ export default function Irsaliyeler() {
         key: "siparisTipi",
         render: (text, record) => (
           <ColumnBadge
-            color={record.Referanslar.siparisTipi === "SERİ" ? "volcano" : "purple"}
+            color={record.Referanslar.siparisTipi === "SERİ" ? "#e1f2fa" : "#fcf2e9"}
             value={record.Referanslar.siparisTipi}
           />
         ),
@@ -348,6 +348,38 @@ function LogoyaGonderButon({ kayitlar }) {
     return logoIrsaliye;
   };
 
+  // const handleOk = async (values) => {
+  //   const gonderilecekKayitlar = kayitlar.map((kayit) => ({
+  //     ...kayit,
+  //     sofor: secilenSofor,
+  //     plaka: values.plaka,
+  //     sevkTarihi: getCurrentDateTime(),
+  //     aciklama: values.genelAciklama,
+  //   }));
+
+  //   const { musteriAdi } = kayitlar[0].Referanslar;
+
+  //   try {
+  //     const logoIrsaliye = logoIrsaliyeObjesiOlustur(values.genelAciklama, gonderilecekKayitlar);
+
+  //     await uretimGirisleriHttp.sevkiyatBilgileriniDoldur(
+  //       gonderilecekKayitlar,
+  //       "XXXXX", // logo irsaliye no
+  //     );
+  //     await tamamlananUretimHttp.addData(gonderilecekKayitlar);
+  //     const devamEdenler = await devamEdenUretimHttp.getData();
+  //     const newIrsaliyeler = await irsaliyeHttp.listeyiTemizle(irsaliyeler, gonderilecekKayitlar);
+  //     setIrsaliyeler(newIrsaliyeler);
+  //     setDevamEdenUretimler(devamEdenler);
+  //     setIsModalVisible(false);
+  //     showNotification(
+  //       "success",
+  //       `${musteriAdi} müşterisine ait irsaliye kaydı logoya gönderildi.`,
+  //     );
+  //   } catch (err) {
+  //     showNotification("error", err.message);
+  //   }
+  // };
   const handleOk = async (values) => {
     const gonderilecekKayitlar = kayitlar.map((kayit) => ({
       ...kayit,

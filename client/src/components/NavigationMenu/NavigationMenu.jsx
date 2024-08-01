@@ -196,12 +196,12 @@ function NavigationMenu() {
           link: "/uretim/devam-eden",
           dataLength: (
             <div>
-              <Tooltip title="Star Metal" placement="right" color="#0887ef">
+              <Tooltip title="Star Metal" placement="right" color="#7866eb">
                 <div style={{ borderBottom: "1px solid" }}>
                   {devamEdenUretimler?.normalUretimler?.length}
                 </div>
               </Tooltip>
-              <Tooltip title="Fason" placement="right" color="#0887ef">
+              <Tooltip title="Fason" placement="right" color="#7866eb">
                 <div>{devamEdenUretimler?.fasonUretimler?.length}</div>
               </Tooltip>
             </div>

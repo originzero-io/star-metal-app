@@ -10,7 +10,7 @@ import {
   TruckOutlined,
 } from "@ant-design/icons";
 
-import { Collapse, Flex, Tag, Tooltip } from "antd";
+import { Collapse, Flex, Modal, Tag, Tooltip } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
@@ -23,15 +23,19 @@ import { useUIContext } from "context/UIProvider";
 import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeForm";
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
-import { useEffect, useState } from "react";
-import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
+import { useState } from "react";
+import { devamEdenUretimHttp, tamamlananUretimHttp } from "services/crud-server/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import ReferansResmi from "./ReferansResmi";
 
-export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilFunc }) {
+export default function NormalUretimlerTablo({
+  musteriBazliKayitlar,
+  uretimiSilFunc,
+  tamamlananlaraGonderFunc,
+}) {
   const { user } = useAuth();
 
-  const { showPanel, showModal } = useUIContext();
+  const { showPanel, showModal, showNotification, showAlert } = useUIContext();
   const { setDevamEdenUretimler } = useDBContext();
 
   const [miktarToplam, setMiktarToplam] = useState({});
@@ -390,6 +394,16 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                       width: 2000,
                     }),
                 },
+                user.yetki === "admin" &&
+                  record.gelenMiktar === record.gidenMiktar && {
+                    icon: <CaretRightOutlined style={{ color: "purple" }} />,
+                    title: (
+                      <div style={{ color: "purple", fontWeight: "bold" }}>
+                        Tamamlananlara Gönder
+                      </div>
+                    ),
+                    action: () => tamamlananlaraGonderFunc(record),
+                  },
               ],
             }}
           />

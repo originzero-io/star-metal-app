@@ -9,7 +9,7 @@ import { useUIContext } from "context/UIProvider";
 import { useEffect, useMemo, useState } from "react";
 import { FcSynchronize } from "react-icons/fc";
 import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
-import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
+import { devamEdenUretimHttp, tamamlananUretimHttp } from "services/crud-server/uretimler.http";
 import FasonUretimlerTablo from "./FasonUretimlerTablo";
 import NormalUretimlerTablo from "./NormalUretimlerTablo";
 
@@ -104,6 +104,30 @@ function DevamEdenUretimler() {
     });
   };
 
+  const tamamlananlaraGonder = (record) => {
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content: `Bu üretim TAMAMLANANLARA taşınacak.`,
+      okText: "Tamam",
+      cancelText: "İptal",
+      async onOk() {
+        try {
+          const tamamlananData = {
+            ...record,
+            uretimId: record.id.toString(),
+          };
+
+          await tamamlananUretimHttp.addData([{ ...tamamlananData }]);
+          const devamEdenler = await devamEdenUretimHttp.getData();
+          setDevamEdenUretimler(devamEdenler);
+          showNotification("success", `${record.id} sıra no'lu üretim tamamlananlara taşındı.`);
+        } catch (error) {
+          showNotification("error", error.message);
+        }
+      },
+    });
+  };
+
   return (
     <div>
       <PageHeader label="Devam Eden Üretimler" icon={<FcSynchronize />} />
@@ -144,6 +168,7 @@ function DevamEdenUretimler() {
               <NormalUretimlerTablo
                 musteriBazliKayitlar={normalUretimFilteredData}
                 uretimiSilFunc={uretimiSil}
+                tamamlananlaraGonderFunc={tamamlananlaraGonder}
               />
             ),
           },
@@ -178,6 +203,7 @@ function DevamEdenUretimler() {
               <FasonUretimlerTablo
                 fasonFirmasiBazliKayitlar={fasonUretimFilteredData}
                 uretimiSilFunc={uretimiSil}
+                tamamlananlaraGonderFunc={tamamlananlaraGonder}
               />
             ),
           },

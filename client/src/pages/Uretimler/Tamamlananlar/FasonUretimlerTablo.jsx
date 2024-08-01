@@ -128,11 +128,6 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       sorter: (a, b) => a.sevkEdilenMiktar - b.sevkEdilenMiktar,
     },
     {
-      title: "Yüzey Alanı",
-      key: "referansYuzeyAlanı",
-      render: (text, record) => record.referansYuzeyAlani,
-    },
-    {
       title: "İşlem Tipi",
       render: (text, record) => <ColumnBadge value={record.islemTipi} />,
       key: "islemTipi",
@@ -175,7 +170,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
                       content: <UretimSevkiyatHareketleri record={record} />,
-                      width: 1400,
+                      width: 1500,
                     }),
                 },
               ],
