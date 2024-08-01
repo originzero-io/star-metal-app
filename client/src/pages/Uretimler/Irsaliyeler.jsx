@@ -263,7 +263,6 @@ function IrsaliyeTablo({ data, columns, deleteRecordsFunc }) {
     <TableGod
       dataSource={data}
       columns={columns}
-      hideDefaultTitleButtons
       pagination={false}
       contextMenu={{
         deleteAction: deleteRecordsFunc,

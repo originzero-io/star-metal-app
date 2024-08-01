@@ -281,7 +281,6 @@ export default function SevkEdilecekler() {
                 columns={createColumnsForCustomer(musteriAdi)}
                 pagination={false}
                 scroll={{ x: 1400 }}
-                hideDefaultTitleButtons
                 rowSelection={createRowSelection(musteriAdi)}
                 // rowKey={kayitlar[index].id}
                 rowStyle={(row) =>

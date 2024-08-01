@@ -1,15 +1,12 @@
 /* eslint-disable indent */
-import { Button, Divider, Modal, Table, Tag } from "antd";
+import { Table, Tag } from "antd";
 import RecordContextMenu from "components/shared/RecordContextMenu";
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
-import { downloadExcel } from "react-export-table-to-excel";
 
 import { useDBContext } from "context/DBProvider";
 import { useReactToPrint } from "react-to-print";
 import styled from "styled-components";
-import ExcelIcon from "../../../public/excel.png";
-import PrintButton from "./PrintButton";
 
 const TableTitleWrapperStyled = styled.div`
   display: flex;
@@ -25,7 +22,6 @@ export default function TableGod({
   scroll,
   expandable,
   pagination,
-  hideDefaultTitleButtons,
   actionButtons,
   // contextMenu = { editForm: null, extraItems: [] },
   contextMenu,
@@ -49,34 +45,6 @@ export default function TableGod({
     setContextMenuPosition({ x: event.clientX, y: event.clientY });
     console.log("contextMenu record: ", record);
     setSelectedRecord(record);
-  };
-
-  const downloadExcelHandler = () => {
-    // const header = ["Firstname", "Lastname", "Age"];
-    // const body = [["Edison", "Padilla", 14]];
-
-    Modal.confirm({
-      title: "Emin misiniz?",
-      content: "Bu tablo excel formatında indirilecek.",
-      okText: "Tamam",
-      cancelText: "İptal",
-      onOk() {
-        const header = columns.map((column) => column.title);
-        const body = dataSource.map(({ key, ...rest }) => Object.values(rest));
-
-        downloadExcel({
-          fileName: "Tablo",
-          // sheet: "react-export-table-to-excel",
-          tablePayload: {
-            header,
-            body,
-          },
-        });
-      },
-      onCancel() {
-        console.log("Hayır, vazgeçtim");
-      },
-    });
   };
 
   const getObjectValueByKey = (obj, pathArr) => {
@@ -121,35 +89,10 @@ export default function TableGod({
             }
           }
           title={
-            actionButtons || !hideDefaultTitleButtons
+            actionButtons
               ? () => (
                   <TableTitleWrapperStyled>
-                    <div style={{ display: "flex" }}>
-                      {actionButtons}
-                      {!hideDefaultTitleButtons && (
-                        <>
-                          <Divider
-                            style={{
-                              height: "35px",
-                              background: "#e7e5e5",
-                            }}
-                            type="vertical"
-                          />
-
-                          <PrintButton
-                            style={{ marginRight: "4px" }}
-                            handlePrintFunc={handlePrint}
-                          />
-
-                          <Button onClick={downloadExcelHandler}>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                              <img src={ExcelIcon} width={20} />
-                              <div style={{ marginLeft: "10px" }}>Excel</div>
-                            </div>
-                          </Button>
-                        </>
-                      )}
-                    </div>
+                    <div style={{ display: "flex" }}>{actionButtons}</div>
                   </TableTitleWrapperStyled>
                 )
               : null
@@ -201,7 +144,6 @@ TableGod.propTypes = {
     key: PropTypes.array.isRequired,
   }),
   pagination: PropTypes.bool,
-  hideDefaultTitleButtons: PropTypes.bool,
   hasContextMenu: PropTypes.bool,
   actionButtons: PropTypes.node,
   contextMenu: PropTypes.shape({

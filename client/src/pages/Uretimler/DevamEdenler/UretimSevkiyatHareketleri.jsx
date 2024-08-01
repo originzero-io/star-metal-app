@@ -240,7 +240,6 @@ export default function UretimSevkiyatHareketleri({ record }) {
                 dataSource={kayitlar}
                 columns={columns}
                 pagination={false}
-                hideDefaultTitleButtons
                 scroll={{ x: 1200 }}
               />
             </div>

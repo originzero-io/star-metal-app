@@ -1,18 +1,20 @@
 import { CaretRightOutlined, TruckOutlined } from "@ant-design/icons";
-import { Collapse, Flex, Tag, Tooltip } from "antd";
+import { Collapse, Flex, Modal, Tag, Tooltip } from "antd";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
+import ExcelButton from "components/shared/ExcelButton";
 import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
 import { useAuth } from "context/AuthProvider";
 import { useUIContext } from "context/UIProvider";
+import { downloadExcel } from "react-export-table-to-excel";
 import { createTableFilterFromData } from "utils/table.helper";
 import UretimSevkiyatHareketleri from "../DevamEdenler/UretimSevkiyatHareketleri";
 
 export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimiSilFunc }) {
   const { user } = useAuth();
-  const { showPanel } = useUIContext();
+  const { showPanel, showNotification } = useUIContext();
 
   const createColumnsForCustomer = (fasonFirmasi) => [
     {
@@ -142,6 +144,51 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
     },
   ];
 
+  const downloadExcelHandler = (fasonFirmasi, dataSource) => {
+    // const header = ["Firstname", "Lastname", "Age"];
+    // const body = [["Edison", "Padilla", 14]];
+    const columns = createColumnsForCustomer(fasonFirmasi);
+
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content: "Bu tablo excel formatında indirilecek.",
+      okText: "Tamam",
+      cancelText: "İptal",
+      onOk() {
+        try {
+          const header = columns.map((column) => column.title);
+
+          const body = dataSource.map((data) => ({
+            id: data.id,
+            musteri: data.musteriAdi,
+            siparisTipi: data.siparisTipi,
+            kodu: data.kodu,
+            referansNo: data.referansNo,
+            iade: data.iade,
+            irsaliyeNo: data.irsaliyeNo,
+            gelenTarih: data.gelenTarih,
+            gelenMiktar: data.gelenMiktar,
+            gidenMiktar: data.gidenMiktar,
+            uretilenMiktar: data.uretilenMiktar,
+            sevkEdilenMiktar: data.sevkEdilenMiktar,
+            islemTipi: data.islemTipi,
+          }));
+
+          downloadExcel({
+            fileName: `TAMAMLANANLAR-${fasonFirmasi.split(" ")[0]}.xls`,
+            tablePayload: {
+              header,
+              body,
+            },
+          });
+          showNotification("success", "Excel başarıyla indirildi");
+        } catch (error) {
+          showNotification("error", `Dosya indirilirken hata: ${error.message}`);
+        }
+      },
+    });
+  };
+
   return (
     <Collapse
       bordered={false}
@@ -150,16 +197,25 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       items={Object.entries(fasonFirmasiBazliKayitlar).map(([fasonFirmasi, kayitlar], index) => ({
         key: index.toString(),
         label: (
-          <Flex>
-            <div style={collapseStyle.subCollapseHeader}>{fasonFirmasi}</div>
-            <CountBadge>{kayitlar.length}</CountBadge>
-          </Flex>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Flex>
+              <div style={collapseStyle.subCollapseHeader}>{fasonFirmasi}</div>
+              <CountBadge>{kayitlar.length}</CountBadge>
+            </Flex>
+            {user.yetki !== "operator" && (
+              <ExcelButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  downloadExcelHandler(fasonFirmasi, kayitlar);
+                }}
+              />
+            )}
+          </div>
         ),
         children: (
           <TableGod
             dataSource={kayitlar}
             columns={createColumnsForCustomer(fasonFirmasi)}
-            hideDefaultTitleButtons
             scroll={{ x: 1500 }}
             contextMenu={{
               extraItems: (record) => [

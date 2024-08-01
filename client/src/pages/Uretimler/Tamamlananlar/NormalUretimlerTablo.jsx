@@ -1,19 +1,21 @@
 import { CaretRightOutlined, TruckOutlined } from "@ant-design/icons";
 
-import { Collapse, Flex } from "antd";
+import { Collapse, Flex, Modal } from "antd";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
+import ExcelButton from "components/shared/ExcelButton";
 import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
 import { useAuth } from "context/AuthProvider";
 import { useUIContext } from "context/UIProvider";
+import { downloadExcel } from "react-export-table-to-excel";
 import { createTableFilterFromData } from "utils/table.helper";
 import UretimSevkiyatHareketleri from "../DevamEdenler/UretimSevkiyatHareketleri";
 
 export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilFunc }) {
   const { user } = useAuth();
-  const { showPanel } = useUIContext();
+  const { showPanel, showNotification } = useUIContext();
 
   const createColumnsForCustomer = (musteriAdi) => [
     {
@@ -136,6 +138,51 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
     },
   ];
 
+  const downloadExcelHandler = (musteriAdi, dataSource) => {
+    // const header = ["Firstname", "Lastname", "Age"];
+    // const body = [["Edison", "Padilla", 14]];
+    const columns = createColumnsForCustomer(musteriAdi);
+
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content: "Bu tablo excel formatında indirilecek.",
+      okText: "Tamam",
+      cancelText: "İptal",
+      onOk() {
+        try {
+          const header = columns.map((column) => column.title);
+
+          const body = dataSource.map((data) => ({
+            id: data.id,
+            siparisTipi: data.siparisTipi,
+            kodu: data.kodu,
+            referansNo: data.referansNo,
+            iade: data.iade,
+            irsaliyeNo: data.irsaliyeNo,
+            gelenTarih: data.gelenTarih,
+            gelenMiktar: data.gelenMiktar,
+            gidenMiktar: data.gidenMiktar,
+            kalanMiktar: data.kalanMiktar,
+            uretilenMiktar: data.uretilenMiktar,
+            uretilmeyenMiktar: data.uretilmeyenMiktar,
+            islemTipi: data.islemTipi,
+          }));
+
+          downloadExcel({
+            fileName: `TAMAMLANANLAR-${musteriAdi.split(" ")[0]}.xls`,
+            tablePayload: {
+              header,
+              body,
+            },
+          });
+          showNotification("success", "Excel başarıyla indirildi");
+        } catch (error) {
+          showNotification("error", `Dosya indirilirken hata: ${error.message}`);
+        }
+      },
+    });
+  };
+
   return (
     <Collapse
       bordered={false}
@@ -144,16 +191,25 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       items={Object.entries(musteriBazliKayitlar).map(([musteriAdi, kayitlar], index) => ({
         key: index.toString(),
         label: (
-          <Flex>
-            <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-            <CountBadge>{kayitlar.length}</CountBadge>
-          </Flex>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Flex>
+              <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
+              <CountBadge>{kayitlar.length}</CountBadge>
+            </Flex>
+            {user.yetki !== "operator" && (
+              <ExcelButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  downloadExcelHandler(musteriAdi, kayitlar);
+                }}
+              />
+            )}
+          </div>
         ),
         children: (
           <TableGod
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
-            hideDefaultTitleButtons
             scroll={{ x: 1600 }}
             contextMenu={{
               extraItems: (record) => [

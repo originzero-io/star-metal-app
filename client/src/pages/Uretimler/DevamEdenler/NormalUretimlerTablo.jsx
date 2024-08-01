@@ -9,11 +9,11 @@ import {
   PrinterOutlined,
   TruckOutlined,
 } from "@ant-design/icons";
-
 import { Collapse, Flex, Modal, Tag, Tooltip } from "antd";
 import UretimIsEmriKarti from "components/cards/UretimIsEmriKarti";
 import ColumnBadge from "components/shared/ColumnBadge";
 import CountBadge from "components/shared/CountBadge";
+import ExcelButton from "components/shared/ExcelButton";
 import IdBadge from "components/shared/IdBadge";
 import collapseStyle from "components/shared/StyledCollapse";
 import TableGod from "components/shared/TableGod";
@@ -24,7 +24,8 @@ import MiktarDuzenlemeForm from "pages/Uretimler/DevamEdenler/MiktarDuzenlemeFor
 import UretimGirisi from "pages/Uretimler/DevamEdenler/UretimGirisi";
 import UretimSevkiyatHareketleri from "pages/Uretimler/DevamEdenler/UretimSevkiyatHareketleri";
 import { useState } from "react";
-import { devamEdenUretimHttp, tamamlananUretimHttp } from "services/crud-server/uretimler.http";
+import { downloadExcel } from "react-export-table-to-excel";
+import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
 import ReferansResmi from "./ReferansResmi";
 
@@ -35,7 +36,7 @@ export default function NormalUretimlerTablo({
 }) {
   const { user } = useAuth();
 
-  const { showPanel, showModal, showNotification, showAlert } = useUIContext();
+  const { showPanel, showModal, showNotification } = useUIContext();
   const { setDevamEdenUretimler } = useDBContext();
 
   const [miktarToplam, setMiktarToplam] = useState({});
@@ -261,6 +262,51 @@ export default function NormalUretimlerTablo({
     }));
   };
 
+  const downloadExcelHandler = (musteriAdi, dataSource) => {
+    const columns = createColumnsForCustomer(musteriAdi);
+
+    Modal.confirm({
+      title: "Emin misiniz?",
+      content: "Bu tablo excel formatında indirilecek.",
+      okText: "Tamam",
+      cancelText: "İptal",
+      onOk() {
+        try {
+          const header = columns.map((column) => column.title);
+
+          const body = dataSource.map((data) => ({
+            acil: data.acil ? "ACİL" : "NORMAL",
+            id: data.id,
+            referansNo: data.referansNo,
+            kodu: data.Referanslar.kodu,
+            islemTipi: data.Referanslar.islemTipi,
+            irsaliyeNo: data.irsaliyeNo,
+            gelenTarih: data.gelenTarih,
+            gelenMiktar: data.gelenMiktar,
+            gidenMiktar: data.gidenMiktar,
+            kalanMiktar: data.kalanMiktar,
+            uretilenMiktar: data.uretilenMiktar,
+            uretilmeyenMiktar: data.uretilmeyenMiktar,
+            siparisTipi: data.Referanslar.siparisTipi,
+            iade: data.iade,
+            referansYuzeyAlani: data.Referanslar.ReferansUretim.referansYuzeyAlani,
+          }));
+
+          downloadExcel({
+            fileName: `DEVAM EDENLER-${musteriAdi.split(" ")[0]}.xls`,
+            tablePayload: {
+              header,
+              body,
+            },
+          });
+          showNotification("success", "Excel başarıyla indirildi");
+        } catch (error) {
+          showNotification("error", `Dosya indirilirken hata: ${error.message}`);
+        }
+      },
+    });
+  };
+
   return (
     <Collapse
       bordered={false}
@@ -269,17 +315,26 @@ export default function NormalUretimlerTablo({
       items={Object.entries(musteriBazliKayitlar).map(([musteriAdi, kayitlar], index) => ({
         key: index.toString(),
         label: (
-          <Flex>
-            <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
-            <CountBadge>{kayitlar.length}</CountBadge>
-          </Flex>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Flex>
+              <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
+              <CountBadge>{kayitlar.length}</CountBadge>
+            </Flex>
+            {user.yetki !== "operator" && (
+              <ExcelButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  downloadExcelHandler(musteriAdi, kayitlar);
+                }}
+              />
+            )}
+          </div>
         ),
         children: (
           <TableGod
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
             onChange={(...args) => handleTableChange(...args, index)}
-            hideDefaultTitleButtons
             footer={
               miktarToplam[index]?.state && (
                 <div
