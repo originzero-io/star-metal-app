@@ -29,17 +29,23 @@ function Personeller() {
         key: "yetki",
         render: (text, record) =>
           text === "admin" ? (
-            <Tag color="volcano">Admin</Tag>
+            <Tag color="volcano" style={{ width: "100%", textAlign: "center" }}>
+              Admin
+            </Tag>
           ) : text === "yonetici" ? (
-            <Tag color="purple">Yönetici</Tag>
+            <Tag color="purple" style={{ width: "100%", textAlign: "center" }}>
+              Yönetici
+            </Tag>
           ) : (
-            <Tag color="blue">Operatör</Tag>
+            <Tag color="blue" style={{ width: "100%", textAlign: "center" }}>
+              Operatör
+            </Tag>
           ),
         filters: createTableFilterFromData(personeller, "yetki"),
 
         onFilter: (value, record) => record.yetki.indexOf(value) === 0,
         filterSearch: true,
-        width: 70,
+        width: 130,
       },
       {
         title: "Ad",
