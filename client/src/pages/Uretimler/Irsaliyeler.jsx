@@ -14,7 +14,6 @@ import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import uretimGirisleriHttp from "services/crud-server/uretim-girisleri.http";
 import { devamEdenUretimHttp, tamamlananUretimHttp } from "services/crud-server/uretimler.http";
 import logoGoApi from "services/logoGoApi";
-import styled from "styled-components";
 import { getCurrentDateTime, getCurrentTimeWithLogoFormat } from "utils/time.helper";
 
 export default function Irsaliyeler() {

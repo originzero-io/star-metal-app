@@ -301,16 +301,13 @@ async function uretimiTamamlananlaraGonder(uretim) {
   const { id, ...rest } = uretim.dataValues; // tamamlananlarda aynı id ye sahip kayıt varsa sorun olur diye
 
   const eklenenUretim = await tamamlananModel[fason].create({
+    uretimId: uretim.id, // devam eden üretimlerdeki id (sevkiyat hareketleri için gerekli)
     musteriAdi,
     fasonFirmasi,
     siparisTipi,
     kodu,
     islemTipi,
     irsaliyeAciklamasi,
-    // referansYuzeyAlani,
-    // resimUrl,
-    // not,
-    // ...uretim.dataValues,
     ...rest,
   });
 

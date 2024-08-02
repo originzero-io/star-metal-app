@@ -169,8 +169,11 @@ DFasonUretim.afterUpdate(async (instance, options) => {
 export const TNormalUretim = sequelize.define(
   "TNormalUretimler",
   {
+    uretimId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     ...ortakSütunlar,
-
     kalanMiktar: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -182,7 +185,6 @@ export const TNormalUretim = sequelize.define(
     acil: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false,
     },
     musteriAdi: {
       type: DataTypes.STRING(70),
@@ -226,6 +228,10 @@ export const TNormalUretim = sequelize.define(
 export const TFasonUretim = sequelize.define(
   "TFasonUretimler",
   {
+    uretimId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     ...ortakSütunlar,
     sevkEdilenMiktar: {
       type: DataTypes.INTEGER,
@@ -276,5 +282,5 @@ export const TFasonUretim = sequelize.define(
 
 // DNormalUretim.sync({ force: true });
 // DFasonUretim.sync({ force: true });
-// TNormalUretim.sync({ force: true });
-// TFasonUretim.sync({ force: true });
+// TNormalUretim.sync({ alter: true });
+// TFasonUretim.sync({ alter: true });

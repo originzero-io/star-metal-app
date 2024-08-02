@@ -26,6 +26,13 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       width: 77,
     },
     {
+      title: "Uretim ID",
+      dataIndex: "uretimId",
+      key: "uretimId",
+      render: (text) => <IdBadge value={text} />,
+      width: 80,
+    },
+    {
       title: "Müşteri",
       // dataIndex: "musteriAdi",
       key: "fasonFirmasi",

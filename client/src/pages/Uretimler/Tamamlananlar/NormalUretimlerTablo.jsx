@@ -27,6 +27,13 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
       width: 80,
     },
     {
+      title: "Uretim ID",
+      dataIndex: "uretimId",
+      key: "uretimId",
+      render: (text) => <IdBadge value={text} />,
+      width: 80,
+    },
+    {
       title: "Sipariş Tipi",
       dataIndex: "siparisTipi",
       key: "siparisTipi",
@@ -219,7 +226,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
                   action: () =>
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
-                      content: <UretimSevkiyatHareketleri record={record} />,
+                      content: <UretimSevkiyatHareketleri record={record} source="tamamlanan" />,
                       width: 1500,
                     }),
                 },

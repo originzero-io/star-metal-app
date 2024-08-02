@@ -37,7 +37,7 @@ const TopSectionItemValue = styled.div`
   // border: 1px solid rgb(128, 84, 206);
 `;
 
-export default function UretimSevkiyatHareketleri({ record }) {
+export default function UretimSevkiyatHareketleri({ record, source = "devamEden" }) {
   const { setLoading, loading } = useDBContext();
   const { showModal } = useUIContext();
   const [uretimGirisleri, setUretimGirisleri] = useState({});
@@ -46,7 +46,7 @@ export default function UretimSevkiyatHareketleri({ record }) {
     async function fetchData() {
       setLoading(true);
       const uretimResponse = await uretimGirisleriHttp.getDataByRecord(
-        record.id,
+        source === "tamamlanan" ? record.uretimId : record.id,
         record.referansNo || record.Referanslar.referansNo,
       );
       console.log("Üretim Id'ye göre sevkiyat hareketleri: ", Object.entries(uretimGirisleri));
