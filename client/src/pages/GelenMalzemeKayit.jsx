@@ -169,7 +169,7 @@ export default function GelenMalzemeKayit() {
     if (form.getFieldValue("musteriAdi")) {
       addRowFunc();
     } else {
-      showAlert("warning", "Malzeme eklemeden önce müşteri seçimi yapın.");
+      showAlert("warning", "Satır eklemeden önce müşteri seçimi yapın.");
     }
   };
 
@@ -416,7 +416,7 @@ export default function GelenMalzemeKayit() {
                     justifyContent: "center",
                   }}
                 >
-                  Malzeme Ekle
+                  Satır Ekle
                 </Button>
               </Form.Item>
             </div>
