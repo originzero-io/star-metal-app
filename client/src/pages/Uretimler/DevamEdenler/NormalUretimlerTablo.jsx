@@ -316,8 +316,8 @@ export default function NormalUretimlerTablo({
         key: index.toString(),
         label: (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Flex>
-              <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
+            <Flex align="center">
+              <div style={collapseStyle.subCollapseHeader}>{musteriAdi.split(" ")[0]}</div>
               <CountBadge>{kayitlar.length}</CountBadge>
             </Flex>
             {user.yetki !== "operator" && (

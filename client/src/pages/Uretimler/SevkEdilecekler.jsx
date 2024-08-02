@@ -269,8 +269,8 @@ export default function SevkEdilecekler() {
           items={Object.entries(uretimGirisleri).map(([musteriAdi, kayitlar], index) => ({
             key: index.toString(),
             label: (
-              <Flex>
-                <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
+              <Flex align="center">
+                <div style={collapseStyle.subCollapseHeader}>{musteriAdi.split(" ")[0]}</div>
                 <CountBadge>{kayitlar.length}</CountBadge>
               </Flex>
             ),

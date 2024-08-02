@@ -385,7 +385,7 @@ function Referanslar() {
                 showModal({
                   title: `Referans No: ${record.referansNo} `,
                   content: (
-                    <Flex justify="center">
+                    <Flex align="center" justify="center">
                       <img
                         alt="Resim bulunamadı"
                         src={`${getUrlByEnvVariables()}/uploads/referanslar/${

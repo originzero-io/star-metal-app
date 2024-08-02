@@ -344,8 +344,8 @@ export default function FasonUretimlerTablo({
         key: index.toString(),
         label: (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Flex>
-              <div style={collapseStyle.subCollapseHeader}>{fasonFirmasi}</div>
+            <Flex align="center">
+              <div style={collapseStyle.subCollapseHeader}>{fasonFirmasi.split(" ")[0]}</div>
               <CountBadge>{kayitlar.length}</CountBadge>
             </Flex>
             {user.yetki !== "operator" && (

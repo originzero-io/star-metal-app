@@ -3,7 +3,7 @@ import getUrlByEnvVariables from "utils/getServerUrl";
 
 export default function ReferansResmi({ record }) {
   return (
-    <Flex justify="center">
+    <Flex align="center" justify="center">
       <img
         alt="Resim bulunamadı"
         src={`${getUrlByEnvVariables()}/uploads/referanslar/${

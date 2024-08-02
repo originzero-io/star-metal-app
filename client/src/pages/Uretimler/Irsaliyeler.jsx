@@ -172,7 +172,7 @@ export default function Irsaliyeler() {
           {
             key: "sevk",
             label: (
-              <Flex>
+              <Flex align="center">
                 <div style={collapseStyle.parentCollapseHeader}>Sevk İrsaliyeleri</div>
                 <CountBadge>{sevkIrsaliyeleri.length}</CountBadge>
               </Flex>
@@ -189,8 +189,10 @@ export default function Irsaliyeler() {
                   Object.entries(tipBazliIrsaliye.sevk).map(([musteriAdi, kayitlar], index) => ({
                     key: index.toString(),
                     label: (
-                      <Flex>
-                        <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
+                      <Flex align="center">
+                        <div style={collapseStyle.subCollapseHeader}>
+                          {musteriAdi.split(" ")[0]}
+                        </div>
                         <CountBadge>{kayitlar.length}</CountBadge>
                       </Flex>
                     ),
@@ -212,7 +214,7 @@ export default function Irsaliyeler() {
           {
             key: "tasima",
             label: (
-              <Flex>
+              <Flex align="center">
                 <div style={collapseStyle.parentCollapseHeader}>Fason & İade İrsaliyeleri</div>
                 <CountBadge>{tasimaIrsaliyeleri.length}</CountBadge>
               </Flex>
@@ -231,8 +233,10 @@ export default function Irsaliyeler() {
                   Object.entries(tipBazliIrsaliye.tasima).map(([musteriAdi, kayitlar], index) => ({
                     key: index.toString(),
                     label: (
-                      <Flex>
-                        <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
+                      <Flex align="center">
+                        <div style={collapseStyle.subCollapseHeader}>
+                          {musteriAdi.split(" ")[0]}
+                        </div>
                         <CountBadge>{kayitlar.length}</CountBadge>
                       </Flex>
                     ),

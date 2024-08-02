@@ -12,7 +12,7 @@ const collapseStyle = {
   },
   subCollapseHeader: {
     fontSize: "15px",
-    fontWeight: "500",
+    fontWeight: "600",
     color: "#4d4d4d",
   },
   subCollapseItem: {

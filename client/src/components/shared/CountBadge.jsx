@@ -1,11 +1,11 @@
 import { Tag } from "antd";
 
-export default function CountBadge({ color = "#f6f1fd", children, ...rest }) {
+export default function CountBadge({ color = "#f9f7fb", children, ...rest }) {
   return (
     <Tag
       color={color}
       style={{
-        border: "1px solid #a782f6",
+        border: "1px solid #baa1ef",
         color: "black",
         fontWeight: "bold",
         marginLeft: 10,

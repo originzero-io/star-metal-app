@@ -142,7 +142,7 @@ function DevamEdenUretimler() {
             style: collapseStyle.parentCollapseItem,
             label: (
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Flex>
+                <Flex align="center">
                   <div style={collapseStyle.parentCollapseHeader}>Star Metal Üretimleri</div>
                   <CountBadge>
                     {Object.values(normalUretimFilteredData).reduce(
@@ -177,7 +177,7 @@ function DevamEdenUretimler() {
             style: collapseStyle.parentCollapseItem,
             label: (
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Flex>
+                <Flex align="center">
                   <div style={collapseStyle.parentCollapseHeader}>Fason Üretimler</div>
                   <CountBadge>
                     {Object.values(fasonUretimFilteredData).reduce(

@@ -198,7 +198,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
         key: index.toString(),
         label: (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Flex>
+            <Flex align="center">
               <div style={collapseStyle.subCollapseHeader}>{fasonFirmasi}</div>
               <CountBadge>{kayitlar.length}</CountBadge>
             </Flex>
