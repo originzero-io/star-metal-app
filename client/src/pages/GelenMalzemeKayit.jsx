@@ -97,8 +97,23 @@ export default function GelenMalzemeKayit() {
         (referans) => referans.referansNo === data.malzemeler[name].referansNo,
       )[0];
 
+      const uretim = referans.fason
+        ? devamEdenUretimler.fasonUretimler.find(
+            (f) =>
+              f.irsaliyeNo === data.irsaliyeNo &&
+              f.referansNo === referans.referansNo &&
+              f.gelenMiktar === data.malzemeler[name].gelenMiktar,
+          )
+        : devamEdenUretimler.normalUretimler.find(
+            (f) =>
+              f.irsaliyeNo === data.irsaliyeNo &&
+              f.referansNo === referans.referansNo &&
+              f.gelenMiktar === data.malzemeler[name].gelenMiktar,
+          );
+
       const cardRecord = {
         key: name,
+        id: uretim.id,
         irsaliyeNo: data.irsaliyeNo,
         personel: data.personel,
         kodu: referans.kodu,
@@ -361,9 +376,9 @@ export default function GelenMalzemeKayit() {
                           disabled
                           placeholder="Fason Firması Yok"
                           style={{
-                            width: "145px",
-                            background: seciliReferansFasonluk[name] ? "#588157" : "",
-                            color: seciliReferansFasonluk[name] ? "white" : "",
+                            width: "170px",
+                            background: seciliReferansFasonluk[name] ? "#fce2d8" : "",
+                            color: seciliReferansFasonluk[name] ? "black" : "",
                           }}
                         />
                       </Form.Item>
@@ -392,6 +407,7 @@ export default function GelenMalzemeKayit() {
                   type="dashed"
                   onClick={() => satirEkle(add)}
                   block
+                  disabled={kayitDurumu}
                   icon={<PlusCircleFilled style={{ fontSize: "15px" }} />}
                   style={{
                     padding: "20px",
@@ -410,7 +426,11 @@ export default function GelenMalzemeKayit() {
           <Button
             htmlType="reset"
             style={{ marginRight: "10px" }}
-            onClick={() => setKayitDurumu(false)}
+            onClick={() => {
+              setKayitDurumu(false);
+              setYeniEklenenNormal([]);
+              setYeniEklenenFason([]);
+            }}
           >
             Sıfırla
           </Button>
