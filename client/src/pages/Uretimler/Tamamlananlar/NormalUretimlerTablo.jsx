@@ -169,7 +169,7 @@ export default function NormalUretimlerTablo({ musteriBazliKayitlar, uretimiSilF
           }));
 
           downloadExcel({
-            fileName: `TAMAMLANANLAR-${musteriAdi.split(" ")[0]}.xls`,
+            fileName: `TAMAMLANANLAR-${musteriAdi}.xls`,
             tablePayload: {
               header,
               body,

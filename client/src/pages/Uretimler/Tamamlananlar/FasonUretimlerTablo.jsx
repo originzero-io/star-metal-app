@@ -175,7 +175,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
           }));
 
           downloadExcel({
-            fileName: `TAMAMLANANLAR-${fasonFirmasi.split(" ")[0]}.xls`,
+            fileName: `TAMAMLANANLAR-${fasonFirmasi}.xls`,
             tablePayload: {
               header,
               body,

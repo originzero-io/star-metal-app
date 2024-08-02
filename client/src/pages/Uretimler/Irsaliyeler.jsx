@@ -190,9 +190,7 @@ export default function Irsaliyeler() {
                     key: index.toString(),
                     label: (
                       <Flex align="center">
-                        <div style={collapseStyle.subCollapseHeader}>
-                          {musteriAdi.split(" ")[0]}
-                        </div>
+                        <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
                         <CountBadge>{kayitlar.length}</CountBadge>
                       </Flex>
                     ),
@@ -234,9 +232,7 @@ export default function Irsaliyeler() {
                     key: index.toString(),
                     label: (
                       <Flex align="center">
-                        <div style={collapseStyle.subCollapseHeader}>
-                          {musteriAdi.split(" ")[0]}
-                        </div>
+                        <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
                         <CountBadge>{kayitlar.length}</CountBadge>
                       </Flex>
                     ),

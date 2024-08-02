@@ -321,7 +321,7 @@ export default function FasonUretimlerTablo({
           }));
 
           downloadExcel({
-            fileName: `DEVAM EDENLER-${fasonFirmasi.split(" ")[0]}.xls`,
+            fileName: `DEVAM EDENLER-${fasonFirmasi}.xls`,
             tablePayload: {
               header,
               body,
@@ -345,7 +345,7 @@ export default function FasonUretimlerTablo({
         label: (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Flex align="center">
-              <div style={collapseStyle.subCollapseHeader}>{fasonFirmasi.split(" ")[0]}</div>
+              <div style={collapseStyle.subCollapseHeader}>{fasonFirmasi}</div>
               <CountBadge>{kayitlar.length}</CountBadge>
             </Flex>
             {user.yetki !== "operator" && (

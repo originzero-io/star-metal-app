@@ -7,6 +7,8 @@ import {
   ExclamationCircleOutlined,
   EyeOutlined,
   PrinterOutlined,
+  StarFilled,
+  StarOutlined,
   TruckOutlined,
 } from "@ant-design/icons";
 import { Collapse, Flex, Modal, Tag, Tooltip } from "antd";
@@ -293,7 +295,7 @@ export default function NormalUretimlerTablo({
           }));
 
           downloadExcel({
-            fileName: `DEVAM EDENLER-${musteriAdi.split(" ")[0]}.xls`,
+            fileName: `DEVAM EDENLER-${musteriAdi}.xls`,
             tablePayload: {
               header,
               body,
@@ -315,9 +317,14 @@ export default function NormalUretimlerTablo({
       items={Object.entries(musteriBazliKayitlar).map(([musteriAdi, kayitlar], index) => ({
         key: index.toString(),
         label: (
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <Flex align="center">
-              <div style={collapseStyle.subCollapseHeader}>{musteriAdi.split(" ")[0]}</div>
+              <div style={collapseStyle.subCollapseHeader}>{musteriAdi}</div>
               <CountBadge>{kayitlar.length}</CountBadge>
             </Flex>
             {user.yetki !== "operator" && (
