@@ -16,15 +16,15 @@ import { createTableFilterFromData } from "utils/table.helper";
 import TableGod from "../../../components/shared/TableGod";
 
 const LogoSyncButton = styled(Button)`
-  background: linear-gradient(135deg, #b1e6bc 58%, #a4e5b1 100%);
+  background: #b1e6bc;
 
   color: #090909;
-  font-weight: bold;
+  font-weight: 600;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-size: 1.4vmin;
+  font-size: 14px;
   margin-bottom: 6px;
   padding: 2px 15px;
   border: 1px solid rgb(73, 171, 66);
@@ -92,7 +92,7 @@ function Referanslar() {
         },
         filterSearch: true,
         render: (text) => <ColumnBadge value={text || "Boş"} />,
-        width: 120,
+        width: 150,
       },
 
       {
@@ -196,7 +196,7 @@ function Referanslar() {
             </Tooltip>
           ),
         filterSearch: true,
-        width: 120,
+        width: 140,
       },
       {
         title: "Miktar Sapması",

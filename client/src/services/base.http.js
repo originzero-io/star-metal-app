@@ -35,20 +35,23 @@ class BaseHttp {
             message: message.statusText,
             description: `${message.data || "Bilinmeyen hata"}`,
             duration: 5,
+            placement: "top",
           });
         } else if (error.request) {
           notification.error({
             message: `${serviceName} sunucusundan yanıt alınamadı`,
             // message: "Sunucu Yanıt Vermedi",
-            description: error.message,
+            description: error.config.url + " => " + error.message,
             // description: `${serviceName} sunucusundan yanıt alınamadı. Lütfen tekrar deneyin.`,
             duration: 5,
+            placement: "top",
           });
         } else {
           notification.error({
             message: "İstek Hatası",
-            description: error.message,
+            description: error.config.url + " => " + error.message,
             duration: 5,
+            placement: "top",
           });
         }
         return Promise.reject(error);

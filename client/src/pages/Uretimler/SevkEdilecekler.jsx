@@ -525,10 +525,10 @@ function IrsaliyeyeGonder({
         <Badge count={seciliFarkliReferansSayisi} overflowCount={99999999} color="blue">
           <Button
             style={{
-              background: "linear-gradient(135deg, #d3e9fb 43%, #c9e2fb 100%)",
+              background: "#d3e9fb",
               color: "#090909",
-              fontWeight: "500",
-              fontSize: "1.5vmin",
+              fontWeight: "600",
+              fontSize: "14px",
               border: "1px solid rgb(87, 161, 225)",
               display: "flex",
               justifyContent: "center",

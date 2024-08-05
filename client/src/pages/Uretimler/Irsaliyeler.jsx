@@ -430,16 +430,16 @@ function LogoyaGonderButon({ kayitlar }) {
   return (
     <Button
       style={{
-        background: "linear-gradient(135deg, #b1e6bc 58%, #69de81 100%)",
+        background: "#b1e6bc",
         color: "#090909",
-        fontWeight: "bold",
+        fontWeight: "600",
         borderRadius: "8px",
         cursor: "pointer",
-        fontSize: "1.6vmin",
+        fontSize: "14px",
         marginBottom: "6px",
         padding: "10px 15px",
         border: "1px solid rgb(73, 171, 66)",
-        height: 35,
+        height: 30,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

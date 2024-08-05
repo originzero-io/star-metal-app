@@ -42,114 +42,59 @@ export const DBProvider = ({ children }) => {
   const { showNotification } = useUIContext();
 
   const fetchReferanslar = async () => {
-    try {
-      setLoading(true);
+    const dbReferanslar = await referanslarHttp.getData();
 
-      const dbReferanslar = await referanslarHttp.getData();
+    // const combinedReferanslar = await referanslarHttp.logoIleEsle(dbReferanslar);
 
-      // const combinedReferanslar = await referanslarHttp.logoIleEsle(dbReferanslar);
+    setReferanslar(dbReferanslar);
 
-      setReferanslar(dbReferanslar);
-      showNotification("success", "Referanslar veri tabanından alındı.");
-
-      const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
-      setReferansParcaAdlari(logoParcaAdlari);
-      const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
-      setReferansIslemTipleri(logoIslemTipleri);
-      const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
-      setReferansAnaBirimleri(logoAnaBirimler);
-
-      showNotification("success", "Referans alt bilgileri logodan alındı.");
-
-      setLoading(false);
-    } catch (error) {
-      showNotification("error", "Referans verisi alınamadı", error.message);
-    }
+    const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
+    setReferansParcaAdlari(logoParcaAdlari);
+    const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
+    setReferansIslemTipleri(logoIslemTipleri);
+    const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
+    setReferansAnaBirimleri(logoAnaBirimler);
   };
 
   const fetchIrsaliyeler = async () => {
-    try {
-      setLoading(true);
-      const irsaliyeData = await irsaliyeHttp.getData();
-      setIrsaliyeler(irsaliyeData);
-      setLoading(false);
-    } catch (error) {
-      showNotification("error", "İrsaliye verisi veritabanından alınamadı", error.message);
-    }
+    const irsaliyeData = await irsaliyeHttp.getData();
+    setIrsaliyeler(irsaliyeData);
   };
-  const fetchMusteriler = async () => {
-    try {
-      setLoading(true);
-      const logoMusteriler = await logoGoApi.getData("GetCariList");
-      setMusteriler(logoMusteriler);
-      showNotification("success", "Müşteriler logodan alındı.");
 
-      setLoading(false);
-    } catch (error) {
-      showNotification("error", "Müşteri verisi logodan alınamadı", error.message);
-    }
+  const fetchMusteriler = async () => {
+    const logoMusteriler = await logoGoApi.getData("GetCariList");
+    setMusteriler(logoMusteriler);
   };
 
   const fetchAmbalajlar = async () => {
-    try {
-      setLoading(true);
-      const ambalajData = await ambalajlarHttp.getData();
-      setAmbalajlar(ambalajData);
-      setLoading(false);
-    } catch (error) {
-      showNotification("error", "Ambalaj verisi veritabanından alınamadı", error.message);
-    }
+    const ambalajData = await ambalajlarHttp.getData();
+    setAmbalajlar(ambalajData);
   };
+
   const fetchDevamEdenUretimler = async () => {
-    try {
-      setLoading(true);
-      const devamEdenUretimData = await devamEdenUretimHttp.getData();
-      setDevamEdenUretimler(devamEdenUretimData);
-      setLoading(false);
-    } catch (error) {
-      showNotification("error", "Üretim verisi veritabanından alınamadı", error.message);
-    }
+    const devamEdenUretimData = await devamEdenUretimHttp.getData();
+    setDevamEdenUretimler(devamEdenUretimData);
   };
 
   const fetchPersoneller = async () => {
-    try {
-      setLoading(true);
-      const personelData = await personellerHttp.getData();
-      setPersoneller(personelData);
-      setLoading(false);
-    } catch (error) {
-      showNotification("error", "Personel verisi veritabanından alınamadı", error.message);
-    }
+    const personelData = await personellerHttp.getData();
+    setPersoneller(personelData);
   };
 
   const fetchSoforler = async () => {
-    try {
-      setLoading(true);
-      const logoSoforler = await logoGoApi.getData("GetSoforList");
-      setSoforler(logoSoforler);
-      showNotification("success", "Şoförler logodan alındı.");
-
-      setLoading(false);
-    } catch (error) {
-      showNotification("error", "Şoför verisi logodan alınamadı", error.message);
-    }
+    const logoSoforler = await logoGoApi.getData("GetSoforList");
+    setSoforler(logoSoforler);
   };
 
   const fetchPlakalar = async () => {
-    try {
-      setLoading(true);
-      const logoPlakalar = await logoGoApi.getData("GetAracList");
-      setPlakalar(logoPlakalar);
-      showNotification("success", "Plakalar logodan alındı.");
-
-      setLoading(false);
-    } catch (error) {
-      showNotification("error", "Plaka verisi logodan alınamadı", error.message);
-    }
+    const logoPlakalar = await logoGoApi.getData("GetAracList");
+    setPlakalar(logoPlakalar);
   };
 
   useEffect(() => {
     async function fetchAllState() {
+      setLoading(true);
+
       await fetchReferanslar();
       await fetchDevamEdenUretimler();
       await Promise.all([
@@ -160,6 +105,8 @@ export const DBProvider = ({ children }) => {
         fetchSoforler(),
         fetchPlakalar(),
       ]);
+
+      setLoading(false);
     }
     fetchAllState();
   }, []);
