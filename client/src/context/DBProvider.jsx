@@ -42,18 +42,22 @@ export const DBProvider = ({ children }) => {
   const { showNotification } = useUIContext();
 
   const fetchReferanslar = async () => {
-    const dbReferanslar = await referanslarHttp.getData();
+    try {
+      const dbReferanslar = await referanslarHttp.getData();
 
-    // const combinedReferanslar = await referanslarHttp.logoIleEsle(dbReferanslar);
+      // const combinedReferanslar = await referanslarHttp.logoIleEsle(dbReferanslar);
 
-    setReferanslar(dbReferanslar);
+      setReferanslar(dbReferanslar);
 
-    const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
-    setReferansParcaAdlari(logoParcaAdlari);
-    const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
-    setReferansIslemTipleri(logoIslemTipleri);
-    const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
-    setReferansAnaBirimleri(logoAnaBirimler);
+      const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
+      setReferansParcaAdlari(logoParcaAdlari);
+      const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
+      setReferansIslemTipleri(logoIslemTipleri);
+      const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
+      setReferansAnaBirimleri(logoAnaBirimler);
+    } catch (error) {
+      console.log("Referanslar çekilirken hata oluştu", error);
+    }
   };
 
   const fetchIrsaliyeler = async () => {
@@ -98,14 +102,13 @@ export const DBProvider = ({ children }) => {
       await fetchReferanslar();
       await fetchDevamEdenUretimler();
       await Promise.all([
-        fetchIrsaliyeler(),
         fetchMusteriler(),
+        fetchIrsaliyeler(),
         fetchAmbalajlar(),
         fetchPersoneller(),
         fetchSoforler(),
         fetchPlakalar(),
       ]);
-
       setLoading(false);
     }
     fetchAllState();

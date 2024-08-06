@@ -232,7 +232,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
                   action: () =>
                     showPanel({
                       title: "Üretim / Sevkiyat Hareketleri",
-                      content: <UretimSevkiyatHareketleri record={record} />,
+                      content: <UretimSevkiyatHareketleri record={record} source="tamamlanan" />,
                       width: 1500,
                     }),
                 },
