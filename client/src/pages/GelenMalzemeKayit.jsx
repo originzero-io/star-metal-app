@@ -207,6 +207,8 @@ export default function GelenMalzemeKayit() {
 
     console.log("Gelen Malzeme Kayıtları: ", yeniMalzemeler);
 
+    setKayitDurumu(true);
+
     const { normalUretimler, fasonUretimler } = await devamEdenUretimHttp.addData(yeniMalzemeler);
 
     setDevamEdenUretimler((prevState) => ({
@@ -214,7 +216,6 @@ export default function GelenMalzemeKayit() {
       fasonUretimler: [...prevState.fasonUretimler, ...fasonUretimler],
     }));
     showNotification("success", `Malzemeler üretime eklendi.`);
-    setKayitDurumu(true);
   };
 
   return (
