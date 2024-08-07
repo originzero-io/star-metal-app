@@ -174,16 +174,17 @@ router.put(
         {
           where: {
             id: uretimGirisiIdleri,
+            referansNo: kayit.referansNo, // aynı id'ye sahip fason kayıt da olabilmesine karşı referansNo şartı da eklendi
           },
         },
       );
 
-      console.log("güncellenen üretim girisleri: ", sonuc);
+      console.log(`>> ${sonuc} << adet üretim girişi güncellendi`);
 
       // üretim giden kalan kayıtlarını güncelle
-      const updatedUretim = await gidenVeKalanMiktarlariGuncelle(kayit);
+      await gidenVeKalanMiktarlariGuncelle(kayit);
 
-      console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}, üretim kayıtları: ${updatedUretim}`);
+      console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}`);
       return sonuc;
     });
 
@@ -203,11 +204,13 @@ const gidenVeKalanMiktarlariGuncelle = async (kayit) => {
 
       if (fasonUretim && !kayit.fasona) {
         // irsaliye fasona kesiliyorsa sevkEdilenMiktar değişmeyecek
+        console.log("Fason Uretim ID: ", fasonUretim.id);
+        console.log("Eklenecek adet: ", uretimGirisi.uretimAdedi);
         const updatedUretim = await fasonUretim.update({
           sevkEdilenMiktar: fasonUretim.sevkEdilenMiktar + uretimGirisi.uretimAdedi,
         });
 
-        console.log("updatedUretim", updatedUretim);
+        console.log(`${updatedUretim.id} id li fason üretim verileri güncellendi: Giden: ${updatedUretim.gidenMiktar} -- Kalan: ${updatedUretim.kalanMiktar}`);
       } else {
         console.log(`Fason Uretim ID ${uretimGirisi.uretimId} bulunamadı.`);
       }
@@ -215,15 +218,15 @@ const gidenVeKalanMiktarlariGuncelle = async (kayit) => {
       const normalUretim = await DNormalUretim.findOne({ where: { id: uretimGirisi.uretimId } });
 
       if (normalUretim) {
-        console.log("normalUretim", normalUretim.id);
-        console.log("eklenecek adet", uretimGirisi.uretimAdedi);
+        console.log("Normal Uretim ID: ", normalUretim.id);
+        console.log("Eklenecek adet: ", uretimGirisi.uretimAdedi);
 
         const updatedUretim = await normalUretim.update({
           gidenMiktar: normalUretim.gidenMiktar + uretimGirisi.uretimAdedi,
           kalanMiktar: normalUretim.kalanMiktar - uretimGirisi.uretimAdedi,
         });
 
-        console.log("updatedUretim", updatedUretim);
+        console.log(`${updatedUretim.id} id li normal üretim verileri güncellendi: Giden: ${updatedUretim.gidenMiktar} -- Kalan: ${updatedUretim.kalanMiktar}`);
       } else {
         console.log(`Uretim ID ${uretimGirisi.uretimId} bulunamadı.`);
       }
