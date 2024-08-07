@@ -275,6 +275,8 @@ function LogoyaGonderButon({ kayitlar }) {
     useDBContext();
   const { showNotification } = useUIContext();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [butonLoading, setButonLoading] = useState(false);
+
   const [secilenSofor, setSecilenSofor] = useState({});
 
   const showModal = (e) => {
@@ -391,6 +393,7 @@ function LogoyaGonderButon({ kayitlar }) {
 
     try {
       const logoIrsaliye = logoIrsaliyeObjesiOlustur(values.genelAciklama, gonderilecekKayitlar);
+      setButonLoading(true);
 
       const logoResponse = await logoGoApi.postData("PostIrsaliye", logoIrsaliye);
 
@@ -405,6 +408,7 @@ function LogoyaGonderButon({ kayitlar }) {
         setIrsaliyeler(newIrsaliyeler);
         setDevamEdenUretimler(devamEdenler);
         setIsModalVisible(false);
+        setButonLoading(false);
         showNotification(
           "success",
           `${musteriAdi} müşterisine ait irsaliye kaydı logoya gönderildi.`,
@@ -537,6 +541,7 @@ function LogoyaGonderButon({ kayitlar }) {
               justifyContent: "center",
               alignItems: "center",
             }}
+            loading={butonLoading}
             icon={
               <div style={{ display: "flex", alignItems: "center" }}>
                 <CaretRightOutlined />
