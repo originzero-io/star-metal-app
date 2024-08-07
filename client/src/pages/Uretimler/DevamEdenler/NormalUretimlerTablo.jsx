@@ -342,6 +342,11 @@ export default function NormalUretimlerTablo({
             dataSource={kayitlar}
             columns={createColumnsForCustomer(musteriAdi)}
             onChange={(...args) => handleTableChange(...args, index)}
+            rowStyle={(row) =>
+              row.acil && {
+                background: "#fadddd",
+              }
+            }
             footer={
               miktarToplam[index]?.state && (
                 <div
