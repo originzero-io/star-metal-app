@@ -86,7 +86,7 @@ export default function ReferansForm({ record, type }) {
       const logoyaGonderilecekPut = {
         ...record,
         referansNo: values.referansNo,
-        kodu: values.kodu,
+        kodu: record.kodu || values.kodu,
         irsaliyeAciklamasi: values.irsaliyeAciklamasi,
         musteriAdi: record.musteriAdi || values.musteriAdi,
         musteriRef:
