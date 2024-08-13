@@ -4,7 +4,7 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 import Referans, { ReferansUretim } from "../models/referans.model.js";
 import UretimGirisi from "../models/uretim-girisi.model.js";
-import { DFasonUretim, DNormalUretim } from "../models/uretim.model.js";
+import UretimGirisiHelper from "../../utils/uretim-girisleri.helper.js";
 
 const router = express.Router();
 
@@ -86,35 +86,13 @@ router.get(
 router.post(
   "/",
   asyncHandler(async (req, res) => {
-    const { fason } = req.body;
-
     await UretimGirisi.create(req.body);
 
-    if (fason) {
-      const uretim = await DFasonUretim.findByPk(req.body.uretimId);
-      if (uretim) {
-        const updatedUretim = await uretim.update({
-          uretilenMiktar: uretim.uretilenMiktar + req.body.uretimAdedi,
-        });
+    const guncellenenUretim = await UretimGirisiHelper.uretimMiktarlariniGuncelle(req.body);
 
-        res.json(updatedUretim);
-      } else {
-        res.status(400).send("Üretim girişi bulunamadı", req.body.id);
-      }
-    } else {
-      const uretim = await DNormalUretim.findByPk(req.body.uretimId);
-
-      if (uretim) {
-        const updatedUretim = await uretim.update({
-          uretilenMiktar: uretim.uretilenMiktar + req.body.uretimAdedi,
-          uretilmeyenMiktar: uretim.uretilmeyenMiktar - req.body.uretimAdedi,
-        });
-
-        res.json(updatedUretim);
-      } else {
-        res.status(400).send("Üretim girişi bulunamadı", req.body.id);
-      }
-    }
+    if (guncellenenUretim) {
+      res.json(guncellenenUretim);
+    } else res.status(400).send("Üretim girişi bulunamadı", req.body.id);
   }),
 );
 
@@ -162,7 +140,7 @@ router.put(
       const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
       console.log("uretimGirisiIdleri", uretimGirisiIdleri);
 
-      const sonuc = await UretimGirisi.update(
+      const kayitSayisi = await UretimGirisi.update(
         {
           sevkTarihi: kayit.sevkTarihi,
           personel: kayit.personel,
@@ -179,13 +157,12 @@ router.put(
         },
       );
 
-      console.log(`>> ${sonuc} << adet üretim girişi güncellendi`);
+      console.log(`>> ${kayitSayisi} << adet üretim girişi güncellendi`);
 
-      // üretim giden kalan kayıtlarını güncelle
-      await gidenVeKalanMiktarlariGuncelle(kayit);
+      await UretimGirisiHelper.gidenVeKalanMiktarlariGuncelle(kayit);
 
-      console.log(`Güncellenen kayıt sayısı: ${sonuc[0]}`);
-      return sonuc;
+      console.log(`Güncellenen kayıt sayısı: ${kayitSayisi[0]}`);
+      return kayitSayisi;
     });
 
     await Promise.all(updatePromises);
@@ -193,48 +170,6 @@ router.put(
     res.send("Tüm kayıtlar başarıyla sevk edildi.");
   }),
 );
-
-const gidenVeKalanMiktarlariGuncelle = async (kayit) => {
-  const uretimGirisiIdleri = kayit.uretimGirisiIdleri.split(",").map(Number);
-  const uretimGirisiList = await UretimGirisi.findAll({ where: { id: uretimGirisiIdleri } });
-
-  for (const uretimGirisi of uretimGirisiList) {
-    if (kayit.Referanslar.fason) {
-      const fasonUretim = await DFasonUretim.findOne({ where: { id: uretimGirisi.uretimId } });
-
-      if (fasonUretim && !kayit.fasona) {
-        // irsaliye fasona kesiliyorsa sevkEdilenMiktar değişmeyecek
-        console.log("Fason Uretim ID: ", fasonUretim.id);
-        console.log("Eklenecek adet: ", uretimGirisi.uretimAdedi);
-        const updatedUretim = await fasonUretim.update({
-          sevkEdilenMiktar: fasonUretim.sevkEdilenMiktar + uretimGirisi.uretimAdedi,
-        });
-
-        console.log(`${updatedUretim.id} id li fason üretim verileri güncellendi: Giden: ${updatedUretim.gidenMiktar} -- Kalan: ${updatedUretim.kalanMiktar}`);
-      } else {
-        console.log(`Fason Uretim ID ${uretimGirisi.uretimId} bulunamadı.`);
-      }
-    } else {
-      const normalUretim = await DNormalUretim.findOne({ where: { id: uretimGirisi.uretimId } });
-
-      if (normalUretim) {
-        console.log("Normal Uretim ID: ", normalUretim.id);
-        console.log("Eklenecek adet: ", uretimGirisi.uretimAdedi);
-
-        const updatedUretim = await normalUretim.update({
-          gidenMiktar: normalUretim.gidenMiktar + uretimGirisi.uretimAdedi,
-          kalanMiktar: normalUretim.kalanMiktar - uretimGirisi.uretimAdedi,
-        });
-
-        console.log(`${updatedUretim.id} id li normal üretim verileri güncellendi: Giden: ${updatedUretim.gidenMiktar} -- Kalan: ${updatedUretim.kalanMiktar}`);
-      } else {
-        console.log(`Uretim ID ${uretimGirisi.uretimId} bulunamadı.`);
-      }
-    }
-  }
-
-  return null;
-};
 
 router.delete(
   "/",
@@ -245,7 +180,7 @@ router.delete(
       await UretimGirisi.destroy({
         where: { id: row.id },
       });
-      await uretimMiktarlariniGeriAl(row);
+      await UretimGirisiHelper.uretimMiktarlariniGeriAl(row);
     });
 
     await Promise.all(deletePromises);
@@ -253,29 +188,5 @@ router.delete(
     res.send("Üretim girişi silindi, üretim miktarları geri alındı.");
   }),
 );
-
-const uretimMiktarlariniGeriAl = async (row) => {
-  if (row.Referanslar.fason) {
-    const uretim = await DFasonUretim.findByPk(row.uretimId);
-    if (uretim) {
-      await uretim.update({
-        uretilenMiktar: uretim.uretilenMiktar - row.uretimAdedi,
-      });
-    } else {
-      console.log("Böyle bir fason üretim bulunamadı", row.id);
-    }
-  } else {
-    const uretim = await DNormalUretim.findByPk(row.uretimId);
-
-    if (uretim) {
-      await uretim.update({
-        uretilenMiktar: uretim.uretilenMiktar - row.uretimAdedi,
-        uretilmeyenMiktar: uretim.uretilmeyenMiktar + row.uretimAdedi,
-      });
-    } else {
-      console.log("Böyle bir normal üretim bulunamadı", row.id);
-    }
-  }
-};
 
 export default router;

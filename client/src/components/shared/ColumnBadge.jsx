@@ -10,7 +10,7 @@ export default function ColumnBadge({ color, value, width = "100%", textAlign = 
         background: color,
         padding: "4px",
         textAlign,
-        border: "1px solid #888888",
+        border: "1px solid #bdbdbd",
       }}
     >
       {value}

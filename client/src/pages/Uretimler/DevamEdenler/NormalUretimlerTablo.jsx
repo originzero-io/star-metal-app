@@ -7,8 +7,6 @@ import {
   ExclamationCircleOutlined,
   EyeOutlined,
   PrinterOutlined,
-  StarFilled,
-  StarOutlined,
   TruckOutlined,
 } from "@ant-design/icons";
 import { Collapse, Flex, Modal, Tag, Tooltip } from "antd";
@@ -29,6 +27,7 @@ import { useState } from "react";
 import { downloadExcel } from "react-export-table-to-excel";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { createTableFilterFromData } from "utils/table.helper";
+import useSaveCollapse from "utils/useSaveCollapse.hook";
 import ReferansResmi from "./ReferansResmi";
 
 export default function NormalUretimlerTablo({
@@ -37,6 +36,8 @@ export default function NormalUretimlerTablo({
   tamamlananlaraGonderFunc,
 }) {
   const { user } = useAuth();
+
+  const [activeKeys, handleCollapseChange] = useSaveCollapse("normalUretimlerCollapseState");
 
   const { showPanel, showModal, showNotification } = useUIContext();
   const { setDevamEdenUretimler } = useDBContext();
@@ -230,7 +231,7 @@ export default function NormalUretimlerTablo({
       })),
       onFilter: (value, record) => record.Referanslar?.siparisTipi.indexOf(value) === 0,
       filterSearch: true,
-      width: 90,
+      width: 100,
     },
     {
       title: "İade",
@@ -252,16 +253,9 @@ export default function NormalUretimlerTablo({
 
   const oncelikDurumunuDegistir = async (record) => {
     const yeniOncelikDurumu = record.acil ? 0 : 1;
-    const updatedUretim = await devamEdenUretimHttp.oncelikAyarla(record, yeniOncelikDurumu);
-    setDevamEdenUretimler((prevState) => ({
-      ...prevState,
-      normalUretimler: prevState.normalUretimler.map((normal) => {
-        if (normal.id === updatedUretim.id) {
-          return { ...updatedUretim };
-        }
-        return normal;
-      }),
-    }));
+    await devamEdenUretimHttp.oncelikAyarla(record, yeniOncelikDurumu);
+    const devamEdenUretimler = await devamEdenUretimHttp.getData();
+    setDevamEdenUretimler(devamEdenUretimler);
   };
 
   const downloadExcelHandler = (musteriAdi, dataSource) => {
@@ -313,6 +307,8 @@ export default function NormalUretimlerTablo({
     <Collapse
       bordered={false}
       size="small"
+      activeKey={activeKeys}
+      onChange={handleCollapseChange}
       expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
       items={Object.entries(musteriBazliKayitlar).map(([musteriAdi, kayitlar], index) => ({
         key: index.toString(),

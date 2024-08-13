@@ -27,6 +27,7 @@ import irsaliyeHttp from "services/crud-server/irsaliyeler.http";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import { fasonaIrsaliyeKaydiOlustur } from "utils/irsaliye.helper";
 import { createTableFilterFromData } from "utils/table.helper";
+import useSaveCollapse from "utils/useSaveCollapse.hook";
 import ReferansResmi from "./ReferansResmi";
 
 export default function FasonUretimlerTablo({
@@ -35,6 +36,8 @@ export default function FasonUretimlerTablo({
   tamamlananlaraGonderFunc,
 }) {
   const { user } = useAuth();
+
+  const [activeKeys, handleCollapseChange] = useSaveCollapse("fasonUretimlerCollapseState");
 
   const { irsaliyeler, setIrsaliyeler, setDevamEdenUretimler } = useDBContext();
   const { showPanel, showNotification, showAlert, showModal } = useUIContext();
@@ -339,6 +342,8 @@ export default function FasonUretimlerTablo({
     <Collapse
       bordered={false}
       size="small"
+      activeKey={activeKeys}
+      onChange={handleCollapseChange}
       expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
       items={Object.entries(fasonFirmasiBazliKayitlar).map(([fasonFirmasi, kayitlar], index) => ({
         key: index.toString(),

@@ -88,6 +88,7 @@ export default function GelenMalzemeKayit() {
   const [musteriReferanslari, setMusteriReferanslari] = useState([]);
 
   const [kayitDurumu, setKayitDurumu] = useState(false);
+  const [kayitLoading, setKayitLoading] = useState(false);
 
   const isEmriYazdir = async (name) => {
     try {
@@ -207,7 +208,7 @@ export default function GelenMalzemeKayit() {
 
     console.log("Gelen Malzeme Kayıtları: ", yeniMalzemeler);
 
-    setKayitDurumu(true);
+    setKayitLoading(true);
 
     const { normalUretimler, fasonUretimler } = await devamEdenUretimHttp.addData(yeniMalzemeler);
 
@@ -216,6 +217,8 @@ export default function GelenMalzemeKayit() {
       fasonUretimler: [...prevState.fasonUretimler, ...fasonUretimler],
     }));
     showNotification("success", `Malzemeler üretime eklendi.`);
+    setKayitLoading(false);
+    setKayitDurumu(true);
   };
 
   return (
@@ -409,6 +412,7 @@ export default function GelenMalzemeKayit() {
                   onClick={() => satirEkle(add)}
                   block
                   disabled={kayitDurumu}
+                  loading={kayitLoading}
                   icon={<PlusCircleFilled style={{ fontSize: "15px" }} />}
                   style={{
                     padding: "20px",
@@ -429,13 +433,11 @@ export default function GelenMalzemeKayit() {
             style={{ marginRight: "10px" }}
             onClick={() => {
               setKayitDurumu(false);
-              setYeniEklenenNormal([]);
-              setYeniEklenenFason([]);
             }}
           >
             Sıfırla
           </Button>
-          <Button type="primary" htmlType="submit" disabled={kayitDurumu}>
+          <Button type="primary" htmlType="submit" disabled={kayitDurumu} loading={kayitLoading}>
             Malzemeleri Kaydet
           </Button>
         </Form.Item>

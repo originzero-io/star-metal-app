@@ -9,7 +9,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     theme={{
       components: {
         Table: {
-          rowHoverBg: "rgb(220, 217, 236)",
+          rowHoverBg: "rgb(234, 231, 242)",
           rowSelectedBg: "rgb(189, 185, 233)",
           rowSelectedHoverBg: "rgb(189, 185, 233)",
 

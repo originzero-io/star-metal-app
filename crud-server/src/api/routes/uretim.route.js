@@ -26,7 +26,10 @@ router.get(
           ],
         },
       ],
-      order: [["id", "ASC"]],
+      order: [
+        ["acil", "DESC"],
+        ["id", "ASC"],
+      ],
     });
     const fasonUretimler = await DFasonUretim.findAll({
       include: [
