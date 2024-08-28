@@ -1,0 +1,40 @@
+# services:
+#   react-app:
+#     build: .
+#     ports:
+#       - "4000:80"
+#     volumes:
+#       - ./dist:/usr/share/nginx/html
+name: star-metal-app
+services:
+  react-app:
+    container_name: react-app
+    build:
+      context: ./client
+    ports:
+      - "4000:80"
+    volumes:
+      - ./client/dist:/usr/share/nginx/html
+    networks:
+      - star-metal-net
+
+  db-server:
+    container_name: db-server
+    build:
+      context: ./crud-server
+    # ports:
+    #   - "6333:6333" # crud-server'ın dışa açılan portu
+    environment:
+      - DB_HOST=host.docker.internal # Docker'ın MSSQL veritabanıyla iletişim kurabilmesi için.
+      - DB_PORT=1433
+      - DB_USER=SA
+      - DB_PASSWORD=OriginZero2024
+      - DB_NAME=StarMetal
+    depends_on:
+      - react-app
+    networks:
+      - star-metal-net
+
+networks:
+  star-metal-net:
+    driver: bridge

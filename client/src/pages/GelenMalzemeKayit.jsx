@@ -1,5 +1,7 @@
+/* eslint-disable no-nested-ternary */
 import { FolderAddTwoTone, PlusCircleFilled } from "@ant-design/icons";
 import {
+  Alert,
   Button,
   Col,
   Divider,
@@ -18,6 +20,7 @@ import { useDBContext } from "context/DBProvider";
 import { useUIContext } from "context/UIProvider";
 import { useState } from "react";
 import { FaMinusCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { devamEdenUretimHttp } from "services/crud-server/uretimler.http";
 import styled from "styled-components";
 import { getCurrentDateTime } from "utils/time.helper";
@@ -406,41 +409,60 @@ export default function GelenMalzemeKayit() {
                   </Space>
                 </SpaceStyled>
               ))}
-              <Form.Item style={{ marginBottom: "20px" }}>
-                <Button
-                  type="dashed"
-                  onClick={() => satirEkle(add)}
-                  block
-                  disabled={kayitDurumu}
-                  loading={kayitLoading}
-                  icon={<PlusCircleFilled style={{ fontSize: "15px" }} />}
-                  style={{
-                    padding: "20px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  Satır Ekle
-                </Button>
-              </Form.Item>
+
+              {!form.getFieldValue("musteriAdi") ? null : form.getFieldValue("musteriAdi") &&
+                musteriReferanslari.length === 0 ? (
+                <Alert
+                  style={{ fontSize: 16 }}
+                  description={
+                    <div>
+                      Bu müşteriye ait referans girişi bulunamadı.{" "}
+                      <Link to="/referanslar">Referanslara</Link> gidip bir referans ekleyin veya
+                      başka bir müşteri seçin.
+                    </div>
+                  }
+                />
+              ) : (
+                <Form.Item style={{ marginBottom: "20px" }}>
+                  <Button
+                    type="dashed"
+                    onClick={() => satirEkle(add)}
+                    block
+                    disabled={kayitDurumu}
+                    loading={kayitLoading}
+                    icon={<PlusCircleFilled style={{ fontSize: "15px" }} />}
+                    style={{
+                      padding: "20px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    Satır Ekle
+                  </Button>
+                </Form.Item>
+              )}
             </div>
           )}
         </Form.List>
-        <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            htmlType="reset"
-            style={{ marginRight: "10px" }}
-            onClick={() => {
-              setKayitDurumu(false);
-            }}
-          >
-            Sıfırla
-          </Button>
-          <Button type="primary" htmlType="submit" disabled={kayitDurumu} loading={kayitLoading}>
-            Malzemeleri Kaydet
-          </Button>
-        </Form.Item>
+
+        {musteriReferanslari.length > 0 && (
+          <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button
+              htmlType="reset"
+              style={{ marginRight: "10px" }}
+              onClick={() => {
+                setKayitDurumu(false);
+              }}
+            >
+              Sıfırla
+            </Button>
+            <Button type="primary" htmlType="submit" disabled={kayitDurumu} loading={kayitLoading}>
+              Malzemeleri Kaydet
+            </Button>
+          </Form.Item>
+        )}
+
         <div style={{ display: "none" }}>
           <UretimIsEmriKarti
             record={printRecord}
