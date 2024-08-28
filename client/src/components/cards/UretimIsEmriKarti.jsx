@@ -90,9 +90,13 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           <ColStyled span={6}>
             <IcerikStyled>{record?.irsaliyeNo}</IcerikStyled>
           </ColStyled>
-          <ColStyled span={6}>KAYIT NO</ColStyled>
-          <ColStyled span={6}>
+          <ColStyled span={3}>KAYIT NO</ColStyled>
+          <ColStyled span={3}>
             <IcerikStyled>{record?.id}</IcerikStyled>
+          </ColStyled>
+
+          <ColStyled span={6}>
+            <IcerikStyled>{record?.iade === "EVET" ? "İADE" : "İADE DEĞİL"}</IcerikStyled>
           </ColStyled>
         </Row>
         <Row style={{ height: "150px" }}>
