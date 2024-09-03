@@ -330,7 +330,7 @@ export default function GelenMalzemeKayit() {
                       <Input
                         disabled
                         placeholder="Parça Adı"
-                        style={{ width: "140px", background: "#ece4fb", fontWeight: 500 }}
+                        style={{ width: "140px", background: "#eee8f8", fontWeight: 500 }}
                       />
                     </Form.Item>
 
@@ -338,7 +338,7 @@ export default function GelenMalzemeKayit() {
                       <Input
                         disabled
                         placeholder="İşlem Tipi"
-                        style={{ width: "140px", background: "#e4ecfb", fontWeight: 500 }}
+                        style={{ width: "140px", background: "#eee8f8", fontWeight: 500 }}
                       />
                     </Form.Item>
 
