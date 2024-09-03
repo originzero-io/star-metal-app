@@ -329,7 +329,15 @@ export default function ReferansForm({ record, type }) {
       labelCol={{ flex: "170px" }}
       labelAlign="left"
       key={record ? record.id : "form"}
-      initialValues={record || { fason: record?.fason || false }}
+      initialValues={
+        record || {
+          fason: record?.fason || false,
+          miktarSapmasi: 5,
+          lotAdedi: 150,
+          referansYuzeyAlani: 1.5,
+          not: "",
+        }
+      }
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -449,7 +457,6 @@ export default function ReferansForm({ record, type }) {
         label="Müşteri"
         name="musteriAdi"
         rules={[{ required: true, message: "Bu alanı doldurun" }]}
-        // style={type === "update" ? { display: "none" } : null}
         style={type === "update" && record.musteriAdi !== "" ? { display: "none" } : null}
       >
         <Select placeholder="Müşteri Adı Seçiniz" showSearch>
@@ -619,6 +626,18 @@ export default function ReferansForm({ record, type }) {
           {
             required: true,
             message: "Bu alanı doldurun",
+          },
+          {
+            validator: (_, value) => {
+              if (!value || /^-?\d{1}(\.\d{1,4})?$/.test(value)) {
+                return Promise.resolve();
+              }
+              return Promise.reject(
+                new Error(
+                  "Lütfen geçerli bir sayı girin. Ondalıktan önce 1 basamak ondalıktan sonra en fazla 4 basamak girilebilir.",
+                ),
+              );
+            },
           },
         ]}
       >
