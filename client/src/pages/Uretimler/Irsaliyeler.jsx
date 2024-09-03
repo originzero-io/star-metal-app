@@ -49,21 +49,21 @@ export default function Irsaliyeler() {
 
   const columns = useMemo(
     () => [
-      {
-        title: "Üretim ID",
-        dataIndex: "uretimId",
-        key: "uretimId",
-        render: (text) => <IdBadge value={text} />,
-        sorter: (a, b) => a.uretimId - b.uretimId,
-        width: 100,
-      },
-      {
-        title: "Üretim Girişi IDler",
-        dataIndex: "uretimGirisiIdleri",
-        key: "uretimGirisiIdleri",
-        render: (text) => <IdBadge value={text} />,
-        width: 100,
-      },
+      // {
+      //   title: "Üretim ID",
+      //   dataIndex: "uretimId",
+      //   key: "uretimId",
+      //   render: (text) => <IdBadge value={text} />,
+      //   sorter: (a, b) => a.uretimId - b.uretimId,
+      //   width: 100,
+      // },
+      // {
+      //   title: "Üretim Girişi IDler",
+      //   dataIndex: "uretimGirisiIdleri",
+      //   key: "uretimGirisiIdleri",
+      //   render: (text) => <IdBadge value={text} />,
+      //   width: 100,
+      // },
       {
         title: "Kodu",
         dataIndex: "kodu",
@@ -98,22 +98,9 @@ export default function Irsaliyeler() {
         width: 100,
       },
       {
-        title: "1. Ambalaj",
-        dataIndex: "birinciAmbalaj",
-        key: "birinciAmbalaj",
-        // width: 120,
-      },
-      {
-        title: "2. Ambalaj",
-        dataIndex: "ikinciAmbalaj",
-        key: "ikinciAmbalaj",
-        // width: 120,
-      },
-      {
         title: "Parça Adı",
         render: (text, record) => record.Referanslar?.parcaAdi,
         key: "parcaAdi",
-        width: 90,
       },
       {
         title: "Sipariş Tipi",
@@ -126,6 +113,18 @@ export default function Irsaliyeler() {
           />
         ),
         width: 100,
+      },
+      {
+        title: "1. Ambalaj",
+        dataIndex: "birinciAmbalaj",
+        key: "birinciAmbalaj",
+        // width: 120,
+      },
+      {
+        title: "2. Ambalaj",
+        dataIndex: "ikinciAmbalaj",
+        key: "ikinciAmbalaj",
+        // width: 120,
       },
     ],
     [irsaliyeler],

@@ -144,24 +144,16 @@ export default function NormalUretimlerTablo({
       width: 135,
     },
     {
+      title: "Parça Adı",
+      render: (text, record) => record.Referanslar?.parcaAdi,
+      key: "parcaAdi",
+      width: 90,
+    },
+    {
       title: "İşlem Tipi",
       // dataIndex: "referansTipi",
       render: (text, record) => record.Referanslar?.islemTipi,
       key: "islemTipi",
-      filters: [
-        ...new Set(musteriBazliKayitlar[musteriAdi]?.map((item) => item.Referanslar?.islemTipi)),
-      ].map((islemTipi) => ({
-        text: islemTipi,
-        value: islemTipi,
-      })),
-      onFilter: (value, record) => record.Referanslar?.islemTipi.indexOf(value) === 0,
-      filterSearch: true,
-      width: 90,
-    },
-    {
-      title: "Parça Adı",
-      render: (text, record) => record.Referanslar?.parcaAdi,
-      key: "parcaAdi",
       width: 90,
     },
     {
@@ -403,7 +395,7 @@ export default function NormalUretimlerTablo({
                 </div>
               )
             }
-            scroll={{ x: 1500 }}
+            scroll={{ x: 1800 }}
             pagination={false}
             contextMenu={{
               deleteAction: uretimiSilFunc,

@@ -61,24 +61,24 @@ export default function SevkEdilecekler() {
   }, []);
 
   const createColumnsForCustomer = (musteriAdi) => [
-    {
-      title: "Uretim ID",
-      dataIndex: "uretimId",
-      key: "uretimId",
-      render: (text) => <IdBadge value={text} />,
-      sorter: (a, b) => a.id - b.id,
-      filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "uretimId"),
-      onFilter: (value, _record) => _record.uretimId === value,
-      width: 120,
-    },
-    {
-      title: "Uretim Girişi ID",
-      dataIndex: "id",
-      key: "id",
-      render: (text) => <IdBadge value={text} />,
-      sorter: (a, b) => a.id - b.id,
-      width: 120,
-    },
+    // {
+    //   title: "Uretim ID",
+    //   dataIndex: "uretimId",
+    //   key: "uretimId",
+    //   render: (text) => <IdBadge value={text} />,
+    //   sorter: (a, b) => a.id - b.id,
+    //   filters: createTableFilterFromData(uretimGirisleri[musteriAdi], "uretimId"),
+    //   onFilter: (value, _record) => _record.uretimId === value,
+    //   width: 120,
+    // },
+    // {
+    //   title: "Uretim Girişi ID",
+    //   dataIndex: "id",
+    //   key: "id",
+    //   render: (text) => <IdBadge value={text} />,
+    //   sorter: (a, b) => a.id - b.id,
+    //   width: 120,
+    // },
     {
       title: "Kodu",
       dataIndex: "kodu",
@@ -148,16 +148,26 @@ export default function SevkEdilecekler() {
       width: 100,
     },
     {
-      title: "1. Ambalaj",
-      dataIndex: "birinciAmbalaj",
-      key: "birinciAmbalaj",
-      width: 120,
+      title: "Parça Adı",
+      render: (text, record) => record.Referanslar?.parcaAdi,
+      key: "parcaAdi",
+      width: 90,
     },
     {
-      title: "2. Ambalaj",
-      dataIndex: "ikinciAmbalaj",
-      key: "ikinciAmbalaj",
-      width: 120,
+      title: "İşlem Tipi",
+      dataIndex: "islemTipi",
+      key: "islemTipi",
+      render: (text, record) => record.Referanslar?.islemTipi,
+      filters: createTableFilterFromData(
+        uretimGirisleri[musteriAdi].map((item) => item.Referanslar), // Eğer Referanslar her zaman varsa
+        "islemTipi",
+      ),
+      onFilter: (value, record) => {
+        const fasonFirmasi = record.Referanslar.islemTipi;
+        return fasonFirmasi.indexOf(value) === 0;
+      },
+      filterSearch: true,
+      width: 110,
     },
     {
       title: "İrsaliye Tipi",
@@ -165,9 +175,9 @@ export default function SevkEdilecekler() {
       key: "irsaliyeTipi",
       render: (text, kayit) => {
         if (kayit.iade === "Hayır" || kayit?.Referanslar.kodu.toLowerCase().includes("YOK")) {
-          return <ColumnBadge color="#e1f2fa" value="SEVK" />;
+          return <ColumnBadge color="#ebf7fc" value="SEVK" />;
         }
-        return <ColumnBadge color="#fcf2e9" value="TAŞIMA" />;
+        return <ColumnBadge color="#fdf5ee" value="TAŞIMA" />;
       },
       filters: [
         {
@@ -196,26 +206,18 @@ export default function SevkEdilecekler() {
       render: (text, record) => <ColumnBadge value={record.Referanslar.siparisTipi} />,
       width: 100,
     },
+
     {
-      title: "İşlem Tipi",
-      dataIndex: "islemTipi",
-      key: "islemTipi",
-      render: (text, record) => <ColumnBadge value={record.Referanslar.islemTipi} />,
-      filters: createTableFilterFromData(
-        uretimGirisleri[musteriAdi].map((item) => item.Referanslar), // Eğer Referanslar her zaman varsa
-        "islemTipi",
-      ),
-      onFilter: (value, record) => {
-        const fasonFirmasi = record.Referanslar.islemTipi;
-        return fasonFirmasi.indexOf(value) === 0;
-      },
-      filterSearch: true,
-      width: 110,
+      title: "1. Ambalaj",
+      dataIndex: "birinciAmbalaj",
+      key: "birinciAmbalaj",
+      width: 120,
     },
     {
-      title: "Parça Adı",
-      render: (text, record) => record.Referanslar?.parcaAdi,
-      key: "parcaAdi",
+      title: "2. Ambalaj",
+      dataIndex: "ikinciAmbalaj",
+      key: "ikinciAmbalaj",
+      width: 120,
     },
   ];
 
@@ -285,7 +287,7 @@ export default function SevkEdilecekler() {
                 dataSource={kayitlar}
                 columns={createColumnsForCustomer(musteriAdi)}
                 pagination={false}
-                scroll={{ x: 1400 }}
+                scroll={{ x: 1800 }}
                 rowSelection={createRowSelection(musteriAdi)}
                 // rowKey={kayitlar[index].id}
                 rowStyle={(row) =>
