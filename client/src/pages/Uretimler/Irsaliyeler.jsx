@@ -524,7 +524,7 @@ function LogoyaGonderButon({ kayitlar }) {
           </Form.Item>
 
           <Form.Item label="Açıklama" name="genelAciklama">
-            <Input placeholder="Açıklama girin" />
+            <Input placeholder="Açıklama girin" maxLength={50} showCount />
           </Form.Item>
 
           <Divider />
