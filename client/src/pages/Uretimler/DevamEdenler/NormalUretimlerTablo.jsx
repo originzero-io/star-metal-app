@@ -159,6 +159,12 @@ export default function NormalUretimlerTablo({
       width: 90,
     },
     {
+      title: "Parça Adı",
+      render: (text, record) => record.Referanslar?.parcaAdi,
+      key: "parcaAdi",
+      width: 90,
+    },
+    {
       title: "İrsaliye No",
       dataIndex: "irsaliyeNo",
       key: "irsaliyeNo",

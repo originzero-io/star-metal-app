@@ -110,6 +110,12 @@ export default function Irsaliyeler() {
         // width: 120,
       },
       {
+        title: "Parça Adı",
+        render: (text, record) => record.Referanslar?.parcaAdi,
+        key: "parcaAdi",
+        width: 90,
+      },
+      {
         title: "Sipariş Tipi",
         dataIndex: "siparisTipi",
         key: "siparisTipi",

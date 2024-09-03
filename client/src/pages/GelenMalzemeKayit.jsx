@@ -1,10 +1,9 @@
 /* eslint-disable no-nested-ternary */
-import { FolderAddTwoTone, PlusCircleFilled } from "@ant-design/icons";
+import { DoubleRightOutlined, FolderAddTwoTone, PlusCircleFilled } from "@ant-design/icons";
 import {
   Alert,
   Button,
   Col,
-  Divider,
   Form,
   Input,
   InputNumber,
@@ -154,6 +153,7 @@ export default function GelenMalzemeKayit() {
         [name]: {
           ...form.getFieldValue(["malzemeler", name]),
           islemTipi: selectedReference.islemTipi,
+          parcaAdi: selectedReference.parcaAdi,
           fason: selectedReference.fason ? "Fason" : "Fason Değil",
           fasonFirmasi: selectedReference.fasonFirmasi,
           resimUrl: selectedReference.resimUrl,
@@ -302,6 +302,7 @@ export default function GelenMalzemeKayit() {
                 <SpaceStyled key={key} align="start">
                   <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
                     <Tag color="purple">{i}</Tag>
+
                     <Form.Item
                       {...restField}
                       name={[name, "referansNo"]}
@@ -324,6 +325,26 @@ export default function GelenMalzemeKayit() {
                         ))}
                       </Select>
                     </Form.Item>
+
+                    <Form.Item {...restField} name={[name, "parcaAdi"]}>
+                      <Input
+                        disabled
+                        placeholder="Parça Adı"
+                        style={{ width: "140px", background: "#ece4fb", fontWeight: 500 }}
+                      />
+                    </Form.Item>
+
+                    <Form.Item {...restField} name={[name, "islemTipi"]}>
+                      <Input
+                        disabled
+                        placeholder="İşlem Tipi"
+                        style={{ width: "140px", background: "#e4ecfb", fontWeight: 500 }}
+                      />
+                    </Form.Item>
+
+                    <div style={{ marginTop: "-5px", fontSize: 20 }}>
+                      <DoubleRightOutlined />
+                    </div>
 
                     <Form.Item
                       {...restField}
@@ -369,12 +390,6 @@ export default function GelenMalzemeKayit() {
                           </Select.Option>
                         ))}
                       </Select>
-                    </Form.Item>
-
-                    <Divider type="vertical" style={{ background: "#cfcfcf", height: "35px" }} />
-
-                    <Form.Item {...restField} name={[name, "islemTipi"]}>
-                      <Input disabled placeholder="İşlem Tipi" style={{ width: "140px" }} />
                     </Form.Item>
 
                     {seciliReferansFasonluk[name] && (

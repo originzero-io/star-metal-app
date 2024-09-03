@@ -212,6 +212,11 @@ export default function SevkEdilecekler() {
       filterSearch: true,
       width: 110,
     },
+    {
+      title: "Parça Adı",
+      render: (text, record) => record.Referanslar?.parcaAdi,
+      key: "parcaAdi",
+    },
   ];
 
   const createRowSelection = (musteriAdi) => ({
