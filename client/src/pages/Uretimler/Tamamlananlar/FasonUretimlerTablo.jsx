@@ -39,6 +39,7 @@ export default function FasonUretimlerTablo({ fasonFirmasiBazliKayitlar, uretimi
       render: (text, record) => (
         <Tooltip title={record.musteriAdi}>
           <Tag
+            bordered={false}
             style={{
               width: "120px",
               whiteSpace: "nowrap",

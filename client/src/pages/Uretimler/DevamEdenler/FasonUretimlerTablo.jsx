@@ -202,11 +202,14 @@ export default function FasonUretimlerTablo({
       render: (text, record) => (
         <Tooltip title={record.Referanslar?.musteriAdi}>
           <Tag
+            bordered={false}
             style={{
               width: "110px",
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
+              padding: "4px",
+              fontWeight: "bold",
             }}
           >
             {record.Referanslar?.musteriAdi}
