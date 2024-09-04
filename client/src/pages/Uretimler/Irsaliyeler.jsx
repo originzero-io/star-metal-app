@@ -305,24 +305,26 @@ function LogoyaGonderButon({ kayitlar }) {
     const irsaliyeTipi = irsaliyeKaydi[0].tip;
     const fason = irsaliyeKaydi[0].fasona;
 
-    let gonderilecekGenelAciklama = "";
+    let otomatikAciklama = "";
 
     if (irsaliyeTipi === "tasima") {
       // tipi tasima ise iadedir veya fasondur
       if (fason) {
-        gonderilecekGenelAciklama = "FASON İŞLEM İÇİN GÖNDERİLİYOR.FATURA EDİLMEYECEK";
+        otomatikAciklama = "FASON İŞLEM İÇİN GÖNDERİLİYOR.FATURA EDİLMEYECEK";
       } else {
-        gonderilecekGenelAciklama = "TEKRAR İŞLEM YAPILMIŞTIR. FATURA EDİLMEYECEK";
+        otomatikAciklama = "TEKRAR İŞLEM YAPILMIŞTIR. FATURA EDİLMEYECEK";
       }
     }
 
     // console.log("genelAciklama", genelAciklama);
-    // console.log("gonderilecekGenelAciklama", gonderilecekGenelAciklama);
-    // console.log("irsaliyeKaydi", irsaliyeKaydi);
+    // console.log("otomatikAciklama", otomatikAciklama);
+    console.log("irsaliyeKaydi", irsaliyeKaydi);
 
     const irsaliyeMaster = {
-      genelAciklama1: gonderilecekGenelAciklama,
-      genelAciklama2: genelAciklama,
+      genelAciklama1: irsaliyeKaydi[0].genelAciklama1,
+      genelAciklama2: irsaliyeKaydi[0].genelAciklama2,
+      genelAciklama3: irsaliyeKaydi[0].genelAciklama3,
+      genelAciklama4: otomatikAciklama,
       logicalref: 0,
       turu: 8, // 1: alış , 8: satış irsaliyesi
       tarih: getCurrentTimeWithLogoFormat(),
@@ -391,13 +393,18 @@ function LogoyaGonderButon({ kayitlar }) {
       sofor: secilenSofor,
       plaka: values.plaka,
       sevkTarihi: getCurrentDateTime(),
-      aciklama: values.genelAciklama,
+      genelAciklama1: values.genelAciklama1,
+      genelAciklama2: values.genelAciklama2,
+      genelAciklama3: values.genelAciklama3,
     }));
 
     const { musteriAdi } = kayitlar[0].Referanslar;
 
     try {
       const logoIrsaliye = logoIrsaliyeObjesiOlustur(values.genelAciklama, gonderilecekKayitlar);
+
+      console.log("logoIrsaliye", logoIrsaliye);
+
       setButonLoading(true);
 
       const logoResponse = await logoGoApi.postData("PostIrsaliye", logoIrsaliye);
@@ -476,6 +483,12 @@ function LogoyaGonderButon({ kayitlar }) {
           labelAlign="left"
           onFinish={handleOk}
           style={{ marginTop: "20px" }}
+          initialValues={{
+            genelAciklama1: "",
+            genelAciklama2: "",
+            genelAciklama3: "",
+            genelAciklama4: "",
+          }}
         >
           <Form.Item
             label="Şoför"
@@ -523,7 +536,13 @@ function LogoyaGonderButon({ kayitlar }) {
             </Select>
           </Form.Item>
 
-          <Form.Item label="Açıklama" name="genelAciklama">
+          <Form.Item label="Açıklama 1" name="genelAciklama1">
+            <Input placeholder="Açıklama girin" maxLength={50} showCount />
+          </Form.Item>
+          <Form.Item label="Açıklama 2" name="genelAciklama2">
+            <Input placeholder="Açıklama girin" maxLength={50} showCount />
+          </Form.Item>
+          <Form.Item label="Açıklama 3" name="genelAciklama3">
             <Input placeholder="Açıklama girin" maxLength={50} showCount />
           </Form.Item>
 
