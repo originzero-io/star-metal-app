@@ -152,6 +152,7 @@ export default function GelenMalzemeKayit() {
         ...form.getFieldValue("malzemeler"),
         [name]: {
           ...form.getFieldValue(["malzemeler", name]),
+          kodu: selectedReference.kodu,
           islemTipi: selectedReference.islemTipi,
           parcaAdi: selectedReference.parcaAdi,
           fason: selectedReference.fason ? "Fason" : "Fason Değil",
@@ -326,21 +327,46 @@ export default function GelenMalzemeKayit() {
                       </Select>
                     </Form.Item>
 
-                    <Form.Item {...restField} name={[name, "parcaAdi"]}>
-                      <Input
-                        disabled
-                        placeholder="Parça Adı"
-                        style={{ width: "140px", background: "#eee8f8", fontWeight: 500 }}
-                      />
-                    </Form.Item>
+                    <Tooltip
+                      title={
+                        seciliReferansSiparisTipi[name]
+                          ? seciliReferansSiparisTipi[name] === "SERİ"
+                            ? "Sipariş No"
+                            : "Talep No"
+                          : "Kodu"
+                      }
+                    >
+                      <Form.Item {...restField} name={[name, "kodu"]}>
+                        <Input
+                          disabled
+                          placeholder="Kodu"
+                          // placeholder={
+                          //   seciliReferansSiparisTipi[name] === "SERİ" ? "Sipariş No" : "Talep No"
+                          // }
+                          style={{ width: "140px", background: "#eee8f8", fontWeight: 500 }}
+                        />
+                      </Form.Item>
+                    </Tooltip>
 
-                    <Form.Item {...restField} name={[name, "islemTipi"]}>
-                      <Input
-                        disabled
-                        placeholder="İşlem Tipi"
-                        style={{ width: "140px", background: "#eee8f8", fontWeight: 500 }}
-                      />
-                    </Form.Item>
+                    <Tooltip title="Parça Adı">
+                      <Form.Item {...restField} name={[name, "parcaAdi"]}>
+                        <Input
+                          disabled
+                          placeholder="Parça Adı"
+                          style={{ width: "140px", background: "#eee8f8", fontWeight: 500 }}
+                        />
+                      </Form.Item>
+                    </Tooltip>
+
+                    <Tooltip title="İşlem Tipi">
+                      <Form.Item {...restField} name={[name, "islemTipi"]}>
+                        <Input
+                          disabled
+                          placeholder="İşlem Tipi"
+                          style={{ width: "140px", background: "#eee8f8", fontWeight: 500 }}
+                        />
+                      </Form.Item>
+                    </Tooltip>
 
                     <div style={{ marginTop: "-5px", fontSize: 20 }}>
                       <DoubleRightOutlined />

@@ -86,7 +86,8 @@ export default function ReferansForm({ record, type }) {
       const logoyaGonderilecekPut = {
         ...record,
         referansNo: values.referansNo,
-        kodu: record.kodu || values.kodu,
+        // kodu: record.kodu || values.kodu,
+        kodu: values.kodu || record.kodu,
         irsaliyeAciklamasi: values.irsaliyeAciklamasi,
         musteriAdi: record.musteriAdi || values.musteriAdi,
         musteriRef:
@@ -345,13 +346,13 @@ export default function ReferansForm({ record, type }) {
       <Divider style={{ color: "#4535aa", marginTop: 0 }} orientation="left">
         Logo Verileri
       </Divider>
-      {type === "update" && record.kodu.toLowerCase().includes("yok") && (
+      {type === "update" && (
         <Form.Item
           label="Kodu"
           name="kodu"
           rules={[{ required: true, message: "Bu alanı doldurun" }]}
         >
-          <Input placeholder="Kodu" style={{ color: "#e03d3d" }} />
+          <Input placeholder="Kodu" />
         </Form.Item>
       )}
       <Form.Item
