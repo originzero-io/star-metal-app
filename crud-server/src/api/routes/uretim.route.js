@@ -195,57 +195,6 @@ router.get(
   }),
 );
 
-// router.post(
-//   "/tamamlanan",
-//   asyncHandler(async (req, res) => {
-//     const kayitlar = req.body;
-//     const model = { 1: DFasonUretim, 0: DNormalUretim };
-
-//     console.log("kayitlar", kayitlar);
-
-//     // Tüm asenkron işlemleri bir diziye topla
-//     const promises = kayitlar.map(async (kayit) => {
-//       const uretimIdleri = kayit.uretimId.split(",").map(Number);
-
-//       const { fason } = kayit.Referanslar;
-//       const { uretimId } = kayit;
-
-//       try {
-//         const uretimList = await model[fason].findAll({
-//           where: { id: uretimIdleri },
-//           include: [
-//             {
-//               model: Referans,
-//               as: "Referanslar",
-//             },
-//           ],
-//         });
-
-//         for (const uretim of uretimList) {
-//           const kodVar = !uretim.Referanslar.kodu.toLowerCase().includes("yok");
-
-//           if (fason) {
-//             console.log("burdaıym");
-
-//             if (uretim.gelenMiktar === uretim.sevkEdilenMiktar && kodVar) {
-//               await uretimiTamamlananlaraGonder(uretim);
-//             }
-//           } else if (uretim.gelenMiktar === uretim.gidenMiktar && kodVar) {
-//             await uretimiTamamlananlaraGonder(uretim);
-//           }
-//         }
-//       } catch (error) {
-//         console.error(`Tamamlanan üretime taşımada hata: ${uretimId}`, error);
-//         res.send(error);
-//       }
-//     });
-
-//     await Promise.all(promises);
-
-//     res.send("Üretimler kontrol edildi. Tamamlananlar Tamamlanan üretime taşındı.");
-//   }),
-// );
-
 router.post(
   "/tamamlanan",
   asyncHandler(async (req, res) => {

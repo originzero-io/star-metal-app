@@ -292,7 +292,7 @@ router.put(
         }
       }
 
-      const updatedReferansUretim = await referansUretim.update({ ...yeniVeri, resimUrl });
+      const updatedReferansUretim = await referansUretim.update({ ...yeniReferansUretim, resimUrl });
       res.json(updatedReferansUretim);
     } else {
       console.log("Böyle bir referans üretim verisi bulunamadı, oluşturuluyor...", yeniVeri.logoMalzemeRef);

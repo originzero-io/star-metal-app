@@ -32,9 +32,8 @@ export default function ReferansForm({ record, type }) {
     referansParcaAdlari,
     setReferansParcaAdlari,
     referansAnaBirimleri,
+    setReferansAnaBirimleri,
     musteriler,
-    setDevamEdenUretimler,
-    setIrsaliyeler,
   } = useDBContext();
   const { showPanel, showModal, showNotification } = useUIContext();
 
@@ -79,6 +78,29 @@ export default function ReferansForm({ record, type }) {
     setFileList(newFileList);
   };
 
+  const logoIleEsle = async () => {
+    showNotification("info", "Referanslar ve alt bilgiler logo ile eşitleniyor...");
+    const logoReferanslar = await logoGoApi.getData("GetReferansList");
+    const combinedReferanslar = await referanslarHttp.logoIleEsle(logoReferanslar);
+
+    // logodan girilmiş verilere ait referans üretim bilgilerinin doldurulması
+    await referansUretimHttp.logoIleEsle(logoReferanslar);
+
+    setReferanslar(combinedReferanslar);
+    showNotification("success", `${logoReferanslar.length} adet referans logo ile eşitlendi.`);
+
+    const logoParcaAdlari = await logoGoApi.getData("GetParcaAdiList");
+    setReferansParcaAdlari(logoParcaAdlari);
+    const logoIslemTipleri = await logoGoApi.getData("GetIslemTipiList");
+    setReferansIslemTipleri(logoIslemTipleri);
+    const logoAnaBirimler = await logoGoApi.getData("GetAnaBirimList");
+    setReferansAnaBirimleri(logoAnaBirimler);
+
+    showNotification("success", "Referans alt bilgileri logo ile eşitlendi.");
+    // Sayfayı yenile
+    window.location.reload();
+  };
+
   const onFinish = async (values) => {
     const formData = new FormData();
 
@@ -86,7 +108,6 @@ export default function ReferansForm({ record, type }) {
       const logoyaGonderilecekPut = {
         ...record,
         referansNo: values.referansNo,
-        // kodu: record.kodu || values.kodu,
         kodu: values.kodu || record.kodu,
         irsaliyeAciklamasi: values.irsaliyeAciklamasi,
         musteriAdi: record.musteriAdi || values.musteriAdi,
@@ -100,7 +121,7 @@ export default function ReferansForm({ record, type }) {
         fasonFirmasi: record.fason ? values.fasonFirmasi : record.fasonFirmasi,
         ReferansUretim: {
           logoMalzemeRef: record.logoMalzemeRef,
-          kodu: record.kodu,
+          kodu: values.kodu || record.kodu,
           resimUrl: record.resimUrl,
           miktarSapmasi: values.miktarSapmasi,
           lotAdedi: values.lotAdedi,
@@ -109,7 +130,7 @@ export default function ReferansForm({ record, type }) {
         },
       };
 
-      console.log("put-:", logoyaGonderilecekPut);
+      console.log("Logoya gönderilecek put:", logoyaGonderilecekPut);
 
       const response = await logoGoApi.putData("PutReferans", logoyaGonderilecekPut);
 
@@ -128,35 +149,15 @@ export default function ReferansForm({ record, type }) {
           formData.append("photo", fileList[0].originFileObj);
         }
 
+        // referans değişince üretim verilerinin de değişmesi için bu end-point gerekli
         await referanslarHttp.updateData(record.id, logoyaGonderilecekPut);
 
-        const updatedReferansUretim = await referansUretimHttp.updateWithPhoto(formData);
-
-        const updatedReferanslar = referanslar.map((referans) => {
-          if (referans.logoMalzemeRef === record.logoMalzemeRef) {
-            return {
-              ...logoyaGonderilecekPut,
-              ReferansUretim: {
-                ...referans.ReferansUretim,
-                ...updatedReferansUretim,
-                resimUrl: `${updatedReferansUretim.resimUrl}?t=${new Date().getTime()}`,
-              },
-            };
-          }
-          return referans;
-        });
-
-        setReferanslar(updatedReferanslar);
+        // referans üretim verilerinin güncellenmesi
+        await referansUretimHttp.updateWithPhoto(formData);
 
         showNotification("success", "Referans üretim verisi güncellendi");
-
-        const devamEdenler = await devamEdenUretimHttp.getData();
-        setDevamEdenUretimler(devamEdenler);
-
-        const irsaliyeler = await irsaliyeHttp.getData();
-        setIrsaliyeler(irsaliyeler);
-
         showPanel(false);
+        await logoIleEsle();
       } else showNotification("error", response.message);
     } else {
       const logoyaGonderilecekPost = {

@@ -351,6 +351,8 @@ function Referanslar() {
           setReferansAnaBirimleri(logoAnaBirimler);
 
           showNotification("success", "Referans alt bilgileri logo ile eşitlendi.");
+          // Sayfayı yenile
+          window.location.reload();
         } catch (error) {
           showNotification("error", "Referans verisi alınamadı", error.message);
         }
