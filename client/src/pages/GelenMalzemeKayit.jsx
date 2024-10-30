@@ -340,9 +340,6 @@ export default function GelenMalzemeKayit() {
                         <Input
                           disabled
                           placeholder="Kodu"
-                          // placeholder={
-                          //   seciliReferansSiparisTipi[name] === "SERİ" ? "Sipariş No" : "Talep No"
-                          // }
                           style={{ width: "140px", background: "#eee8f8", fontWeight: 500 }}
                         />
                       </Form.Item>
