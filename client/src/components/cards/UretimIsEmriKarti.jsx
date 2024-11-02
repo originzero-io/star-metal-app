@@ -96,7 +96,7 @@ export default function UretimIsEmriKarti({ record, printTrigger, setPrintTrigge
           </ColStyled>
 
           <ColStyled span={6}>
-            <IcerikStyled>{record?.iade === "EVET" ? "İADE" : "İADE DEĞİL"}</IcerikStyled>
+            <IcerikStyled>{record?.iade === "Evet" ? "İADE" : "İADE DEĞİL"}</IcerikStyled>
           </ColStyled>
         </Row>
         <Row style={{ height: "150px" }}>
