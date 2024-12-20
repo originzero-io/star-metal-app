@@ -40,7 +40,7 @@ export default function PersonelForm({ record, type }) {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
-      disabled={user.yetki !== "admin" && user.ad !== record.ad}
+      disabled={type === "update" && user.yetki !== "admin" && user.ad !== record.ad}
     >
       <Form.Item
         label="Ad"
@@ -123,7 +123,7 @@ export default function PersonelForm({ record, type }) {
         />
       </Form.Item>
 
-      {(user.yetki === "admin" || (user.yetki === "yonetici" && user.ad === record.ad)) && (
+      {(user.yetki === "admin" || (user.yetki === "yonetici" && user.ad === record?.ad)) && (
         <Form.Item
           label="Parola"
           name="parola"
