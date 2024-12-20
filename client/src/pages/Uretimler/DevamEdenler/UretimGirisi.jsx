@@ -78,6 +78,8 @@ export default function UretimGirisi({ record }) {
   const [terazidenOlcumAlindi, setTerazidenOlcumAlindi] = useState(false);
   const [uretimAdedi, setUretimAdedi] = useState(0);
 
+  const [kayitDurumu, setKayitDurumu] = useState(false);
+
   const [teraziOlcum, setTeraziOlcum] = useState({
     brut: 0,
     dara: 0,
@@ -130,7 +132,7 @@ export default function UretimGirisi({ record }) {
   const onFinish = async (values) => {
     // console.log("localRecord: ", localRecord);
     // console.log("values: ", values);
-
+    setKayitDurumu(true);
     const data = {
       alici: localRecord.Referanslar.fason
         ? localRecord.Referanslar.fasonFirmasi
@@ -188,11 +190,13 @@ export default function UretimGirisi({ record }) {
         "success",
         `${data.referansNo} referansına ${data.uretimAdedi} adet üretim girişi yapıldı`,
       );
+      setKayitDurumu(false);
     } else {
       showNotification(
         "error",
         `Üretilen miktar gelen miktardan fazla olamaz. Değerleri kontrol ediniz.`,
       );
+      setKayitDurumu(false);
     }
   };
 
@@ -262,7 +266,7 @@ export default function UretimGirisi({ record }) {
           form={form}
           labelCol={{ flex: "150px" }}
           labelAlign="left"
-          initialValues={{ uretimAdedi: teraziOlcum.adet || 0, uretimTarihi: getCurrentDateTime() }}
+          initialValues={{ uretimAdedi: teraziOlcum.adet || 1, uretimTarihi: getCurrentDateTime() }}
           onFinish={onFinish}
         >
           <Row gutter={32}>
@@ -326,17 +330,27 @@ export default function UretimGirisi({ record }) {
               <Form.Item
                 label="Üretim Adedi"
                 name="uretimAdedi"
-                tooltip={`${uretimAdediMinInput}-${uretimAdediMaxInput} arası girebilirsiniz`}
+                tooltip={`${
+                  uretimAdediMinInput > 0 ? uretimAdediMinInput : 1
+                }-${uretimAdediMaxInput} arası girebilirsiniz`}
                 rules={[
                   {
                     required: true,
                     message: "Bu alanı doldurun",
                   },
+                  {
+                    validator: (_, value) => {
+                      if (value >= (uretimAdediMinInput > 0 ? uretimAdediMinInput : 1)) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Üretim adedi aralık dışında veya 0 olamaz"));
+                    },
+                  },
                 ]}
               >
                 <InputNumber
                   style={{ width: "100%" }}
-                  min={uretimAdediMinInput > 0 ? uretimAdediMinInput : 0}
+                  min={uretimAdediMinInput > 0 ? uretimAdediMinInput : 1}
                   max={uretimAdediMaxInput}
                   disabled={!localRecord.Referanslar.fason && !terazidenOlcumAlindi}
                   onChange={(value) => setUretimAdedi(value)}
@@ -387,7 +401,7 @@ export default function UretimGirisi({ record }) {
                 type="primary"
                 icon={<CreditCardOutlined />}
                 htmlType="submit"
-                disabled={uretimAdedi === 0}
+                disabled={uretimAdedi === 0 || kayitDurumu}
               >
                 Üretim Girişi Yap
               </Button>

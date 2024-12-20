@@ -88,7 +88,9 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BaslikStyled>REFERANS NO</BaslikStyled>
             </div>
             <div style={{ textAlign: "end", marginRight: "40px" }}>
-              <IcerikStyled style={{ fontSize: "54px" }}>{record.referansNo}</IcerikStyled>
+              <IcerikStyled style={{ fontSize: "54px" }}>
+                {record.Referanslar?.irsaliyeAciklamasi}
+              </IcerikStyled>
             </div>
           </ColStyled>
         </Row>
