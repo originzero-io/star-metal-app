@@ -147,7 +147,7 @@ router.put(
           sofor: `${kayit.sofor.adi} ${kayit.sofor.soyadi}`,
           plaka: kayit.plaka,
           irsaliyeNo: logoIrsaliyeNo,
-          aciklama: kayit.aciklama,
+          aciklama: `${kayit.genelAciklama1  } ${  kayit.genelAciklama2  } ${ kayit.genelAciklama3}`,
         },
         {
           where: {
