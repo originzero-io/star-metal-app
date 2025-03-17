@@ -23,8 +23,21 @@ function DevamEdenUretimler() {
   // ? normal ve fason bazlı kategorize etme
   useEffect(() => {
     const musteriBazliNormal = devamEdenUretimler.normalUretimler.reduce((acc, uretim) => {
-      const musteriAdi = uretim?.Referanslar?.musteriAdi;
-
+      
+      let musteriAdi = "";
+      
+      if(uretim.Referanslar === null){
+        console.log(">>> Normal bir üretimin referansı null geldi !! Üretim: ", uretim);
+        musteriAdi = `${uretim.referansNo} REFERANSINDA SORUN VAR!`;
+      }
+      else {
+        musteriAdi = uretim.Referanslar.musteriAdi;
+      }
+      // const musteriAdi = uretim?.Referanslar?.musteriAdi ?? "MÜŞTERİ BULUNAMADI";
+      
+      if(uretim.Referanslar === null) 
+        console.log(">>> Normal bir üretimin referansı null geldi !! Üretim: ", uretim);
+      
       // Eğer bu müşteri adı ile bir grup zaten mevcut değilse, bu grup için boş bir dizi oluştur
       if (!acc[musteriAdi]) {
         acc[musteriAdi] = [];
@@ -36,7 +49,18 @@ function DevamEdenUretimler() {
     setMusteriBazliNormalUretimler(musteriBazliNormal);
 
     const fasonFirmasiBazliFason = devamEdenUretimler.fasonUretimler.reduce((acc, uretim) => {
-      const { fasonFirmasi } = uretim.Referanslar;
+      
+      let fasonFirmasi = "";
+      
+      if(uretim.Referanslar === null){
+        console.log(">>> Fason bir üretimin referansı null geldi !! Üretim: ", uretim);
+        fasonFirmasi = `${uretim.referansNo} REFERANSINDA SORUN VAR!`;
+      }
+      else {
+        fasonFirmasi = uretim.Referanslar.fasonFirmasi;
+      }
+      
+      // const fasonFirmasi = uretim?.Referanslar?.fasonFirmasi ?? "FASON FİRMASI BULUNAMADI";
 
       if (!acc[fasonFirmasi]) {
         acc[fasonFirmasi] = [];

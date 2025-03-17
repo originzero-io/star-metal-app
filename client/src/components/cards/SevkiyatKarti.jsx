@@ -3,7 +3,6 @@ import PrintButton from "components/shared/PrintButton";
 import { useEffect, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import styled from "styled-components";
-import { getCurrentDateTime } from "utils/time.helper";
 
 const ContainerStyled = styled.div`
   margin-top: 8px;
@@ -139,7 +138,7 @@ export default function SevkiyatKarti({ record, printTrigger, setPrintTrigger })
               <BaslikStyled>TARİH / SAAT</BaslikStyled>
             </div>
             <div style={{ textAlign: "center" }}>
-              <IcerikStyled>{getCurrentDateTime()}</IcerikStyled>
+              <IcerikStyled>{record.uretimTarihi}</IcerikStyled>
             </div>
           </ColStyled>
           <ColStyled span={3}>

@@ -37,7 +37,7 @@ export default function NormalUretimlerTablo({
 }) {
   const { user } = useAuth();
 
-  const [activeKeys, handleCollapseChange] = useSaveCollapse("normalUretimlerCollapseState");
+  // const [activeKeys, handleCollapseChange] = useSaveCollapse("normalUretimlerCollapseState");
 
   const { showPanel, showModal, showNotification } = useUIContext();
   const { setDevamEdenUretimler } = useDBContext();
@@ -305,8 +305,8 @@ export default function NormalUretimlerTablo({
     <Collapse
       bordered={false}
       size="small"
-      activeKey={activeKeys}
-      onChange={handleCollapseChange}
+      // activeKey={activeKeys}
+      // onChange={handleCollapseChange}
       expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
       items={Object.entries(musteriBazliKayitlar).map(([musteriAdi, kayitlar], index) => ({
         key: index.toString(),

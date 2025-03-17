@@ -32,6 +32,6 @@ const Ambalaj = sequelize.define(
   },
 );
 
-Ambalaj.sync({ alter: true });
+// Ambalaj.sync({ alter: true });
 
 export default Ambalaj;
